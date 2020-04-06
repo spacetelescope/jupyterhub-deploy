@@ -1,22 +1,18 @@
 images:
-  image_name: # TODO: Full path to your docker image, based on the following pattern
-  On AWS: 162808325377.dkr.ecr.us-east-1.amazonaws.com/wfirst-sit-eks-user-image
+  image_name: 162808325377.dkr.ecr.us-east-1.amazonaws.com/wfirst-sit-eks-user-image
+
   registry:
     provider: aws
     aws:
-      # Pushes to Amazon ECR
-      project: 162808325377 # AWS account id
       zone: us-east-1
-      # Get AWS credentials that can push to ECR, in same format as ~/.aws/credentials
-      # then put them in secrets/aws-ecr-config.cfg
-      service_key: aws-ecr-config.cfg
+      service_key: aws-ecr-creds.cfg
+      project: 162808325377
+
 
 cluster:
   provider: aws
   aws:
-    project: 162808325377 # AWS account id
-    zone: us-east-1
-    cluster: wfirst-sit-eks
-    # Get AWS credentials that can access your EKS cluster, in same format as ~/.aws/credentials
-    # then put them in secrets/aws-eks-config.cfg
-    service_key: aws-eks-config.cfg
+      zone: us-east-1
+      service_key: aws-eks-creds.cfg
+      cluster: wfirst-sit-eks
+      project: 162808325377
