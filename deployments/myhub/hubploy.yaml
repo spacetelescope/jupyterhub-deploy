@@ -15,7 +15,7 @@ images:
       zone: # TODO: Zone in which your container image should live. Match your cluster's zone
       # TODO: Get AWS credentials that can push to ECR, in same format as ~/.aws/credentials
       # then put them in secrets/aws-ecr-config.cfg
-      service_key: aws-ecr-config.cfg
+      #service_key: aws-ecr-config.cfg
 
 cluster:
   provider: # TODO: gcloud or aws
@@ -31,4 +31,4 @@ cluster:
     cluster: # TODO: The name of your EKS cluster
     # TODO: Get AWS credentials that can access your EKS cluster, in same format as ~/.aws/credentials
     # then put them in secrets/aws-eks-config.cfg
-    service_key: aws-eks-config.cfg
+    #service_key: aws-eks-config.cfg
