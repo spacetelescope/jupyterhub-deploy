@@ -1,0 +1,10 @@
+# Base environment, with various jupyter components installed
+name: cvt
+channels:
+  - http://ssb.stsci.edu/astroconda
+  - defaults
+dependencies:
+  - ipykernel==4.8.2
+  - jwst_coronagraph_visibility==0.4.2
+  - matplotlib
+  - pysiaf

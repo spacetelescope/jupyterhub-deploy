@@ -1,0 +1,3 @@
+[submodule "cloud-infrastructure"]
+	path = cloud-infrastructure
+	url = https://github.com/yuvipanda/terraform-deploy.git
