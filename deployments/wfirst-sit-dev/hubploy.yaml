@@ -1,6 +1,5 @@
 images:
   image_name: 162808325377.dkr.ecr.us-east-1.amazonaws.com/wfirst-sit-dev-user-image
-
   registry:
     provider: aws
     aws:
