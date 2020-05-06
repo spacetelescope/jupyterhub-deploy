@@ -1,4 +1,4 @@
-name: wfirst-sit
+name: wfirst-sit-dev
 channels:
 - http://ssb.stsci.edu/astroconda
 - defaults

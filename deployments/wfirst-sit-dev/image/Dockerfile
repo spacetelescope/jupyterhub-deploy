@@ -97,8 +97,8 @@ RUN conda env update --name default -f /tmp/default.yml && \
 # RUN ${CONDA_DIR}/envs/default/bin/jupyter labextension install jupyterlab-server-proxy
 
 
-COPY environments/wfirst-sit.yml /tmp/wfirst-sit.yml
-RUN conda env create -f /tmp/wfirst-sit.yml && \
+COPY environments/wfirst-sit-dev.yml /tmp/wfirst-sit-dev.yml
+RUN conda env create -f /tmp/wfirst-sit-dev.yml && \
     conda clean -tipsy
 
 COPY environments/cvt.yml /tmp/cvt.yml
