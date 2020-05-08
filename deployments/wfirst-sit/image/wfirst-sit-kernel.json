@@ -1,0 +1,9 @@
+{
+    "argv": [
+        "/opt/kernel_runner.py",
+        "wfirst-sit",
+        "{connection_file}"
+    ],
+    "display_name": "WFIRST",
+    "language": "python"
+}
