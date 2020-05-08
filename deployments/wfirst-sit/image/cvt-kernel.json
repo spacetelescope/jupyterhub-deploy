@@ -1,0 +1,9 @@
+{
+    "argv": [
+        "/opt/kernel_runner.py",
+        "cvt",
+        "{connection_file}"
+    ],
+    "display_name": "Coronagraphic Visibility Tool",
+    "language": "python"
+}

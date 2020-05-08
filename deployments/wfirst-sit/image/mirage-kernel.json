@@ -1,0 +1,9 @@
+{
+    "argv": [
+        "/opt/kernel_runner.py",
+        "mirage",
+        "{connection_file}"
+    ],
+    "display_name": "MIRaGe",
+    "language": "python"
+}
