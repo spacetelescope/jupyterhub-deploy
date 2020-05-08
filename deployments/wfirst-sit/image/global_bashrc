@@ -1,0 +1,7 @@
+export PS1="${debian_chroot:+($debian_chroot)}\u@notebook:\w\$ "
+
+export PATH="/opt/bin:$PATH"
+
+# Enable conda and activate wfirst-sit by default
+. "/opt/conda/etc/profile.d/conda.sh"
+conda activate wfirst-sit
