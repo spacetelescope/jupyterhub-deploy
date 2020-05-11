@@ -117,3 +117,6 @@ RUN conda env create -f /tmp/mirage.yml && \
 
 # Keep Xfce directories out of home and set up shortcuts for DS9 and CVT.
 # COPY user-dirs.defaults /etc/xdg/user-dirs.defaults
+
+# Start user in home directory, not somewhere else
+WORKDIR /home/jovyan
