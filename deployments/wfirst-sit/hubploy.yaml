@@ -7,7 +7,6 @@ images:
       role: arn:aws:iam::162808325377:role/wfirst-sit-hubploy-ecr
       project: 162808325377
 
-
 cluster:
   provider: aws
   aws:
