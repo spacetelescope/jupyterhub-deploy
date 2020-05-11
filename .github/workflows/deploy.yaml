@@ -30,7 +30,7 @@ jobs:
       - uses: docker://yuvipanda/hubploy:20191210215236cfab2d
         name: build & push image if needed
         with:
-          args: build myhub --check-registry --push
+          args: build wfirst-sit --check-registry --push
       - uses: docker://yuvipanda/hubploy:20191210215236cfab2d
         name: Setup Helm
         with:
@@ -40,9 +40,9 @@ jobs:
         name: Deploy to staging
         if: github.ref == 'refs/heads/staging'
         with:
-          args: deploy myhub hub staging
+          args: deploy wfirst-sit hub staging
       - uses: docker://yuvipanda/hubploy:20191210215236cfab2d
         name: Deploy to prod
         if: github.ref == 'refs/heads/prod'
         with:
-          args: deploy myhub hub prod
+          args: deploy wfirst-sit hub prod

@@ -16,4 +16,4 @@ jobs:
       - uses: docker://yuvipanda/hubploy:20191210215236cfab2d
         name: test building image
         with:
-          args: build myhub
+          args: build wfirst-sit
