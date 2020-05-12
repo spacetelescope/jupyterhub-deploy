@@ -1,5 +1,6 @@
 jupyterhub:
   singleuser:
+    defaultUrl: "/lab"
     memory:
       guarantee: 512M
       limit: 1G

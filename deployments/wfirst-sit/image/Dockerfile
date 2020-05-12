@@ -8,7 +8,6 @@ FROM jupyter/scipy-notebook:a238993ad594
 
 LABEL maintainer="Science Platforms <cslocum@stsci.edu>"
 
-=======
 # Use latest ubuntu from community maintained buildpack-deps
 # https://hub.docker.com/_/buildpack-deps/
 FROM buildpack-deps:bionic-scm
@@ -141,7 +140,6 @@ COPY user-dirs.defaults /etc/xdg/user-dirs.defaults
 COPY VERSION /opt
 
 USER $NB_UID
-=======
 ENV CRDS_PATH=/home/jovyan/crds_cache \
     CRDS_SERVER_URL=https://jwst-serverless.stsci.edu \
     CRDS_S3_ENABLED=1 \
