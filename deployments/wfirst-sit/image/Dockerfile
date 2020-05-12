@@ -188,11 +188,13 @@ RUN curl -sSL https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_
 USER root
 # Load conda profile scripts by default
 RUN ln -s ${CONDA_DIR}/etc/profile.d/conda.sh /etc/profile.d/conda.sh
+
 # Install apt packages, without any questions asked
+ENV TZ="America/New_York"
 RUN apt-get update --yes > /dev/null && \
     DEBIAN_FRONTEND=noninteractive \
     apt-get install --yes \
-        curl rsync locales \
+        curl rsync locales tzdata \
         dbus-x11 firefox xfce4 xfce4-panel xfce4-session xfce4-settings xorg xubuntu-icon-theme \
         automake libtool fftw3-dev libatlas-base-dev build-essential make > /dev/null && \
     rm -rf /var/lib/apt/lists/*
