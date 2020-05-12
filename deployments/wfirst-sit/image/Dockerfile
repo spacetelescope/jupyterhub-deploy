@@ -190,9 +190,8 @@ USER root
 RUN ln -s ${CONDA_DIR}/etc/profile.d/conda.sh /etc/profile.d/conda.sh
 
 # Install apt packages, without any questions asked
-RUN export TZ=America/New_York
-#RUN apt-get update --yes > /dev/null && \
-RUN DEBIAN_FRONTEND=noninteractive \
+RUN apt-get update --yes > /dev/null && \
+    TZ="America/New_York" DEBIAN_FRONTEND=noninteractive \
     apt-get install --yes \
         curl rsync locales tzdata \
         dbus-x11 firefox xfce4 xfce4-panel xfce4-session xfce4-settings xorg xubuntu-icon-theme \
