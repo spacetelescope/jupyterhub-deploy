@@ -105,6 +105,6 @@ COPY default-home-contents/ /etc/default-home-contents/
 #     rm /home/jovyan/global_bashrc
 
 # Keep Xfce directories out of home and set up shortcuts for DS9 and CVT.
-# COPY user-dirs.defaults /etc/xdg/user-dirs.defaults
+COPY user-dirs.defaults /etc/xdg/user-dirs.defaults
 
 WORKDIR /home/jovyan
