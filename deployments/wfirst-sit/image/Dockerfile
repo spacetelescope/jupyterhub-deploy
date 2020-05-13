@@ -100,9 +100,9 @@ RUN conda env create -f /tmp/mirage.yml && \
 COPY default-home-contents/ /etc/default-home-contents/
 
 # # Add content to the global bashrc
-# COPY global_bashrc /home/jovyan
-# RUN cat /home/jovyan/global_bashrc >> /etc/bash.bashrc && \
-#     rm /home/jovyan/global_bashrc
+COPY global_bashrc /home/jovyan
+RUN cat /home/jovyan/global_bashrc >> /etc/bash.bashrc && \
+    rm /home/jovyan/global_bashrc
 
 # Keep Xfce directories out of home and set up shortcuts for DS9 and CVT.
 COPY user-dirs.defaults /etc/xdg/user-dirs.defaults
