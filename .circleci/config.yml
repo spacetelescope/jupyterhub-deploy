@@ -39,7 +39,7 @@ orbs:
                   COMMIT_RANGE=$(./.circleci/get-commit-range.py)
                   echo ${COMMIT_RANGE}
                   echo "export COMMIT_RANGE='${COMMIT_RANGE}'" >> ${BASH_ENV}
-                  
+
           - setup_remote_docker
           - save_cache:
               paths:
