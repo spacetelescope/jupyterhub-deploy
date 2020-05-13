@@ -97,6 +97,7 @@ COPY environments/mirage.yml /tmp/mirage.yml
 RUN conda env create -f /tmp/mirage.yml && \
     conda clean -tipsy
 
+COPY default-home-contents/ /etc/default-home-contents/
 
 # # Add content to the global bashrc
 # COPY global_bashrc /home/jovyan
