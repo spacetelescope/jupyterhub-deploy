@@ -12,7 +12,7 @@ ARG NB_UID="1000"
 # Environment variables
 ENV MKL_THREADING_LAYER="GNU"
 
-# ENV vars set in indiidual activate scripts previously
+# ENV vars set in individual activate scripts previously
 ENV MIRAGE_DATA=/data/mirage \
     PYSYN_CDBS=/data/pysynphot \
     WEBBPSF_PATH=/data/webbpsf \
@@ -75,6 +75,11 @@ RUN cd /tmp && \
     make && \
     make install
 
+# Add content to the global bashrc
+COPY global_bashrc /home/jovyan
+RUN cat /home/jovyan/global_bashrc >> /etc/bash.bashrc && \
+    rm /home/jovyan/global_bashrc
+
 USER ${NB_USER}
 # Install environments one at a time!
 # Base environment has JupyterLab & related packages
@@ -99,13 +104,7 @@ RUN conda env create -f /tmp/mirage.yml && \
 
 COPY default-home-contents/ /etc/default-home-contents/
 
-# # Add content to the global bashrc
-COPY global_bashrc /home/jovyan
-RUN cat /home/jovyan/global_bashrc >> /etc/bash.bashrc && \
-    rm /home/jovyan/global_bashrc
-
 # Keep Xfce directories out of home and set up shortcuts for DS9 and CVT.
 COPY user-dirs.defaults /etc/xdg/user-dirs.defaults
-
 
 WORKDIR /home/jovyan
