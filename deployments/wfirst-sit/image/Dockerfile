@@ -12,18 +12,6 @@ ARG NB_UID="1000"
 # Environment variables
 ENV MKL_THREADING_LAYER="GNU"
 
-# CRDS environment variables
-ENV CRDS_PATH=/home/jovyan/crds_cache \
-    CRDS_SERVER_URL=https://jwst-serverless.stsci.edu \
-    CRDS_S3_ENABLED=1 \
-    CRDS_S3_RETURN_URI=0 \
-    CRDS_MAPPING_URI=s3://dmd-test-crds/mappings/jwst \
-    CRDS_REFERENCE_URI=s3://dmd-test-crds/references/jwst \
-    CRDS_CONFIG_URI=s3://dmd-test-crds/config/jwst \
-    CRDS_USE_PICKLES=0 \
-    CRDS_DOWNLOAD_MODE=plugin \
-    CRDS_DOWNLOAD_PLUGIN='crds_s3_get ${SOURCE_URL} ${OUTPUT_PATH} ${FILE_SIZE} ${FILE_SHA1SUM}'
-
 # ENV vars set in indiidual activate scripts previously
 ENV MIRAGE_DATA=/data/mirage \
     PYSYN_CDBS=/data/pysynphot \
