@@ -32,6 +32,14 @@ orbs:
                 pip install --upgrade -r requirements.txt
                 echo 'export PATH="${HOME}/repo/venv/bin:$PATH"' >> ${BASH_ENV}
 
+          - run:
+              name: Determine range of commits we are building
+              command: |
+                  # CircleCI doesn't have equivalent to Travis' COMMIT_RANGE
+                  COMMIT_RANGE=$(./.circleci/get-commit-range.py)
+                  echo ${COMMIT_RANGE}
+                  echo "export COMMIT_RANGE='${COMMIT_RANGE}'" >> ${BASH_ENV}
+                  
           - setup_remote_docker
           - save_cache:
               paths:
