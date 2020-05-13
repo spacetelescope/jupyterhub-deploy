@@ -1,5 +1,9 @@
 jupyterhub:
   singleuser:
+    lifecycleHooks:
+      postStart:
+        exec:
+          command: ["cp", "-afr", "/etc/default-home-contents", "/home/jovyan"]
     defaultUrl: "/lab"
     memory:
       guarantee: 512M
