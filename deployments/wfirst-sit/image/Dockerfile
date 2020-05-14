@@ -39,15 +39,6 @@ RUN useradd \
 # Make /opt writeable by ${NB_USER}
 RUN mkdir -p $(dirname ${CONDA_DIR}) && chown ${NB_USER}:${NB_USER} $(dirname ${CONDA_DIR})
 
-USER ${NB_USER}
-
-RUN curl -sSL https://github.com/conda-forge/miniforge/releases/download/4.8.3-2/Miniforge3-4.8.3-2-Linux-x86_64.sh > /tmp/miniforge-installer.sh & \\
-    bash /tmp/miniforge-installer.sh  -b -p ${CONDA_DIR} && \
-    conda clean -tipsy
-
-USER root
-# Load conda profile scripts by default
-RUN ln -s ${CONDA_DIR}/etc/profile.d/conda.sh /etc/profile.d/conda.sh
 # Install apt packages, without any questions asked
 RUN apt-get update --yes > /dev/null && \
     DEBIAN_FRONTEND=noninteractive \
@@ -74,6 +65,16 @@ RUN cd /tmp && \
     make && \
     make install
 
+USER ${NB_USER}
+
+RUN curl -sSL https://github.com/conda-forge/miniforge/releases/download/4.8.3-2/Miniforge3-4.8.3-2-Linux-x86_64.sh > /tmp/miniforge-installer.sh & \\
+    bash /tmp/miniforge-installer.sh  -b -p ${CONDA_DIR} && \
+    conda clean -tipsy
+
+USER root
+# Load conda profile scripts by default
+RUN ln -s ${CONDA_DIR}/etc/profile.d/conda.sh /etc/profile.d/conda.sh
+
 # Add content to the global bashrc
 COPY global_bashrc /home/jovyan
 RUN cat /home/jovyan/global_bashrc >> /etc/bash.bashrc && \
@@ -87,7 +88,6 @@ RUN conda env update --name base -f /tmp/base.yml && \
     conda clean -tipsy
 
 RUN ${CONDA_DIR}/bin/jupyter labextension install @jupyterlab/server-proxy
-
 
 COPY environments/wfirst-sit.yml /tmp/wfirst-sit.yml
 RUN conda env create -f /tmp/wfirst-sit.yml && \
