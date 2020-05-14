@@ -12,7 +12,6 @@ dependencies:
 - astroscrappy==1.0.5
 - cfitsio==3.440
 - cubeviz==0.3.0
-- ds9==7.4
 - dust_extinction==0.7
 - fftw==3.3.4
 - fitsblender==0.3.6

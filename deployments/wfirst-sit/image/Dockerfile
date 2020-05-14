@@ -21,7 +21,6 @@ ENV MIRAGE_DATA=/data/mirage \
 # conda related env vars
 ENV CONDA_DIR=/opt/conda
 ENV SHELL=/bin/bash
-ENV DEFAULT_ENV=default
 ENV PATH=${CONDA_DIR}/bin:${CONDA_DIR}/envs/${DEFAULT_ENV}/bin:${PATH}
 
 USER root
@@ -83,11 +82,11 @@ RUN cat /home/jovyan/global_bashrc >> /etc/bash.bashrc && \
 USER ${NB_USER}
 # Install environments one at a time!
 # Base environment has JupyterLab & related packages
-COPY environments/default.yml /tmp/default.yml
-RUN conda env update --name default -f /tmp/default.yml && \
+COPY environments/base.yml /tmp/base.yml
+RUN conda env update --name base -f /tmp/base.yml && \
     conda clean -tipsy
-# FIXME: This extension doesn't support current version of lab
-# RUN ${CONDA_DIR}/envs/default/bin/jupyter labextension install jupyterlab-server-proxy
+
+RUN ${CONDA_DIR}/bin/jupyter labextension install @jupyterlab/server-proxy
 
 
 COPY environments/wfirst-sit.yml /tmp/wfirst-sit.yml
