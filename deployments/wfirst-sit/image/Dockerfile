@@ -21,7 +21,7 @@ ENV MIRAGE_DATA=/data/mirage \
 # conda related env vars
 ENV CONDA_DIR=/opt/conda
 ENV SHELL=/bin/bash
-ENV PATH=${CONDA_DIR}/bin:${CONDA_DIR}/envs/${DEFAULT_ENV}/bin:${PATH}
+ENV PATH=${CONDA_DIR}/bin:${PATH}
 
 USER root
 
