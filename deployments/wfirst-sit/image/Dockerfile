@@ -75,11 +75,6 @@ USER root
 # Load conda profile scripts by default
 RUN ln -s ${CONDA_DIR}/etc/profile.d/conda.sh /etc/profile.d/conda.sh
 
-# Add content to the global bashrc
-COPY global_bashrc /home/jovyan
-RUN cat /home/jovyan/global_bashrc >> /etc/bash.bashrc && \
-    rm /home/jovyan/global_bashrc
-
 USER ${NB_USER}
 # Install environments one at a time!
 # Base environment has JupyterLab & related packages
