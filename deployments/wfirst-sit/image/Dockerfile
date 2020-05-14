@@ -1,6 +1,6 @@
-# Use latest ubuntu from community maintained buildpack-deps
+# Use latest ubuntu LTS from community maintained buildpack-deps
 # https://hub.docker.com/_/buildpack-deps/
-FROM buildpack-deps:bionic-scm
+FROM buildpack-deps:focal-scm
 
 LABEL maintainer="Science Platforms <cslocum@stsci.edu>"
 
