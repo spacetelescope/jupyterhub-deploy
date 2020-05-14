@@ -41,8 +41,8 @@ RUN mkdir -p $(dirname ${CONDA_DIR}) && chown ${NB_USER}:${NB_USER} $(dirname ${
 
 USER ${NB_USER}
 
-RUN curl -sSL https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh > /tmp/miniconda-installer.sh && \
-    bash /tmp/miniconda-installer.sh  -b -p ${CONDA_DIR} && \
+RUN curl -sSL https://github.com/conda-forge/miniforge/releases/download/4.8.3-2/Miniforge3-4.8.3-2-Linux-x86_64.sh > /tmp/miniforge-installer.sh & \\
+    bash /tmp/miniforge-installer.sh  -b -p ${CONDA_DIR} && \
     conda clean -tipsy
 
 USER root
