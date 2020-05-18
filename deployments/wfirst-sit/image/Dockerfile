@@ -45,7 +45,7 @@ RUN apt-get update --yes > /dev/null && \
     apt-get install --yes \
         curl rsync locales \
         dbus-x11 firefox xfce4 xfce4-panel xfce4-session xfce4-settings xorg xubuntu-icon-theme \
-        automake libtool fftw3-dev libatlas-base-dev build-essential make > /dev/null && \
+        automake libtool fftw3-dev libatlas-base-dev build-essential make vim emacs gfortran > /dev/null && \
     rm -rf /var/lib/apt/lists/*
 
 # Set up locales, and default to UTF-8
