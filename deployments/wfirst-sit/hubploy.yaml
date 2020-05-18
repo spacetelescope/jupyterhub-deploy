@@ -1,11 +1,11 @@
 images:
-  image_name: 162808325377.dkr.ecr.us-east-1.amazonaws.com/wfirst-sit-eks-user-image
+  image_name: 162808325377.dkr.ecr.us-east-1.amazonaws.com/wfirst-sit-user-image
 
   registry:
     provider: aws
     aws:
       zone: us-east-1
-      service_key: aws-ecr-creds.cfg
+      role_arn: arn:aws:iam::162808325377:role/wfirst-sit-hubploy-ecr
       project: 162808325377
 
 
@@ -13,6 +13,6 @@ cluster:
   provider: aws
   aws:
       zone: us-east-1
-      service_key: aws-eks-creds.cfg
-      cluster: wfirst-sit-eks
+      role_arn: arn:aws:iam::162808325377:role/wfirst-sit-hubploy-eks
+      cluster: wfirst-sit
       project: 162808325377

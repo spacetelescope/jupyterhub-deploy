@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=SAOImageDS9
+Comment=
+Exec=/opt/conda/envs/wfirst-sit/bin/ds9
+Icon=non-starred
+Path=/home/jovyan
+Terminal=false
+StartupNotify=false

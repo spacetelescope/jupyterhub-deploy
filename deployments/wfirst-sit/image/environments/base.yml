@@ -1,7 +1,8 @@
 # Base environment, with various jupyter components installed
 channels:
   - manics
-  - defaults
+  - conda-forge
+  - http://ssb.stsci.edu/astroconda
 dependencies:
   # FIXME: Pin these somehow?
   - jupyterlab
@@ -10,8 +11,8 @@ dependencies:
   - jupyterhub
   # For Jupyter Desktop Proxy
   - websockify==0.9.0
+  - ds9==7.4
   - pip
   - pip:
     - nbgitpuller
-    - git+https://github.com/jupyterhub/jupyter-server-proxy@4b5ec52
-    - jupyter-desktop-server==0.1.2
+    - git+https://github.com/yuvipanda/jupyter-desktop-server@daecbdbbf89003a1d71fa03f362682a886bb3ad7

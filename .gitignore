@@ -105,3 +105,5 @@ venv.bak/
 
 # fetched helm charts
 hub/charts/
+
+deployments/*/secrets/*
