@@ -1,7 +1,7 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=SAOImageDS9
+Name=SAOImage ds9
 Comment=
 Exec=/opt/conda/bin/ds9
 Icon=non-starred
