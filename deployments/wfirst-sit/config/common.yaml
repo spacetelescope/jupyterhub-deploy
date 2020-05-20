@@ -23,3 +23,8 @@ jupyterhub:
   proxy:
     https:
       enabled: false
+  hub:
+    extraConfig:
+      jupyterlab: |
+        c.Authenticator.admin_users = {'cslocum'}
+
