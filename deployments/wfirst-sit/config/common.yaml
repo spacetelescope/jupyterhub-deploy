@@ -28,3 +28,20 @@ jupyterhub:
       jupyterlab: |
         c.Authenticator.admin_users = {'cslocum'}
 
+        from kubespawner.spawner import KubeSpawner
+        c.JupyterHub.spawner_class = KubeSpawner
+        profiles = [
+        {
+            "display_name": "WFIRST SIT",
+            "kubespawner_override": {
+            #"image_spec": "162808325377.dkr.ecr.us-east-1.amazonaws.com/wfirst-sit-user-image",
+            "cpu_guarantee": 1.5,
+            "cpu_limit": 3,
+            "mem_guarantee": "15G",
+            "mem_limit": "15G"
+        }
+        }
+        ]
+        c.KubeSpawner.profile_list = profiles
+        c.KubeSpawner.image_pull_policy = "Always"
+        c.KubeSpawner.start_timeout = 60 * 10
