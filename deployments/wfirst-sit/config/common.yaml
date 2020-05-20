@@ -34,12 +34,12 @@ jupyterhub:
         {
             "display_name": "WFIRST SIT",
             "kubespawner_override": {
-            #"image_spec": "162808325377.dkr.ecr.us-east-1.amazonaws.com/wfirst-sit-user-image",
-            "cpu_guarantee": 1.5,
-            "cpu_limit": 3,
-            "mem_guarantee": "15G",
-            "mem_limit": "15G"
-        }
+                #"image_spec": "162808325377.dkr.ecr.us-east-1.amazonaws.com/wfirst-sit-user-image",
+                #"cpu_guarantee": 1,
+                #"cpu_limit": 3,
+                #"mem_guarantee": "5G",
+                #"mem_limit": "5G"
+            }
         }
         ]
         c.KubeSpawner.profile_list = profiles
