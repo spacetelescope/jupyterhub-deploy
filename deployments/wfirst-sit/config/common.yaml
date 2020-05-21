@@ -3,7 +3,8 @@ jupyterhub:
     lifecycleHooks:
       postStart:
         exec:
-          command: ["rsync", "/etc/default-home-contents/", "/home/jovyan"]
+          #command: ["rsync", "/etc/default-home-contents/", "/home/jovyan"]
+          command: ["gitpuller", "https://github.com/spacetelescope/jupyter-user-content", "wfirst-sit-content", "/home/jovyan"]
     # temporary for testing
     image:
       tag: a6e2554

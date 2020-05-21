@@ -9,6 +9,7 @@ dependencies:
   - nodejs
   - nb_conda_kernels
   - jupyterhub
+  - nbgitpuller
   # For Jupyter Desktop Proxy
   - websockify==0.9.0
   - ds9==7.4

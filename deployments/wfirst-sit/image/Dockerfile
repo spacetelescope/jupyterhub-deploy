@@ -96,7 +96,7 @@ COPY environments/mirage.yml /tmp/mirage.yml
 RUN conda env create -f /tmp/mirage.yml && \
     conda clean -tipsy
 
-COPY default-home-contents/ /etc/default-home-contents/
+#COPY default-home-contents/ /etc/default-home-contents/
 
 # Keep Xfce directories out of home and set up shortcuts for DS9 and CVT.
 COPY user-dirs.defaults /etc/xdg/user-dirs.defaults
