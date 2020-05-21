@@ -4,6 +4,9 @@ jupyterhub:
       postStart:
         exec:
           command: ["rsync", "/etc/default-home-contents/", "/home/jovyan"]
+    # temporary for testing
+    image:
+      tag: a6e2554
     extraEnv:
       # CRDS Environment variables
       CRDS_PATH: /home/jovyan/crds_cache
