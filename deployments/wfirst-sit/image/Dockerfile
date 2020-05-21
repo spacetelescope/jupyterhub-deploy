@@ -102,4 +102,3 @@ COPY default-home-contents/ /etc/default-home-contents/
 COPY user-dirs.defaults /etc/xdg/user-dirs.defaults
 
 WORKDIR /home/jovyan
-# whitespace so I can commit...REMOVE
