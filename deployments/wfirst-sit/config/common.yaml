@@ -4,6 +4,7 @@ jupyterhub:
       postStart:
         exec:
           command: ["rsync", "/etc/default-home-contents/", "/home/jovyan"]
+          #command: ["gitpuller", "https://github.com/spacetelescope/jupyterhub-user-content", "wfirst-sit", "."]
     extraEnv:
       # CRDS Environment variables
       CRDS_PATH: /home/jovyan/crds_cache
@@ -23,3 +24,25 @@ jupyterhub:
   proxy:
     https:
       enabled: false
+  auth:
+    # change this when we setup oauth
+    type: dummy
+    dummy:
+      password: password
+
+#    type: custom
+#    custom:
+#      className: oauthenticator.generic.GenericOAuthenticator
+#      config:
+#        login_service: "auth0"
+#        token_url: "https://auth.mast.stsci.edu/oauth/access_token"
+#        userdata_method: GET
+        # more stuff
+
+    users:
+      - cslocum
+      - yuvi
+    admin:
+      users:
+        - cslocum
+
