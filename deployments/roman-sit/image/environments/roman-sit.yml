@@ -1,4 +1,4 @@
-name: wfirst-sit
+name: roman-sit
 channels:
 - http://ssb.stsci.edu/astroconda
 - defaults

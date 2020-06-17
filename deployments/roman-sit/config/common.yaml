@@ -4,7 +4,7 @@ jupyterhub:
       postStart:
         exec:
           command: ["rsync", "/etc/default-home-contents/", "/home/jovyan"]
-          #command: ["gitpuller", "https://github.com/spacetelescope/jupyterhub-user-content", "wfirst-sit", "."]
+          #command: ["gitpuller", "https://github.com/spacetelescope/jupyterhub-user-content", "roman-sit", "."]
     extraEnv:
       # CRDS Environment variables
       CRDS_PATH: /home/jovyan/crds_cache
