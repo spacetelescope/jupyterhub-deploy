@@ -14,8 +14,3 @@ cluster:
       role_arn: arn:aws:iam::162808325377:role/roman-sit-hubploy-eks
       cluster: roman-sit
       project: 162808325377
- 
-secrets_repo:
-      repo_name: roman-sit-secrets
-      config_name: config.yaml
-      role_arn: arn:aws:iam::162808325377:role/roman-sit-secrets-decrypt
