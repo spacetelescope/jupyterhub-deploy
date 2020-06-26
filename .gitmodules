@@ -2,5 +2,5 @@
 	path = cloud-infrastructure
 	url = https://github.com/TheRealZoidberg/terraform-deploy.git
 [submodule "secrets/deployment/roman-sit/secrets"]
-	path = secrets/deployment/roman-sit/secrets
+	path = secrets/deployments/roman-sit/secrets
 	url = https://git-codecommit.us-east-1.amazonaws.com/v1/repos/roman-sit-secrets
