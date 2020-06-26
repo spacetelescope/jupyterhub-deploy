@@ -33,7 +33,6 @@ jupyterhub:
       enabled: false
       hosts:
         - roman-sit.science.stsci.edu
-      type: manual
   auth:
     # change this when we setup oauth
     #    type: dummy
