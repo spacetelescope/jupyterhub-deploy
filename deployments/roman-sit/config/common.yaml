@@ -18,7 +18,9 @@ jupyterhub:
       CRDS_CONFIG_URI: "s3://dmd-test-crds/config/jwst"
       CRDS_USE_PICKLES: "0"
       CRDS_DOWNLOAD_MODE: plugin
-      CRDS_DOWNLOAD_PLUGIN: 'crds_s3_get ${SOURCE_URL} ${OUTPUT_PATH} ${FILE_SIZE} ${FILE_SHA1SUM}'
+      CRDS_DOWNLOAD_PLUGIN: "crds_s3_get ${SOURCE_URL} ${OUTPUT_PATH} ${FILE_SIZE} ${FILE_SHA1SUM}"
+      OAUTH2_AUTHORIZE_URL: "https://auth.mast.stsci.edu/oauth/authorize"
+      #OAUTH_CALLBACK_URL: "https://roman-sit.science.stsci.edu/hub/oauth_callback"
     defaultUrl: "/lab"
     memory:
       guarantee: 512M
@@ -30,29 +32,21 @@ jupyterhub:
   proxy:
     https:
       enabled: true
-      type: offload
-      hosts: roman-sit.science.stsci.edu
-    service:
-      type: LoadBalancer
-      ports:
-        - port: 443
-          #targetPort: 
-      annotations:
-        # certificate ARN
-        service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-east-1:162808325377:certificate/87c54f63-7980-4c0d-9d20-4b17756cef8a"
-        # the protocol to use on the backend, we use TCP since we're using websockets
-        service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "tcp"
-        # which ports should use SSL
-        service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "https"
-        service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "3600"
+      type: manual
+      hosts:
+        - roman-sit.science.stsci.edu
   auth:
     type: custom
     custom:
       className: oauthenticator.generic.GenericOAuthenticator
       config:
         login_service: "MAST"
-        token_url: "https://auth.mast.stsci.edu/oauth/access_token"
-        oauth_callback_url: "https://roman-sit.science.stsci.edu/hub/oauth_login"
+        oauth_callback_url: "https://roman-sit.science.stsci.edu/hub/oauth_callback"
+        authorize_url: "https://auth.mast.stsci.edu/oauth/authorize"
+        userdata_url: "https://auth.mast.stsci.edu/info"
+        username_key: "eppn"
+        #userdata_params: {'state': 'state'}
+        scope: ["mast:user:info", "mast:proprietary:hst"]
         userdata_method: GET
     users:
       - cslocum
