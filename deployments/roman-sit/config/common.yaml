@@ -19,16 +19,16 @@ jupyterhub:
       CRDS_USE_PICKLES: "0"
       CRDS_DOWNLOAD_MODE: plugin
       CRDS_DOWNLOAD_PLUGIN: "crds_s3_get ${SOURCE_URL} ${OUTPUT_PATH} ${FILE_SIZE} ${FILE_SHA1SUM}"
-    #defaultUrl: "/lab"
+    defaultUrl: "/lab"
     memory:
       guarantee: 512M
       limit: 1G
   hub:
-    extraConfig:
+    #extraConfig:
       #jupyterlab: |
         #c.Spawner.default_url = "/lab"
-      jupyterlab: |
-        c.Spawner.cmd = ['jupyter-labhub']
+      #jupyterlab: |
+        #c.Spawner.cmd = ['jupyter-labhub']
     extraEnv:
       OAUTH2_AUTHORIZE_URL: "https://auth.mast.stsci.edu/oauth/authorize"
       OAUTH_CALLBACK_URL: "https://roman-sit.science.stsci.edu/hub/oauth_callback"
