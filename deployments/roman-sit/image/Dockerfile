@@ -83,6 +83,7 @@ RUN conda env update --name base -f /tmp/base.yml && \
     conda clean -tipsy
 
 RUN ${CONDA_DIR}/bin/jupyter labextension install @jupyterlab/server-proxy
+RUN ${CONDA_DIR}/bin/jupyter serverextension enable --py jupyterlab --sys-prefix
 
 COPY environments/roman-sit.yml /tmp/roman-sit.yml
 RUN conda env create -f /tmp/roman-sit.yml && \
