@@ -39,6 +39,7 @@ jupyterhub:
     type: custom
     custom:
       className: oauthenticator.generic.GenericOAuthenticator
+      clientId: 464f261c10bf04a8
       config:
         login_service: "MAST"
         oauth_callback_url: "https://roman-sit.science.stsci.edu/hub/oauth_callback"
