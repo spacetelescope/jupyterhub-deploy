@@ -83,9 +83,10 @@ RUN conda env update --name base -f /tmp/base.yml && \
     conda clean -tipsy
 
 RUN ${CONDA_DIR}/bin/jupyter labextension install @jupyterlab/server-proxy
+#RUN ${CONDA_DIR}/bin/jupyter serverextension enable --py jupyterlab --sys-prefix
 
-COPY environments/wfirst-sit.yml /tmp/wfirst-sit.yml
-RUN conda env create -f /tmp/wfirst-sit.yml && \
+COPY environments/roman-sit.yml /tmp/roman-sit.yml
+RUN conda env create -f /tmp/roman-sit.yml && \
     conda clean -tipsy
 
 COPY environments/cvt.yml /tmp/cvt.yml
