@@ -66,33 +66,29 @@ Once your CI node is set up, installing JupyterHub requires working through a fl
 | [jupyterhub-deploy](https://github.com/spacetelescope/jupyterhub-deploy.git) | Various configurations of JupyterHub images (including notebook config) which are deployed by hubploy and run on the EKS cluster built by terraform-deploy. |
 | [hubploy-template](https://github.com/yuvipanda/hubploy-template) (optional) | spacetelescope/jupyterhub-deploy is an instantiation of this template. Template is used by organizations to set up their own custom JupyterHub images. |
 
-
 # Terraform-deploy repository
 
 This section describe setting up basic EKS cluster infrastructure and resources required by the hubploy program using the Terraform system.
 
 The terraform-delpoy repo has three subdirectories with independent Terraform installs: aws-creds, aws, and aws-codecommit-secrets.
 
-## Subdirectory aws-creds
+### Subdirectory aws-creds
 
 The _**aws-creds**_ subdirectory uses Terraform to set up roles and policies needed to do the overall deployment.
 
-1.  git clone --recursive [https://github.com/super-cob/terraform-deploy/](https://github.com/super-cob/terraform-deploy/) (Jacob's repo)
+ 1.  `git clone --recursive https://github.com/super-cob/terraform-deploy` (This is Jacob's repo, note that [https://github.com/TheRealZoidberg/terraform-deploy](https://github.com/TheRealZoidberg/terraform-deploy) contains the secrets code as well)
+	 - Create new file *roles.tfvars*
+	 - Edit and add the following:
+		 - region = "us-east-1"  
+		 - iam_prefix = "prefix" (Where *prefix* can be a username or hubploy deployment name)
+	 - `terraform init`
+	 - `terraform apply -var-file=roles.tfvars` (this creates a group, group can assume role, role is architect)
+	 - Add user to group - *prefix*-terraform-architect
+	 - Assume the role:
+		 - `aws sts assume-role --role-arn arn:aws:iam::162808325377:role/gough-terraform-architect --role-session-name gough`;  output of this command should produce output similar to this
+
     
-    1.  [https://github.com/TheRealZoidberg/terraform-deploy](https://github.com/TheRealZoidberg/terraform-deploy) (contains secrets code as well)
-    
-    1.  Create new file roles.tfvars
-    2.  Edit and add the following:
-        1.  region = "us-east-1"  
-            iam_prefix = "<prefix>-" (Where <prefix> can be a username or hubploy deployment name)
-    3.  terraform init
-    4.  terraform apply -var-file=roles.tfvars
-    5.  This creates a group, group can assume role, role is architect
-    6.  Add user to group - <prefix>-terraform-architect
-    7.  Assume the role:
-        1.  aws sts assume-role --role-arn arn:aws:iam::162808325377:role/gough-terraform-architect --role-session-name gough. This should produce the following output:cd aws-creds
-    
-2.    
+ 3.    
     
      {
         "AssumedRoleUser": {
@@ -239,4 +235,3 @@ Earlier notes, procedures, etc. that were on this page have been moved [here](ht
 Yuvi's provided this diagram documenting some of the repository relationships a while ago:  
   
 ![](https://innerspace.stsci.edu/rest/documentConversion/latest/conversion/thumbnail/214342897/3?attachmentId=214342897&version=3&mimeType=application%2Fpdf&height=250&thumbnailStatus=200)
-
