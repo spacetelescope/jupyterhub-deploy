@@ -76,7 +76,7 @@ The terraform-delpoy repo has three subdirectories with independent Terraform in
 
 The _**aws-creds**_ subdirectory uses Terraform to set up roles and policies needed to do the overall deployment.
 
- 1.  `git clone --recursive https://github.com/super-cob/terraform-deploy` (This is Jacob's repo, note that [https://github.com/TheRealZoidberg/terraform-deploy](https://github.com/TheRealZoidberg/terraform-deploy) contains the secrets code as well)
+ - `git clone --recursive https://github.com/super-cob/terraform-deploy` (This is Jacob's repo, note that [https://github.com/TheRealZoidberg/terraform-deploy](https://github.com/TheRealZoidberg/terraform-deploy) contains the secrets code as well)
 	 - Create new file *roles.tfvars*
 	 - Edit and add the following:
 		 - region = "us-east-1"  
@@ -85,76 +85,31 @@ The _**aws-creds**_ subdirectory uses Terraform to set up roles and policies nee
 	 - `terraform apply -var-file=roles.tfvars` (this creates a group, group can assume role, role is architect)
 	 - Add user to group - *prefix*-terraform-architect
 	 - Assume the role:
-		 - `aws sts assume-role --role-arn arn:aws:iam::162808325377:role/gough-terraform-architect --role-session-name gough`;  output of this command should produce output similar to this
+		 - `aws sts assume-role --role-arn arn:aws:iam::162808325377:role/gough-terraform-architect --role-session-name gough`;  output of this command should produce output similar to [this](https://github.com/cslocum/jupyterhub-deploy/blob/roman/doc/assume-role-output.txt)
+		 - Export variables: `export AWS_SECRET_ACCESS_KEY=<someSecret>; export AWS_SESSION_TOKEN=<someToken>; export AWS_ACCESS_KEY_ID=<someID>`
 
-    
- 3.    
-    
-     {
-        "AssumedRoleUser": {
-            "AssumedRoleId": "AROASL2BB4UAZ23PIH7PC:cob7",
-            "Arn": "arn:aws:sts::162808325377:assumed-role/gough-terraform-architect/cob7"
-        },
-        "Credentials": {
-        "SecretAccessKey": "<SomeSecret>”,
-        "SessionToken": "<SomeToken>",
-        "Expiration": "2020-05-19T20:53:15Z",
-        "AccessKeyId": "<SomeID>"
-    }
-    
-      
-    
-    1.  Export variables:
-        
-        export AWS_SECRET_ACCESS_KEY=<someSecret>
-        export AWS_SESSION_TOKEN=<someToken>
-        export AWS_ACCESS_KEY_ID=<someID>
-        
-          
-        
-
-## Subdirectory aws
+### Subdirectory aws
 
 The _**aws**_ subdirectory is responsible for creating the core EKS cluster resources needed to run a JupyterHub.
 
 It creates the EKS cluster, ECR registry for JupyterHub images, IAM roles and policies for HubPloy, the EKS autoscaler, etc.
 
-1.  1.  Set eks config by the following:
-        1.  aws eks update-kubeconfig --name <deploymentName>
-        2.  aws sts get-caller-identity  
-            cd ../aws
-            1.  terraform init
-                1.  Copy your-cluster.tfvars.template to <deploymentName>.tfvars - and edit contents.
-            2.  terraform apply -var-file=<deploymentName>.tfvars
-            3.  This will start a long build process...
-            4.  Process will generate 'hubploy.yaml'
-            5.  Edit hubploy.yaml to match the following:
-                1.  images:  
-                    image_name:  [162808325377.dkr.ecr.us-east-1.amazonaws.com/<deploymentName>-user-image](http://162808325377.dkr.ecr.us-east-1.amazonaws.com/wfirst-sit-user-image)  
-                    provider: aws  
-                    aws:  
-                    zone: us-east-1  
-                    role_arn: arn:aws:iam::162808325377:role/<deploymentName>-hubploy-ecr  
-                    project: 162808325377  
-                    cluster: <cluster-name>  
-                    provider: aws  
-                    aws:  
-                    zone: us-east-1  
-                    role_arn: arn:aws:iam::162808325377:role/<deploymentName>-hubploy-eks  
-                    cluster: wfirst-sit  
-                    project: 162808325377
-                2.  Copy hubply.yaml to jupyterhub-deploy/deplyments/yourdeployment
+Configure local deployment environment for the EKS cluster:
+- `aws eks update-kubeconfig --name <deploymentName>`
+- `aws sts get-caller-identity`
+- `cd ../aws`
+- `terraform init`
+- Copy _your-cluster.tfvars.template_ to _deploymentName.tfvars_ and edit the contents
+- `terraform apply -var-file=deploymentName.tfvars`
+	- This will start a long build process...at the end, _hubploy.yaml_ will have been created
+	- Edit hubploy.yaml to be similar to [this](https://github.com/cslocum/jupyterhub-deploy/blob/roman/doc/example-hubploy-yaml.txt)
+	- Copy _hubploy.yaml_ to _jupyterhub-deploy/deplyments/yourDeployment_
 
-## Subdirectory aws-codecommit-secrets
+### Subdirectory aws-codecommit-secrets
 
 The _**aws-codecommit-secrets**_ subdirectory is used to set up roles and and ECR registry used to manage JupyterHub secrets in a private repo.
 
-1.  Follow the instructions here for secrets setup:
-    1.  [KMS Secret Encryption](https://innerspace.stsci.edu/display/DMD/KMS+Secret+Encryption)
-
-  
-
-----------
+Follow the instructions here for secrets setup: [KMS Secret Encryption](https://innerspace.stsci.edu/display/DMD/KMS+Secret+Encryption)
 
 # Hubploy repository
 
