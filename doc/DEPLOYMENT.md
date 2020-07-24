@@ -93,7 +93,7 @@ Configure local deployment environment for the EKS cluster:
 - `cd ../aws`
 - `terraform init`
 - Copy _your-cluster.tfvars.template_ to _deploymentName.tfvars_ and edit the contents
-- `terraform apply -var-file=deploymentName.tfvars` (this will start a long build process...)
+- `terraform apply -var-file=deploymentName.tfvars` (this will take a while...)
 
 ### Subdirectory aws-codecommit-secrets
 
@@ -105,23 +105,28 @@ Follow the instructions here for secrets setup: [KMS Secret Encryption](https://
 
 This section documents installing the hubploy program which automates deploying a new JupyterHub image to the Terraformed EKS cluster.
 
-1.  Checkout hubploy:
-    1.  git clone [https://github.com/yuvipanda/hubploy](https://github.com/yuvipanda/hubploy)
-    2.  cd hubploy
-2.  Checkout 'support_roles'
-    1.  git checkout support_roles
-    2.  pip install .
-
-  
-
-----------
+Checkout and install hubploy:
+- `git clone https://github.com/yuvipanda/hubploy`
+-  `cd hubploy`
+- `git checkout support_roles` [NOTE: this step will go away once the branch is merged]
+- `pip install .`
 
 # Jupyterhub-deploy repository
 
-This section documents [TODO]
+In this section, we will
+- Configure a Docker image
+- Configure a Jupyterhub deployment
+- Build the Docker image
+- Deploy Jupyterhub to the EKS cluster that was provisioned earlier
 
-1.  Clone jupyterhub-deploy.
-    1.  git clone [https://github.com/spacetelescope/jupyterhub-deploy.git](https://github.com/spacetelescope/jupyterhub-deploy.git)
+To get started, clone the respository: `git clone https://github.com/spacetelescope/jupyterhub-deploy.git`
+
+
+
+
+[TODD IS STILL WORKING ON THIS PART]
+
+
 
 # Build Docker Image with Hubploy
 
