@@ -1,10 +1,3 @@
-
-[Add a bit of background]
-
-# Prerequisites
-
-[What are we putting here?]
-
 # Actions to take before deployment
 
 **SSL certificates**
@@ -100,10 +93,7 @@ Configure local deployment environment for the EKS cluster:
 - `cd ../aws`
 - `terraform init`
 - Copy _your-cluster.tfvars.template_ to _deploymentName.tfvars_ and edit the contents
-- `terraform apply -var-file=deploymentName.tfvars`
-	- This will start a long build process...at the end, _hubploy.yaml_ will have been created
-	- Edit hubploy.yaml to be similar to [this](https://github.com/cslocum/jupyterhub-deploy/blob/roman/doc/example-hubploy-yaml.txt)
-	- Copy _hubploy.yaml_ to _jupyterhub-deploy/deplyments/yourDeployment_
+- `terraform apply -var-file=deploymentName.tfvars` (this will start a long build process...)
 
 ### Subdirectory aws-codecommit-secrets
 
