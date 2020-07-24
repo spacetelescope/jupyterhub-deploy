@@ -1,0 +1,11 @@
+{
+    "AssumedRoleUser": {
+        "AssumedRoleId": "AROASL2BB4UAZ23PIH7PC:cob7",
+        "Arn": "arn:aws:sts::162808325377:assumed-role/gough-terraform-architect/cob7"
+    },
+    "Credentials": {
+    "SecretAccessKey": "<SomeSecret>”,
+    "SessionToken": "<SomeToken>",
+    "Expiration": "2020-05-19T20:53:15Z",
+    "AccessKeyId": "<SomeID>"
+}
