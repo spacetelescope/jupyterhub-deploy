@@ -65,32 +65,34 @@ Once your CI node is set up, installing JupyterHub requires working through a fl
 
 # Terraform-deploy repository
 
-This section describes setting up a basic EKS cluster infrastructure and resources required by the hubploy program, using Terraform.
+This section describes how to set up a basic EKS cluster infrastructure and resources required by the hubploy program, using Terraform.
 
-The terraform-delpoy repo has three subdirectories with independent Terraform configurations: *aws-creds*, *aws*, and *aws-codecommit-secrets*.
+Get a copy of the repository with this command: `git clone --recursive https://github.com/TheRealZoidberg/terraform-deploy` (Note: eventually, this will be will be merged back into the parent repository).
+
+The terraform-delpoy repository has three subdirectories with independent Terraform configurations: *aws-creds*, *aws*, and *aws-codecommit-secrets*.
 
 ### Subdirectory aws-creds
 
 The _aws-creds_ subdirectory uses Terraform to set up roles and policies needed to do the overall deployment.
 
- - `git clone --recursive https://github.com/TheRealZoidberg/terraform-deploy` (Eventually, this will be will be merged back into the parent repository)
-	 - Create new file *roles.tfvars* [**DO WE COPY THIS FROM SOMEWHERE???**]
-	 - Edit and add the following:
-		 - region = "us-east-1"  
-		 - iam_prefix = "prefix" (Where *prefix* is the hubploy deployment name)
-	 - `terraform init`
-	 - `terraform apply -var-file=roles.tfvars` (this creates a group that can assume the "architect" role)
-	 - Add user to group - *prefix*-terraform-architect [**SHOULD THIS BE NECESSARY???**]
-	 - Assume the role:
-		 - `aws sts assume-role --role-arn arn:aws:iam::162808325377:role/gough-terraform-architect --role-session-name gough`
-			 - Output of this command should produce output similar to [this](https://github.com/cslocum/jupyterhub-deploy/blob/roman/doc/assume-role-output.txt)
-		 - Export variables *AWS_SECRET_ACCESS_KEY*, *AWS_SESSION_TOKEN*, and *AWS_ACCESS_KEY_ID* based on the output
+
+ - Create new file *roles.tfvars* [**DO WE COPY THIS FROM SOMEWHERE???**]
+ - Edit and add the following:
+	 - region = "us-east-1"  
+	 - iam_prefix = "prefix" (Where *prefix* is the hubploy deployment name)
+ - `terraform init`
+ - `terraform apply -var-file=roles.tfvars` (this creates a group that can assume the "architect" role)
+ - Add user to group - *prefix*-terraform-architect [**SHOULD THIS BE NECESSARY???**]
+ - Assume the role:
+	 - `aws sts assume-role --role-arn arn:aws:iam::162808325377:role/gough-terraform-architect --role-session-name gough`
+		 - Output of this command should produce output similar to [this](https://github.com/cslocum/jupyterhub-deploy/blob/roman/doc/assume-role-output.txt)
+	 - Export variables *AWS_SECRET_ACCESS_KEY*, *AWS_SESSION_TOKEN*, and *AWS_ACCESS_KEY_ID* based on the output
 
 ### Subdirectory aws
 
-The _**aws**_ subdirectory is responsible for creating the core EKS cluster resources needed to run a JupyterHub.
+The _aws_ subdirectory is responsible for creating the core EKS cluster resources needed to run JupyterHub.
 
-It creates the EKS cluster, ECR registry for JupyterHub images, IAM roles and policies for HubPloy, the EKS autoscaler, etc.
+It creates the EKS cluster, ECR registry for JupyterHub images, IAM roles and policies for Hubploy, the EKS autoscaler, etc.
 
 Configure local deployment environment for the EKS cluster:
 - `aws eks update-kubeconfig --name <deploymentName>`
