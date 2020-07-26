@@ -32,7 +32,7 @@ Use the AWS EC2 Console to create a CI node where you'll deploy from.  The EC2 i
 
 Note: some of this may change when we move to the sandbox account.
 
-_Please remember to shut down the instance when not in use._
+**_Please remember to shut down the instance when not in use._**
 
 ## Configure AWS
 
@@ -58,10 +58,9 @@ Once your CI node is set up, installing JupyterHub requires working through a fl
 
 | Repository | Description |
 |--|--|
-| [terraform-deploy](https://github.com/TheRealZoidberg/terraform-deploy) | Creates an EKS cluster, security roles, ECR registry, secrets, etc. needed to host a JupyterHub system. |
-| [hubploy](https://github.com/yuvipanda/hubploy) | Program which builds JupyterHub images, interacts with ECR, and (re)deploys JupyterHub to a staging or production environment. Supports iterating with the JupyterHub system and notebook image vs. the basic cluster infrastructure. |
-| [jupyterhub-deploy](https://github.com/spacetelescope/jupyterhub-deploy.git) | Various configurations of JupyterHub images (including notebook config) which are deployed by hubploy and run on the EKS cluster built by terraform-deploy. |
-| [hubploy-template](https://github.com/yuvipanda/hubploy-template) (optional) | spacetelescope/jupyterhub-deploy is an instantiation of this template. Template is used by organizations to set up their own custom JupyterHub images. |
+| [terraform-deploy](https://github.com/TheRealZoidberg/terraform-deploy) | Creates an EKS cluster, security roles, ECR registry, secrets, etc. needed to host a JupyterHub platform. |
+| [hubploy](https://github.com/yuvipanda/hubploy) [**Should this be included in this table???**]| A package that builds JupyterHub images, uploads them to ECR, and deploys JupyterHub to a staging or production environment. Hubploy supports iteration with the JupyterHub system and does not interact with the Kubernetes cluster. |
+| [jupyterhub-deploy](https://github.com/spacetelescope/jupyterhub-deploy.git) | Contains JupyterHub deployment configurations for Docker images and and the EKS cluster.
 
 # Terraform-deploy repository
 
@@ -71,26 +70,27 @@ Get a copy of the repository with this command: `git clone --recursive https://g
 
 The terraform-delpoy repository has three subdirectories with independent Terraform configurations: *aws-creds*, *aws*, and *aws-codecommit-secrets*.
 
-### Subdirectory aws-creds
+### Setup IAM resources and assume architect role
 
-The _aws-creds_ subdirectory uses Terraform to set up roles and policies needed to do the overall deployment.
-
+The **_aws-creds_** subdirectory contains configuration files to set up roles and policies needed to do the overall deployment.
 
  - Create new file *roles.tfvars* [**DO WE COPY THIS FROM SOMEWHERE???**]
  - Edit and add the following:
 	 - region = "us-east-1"  
 	 - iam_prefix = "prefix" (Where *prefix* is the hubploy deployment name)
  - `terraform init`
- - `terraform apply -var-file=roles.tfvars` (this creates a group that can assume the "architect" role)
- - Add user to group - *prefix*-terraform-architect [**SHOULD THIS BE NECESSARY???**]
+ - `terraform apply -var-file=roles.tfvars` (this creates a group that can assume the architect role)
+ - Add user to group *prefix*-terraform-architect [**SHOULD THIS BE NECESSARY???**]
  - Assume the role:
 	 - `aws sts assume-role --role-arn arn:aws:iam::162808325377:role/gough-terraform-architect --role-session-name gough`
 		 - Output of this command should produce output similar to [this](https://github.com/cslocum/jupyterhub-deploy/blob/roman/doc/assume-role-output.txt)
 	 - Export variables *AWS_SECRET_ACCESS_KEY*, *AWS_SESSION_TOKEN*, and *AWS_ACCESS_KEY_ID* based on the output
 
-### Subdirectory aws
+The assumed architect role will allow you to proceed with the rest of the setup.
 
-The _aws_ subdirectory is responsible for creating the core EKS cluster resources needed to run JupyterHub.
+### Provision the EKS cluster
+
+The **_aws_** subdirectory contains configuration files that create the core EKS cluster resources needed to run JupyterHub.
 
 It creates the EKS cluster, ECR registry for JupyterHub images, IAM roles and policies for Hubploy, the EKS autoscaler, etc.
 
