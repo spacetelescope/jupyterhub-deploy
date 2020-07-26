@@ -4,9 +4,15 @@
 
 Put in a support ticket to obtain SSL certificates for the desired DNS name. You should be provided with a private key and a public certificate. _Make sure to put this request in early as it make take a while for ITSD to generate and provide them._
 
-**Gather Platform Requirements**
+**Gather platform requirements**
 
 Get list of desired software/files/notebooks for Docker image. This make take a while because it involves iterating with scientists and stakeholders.
+
+**Generate and register client with MAST**
+
+Jupyterhub will need and client secret and ID to integrate with MAST authentication.  Follow these [instructions](https://innerspace.stsci.edu/display/DMD/Register+a+new+OAuth+application) to generate and register the secret and ID.  This process includes making a pull request.  Contact someone on the MAST team to test the new PR and update the production MAST service.
+
+Hold on to the secret and ID, they will be needed later in the deployment process.
 
 # CI Node Setup
 
@@ -79,7 +85,7 @@ The _**aws-creds**_ subdirectory uses Terraform to set up roles and policies nee
 	 - Add user to group - *prefix*-terraform-architect
 	 - Assume the role:
 		 - `aws sts assume-role --role-arn arn:aws:iam::162808325377:role/gough-terraform-architect --role-session-name gough`;  output of this command should produce output similar to [this](https://github.com/cslocum/jupyterhub-deploy/blob/roman/doc/assume-role-output.txt)
-		 - Export variables: `export AWS_SECRET_ACCESS_KEY=<someSecret>; export AWS_SESSION_TOKEN=<someToken>; export AWS_ACCESS_KEY_ID=<someID>`
+		 - Export variables *AWS_SECRET_ACCESS_KEY*, *AWS_SESSION_TOKEN*, and *AWS_ACCESS_KEY_ID* based on the output
 
 ### Subdirectory aws
 
@@ -100,6 +106,8 @@ Configure local deployment environment for the EKS cluster:
 The _**aws-codecommit-secrets**_ subdirectory is used to set up roles and and ECR registry used to manage JupyterHub secrets in a private repo.
 
 Follow the instructions here for secrets setup: [KMS Secret Encryption](https://innerspace.stsci.edu/display/DMD/KMS+Secret+Encryption)
+
+^^^THIS SECTION MAY BE MOVED, MODIFIED, OR DELETED
 
 # Hubploy repository
 
@@ -144,9 +152,9 @@ There are three categories of secrets involved in the cluster configuration:
 
 Steps to obtain and configure secrets:
 
-1.  Generate and register client secret and ID, and register with MAST authentication site
+~~1.  Generate and register client secret and ID, and register with MAST authentication site
     1.  [Register a new OAuth application](https://innerspace.stsci.edu/display/DMD/Register+a+new+OAuth+application)
-    2.  Need to contact someone on MAST team to merge PR and re-deploy [THIS CAN TAKE A WHILE]
+    2.  Need to contact someone on MAST team to merge PR and re-deploy [THIS CAN TAKE A WHILE]~~
 2.  Clone CodeCommit repository in <top-level jupyterhub-deploy>/secrets/deployments/<deployment>/**secrets**
     1.  Using sops, create a file called staging.yaml that looks like this: [https://gist.github.com/cslocum/1ac64ff17eb7ffd574ea95b4b661d921](https://gist.github.com/cslocum/1ac64ff17eb7ffd574ea95b4b661d921) [Move somewhere from gist]
     2.  common.yaml in <top-level jupyterhub-deploy>/deployments/<deployment>/config should look like this: [https://gist.github.com/cslocum/48f7151fb5c713b6d4e5f5eee1a09f6b](https://gist.github.com/cslocum/48f7151fb5c713b6d4e5f5eee1a09f6b) [Move somewhere from gist]
@@ -166,7 +174,6 @@ Steps to obtain and configure secrets:
     2.  Connecting to external ingress will bring you to hub login page. Log in with AD credentials.![](https://innerspace.stsci.edu/download/attachments/212113480/image2020-7-13_15-21-28.png?version=1&modificationDate=1594668088952&api=v2 "Data Management Division > EKS Jupyterhub Setup > image2020-7-13_15-21-28.png")
     3.  Using Route 53, add an entry associating the DNS name to the ingress [ADD MORE INFO]
 
-  
 
 ----------
 
