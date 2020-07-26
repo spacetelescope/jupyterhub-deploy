@@ -8,7 +8,7 @@ Put in a support ticket to obtain SSL certificates for the desired DNS name. You
 
 Get list of desired software/files/notebooks for Docker image. This make take a while because it involves iterating with scientists and stakeholders.
 
-**Generate and register client with MAST**
+**Register client with MAST**
 
 Jupyterhub will need and client secret and ID to integrate with MAST authentication.  Follow these [instructions](https://innerspace.stsci.edu/display/DMD/Register+a+new+OAuth+application) to generate and register the secret and ID.  This process includes making a pull request.  Contact someone on the MAST team to test the new PR and update the production MAST service.
 
@@ -27,12 +27,10 @@ Use the AWS EC2 Console to create a CI node where you'll deploy from.  The EC2 i
 - EBS storage: **150 GB**
 - Security group: **institute-ssh-only**
 - Tags: **Name = <your-username>-ci**
-- On your laptop or desktop pc, connect to your EC2 / CI node using ssh
-- You must be on VPN to get through the security group restrictions
+- From withing the ST network, connect to your CI node using ssh
+	- Find your EC2 instance on the AWS console and copy the public IPv4 address, then issue this command: `ssh ec2-user@<public-IPv4-address-for-you-ci-node>`
 
-Select your EC2 instance on the AWS console and copy the public IPv4 address.
-
-`ssh ec2-user@<public-IPv4-address-for-you-ci-node>`
+Note: some of this may change when we move to the sandbox account.
 
 _Please remember to shut down the instance when not in use._
 
@@ -67,24 +65,25 @@ Once your CI node is set up, installing JupyterHub requires working through a fl
 
 # Terraform-deploy repository
 
-This section describe setting up basic EKS cluster infrastructure and resources required by the hubploy program using the Terraform system.
+This section describes setting up a basic EKS cluster infrastructure and resources required by the hubploy program, using Terraform.
 
-The terraform-delpoy repo has three subdirectories with independent Terraform installs: aws-creds, aws, and aws-codecommit-secrets.
+The terraform-delpoy repo has three subdirectories with independent Terraform configurations: *aws-creds*, *aws*, and *aws-codecommit-secrets*.
 
 ### Subdirectory aws-creds
 
-The _**aws-creds**_ subdirectory uses Terraform to set up roles and policies needed to do the overall deployment.
+The _aws-creds_ subdirectory uses Terraform to set up roles and policies needed to do the overall deployment.
 
- - `git clone --recursive https://github.com/super-cob/terraform-deploy` (This is Jacob's repo, note that [https://github.com/TheRealZoidberg/terraform-deploy](https://github.com/TheRealZoidberg/terraform-deploy) contains the secrets code as well)
-	 - Create new file *roles.tfvars*
+ - `git clone --recursive https://github.com/TheRealZoidberg/terraform-deploy` (Eventually, this will be will be merged back into the parent repository)
+	 - Create new file *roles.tfvars* [**DO WE COPY THIS FROM SOMEWHERE???**]
 	 - Edit and add the following:
 		 - region = "us-east-1"  
-		 - iam_prefix = "prefix" (Where *prefix* can be a username or hubploy deployment name)
+		 - iam_prefix = "prefix" (Where *prefix* is the hubploy deployment name)
 	 - `terraform init`
-	 - `terraform apply -var-file=roles.tfvars` (this creates a group, group can assume role, role is architect)
-	 - Add user to group - *prefix*-terraform-architect
+	 - `terraform apply -var-file=roles.tfvars` (this creates a group that can assume the "architect" role)
+	 - Add user to group - *prefix*-terraform-architect [**SHOULD THIS BE NECESSARY???**]
 	 - Assume the role:
-		 - `aws sts assume-role --role-arn arn:aws:iam::162808325377:role/gough-terraform-architect --role-session-name gough`;  output of this command should produce output similar to [this](https://github.com/cslocum/jupyterhub-deploy/blob/roman/doc/assume-role-output.txt)
+		 - `aws sts assume-role --role-arn arn:aws:iam::162808325377:role/gough-terraform-architect --role-session-name gough`
+			 - Output of this command should produce output similar to [this](https://github.com/cslocum/jupyterhub-deploy/blob/roman/doc/assume-role-output.txt)
 		 - Export variables *AWS_SECRET_ACCESS_KEY*, *AWS_SESSION_TOKEN*, and *AWS_ACCESS_KEY_ID* based on the output
 
 ### Subdirectory aws
