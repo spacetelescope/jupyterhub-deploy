@@ -26,7 +26,7 @@ Use the AWS EC2 Console to create a CI node where you'll deploy from.  The EC2 i
 - Instance type: **t3.xlarge**
 - EBS storage: **150 GB**
 - Security group: **institute-ssh-only**
-- Tags: **Name = <your-username>-ci**
+- Tags: **Name = *your-username*-ci**
 - From withing the ST network, connect to your CI node using ssh
 	- Find your EC2 instance on the AWS console and copy the public IPv4 address, then issue this command: `ssh ec2-user@<public-IPv4-address-for-you-ci-node>`
 
@@ -36,17 +36,16 @@ Note: some of this may change when we move to the sandbox account.
 
 ## Configure AWS
 
-You will need security credentials, they can be found in the AWS console under IAM→Users→ yourUsername → Security Credentials → Access Keys
+You will need security credentials.  Under **IAM → Users→ yourUsername → Security Credentials → Access Keys** in the AWS console, create a new set.  Save these credentials, as you will not be able to access your secret key again.
 
-Then on your CI node:
-`aws configure`
+On your CI node, execute `aws configure`.  You will be prompted for the following information:
 
-- Access Key ID: **<your key id>**
-- Secrete Access Key: **<your secret key>**
+- Access Key ID: **your-key-id**
+- Secret Access Key: **your-access-key**
 - Region: **us-east-1**
 - Default output format: **json**
 
-## Start Docker
+# Start Docker
 
 `sudo service docker start`
 
@@ -54,79 +53,84 @@ Then on your CI node:
 
 # Repository Overview
 
-Once your CI node is set up, installing JupyterHub requires working through a flow of several git repositories in series on your CI node:
+Installing JupyterHub requires working through a flow of several git repositories, in series, on your CI node:
 
 | Repository | Description |
 |--|--|
 | [terraform-deploy](https://github.com/TheRealZoidberg/terraform-deploy) | Creates an EKS cluster, security roles, ECR registry, secrets, etc. needed to host a JupyterHub platform. |
-| [hubploy](https://github.com/yuvipanda/hubploy) [**Should this be included in this table???**]| A package that builds JupyterHub images, uploads them to ECR, and deploys JupyterHub to a staging or production environment. Hubploy supports iteration with the JupyterHub system and does not interact with the Kubernetes cluster. |
+| [hubploy](https://github.com/yuvipanda/hubploy) | A package that builds JupyterHub images, uploads them to ECR, and deploys JupyterHub to a staging or production environment. Hubploy supports iteration with the JupyterHub system and does not interact with the Kubernetes cluster. |
 | [jupyterhub-deploy](https://github.com/spacetelescope/jupyterhub-deploy.git) | Contains JupyterHub deployment configurations for Docker images and and the EKS cluster.
 
-# Terraform-deploy repository
+# Terraform-deploy
 
-This section describes how to set up a basic EKS cluster infrastructure and resources required by the hubploy program, using Terraform.
+This section describes how to set up an EKS cluster and resources required by the hubploy program, using Terraform.
 
 Get a copy of the repository with this command: `git clone --recursive https://github.com/TheRealZoidberg/terraform-deploy` (Note: eventually, this will be will be merged back into the parent repository).
 
-The terraform-delpoy repository has three subdirectories with independent Terraform configurations: *aws-creds*, *aws*, and *aws-codecommit-secrets*.
+The terraform-deploy repository has three subdirectories with independent Terraform configurations: *aws-creds*, *aws*, and *aws-codecommit-secrets*.
 
 ### Setup IAM resources and assume architect role
 
 The **_aws-creds_** subdirectory contains configuration files to set up roles and policies needed to do the overall deployment.
 
- - Create new file *roles.tfvars* [**DO WE COPY THIS FROM SOMEWHERE???**]
+ - In the _aws-creds_ directory, create a new file called *roles.tfvars* [**DO WE COPY AN EXAMPLE FILE FROM SOMEWHERE???**]
  - Edit and add the following:
-	 - region = "us-east-1"  
-	 - iam_prefix = "prefix" (Where *prefix* is the hubploy deployment name)
+	 - region = **us-east-1**
+	 - iam_prefix = **prefix** (where *prefix* is the deployment name)
  - `terraform init`
  - `terraform apply -var-file=roles.tfvars` (this creates a group that can assume the architect role)
  - Add user to group *prefix*-terraform-architect [**SHOULD THIS BE NECESSARY???**]
  - Assume the role:
 	 - `aws sts assume-role --role-arn arn:aws:iam::162808325377:role/gough-terraform-architect --role-session-name gough`
-		 - Output of this command should produce output similar to [this](https://github.com/cslocum/jupyterhub-deploy/blob/roman/doc/assume-role-output.txt)
+		 - The output of this command should be similar to [this](https://github.com/cslocum/jupyterhub-deploy/blob/roman/doc/assume-role-output.txt)
 	 - Export variables *AWS_SECRET_ACCESS_KEY*, *AWS_SESSION_TOKEN*, and *AWS_ACCESS_KEY_ID* based on the output
 
-The assumed architect role will allow you to proceed with the rest of the setup.
+The assumed architect role will allow you to proceed with the rest of the deployment.
 
 ### Provision the EKS cluster
 
-The **_aws_** subdirectory contains configuration files that create the core EKS cluster resources needed to run JupyterHub.
+The **_aws_** subdirectory contains configuration files that create the EKS cluster resources needed to run JupyterHub.
 
-It creates the EKS cluster, ECR registry for JupyterHub images, IAM roles and policies for Hubploy, the EKS autoscaler, etc.
+It creates the EKS cluster, ECR registry for JupyterHub images, IAM roles and policies for hubploy, the EKS autoscaler, etc.
 
-Configure local deployment environment for the EKS cluster:
+In the *aws* directory, configure local deployment environment for the EKS cluster:
 - `aws eks update-kubeconfig --name <deploymentName>`
 - `aws sts get-caller-identity`
-- `cd ../aws`
 - `terraform init`
 - Copy _your-cluster.tfvars.template_ to _deploymentName.tfvars_ and edit the contents
 - `terraform apply -var-file=deploymentName.tfvars` (this will take a while...)
 
-### Subdirectory aws-codecommit-secrets
+### Setup roles for accessing secrets repository
 
-The _**aws-codecommit-secrets**_ subdirectory is used to set up roles and and ECR registry used to manage JupyterHub secrets in a private repo.
+The _**aws-codecommit-secrets**_ subdirectory contains configuration files that setup roles for accessing for a private repository.  This repository will contain secrets for the EKS cluster, JupyterHub proxy, and MAST authentication.
 
-Follow the instructions here for secrets setup: [KMS Secret Encryption](https://innerspace.stsci.edu/display/DMD/KMS+Secret+Encryption)
+[**INCLUDE TERRAFORM INSTRUCTIONS**]
 
-^^^THIS SECTION MAY BE MOVED, MODIFIED, OR DELETED
+# Hubploy
 
-# Hubploy repository
+This section provides instructions for installing the hubploy package.
 
-This section documents installing the hubploy program which automates deploying a new JupyterHub image to the Terraformed EKS cluster.
-
-Checkout and install hubploy:
+Clone and install hubploy:
 - `git clone https://github.com/yuvipanda/hubploy`
 -  `cd hubploy`
-- `git checkout support_roles` [NOTE: this step will go away once the branch is merged]
+- `git checkout support_roles` [**This step will go away once the branch is merged**]
 - `pip install .`
 
-# Jupyterhub-deploy repository
+# Jupyterhub-deploy
 
-In this section, we will
+In this section, we will define a Docker image and EKS cluster configuration, as well as build and push the image to ECR.  We will then deploy JupyterHub to the cluster.
+
 - Configure a Docker image
 - Configure a Jupyterhub deployment
 - Build the Docker image
 - Deploy Jupyterhub to the EKS cluster that was provisioned earlier
+
+
+Contains JupyterHub deployment configurations for Docker images and and the EKS cluster.
+
+
+
+
 
 To get started, clone the respository: `git clone https://github.com/spacetelescope/jupyterhub-deploy.git`
 
