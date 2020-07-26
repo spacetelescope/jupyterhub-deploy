@@ -1,0 +1,16 @@
+jupyterhub:
+    hub:
+        extraEnv:
+            OAUTH2_TOKEN_URL: https://auth.mast.stsci.edu/oauth/access_token?client_secret=[REDACTED]
+    proxy:
+        secretToken: [REDACTED]
+        https:
+            manual:
+                key: |
+                    [REDACTED]
+                cert: |
+                    [REDACTED]
+    auth:
+        custom:
+            config:
+                client_secret: [REDACTED]
