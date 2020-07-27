@@ -127,7 +127,7 @@ In this section, we will define a Docker image and EKS cluster configuration, as
 
 To get started, clone the repository: `git clone https://github.com/spacetelescope/jupyterhub-deploy.git`
 
-### Build a Docker image with Hubploy
+### Build a Docker image with hubploy
 
 First, identify an existing deployment in the *deployments* directory that most closely matches your desired configuration, and do a recursive copy (the copied directory name should be the new deployment name).  Modifications to the Docker image, cluster configuration, and *hubploy.yaml* file will need to be made.
 
@@ -137,7 +137,7 @@ Go through the *image* directory, change file names and edit files that contain 
 
 Once the configuration changes have been made, change directories to the top level of the jupyterhub-deploy repository.  Then issue this command to build the Docker image and push it to ECR: `hubploy build <deployment-name> --push --check-registry`.
 
-### Configure JupyterHub and Cluster Secrets
+### Configure JupyterHub and cluster secrets
 
 There are three categories of secrets involved in the cluster configuration:
 
@@ -171,7 +171,7 @@ Now we need to create a *staging.yaml* file.  During JupyterHub deployment, helm
 
 Finally, commit and push the changes to the repository.
 
-### Deploying JupyterHub to the EKS Cluster with hubploy
+### Deploying JupyterHub to the EKS cluster with hubploy
 
 - `hubploy deploy <deployment-name> hub staging`
 - `kubectl -n <deployment-name>-staging get svc proxy-public`
