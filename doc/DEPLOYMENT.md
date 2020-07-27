@@ -148,7 +148,7 @@ There are three categories of secrets involved in the cluster configuration:
 In the top level of the *jupyterhub-deployment* repository, create a directory structure that will contain a clone of the AWS CodeCommit repository provisioned by Terraform earlier.
 
 - `mkdir -p secrets/deployments/deployment-name`
-- `cd secrets/deployments/deployment-name``
+- `cd secrets/deployments/deployment-name`
 
 In the AWS console, find the URL of the secrets repository by navigating to **Services → CodeCommit → Repositories** and click on the repository named *deployment-name-secrets*.  Click on the drop-down button called "Clone URL" and select "Clone HTTPS".  The copied URL should look something like https://git-codecommit.us-east-1.amazonaws.com/v1/repos/deployment-name-secrets.
 
@@ -157,18 +157,19 @@ Next, clone the repository:
 - `git clone https://git-codecommit.us-east-1.amazonaws.com/v1/repos/deployment-name-secrets secrets`
 - `cd secrets`
 
-Since we use sops to encrypt and decrypt the secret files, we need to copy the *.sops.yaml* file that was created ...
+Since we use sops to encrypt and decrypt the secret files, we need to copy the *.sops.yaml* file that was created terraform-deploy/aws-codecommit-secret:
 
+- `cp terraform-deploy/aws-codecommit-secret/.sops.yaml .`
+- `git add .sops.yaml`
 
+Now we need to create a *staging.yaml* file.  During JupyterHub deployment, helm, via hubploy, will merge this file with the the *common.yaml* file created earlier in the deployment configuration to generate a master configuration file for JupyterHub.  Download the example file and fill in the redacted sections (pay attention to indentation - only use spaces):
 
-2.  Clone CodeCommit repository in <top-level jupyterhub-deploy>/secrets/deployments/<deployment>/**secrets**
-    1.  Using sops, create a file called staging.yaml that looks like this: [https://gist.github.com/cslocum/1ac64ff17eb7ffd574ea95b4b661d921](https://gist.github.com/cslocum/1ac64ff17eb7ffd574ea95b4b661d921) [Move somewhere from gist]
-    2.  common.yaml in <top-level jupyterhub-deploy>/deployments/<deployment>/config should look like this: [https://gist.github.com/cslocum/48f7151fb5c713b6d4e5f5eee1a09f6b](https://gist.github.com/cslocum/48f7151fb5c713b6d4e5f5eee1a09f6b) [Move somewhere from gist]
+- `wget https://github.com/cslocum/jupyterhub-deploy/blob/roman/doc/example-staging.yaml` (**This URL will changed after merging in the master branch**)
+- `git add staging.yaml`
+- `sops staging.yaml`
+- Fill in the areas that say "[REDACTED]" and change the "client_id" value
 
-
-
-
-
+Finally, commit and push the changes to the repository.
 
 ### Deploying Jupyterhub to the EKS Cluster with Hubploy
 
