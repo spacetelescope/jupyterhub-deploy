@@ -317,7 +317,7 @@ In this section, we will define a Docker image and EKS cluster configuration, as
 
 To get started, clone the repository: `git clone https://github.com/spacetelescope/jupyterhub-deploy.git`
 
-### Build a Docker Image with Hubploy
+### Build a Docker image with Hubploy
 
 First, identify an existing deployment in the *deployments* directory that most closely matches your desired configuration, and do a recursive copy (the copied directory name should be the new deployment name).  Modifications to the Docker image, cluster configuration, and *hubploy.yaml* file will need to be made.
 
@@ -325,10 +325,7 @@ An example of *hubploy.yaml* can be found [here](https://github.com/cslocum/jupy
 
 Go through the *image* directory, change file names and edit files that contain deployment-specific references.  Also make any changes to the Docker image files as needed (for instance, required software).
 
-
-1.  Configure image
-2.  cd ~/jupyterhub-deploy
-3.  hubploy build <hub-name> --push --check-registry
+Once the configuration changes have been made, change directories to the top level of the jupyterhub-deploy repository.  Then issue this command to build the Docker image and push it to ECR: `hubploy build <deployment-name> --push --check-registry`.
 
 ### Configure Jupyterhub and Cluster Secrets
 
