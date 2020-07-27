@@ -10,7 +10,7 @@ Get list of desired software/files/notebooks for Docker image. This make take a 
 
 **Register client with MAST**
 
-Jupyterhub will need and client secret and ID to integrate with MAST authentication.  Follow these [instructions](https://innerspace.stsci.edu/display/DMD/Register+a+new+OAuth+application) to generate and register the secret and ID.  This process includes making a pull request.  Contact someone on the MAST team to test the new PR and update the production MAST service.
+JupyterHub will need and client secret and ID to integrate with MAST authentication.  Follow these [instructions](https://innerspace.stsci.edu/display/DMD/Register+a+new+OAuth+application) to generate and register the secret and ID.  This process includes making a pull request.  Contact someone on the MAST team to test the new PR and update the production MAST service.
 
 Hold on to the secret and ID, they will be needed later in the deployment process.
 
@@ -137,11 +137,11 @@ Go through the *image* directory, change file names and edit files that contain 
 
 Once the configuration changes have been made, change directories to the top level of the jupyterhub-deploy repository.  Then issue this command to build the Docker image and push it to ECR: `hubploy build <deployment-name> --push --check-registry`.
 
-### Configure Jupyterhub and Cluster Secrets
+### Configure JupyterHub and Cluster Secrets
 
 There are three categories of secrets involved in the cluster configuration:
 
--   **Jupyterhub proxyToken** - this will be used by the JupyterHub hub pod [**or proxy? check on this; is this what it's actually used for?**]
+-   **JupyterHub proxyToken** - this will be used by the JupyterHub hub pod [**or proxy? check on this; is this what it's actually used for?**]
 -   MAST authentication **client ID** and **client secret** - these were generated earlier and will be used during the OAuth authentication process
 -   **SSL private key and certificate** - these were obtained earlier [**SAY WHAT USED FOR**]
 
@@ -171,7 +171,7 @@ Now we need to create a *staging.yaml* file.  During JupyterHub deployment, helm
 
 Finally, commit and push the changes to the repository.
 
-### Deploying Jupyterhub to the EKS Cluster with hubploy
+### Deploying JupyterHub to the EKS Cluster with hubploy
 
 - `hubploy deploy <deployment-name> hub staging`
 - `kubectl -n <deployment-name>-staging get svc proxy-public`
