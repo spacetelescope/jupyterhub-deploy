@@ -331,7 +331,7 @@ Once the configuration changes have been made, change directories to the top lev
 
 There are three categories of secrets involved in the cluster configuration:
 
--   **Jupyterhub proxyToken** - this will be used by the Jupyterhub hub pod (or proxy? check on this; is this what it's actually used for?)
+-   **Jupyterhub proxyToken** - this will be used by the Jupyterhub hub pod (**or proxy? check on this; is this what it's actually used for?**)
 -   MAST authentication **client ID** and **client secret** - these with be used during the OAuth2 authentication process
 -   **SSL private key and certificate** - these were obtained earlier
 
@@ -343,6 +343,11 @@ Steps to obtain and configure secrets:
 2.  Clone CodeCommit repository in <top-level jupyterhub-deploy>/secrets/deployments/<deployment>/**secrets**
     1.  Using sops, create a file called staging.yaml that looks like this: [https://gist.github.com/cslocum/1ac64ff17eb7ffd574ea95b4b661d921](https://gist.github.com/cslocum/1ac64ff17eb7ffd574ea95b4b661d921) [Move somewhere from gist]
     2.  common.yaml in <top-level jupyterhub-deploy>/deployments/<deployment>/config should look like this: [https://gist.github.com/cslocum/48f7151fb5c713b6d4e5f5eee1a09f6b](https://gist.github.com/cslocum/48f7151fb5c713b6d4e5f5eee1a09f6b) [Move somewhere from gist]
+
+
+
+
+
 
 ### Deploying Jupyterhub to the EKS Cluster with Hubploy
 
@@ -378,4 +383,4 @@ Yuvi's provided this diagram documenting some of the repository relationships a 
   
 ![](https://innerspace.stsci.edu/rest/documentConversion/latest/conversion/thumbnail/214342897/3?attachmentId=214342897&version=3&mimeType=application%2Fpdf&height=250&thumbnailStatus=200)
   
-![](https://innerspace.stsci.edu/rest/documentConversion/latest/conversion/thumbnail/214342897/3?attachmentId=214342897&version=3&mimeType=application%2Fpdf&height=250&thumbnailStatus=200)
+
