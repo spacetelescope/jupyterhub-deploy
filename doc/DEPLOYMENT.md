@@ -141,11 +141,24 @@ Once the configuration changes have been made, change directories to the top lev
 
 There are three categories of secrets involved in the cluster configuration:
 
--   **Jupyterhub proxyToken** - this will be used by the Jupyterhub hub pod (**or proxy? check on this; is this what it's actually used for?**)
--   MAST authentication **client ID** and **client secret** - these with be used during the OAuth2 authentication process
--   **SSL private key and certificate** - these were obtained earlier
+-   **Jupyterhub proxyToken** - this will be used by the JupyterHub hub pod [**or proxy? check on this; is this what it's actually used for?**]
+-   MAST authentication **client ID** and **client secret** - these were generated earlier and will be used during the OAuth authentication process
+-   **SSL private key and certificate** - these were obtained earlier [**SAY WHAT USED FOR**]
 
-Steps to obtain and configure secrets:
+In the top level of the *jupyterhub-deployment* repository, create a directory structure that will contain a clone of the AWS CodeCommit repository provisioned by Terraform earlier.
+
+- `mkdir -p secrets/deployments/deployment-name`
+- `cd secrets/deployments/deployment-name``
+
+In the AWS console, find the URL of the secrets repository by navigating to **Services → CodeCommit → Repositories** and click on the repository named *deployment-name-secrets*.  Click on the drop-down button called "Clone URL" and select "Clone HTTPS".  The copied URL should look something like https://git-codecommit.us-east-1.amazonaws.com/v1/repos/deployment-name-secrets.
+
+Next, clone the repository:
+
+- `git clone https://git-codecommit.us-east-1.amazonaws.com/v1/repos/deployment-name-secrets secrets`
+- `cd secrets`
+
+Since we use sops to encrypt and decrypt the secret files, we need to copy the *.sops.yaml* file that was created ...
+
 
 
 2.  Clone CodeCommit repository in <top-level jupyterhub-deploy>/secrets/deployments/<deployment>/**secrets**
