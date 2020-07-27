@@ -171,31 +171,14 @@ Now we need to create a *staging.yaml* file.  During JupyterHub deployment, helm
 
 Finally, commit and push the changes to the repository.
 
-### Deploying Jupyterhub to the EKS Cluster with Hubploy
+### Deploying Jupyterhub to the EKS Cluster with hubploy
 
-1.  hubploy deploy <hub-name> hub staging
-2.  kubectl -n <hub-name>-staging get svc proxy-public
-    1.  Will return public IP address of hub.
-        
-        kubectl -n roman-sit-staging get svc proxy-public
-        NAME           TYPE           CLUSTER-IP     EXTERNAL-IP                                                               PORT(S)                      AGE
-        proxy-public   LoadBalancer   10.100.89.44   adf8eaeb22ac649819fa9475a65c1dbd-1141269795.us-east-1.elb.amazonaws.com   443:32457/TCP,80:30976/TCP   7d3h
-        
-          
-        
-    2.  Connecting to external ingress will bring you to hub login page. Log in with AD credentials.![](https://innerspace.stsci.edu/download/attachments/212113480/image2020-7-13_15-21-28.png?version=1&modificationDate=1594668088952&api=v2 "Data Management Division > EKS Jupyterhub Setup > image2020-7-13_15-21-28.png")
-    3.  Using Route 53, add an entry associating the DNS name to the ingress [ADD MORE INFO]
+- `hubploy deploy <deployment-name> hub staging`
+- `kubectl -n <deployment-name>-staging get svc proxy-public`
 
+The second command above will output the hub's ingress (indicated by "EXTERNAL-IP").
 
-----------
-
-# Misc. Notes
-
-  
-
-We use [KMS Secret Encryption](https://innerspace.stsci.edu/display/DMD/KMS+Secret+Encryption) to store secrets. The encrypted secrets are stored in a CodeCommit repository.
-
-  
+Now we need to make an entry in AWS Route53.  The entry should map the DNS name associated with the SSL certificates to the ingress. [**EXPLAIN HOW TO DO THIS IN ROUTE53**]
 
 Earlier notes, procedures, etc. that were on this page have been moved [here](https://innerspace.stsci.edu/display/DMD/AMI%3A+misc) for posterity.
 
