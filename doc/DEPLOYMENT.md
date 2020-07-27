@@ -49,7 +49,7 @@ On your CI node, execute `aws configure`.  You will be prompted for the followin
 
 `sudo service docker start`
 
-(this step will not be necessary once ![](https://innerspace.stsci.edu/plugins/servlet/confluence/placeholder/macro?definition=e2ppcmE6a2V5PUpVU0ktNDE5fQ==&locale=en_US) has been implemented)
+(this step will not be necessary once JUSI-419 has been implemented)
 
 # Repository Overview
 
