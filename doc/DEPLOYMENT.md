@@ -337,9 +337,6 @@ There are three categories of secrets involved in the cluster configuration:
 
 Steps to obtain and configure secrets:
 
-~~1.  Generate and register client secret and ID, and register with MAST authentication site
-    1.  [Register a new OAuth application](https://innerspace.stsci.edu/display/DMD/Register+a+new+OAuth+application)
-    2.  Need to contact someone on MAST team to merge PR and re-deploy [THIS CAN TAKE A WHILE]~~
 2.  Clone CodeCommit repository in <top-level jupyterhub-deploy>/secrets/deployments/<deployment>/**secrets**
     1.  Using sops, create a file called staging.yaml that looks like this: [https://gist.github.com/cslocum/1ac64ff17eb7ffd574ea95b4b661d921](https://gist.github.com/cslocum/1ac64ff17eb7ffd574ea95b4b661d921) [Move somewhere from gist]
     2.  common.yaml in <top-level jupyterhub-deploy>/deployments/<deployment>/config should look like this: [https://gist.github.com/cslocum/48f7151fb5c713b6d4e5f5eee1a09f6b](https://gist.github.com/cslocum/48f7151fb5c713b6d4e5f5eee1a09f6b) [Move somewhere from gist]
