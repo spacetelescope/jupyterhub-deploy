@@ -67,18 +67,39 @@ This section describes how to set up an EKS cluster and resources required by th
 
 Get a copy of the repository with this command: `git clone --recursive https://github.com/TheRealZoidberg/terraform-deploy` (Note: eventually, this will be will be merged back into the parent repository).
 
-The terraform-deploy repository has three subdirectories with independent Terraform configurations: *aws-creds*, *aws*, and *aws-codecommit-secrets*.
+The terraform-deploy repository has two subdirectories with independent Terraform configurations: *aws-creds* and *aws*.  *aws-codecommit-secrets* is a separate repository and will become a third subdirectory after being cloned.
 
 ### Setup IAM resources
 
-The **_aws-creds_** subdirectory contains configuration files to set up roles and policies needed to do the overall deployment.
+The **_aws-creds_** subdirectory contains configuration files to set up roles and policies needed to do the overall deployment.  Complete these steps:
 
- - In the _aws-creds_ directory, create a new file called *roles.tfvars* [**DO WE COPY AN EXAMPLE FILE FROM SOMEWHERE???**]
- - Edit and add the following:
-	 - region = **us-east-1**
-	 - iam_prefix = **deployment-name**
- - `terraform init`
- - `terraform apply -var-file=roles.tfvars` 
+- Create a new file called *roles.tfvars* [**is there a template???**]
+- `terraform init`
+- `terraform apply -var-file=iam.tfvars`
+- WHAT ELSE???
+
+**_aws-codecommit-secrets_** contains Terraform code to set up a secure way to store secret YAML files for use with hubploy.  There are two subdirectories in this repository: *kms-codecommit* and *terraform_iam*.  Run `git clone https://github.com/yuvipanda/aws-codecommit-secret.git`
+
+First, setup an IAM role with just enough permissions to run the Terraform module in *kms-codecommit*:
+
+- `cd terraform-iam`
+- `cp your-vars.tfvars.example roles.tfvars`
+- Edit *roles.tfvars*:
+	- Update "repo_name" to be "deployment-name-secrets"
+	- Update the user ARN to reflect your user
+- `terraform init`
+- `awsudo arn:aws:iam::162808325377:role/deployment-name-secrets-setup terraform apply -var-file=roles.tfvars`
+
+Next, we will setup KMS and CodeCommit:
+
+- `cd ../kms-codecommit`
+- `cp your-vars.tfvars.example codecommit.tfvars`
+- Edit *codecommit.tfvars*:
+	- Update "repo_name" to be "deployment-name-secrets"
+	- Update the user ARNs to reflect your user
+- `terraform init`
+- `awsudo arn:aws:iam::162808325377:role/deployment-name-secrets-setup terraform apply -var-file=code.tfvars`
+- A file named **_.sops.yaml_** will have been produced, and this will be used in the new CodeCommit repository for appropriate encryption with [sops](https://github.com/mozilla/sops)
 
 ### Provision EKS cluster
 
