@@ -186,6 +186,6 @@ Finally, commit and push the changes to the repository.
 - `hubploy deploy <deployment-name> hub staging`
 - `kubectl -n <deployment-name>-staging get svc proxy-public`
 
-The second command above will output the hub's ingress (indicated by "EXTERNAL-IP").
+The second command will output the hub's ingress, indicated by "EXTERNAL-IP".
 
-Now we need to make an entry in AWS Route53.  The entry should map the DNS name associated with the SSL certificates to the ingress. [**EXPLAIN HOW TO DO THIS IN ROUTE53**]
+Now we need to make an entry in AWS **Route53**.  The entry should map the DNS name associated with the SSL certificates to the ingress.
