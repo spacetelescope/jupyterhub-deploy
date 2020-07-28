@@ -78,8 +78,7 @@ The **_aws-creds_** subdirectory contains configuration files to set up roles an
 	 - region = **us-east-1**
 	 - iam_prefix = **deployment-name**
  - `terraform init`
- - `terraform apply -var-file=roles.tfvars` (this creates a group that can assume the architect role)
- - Add user to group *prefix*-terraform-architect [**SHOULD THIS BE NECESSARY???**]
+ - `terraform apply -var-file=roles.tfvars` 
 
 ### Provision EKS cluster
 
