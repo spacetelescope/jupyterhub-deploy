@@ -34,7 +34,7 @@ Note: some of this may change when we move to the sandbox account.
 
 **_Please remember to shut down the instance when not in use._**
 
-## Configure AWS
+# Configure AWS
 
 You will need security credentials.  Under **IAM → Users→ yourUsername → Security Credentials → Access Keys** in the AWS console, create a new set.  Save these credentials, as you will not be able to access your secret key again.
 
@@ -69,23 +69,17 @@ Get a copy of the repository with this command: `git clone --recursive https://g
 
 The terraform-deploy repository has three subdirectories with independent Terraform configurations: *aws-creds*, *aws*, and *aws-codecommit-secrets*.
 
-### Setup IAM resources and assume architect role
+### Setup IAM resources
 
 The **_aws-creds_** subdirectory contains configuration files to set up roles and policies needed to do the overall deployment.
 
  - In the _aws-creds_ directory, create a new file called *roles.tfvars* [**DO WE COPY AN EXAMPLE FILE FROM SOMEWHERE???**]
  - Edit and add the following:
 	 - region = **us-east-1**
-	 - iam_prefix = **prefix** (where *prefix* is the deployment name)
+	 - iam_prefix = **deployment-name**
  - `terraform init`
  - `terraform apply -var-file=roles.tfvars` (this creates a group that can assume the architect role)
  - Add user to group *prefix*-terraform-architect [**SHOULD THIS BE NECESSARY???**]
- - Assume the role:
-	 - `aws sts assume-role --role-arn arn:aws:iam::162808325377:role/gough-terraform-architect --role-session-name gough`
-		 - The output of this command should be similar to [this](https://github.com/cslocum/jupyterhub-deploy/blob/roman/doc/assume-role-output.txt)
-	 - Export variables *AWS_SECRET_ACCESS_KEY*, *AWS_SESSION_TOKEN*, and *AWS_ACCESS_KEY_ID* based on the output
-
-The assumed architect role will allow you to proceed with the rest of the deployment.
 
 ### Provision EKS cluster
 
@@ -94,8 +88,7 @@ The **_aws_** subdirectory contains configuration files that create the EKS clus
 It creates the EKS cluster, ECR registry for JupyterHub images, IAM roles and policies for hubploy, the EKS autoscaler, etc.
 
 In the *aws* directory, configure the local deployment environment for the EKS cluster:
-- `aws eks update-kubeconfig --name <deploymentName>`
-- `aws sts get-caller-identity`
+- `awsudo arn:aws:iam::162808325377:role/deployment-name-hubploy-eks aws eks update-kubeconfig --name <deploymentName>`
 
 Then run Terraform:
 - `terraform init`
@@ -141,9 +134,10 @@ Once the configuration changes have been made, change directories to the top lev
 
 There are three categories of secrets involved in the cluster configuration:
 
--   **JupyterHub proxyToken** - this will be used by the JupyterHub hub pod [**or proxy? check on this; is this what it's actually used for?**]
+-   **JupyterHub proxyToken** - the hub authenticates its requests to the proxy using a secret token that the both services agree upon
+	- Generate the token with this command: `openssl rand -hex 32`
 -   MAST authentication **client ID** and **client secret** - these were generated earlier and will be used during the OAuth authentication process
--   **SSL private key and certificate** - these were obtained earlier [**SAY WHAT USED FOR**]
+-   **SSL private key and certificate** - these were obtained earlier
 
 In the top level of the *jupyterhub-deployment* repository, create a directory structure that will contain a clone of the AWS CodeCommit repository provisioned by Terraform earlier.
 
