@@ -69,7 +69,7 @@ Get a copy of the repository with this command: `git clone --recursive https://g
 
 The terraform-deploy repository has two subdirectories with independent Terraform modules: *aws-creds* and *aws*.  *aws-codecommit-secrets* is a separate repository and will become a third subdirectory after being cloned.
 
-### Setup IAM resources
+### Setup IAM resources, KMS, and CodeCommit
 
 The **_aws-creds_** subdirectory contains configuration files to set up roles and policies needed to do the overall deployment.  Complete these steps:
 
@@ -139,6 +139,10 @@ First, identify an existing deployment in the *deployments* directory that most 
 An example of *hubploy.yaml* can be found [here](https://github.com/cslocum/jupyterhub-deploy/blob/roman/doc/example-hubploy.yaml).  Modify image_name, role_arn, project (the AWS account), and cluster.
 
 Go through the *image* directory, change file names and edit files that contain deployment-specific references.  Also make any changes to the Docker image files as needed (for instance, required software).
+
+A file named *common.yaml* file needs to be created in the *config* directory.  An example can be found [here](https://github.com/cslocum/jupyterhub-deploy/blob/roman/doc/example-common.yaml).  Place a copy of this example file in *config*, and edit the contents as appropriate.
+
+Add, commit, and push all changes.
 
 Once the configuration changes have been made, change directories to the top level of the jupyterhub-deploy repository.  Then issue this command to build the Docker image and push it to ECR: `hubploy build <deployment-name> --push --check-registry`.
 
