@@ -67,7 +67,7 @@ This section describes how to set up an EKS cluster and resources required by th
 
 Get a copy of the repository with this command: `git clone --recursive https://github.com/TheRealZoidberg/terraform-deploy` (Note: eventually, this will be will be merged back into the parent repository).
 
-The terraform-deploy repository has two subdirectories with independent Terraform configurations: *aws-creds* and *aws*.  *aws-codecommit-secrets* is a separate repository and will become a third subdirectory after being cloned.
+The terraform-deploy repository has two subdirectories with independent Terraform modules: *aws-creds* and *aws*.  *aws-codecommit-secrets* is a separate repository and will become a third subdirectory after being cloned.
 
 ### Setup IAM resources
 
@@ -80,7 +80,7 @@ The **_aws-creds_** subdirectory contains configuration files to set up roles an
 
 **_aws-codecommit-secrets_** contains Terraform code to set up a secure way to store secret YAML files for use with hubploy.  There are two subdirectories in this repository: *kms-codecommit* and *terraform_iam*.  Run `git clone https://github.com/yuvipanda/aws-codecommit-secret.git`
 
-First, setup an IAM role with just enough permissions to run the Terraform module in *kms-codecommit*:
+First, setup an IAM role with just enough permissions to run the Terraform module in *terraform-iam*:
 
 - `cd terraform-iam`
 - `cp your-vars.tfvars.example roles.tfvars`
@@ -90,7 +90,7 @@ First, setup an IAM role with just enough permissions to run the Terraform modul
 - `terraform init`
 - `awsudo arn:aws:iam::162808325377:role/deployment-name-secrets-setup terraform apply -var-file=roles.tfvars`
 
-Next, we will setup KMS and CodeCommit:
+Next, we will setup KMS and CodeCommit with the *kms-codecommit* Terraform module:
 
 - `cd ../kms-codecommit`
 - `cp your-vars.tfvars.example codecommit.tfvars`
@@ -114,14 +114,6 @@ Then run Terraform:
 - `terraform init`
 - Copy _your-cluster.tfvars.template_ to _deploymentName.tfvars_ and edit the contents
 - `terraform apply -var-file=deploymentName.tfvars` (this will take a while...)
-
-### Setup roles for accessing the secrets repository
-
-The _**aws-codecommit-secrets**_ subdirectory contains configuration files that setup roles for accessing for a private AWS CodeCommit repository.  This repository will contain secrets for the EKS cluster, JupyterHub proxy, and MAST authentication.
-
-[**TODO: INCLUDE TERRAFORM INSTRUCTIONS**]
-
-Instructions for populating this repository will be provided later.
 
 # Hubploy
 
@@ -171,9 +163,9 @@ Next, clone the repository:
 - `git clone https://git-codecommit.us-east-1.amazonaws.com/v1/repos/deployment-name-secrets secrets`
 - `cd secrets`
 
-Since we use sops to encrypt and decrypt the secret files, we need to copy the *.sops.yaml* file that was created terraform-deploy/aws-codecommit-secret:
+Since we use sops to encrypt and decrypt the secret files, we need to copy the *.sops.yaml* file that was created *terraform-deploy/aws-codecommit-secret/kms-codecommit*:
 
-- `cp terraform-deploy/aws-codecommit-secret/.sops.yaml .`
+- `cp terraform-deploy/aws-codecommit-secret/kms-codecommit/.sops.yaml .`
 - `git add .sops.yaml`
 
 Now we need to create a *staging.yaml* file.  During JupyterHub deployment, helm, via hubploy, will merge this file with the the *common.yaml* file created earlier in the deployment configuration to generate a master configuration file for JupyterHub.  Download the example file and fill in the redacted sections (pay attention to indentation - only use spaces):
