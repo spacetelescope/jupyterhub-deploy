@@ -7,9 +7,13 @@ jupyterhub:
         https:
             manual:
                 key: |
+                    -----BEGIN RSA PRIVATE KEY-----
                     [REDACTED]
+                    -----END RSA PRIVATE KEY-----
                 cert: |
+                    -----BEGIN CERTIFICATE-----
                     [REDACTED]
+                    -----END CERTIFICATE-----
     auth:
         custom:
             config:
