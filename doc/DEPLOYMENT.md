@@ -196,7 +196,7 @@ Click on "AWS Account", then select the "aws-stctnetwork".  The menu will expand
 
 Click on "Hosted zones", then "science.stsci.edu".  You will see a list of all records under the "science.stsci.edu" zone.  Click on the "Create Record Set" button.  Enter the following information in the pane on the right:
 
-- Name: deployment-name.science.stsci.edu
+- Name: **deployment-name.science.stsci.edu**
 - Type: **A - IPv4 address**
 - Alias: **Yes**
 - Alias Target: **<hub's ingress>**
