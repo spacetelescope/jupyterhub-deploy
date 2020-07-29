@@ -2,7 +2,7 @@
 
 **SSL certificates**
 
-Put in a support ticket to obtain SSL certificates for the desired DNS name. You should be provided with a private key and a public certificate. _Make sure to put this request in early as it make take a while for ITSD to generate and provide them._
+Put in a support ticket to obtain SSL certificates for the desired DNS name. You should be provided with a private key and a public certificate. _Make sure to put this request in early as it may take a while for ITSD to generate and provide them._
 
 **Gather platform requirements**
 
