@@ -172,12 +172,14 @@ Since we use sops to encrypt and decrypt the secret files, we need to copy the *
 - `cp terraform-deploy/aws-codecommit-secret/kms-codecommit/.sops.yaml .`
 - `git add .sops.yaml`
 
-Now we need to create a *staging.yaml* file.  During JupyterHub deployment, helm, via hubploy, will merge this file with the the *common.yaml* file created earlier in the deployment configuration to generate a master configuration file for JupyterHub.  Download the example file and fill in the redacted sections (pay attention to indentation - only use spaces):
+Now we need to create a *staging.yaml* file.  During JupyterHub deployment, helm, via hubploy, will merge this file with the the *common.yaml* file created earlier in the deployment configuration process to generate a master configuration file for JupyterHub.  Download the [example file](https://github.com/cslocum/jupyterhub-deploy/blob/roman/doc/example-staging.yaml) and fill in the redacted sections (pay attention to indentation - only use spaces):
 
 - `wget https://github.com/cslocum/jupyterhub-deploy/blob/roman/doc/example-staging.yaml` (**This URL will changed after merging in the master branch**)
 - `git add staging.yaml`
 - `sops staging.yaml`
 - Fill in the areas that say "[REDACTED]" and change the "client_id" value
+
+Do to a hiccup documented in [JUSI-412](https://jira.stsci.edu/browse/JUSI-412), it is necessary to insert the ARN of the decrypt role, so that sops can decrypt *staging.yaml* during deployment without specifying the role.  Once *staging.yaml* has been created and configured, edit the file (do not use sops) and add the role arn.  You can see an example of the an updated, encrypted file [here](https://github.com/cslocum/jupyterhub-deploy/blob/roman/doc/example-staging-with-inserted-role.yaml).
 
 Finally, commit and push the changes to the repository.
 
