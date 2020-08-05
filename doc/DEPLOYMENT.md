@@ -57,7 +57,7 @@ Installing JupyterHub requires working through a flow of several git repositorie
 
 | Repository | Description |
 |--|--|
-| [terraform-deploy](https://github.com/TheRealZoidberg/terraform-deploy) | Creates an EKS cluster, security roles, ECR registry, secrets, etc. needed to host a JupyterHub platform. |
+| [terraform-deploy](https://github.com/spacetelescope/terraform-deploy) | Creates an EKS cluster, security roles, ECR registry, secrets, etc. needed to host a JupyterHub platform. |
 | [hubploy](https://github.com/yuvipanda/hubploy) | A package that builds JupyterHub images, uploads them to ECR, and deploys JupyterHub to a staging or production environment. Hubploy supports iteration with the JupyterHub system and does not interact with the Kubernetes cluster. |
 | [jupyterhub-deploy](https://github.com/spacetelescope/jupyterhub-deploy.git) | Contains JupyterHub deployment configurations for Docker images and and the EKS cluster.
 
@@ -65,22 +65,34 @@ Installing JupyterHub requires working through a flow of several git repositorie
 
 This section describes how to set up an EKS cluster and resources required by the hubploy program, using Terraform.
 
-Get a copy of the repository with this command: `git clone --recursive https://github.com/TheRealZoidberg/terraform-deploy` (Note: eventually, this will be will be merged back into the parent repository).
+Get a copy of the repository with this command: `git clone --recursive https://github.com/spacetelescope/terraform-deploy` (Note: eventually, this will be will be merged back into the parent repository).
 
 The terraform-deploy repository has two subdirectories with independent Terraform modules: *aws-creds* and *aws*.  *aws-codecommit-secrets* is a separate repository and will become a third subdirectory after being cloned.
 
 ### Setup IAM resources, KMS, and CodeCommit
 
-The **_aws-creds_** subdirectory contains configuration files to set up roles and policies needed to do the overall deployment.  Complete these steps:
+The **_aws-creds_** subdirectory contains configuration files to set up roles and policies needed to do the overall deployment.
 
-- Create a new file called *roles.tfvars* [**is there a template???**]
+**NOTE:** AWS has a hard limit of 10 groups per user.   Since terraform-deploy adds 2 groups,  you can be a member of at
+most 8 groups prior to executing these instructions.
+
+Complete these steps:
+
+- Customize the file called *roles.tfvars* with your cluster name.
 - `terraform init`
-- `terraform apply -var-file=iam.tfvars`
+- `terraform apply -var-file=roles.tfvars`
+- After Terraform constructs group `<deployment-name>-terraform-architects`,  add your user to it using the AWS IAM console.
 - WHAT ELSE???
 
-**_aws-codecommit-secrets_** contains Terraform code to set up a secure way to store secret YAML files for use with hubploy.  There are two subdirectories in this repository: *kms-codecommit* and *terraform_iam*.  Run `git clone https://github.com/yuvipanda/aws-codecommit-secret.git`
 
-First, setup an IAM role with just enough permissions to run the Terraform module in *terraform-iam*:
+**_aws-codecommit-secrets_** contains Terraform code to set up a secure way to store secret YAML files for use with hubploy.
+
+`aws-codecommit-secrets` directory should have been created by the recursive clone of `terraform-deploy` above, but if not,
+run:  `git clone https://github.com/yuvipanda/aws-codecommit-secret.git` from the terraform-deploy root directory.
+
+There are two subdirectories in `aws-codecommit-secrets`: *kms-codecommit* and *terraform_iam*.
+
+First, setup an IAM role using *terraform-iam* with just enough permissions to run the Terraform module in *kms-codecommit*:
 
 - `cd terraform-iam`
 - `cp your-vars.tfvars.example roles.tfvars`
@@ -98,7 +110,7 @@ Next, we will setup KMS and CodeCommit with the *kms-codecommit* Terraform modul
 	- Update "repo_name" to be "deployment-name-secrets"
 	- Update the user ARNs to reflect your user
 - `terraform init`
-- `awsudo arn:aws:iam::162808325377:role/deployment-name-secrets-setup terraform apply -var-file=code.tfvars`
+- `awsudo arn:aws:iam::162808325377:role/<deployment-name->secrets-setup terraform apply -var-file=code.tfvars`
 - A file named **_.sops.yaml_** will have been produced, and this will be used in the new CodeCommit repository for appropriate encryption with [sops](https://github.com/mozilla/sops)
 
 ### Provision EKS cluster
@@ -108,20 +120,68 @@ The **_aws_** subdirectory contains configuration files that create the EKS clus
 It creates the EKS cluster, ECR registry for JupyterHub images, IAM roles and policies for hubploy, the EKS autoscaler, etc.
 
 In the *aws* directory, configure the local deployment environment for the EKS cluster:
-- `awsudo arn:aws:iam::162808325377:role/deployment-name-hubploy-eks aws eks update-kubeconfig --name <deploymentName>`
+- `awsudo arn:aws:iam::162808325377:role/<deployment-name>-hubploy-eks aws eks update-kubeconfig --name <deploymentName>`
 
 Then run Terraform:
 - `terraform init`
 - Copy _your-cluster.tfvars.template_ to _deploymentName.tfvars_ and edit the contents
-- `terraform apply -var-file=deploymentName.tfvars` (this will take a while...)
+- `terraform apply -var-file=deploymentName.tfvars` (this will take a while.)
+
+Add yourself to the deployers group:
+- Check for your user's membership in group `<deployment-name>`-hubploy-deployers.
+- Use the IAM console to add it to your user as necessary.
+
+### Add Trust Relationships
+
+Set up the trust relationships for roles `<deployment-name>-hubploy-eks` and `<deployment-name>-secrets-decrypt`
+using the IAM console:
+
+- Open the IAM console for role `<deployment-name>-hubploy-eks`
+- Click on the `Trust relationships` tab.
+- Click `Edit trust relationship`.
+- Replace:
+
+```
+      "Principal": {
+        "AWS": "arn:aws:iam::162808325377:root"
+      },
+```
+
+with:
+
+```
+      "Principal": {
+        "AWS": [
+          "arn:aws:iam::162808325377:user/<username>",
+          "arn:aws:iam::162808325377:root",
+          "arn:aws:iam::162808325377:role/<deployment-name>-secrets-decrypt"
+        ]
+      },
+```
+
+Next edit the trust relationships for `<deployment-name>-secrets-decrypt`:
+
+- Open the IAM console for role `<deployment-name>-hubploy-eks`
+- Click on the `Trust relationships` tab.
+- Click `Edit trust relationship`.
+- Set the `Principal` block to:
+
+```
+      "Principal": {
+        "AWS": [
+          "arn:aws:iam::162808325377:role/<deployment-name>-hubploy-eks",
+          "arn:aws:iam::162808325377:user/<username>",
+          "arn:aws:iam::162808325377:role/kops_svc"
+        ]
+      },
+```
 
 # Hubploy
 
 To clone and install hubploy:
 
 - `git clone https://github.com/yuvipanda/hubploy`
--  `cd hubploy`
-- `git checkout support_roles` [**This step will go away once the branch is merged**]
+- `cd hubploy`
 - `pip install .`
 
 You may remove the hubploy repository clone after installation.
@@ -171,6 +231,17 @@ Since we use sops to encrypt and decrypt the secret files, we need to copy the *
 
 - `cp terraform-deploy/aws-codecommit-secret/kms-codecommit/.sops.yaml .`
 - `git add .sops.yaml`
+
+Examining `.sops.yaml`,  it should look something liket this:
+
+```
+creation_rules:
+  - path_regex: .*
+    kms: "arn:aws:kms:us-east-1:162808325377:key/<your kms key uuid>"
+    role: "arn:aws:iam::162808325377:role/<deployment-name>-secrets-decrypt"
+```
+
+If it does not, ask around and/or update it accordingly.
 
 Now we need to create a *staging.yaml* file.  During JupyterHub deployment, helm, via hubploy, will merge this file with the the *common.yaml* file created earlier in the deployment configuration process to generate a master configuration file for JupyterHub.  Download the [example file](https://github.com/cslocum/jupyterhub-deploy/blob/roman/doc/example-staging.yaml) and fill in the redacted sections (pay attention to indentation - only use spaces):
 
