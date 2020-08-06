@@ -199,15 +199,13 @@ First, identify an existing deployment in the *deployments* directory that most 
 
 6. If needed, log into AWS ECR using this or something like it:
 
-```
-`aws ecr get-login | sed -e 's/-e none//g'`
-```
+- `aws ecr get-login | sed -e 's/-e none//g'`
+
 
 7. Then issue this command to build the Docker image and push it to ECR:
 
-```
-hubploy build <deployment-name> --push --check-registry`
-```
+- `hubploy build <deployment-name> --push --check-registry`
+
 
 ## Configure JupyterHub and Cluster Secrets
 
