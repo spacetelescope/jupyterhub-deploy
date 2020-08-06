@@ -235,7 +235,7 @@ Since we use sops to encrypt and decrypt the secret files, we need to copy the *
 - `cp terraform-deploy/aws-codecommit-secret/kms-codecommit/.sops.yaml .`
 - `git add .sops.yaml`
 
-Examining `.sops.yaml`,  it should look something liket this:
+Examining `.sops.yaml`,  it should look something like this:
 
 ```
 creation_rules:
