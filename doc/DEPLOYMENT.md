@@ -187,15 +187,27 @@ To get started, clone the repository: `git clone https://github.com/spacetelesco
 
 First, identify an existing deployment in the *deployments* directory that most closely matches your desired configuration, and do a recursive copy (the copied directory name should be the new deployment name).  Modifications to the Docker image, cluster configuration, and *hubploy.yaml* file will need to be made.
 
-An example of *hubploy.yaml* can be found [here](https://github.com/cslocum/jupyterhub-deploy/blob/roman/doc/example-hubploy.yaml).  Modify image_name, role_arn, project (the AWS account), and cluster.
+1. An example of *hubploy.yaml* can be found [here](https://github.com/cslocum/jupyterhub-deploy/blob/roman/doc/example-hubploy.yaml).  Modify image_name, role_arn, project (the AWS account), and cluster.
 
-Go through the *image* directory, change file names and edit files that contain deployment-specific references.  Also make any changes to the Docker image files as needed (for instance, required software).
+2. Go through the *image* directory, change file names and edit files that contain deployment-specific references.  Also make any changes to the Docker image files as needed (for instance, required software).
 
-A file named *common.yaml* file needs to be created in the *config* directory.  An example can be found [here](https://github.com/cslocum/jupyterhub-deploy/blob/roman/doc/example-common.yaml).  Place a copy of this example file in *config*, and edit the contents as appropriate.
+3. A file named *common.yaml* file needs to be created in the *config* directory.  An example can be found [here](https://github.com/cslocum/jupyterhub-deploy/blob/roman/doc/example-common.yaml).  Place a copy of this example file in *config*, and edit the contents as appropriate.
 
-Add, commit, and push all changes.
+4. Add, commit, and push all changes.
 
-Once the configuration changes have been made, change directories to the top level of the jupyterhub-deploy repository.  Then issue this command to build the Docker image and push it to ECR: `hubploy build <deployment-name> --push --check-registry`.
+5. Once the configuration changes have been made, change directories to the top level of the jupyterhub-deploy repository.
+
+6. If needed, log into AWS ECR using this or something like it:
+
+```
+`aws ecr get-login | sed -e 's/-e none//g'`
+```
+
+7. Then issue this command to build the Docker image and push it to ECR:
+
+```
+hubploy build <deployment-name> --push --check-registry`
+```
 
 ## Configure JupyterHub and Cluster Secrets
 
