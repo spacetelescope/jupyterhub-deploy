@@ -133,21 +133,12 @@ Add yourself to the deployers group:
 
 ### Add Trust Relationships
 
-Set up the trust relationships for roles `<deployment-name>-hubploy-eks` and `<deployment-name>-secrets-decrypt`
-using the IAM console:
+Set up the trust relationships for role `<deployment-name>-hubploy-eks` using the IAM console:
 
-- Open the IAM console for role `<deployment-name>-hubploy-eks`
+- Open the AWS IAM console for role `<deployment-name>-hubploy-eks`
 - Click on the `Trust relationships` tab.
 - Click `Edit trust relationship`.
-- Replace:
-
-```
-      "Principal": {
-        "AWS": "arn:aws:iam::162808325377:root"
-      },
-```
-
-with:
+- Replace the `Principal` block with:
 
 ```
       "Principal": {
@@ -161,10 +152,10 @@ with:
 
 Next edit the trust relationships for `<deployment-name>-secrets-decrypt`:
 
-- Open the IAM console for role `<deployment-name>-hubploy-eks`
+- Open the AWS IAM console for role `<deployment-name>-secrets-decrypt`
 - Click on the `Trust relationships` tab.
 - Click `Edit trust relationship`.
-- Set the `Principal` block to:
+- Replace the `Principal` block with:
 
 ```
       "Principal": {
@@ -192,7 +183,7 @@ In this section, we will define a Docker image and EKS cluster configuration, as
 
 To get started, clone the repository: `git clone https://github.com/spacetelescope/jupyterhub-deploy.git`
 
-### Build a Docker image with hubploy
+## Build a Docker Image with Hubploy
 
 First, identify an existing deployment in the *deployments* directory that most closely matches your desired configuration, and do a recursive copy (the copied directory name should be the new deployment name).  Modifications to the Docker image, cluster configuration, and *hubploy.yaml* file will need to be made.
 
@@ -206,7 +197,7 @@ Add, commit, and push all changes.
 
 Once the configuration changes have been made, change directories to the top level of the jupyterhub-deploy repository.  Then issue this command to build the Docker image and push it to ECR: `hubploy build <deployment-name> --push --check-registry`.
 
-### Configure JupyterHub and cluster secrets
+## Configure JupyterHub and Cluster Secrets
 
 There are three categories of secrets involved in the cluster configuration:
 
@@ -254,7 +245,7 @@ Do to a hiccup documented in [JUSI-412](https://jira.stsci.edu/browse/JUSI-412),
 
 Finally, commit and push the changes to the repository.
 
-### Deploying JupyterHub to the EKS cluster with hubploy
+## Deploying JupyterHub to the EKS Cluster with Hubploy
 
 - `hubploy deploy <deployment-name> hub staging`
 - `kubectl -n <deployment-name>-staging get svc proxy-public`
