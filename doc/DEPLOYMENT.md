@@ -1,3 +1,4 @@
+
 # Actions to take before deployment
 
 **SSL certificates**
@@ -10,9 +11,11 @@ Get list of desired software/files/notebooks for Docker image. This make take a 
 
 **Register client with MAST**
 
-JupyterHub will need and client secret and ID to integrate with MAST authentication.  Follow these [instructions](https://innerspace.stsci.edu/display/DMD/Register+a+new+OAuth+application) to generate and register the secret and ID.  This process includes making a pull request.  Contact someone on the MAST team to test the new PR and update the production MAST service.
+JupyterHub will need a client secret and ID to integrate with the MAST authentication service.  You will need to contact someone on the MAST team to request these credentials - they will generate and deploy them to the OAuth service.
 
 Hold on to the secret and ID, they will be needed later in the deployment process.
+
+Notes: 1) there is an ongoing conversation about which authentication method is most appropriate for JupyterHub, and 2) there is currently no formalized procedure for requesting these credentials.
 
 # CI Node Setup
 
@@ -65,7 +68,7 @@ Installing JupyterHub requires working through a flow of several git repositorie
 
 This section describes how to set up an EKS cluster and resources required by the hubploy program, using Terraform.
 
-Get a copy of the repository with this command: `git clone --recursive https://github.com/TheRealZoidberg/terraform-deploy` (Note: eventually, this will be will be merged back into the parent repository).
+Get a copy of the repository with this command: `git clone --recursive https://github.com/spacetelescope/terraform-deploy` (Note: eventually, this will be will be merged back into the parent repository).
 
 The terraform-deploy repository has two subdirectories with independent Terraform modules: *aws-creds* and *aws*.  *aws-codecommit-secrets* is a separate repository and will become a third subdirectory after being cloned.
 
@@ -108,12 +111,12 @@ The **_aws_** subdirectory contains configuration files that create the EKS clus
 It creates the EKS cluster, ECR registry for JupyterHub images, IAM roles and policies for hubploy, the EKS autoscaler, etc.
 
 In the *aws* directory, configure the local deployment environment for the EKS cluster:
-- `awsudo arn:aws:iam::162808325377:role/deployment-name-hubploy-eks aws eks update-kubeconfig --name <deploymentName>`
+- `awsudo arn:aws:iam::162808325377:role/deployment-name-hubploy-eks aws eks update-kubeconfig --name <deployment-name>`
 
 Then run Terraform:
 - `terraform init`
-- Copy _your-cluster.tfvars.template_ to _deploymentName.tfvars_ and edit the contents
-- `terraform apply -var-file=deploymentName.tfvars` (this will take a while...)
+- Copy _your-cluster.tfvars.template_ to _deployment-name.tfvars_ and edit the contents
+- `terraform apply -var-file=deployment-name.tfvars` (this will take a while...)
 
 # Hubploy
 
@@ -121,7 +124,6 @@ To clone and install hubploy:
 
 - `git clone https://github.com/yuvipanda/hubploy`
 -  `cd hubploy`
-- `git checkout support_roles` [**This step will go away once the branch is merged**]
 - `pip install .`
 
 You may remove the hubploy repository clone after installation.
@@ -136,11 +138,11 @@ To get started, clone the repository: `git clone https://github.com/spacetelesco
 
 First, identify an existing deployment in the *deployments* directory that most closely matches your desired configuration, and do a recursive copy (the copied directory name should be the new deployment name).  Modifications to the Docker image, cluster configuration, and *hubploy.yaml* file will need to be made.
 
-An example of *hubploy.yaml* can be found [here](https://github.com/cslocum/jupyterhub-deploy/blob/roman/doc/example-hubploy.yaml).  Modify image_name, role_arn, project (the AWS account), and cluster.
+An example of *hubploy.yaml* can be found [here](https://github.com/cslocum/jupyterhub-deploy/blob/staging/doc/example-hubploy.yaml).  Modify image_name, role_arn, project (the AWS account), and cluster.
 
 Go through the *image* directory, change file names and edit files that contain deployment-specific references.  Also make any changes to the Docker image files as needed (for instance, required software).
 
-A file named *common.yaml* file needs to be created in the *config* directory.  An example can be found [here](https://github.com/cslocum/jupyterhub-deploy/blob/roman/doc/example-common.yaml).  Place a copy of this example file in *config*, and edit the contents as appropriate.
+A file named *common.yaml* file needs to be created in the *config* directory.  An example can be found [here](https://github.com/cslocum/jupyterhub-deploy/blob/staging/doc/example-common.yaml).  Place a copy of this example file in *config*, and edit the contents as appropriate.
 
 Add, commit, and push all changes.
 
@@ -152,7 +154,7 @@ There are three categories of secrets involved in the cluster configuration:
 
 -   **JupyterHub proxyToken** - the hub authenticates its requests to the proxy using a secret token that the both services agree upon
 	- Generate the token with this command: `openssl rand -hex 32`
--   MAST authentication **client ID** and **client secret** - these were generated earlier and will be used during the OAuth authentication process
+-   MAST authentication **client ID** and **client secret** - these were obtained earlier and will be used during the OAuth authentication process
 -   **SSL private key and certificate** - these were obtained earlier
 
 In the top level of the *jupyterhub-deployment* repository, create a directory structure that will contain a clone of the AWS CodeCommit repository provisioned by Terraform earlier.
@@ -172,14 +174,14 @@ Since we use sops to encrypt and decrypt the secret files, we need to copy the *
 - `cp terraform-deploy/aws-codecommit-secret/kms-codecommit/.sops.yaml .`
 - `git add .sops.yaml`
 
-Now we need to create a *staging.yaml* file.  During JupyterHub deployment, helm, via hubploy, will merge this file with the the *common.yaml* file created earlier in the deployment configuration process to generate a master configuration file for JupyterHub.  Download the [example file](https://github.com/cslocum/jupyterhub-deploy/blob/roman/doc/example-staging.yaml) and fill in the redacted sections (pay attention to indentation - only use spaces):
+Now we need to create a *staging.yaml* file.  During JupyterHub deployment, helm, via hubploy, will merge this file with the the *common.yaml* file created earlier in the deployment configuration process to generate a master configuration file for JupyterHub.
 
-- `wget https://github.com/cslocum/jupyterhub-deploy/blob/roman/doc/example-staging.yaml` (**This URL will changed after merging in the master branch**)
-- `git add staging.yaml`
-- `sops staging.yaml`
+- `awsudo arn:aws:iam::162808325377:role/<deployment-name>-secrets-encrypt sops staging.yaml` - this will open up your editor...
+- Populate the file with the contents of https://github.com/cslocum/jupyterhub-deploy/blob/staging/doc/example-staging.yaml
 - Fill in the areas that say "[REDACTED]" and change the "client_id" value
+- `git add staging.yaml`
 
-Do to a hiccup documented in [JUSI-412](https://jira.stsci.edu/browse/JUSI-412), it is necessary to insert the ARN of the decrypt role, so that sops can decrypt *staging.yaml* during deployment without specifying the role.  Once *staging.yaml* has been created and configured, edit the file (do not use sops) and add the role ARN.  You can see an example of the bottom of the an updated, encrypted file [here](https://github.com/cslocum/jupyterhub-deploy/blob/roman/doc/example-staging-with-inserted-role.yaml).
+Do to a hiccup documented in [JUSI-412](https://jira.stsci.edu/browse/JUSI-412), it is necessary to insert the ARN of the decrypt role, so that sops can decrypt *staging.yaml* during deployment without specifying the role.  Once *staging.yaml* has been created and configured, edit the file (do not use sops) and add the role ARN.  You can see an example of the bottom of the an updated, encrypted file [here](https://github.com/cslocum/jupyterhub-deploy/blob/staging/doc/example-staging-with-inserted-role.yaml).
 
 Finally, commit and push the changes to the repository.
 
