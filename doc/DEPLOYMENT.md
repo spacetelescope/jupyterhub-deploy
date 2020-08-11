@@ -5,6 +5,8 @@
 
 Put in a support ticket to obtain SSL certificates for the desired DNS name. You should be provided with a private key and a public certificate. _Make sure to put this request in early as it may take a while for ITSD to generate and provide them._
 
+Note: if a DNS entry associated with the certificate is not made within a week, the certificate will be revoked.
+
 **Gather platform requirements**
 
 Get list of desired software/files/notebooks for Docker image. This make take a while because it involves iterating with scientists and stakeholders.
@@ -76,7 +78,7 @@ The terraform-deploy repository has two subdirectories with independent Terrafor
 
 The **_aws-creds_** subdirectory contains configuration files to set up roles and policies needed to do the overall deployment.
 
-**NOTE:** AWS has a hard limit of 10 groups per user. Since terraform-deploy adds 2 groups, you can be a member of at most 8 groups before proceeding.
+**Note:** AWS has a hard limit of 10 groups per user. Since terraform-deploy adds 2 groups, you can be a member of at most 8 groups before proceeding.
 
 Complete these steps:
 
