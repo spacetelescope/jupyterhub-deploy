@@ -174,6 +174,8 @@ Since we use sops to encrypt and decrypt the secret files, we need to copy the *
 - `cp terraform-deploy/aws-codecommit-secret/kms-codecommit/.sops.yaml .`
 - `git add .sops.yaml`
 
+**BUG**: the role value in the generated *.sops.yaml* is decrypt, but it should be encrypt
+
 Now we need to create a *staging.yaml* file.  During JupyterHub deployment, helm, via hubploy, will merge this file with the the *common.yaml* file created earlier in the deployment configuration process to generate a master configuration file for JupyterHub.
 
 - `awsudo arn:aws:iam::162808325377:role/<deployment-name>-secrets-encrypt sops staging.yaml` - this will open up your editor...
