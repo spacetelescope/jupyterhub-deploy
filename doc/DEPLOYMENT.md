@@ -60,7 +60,7 @@ Installing JupyterHub requires working through a flow of several git repositorie
 
 | Repository | Description |
 |--|--|
-| [terraform-deploy](https://github.com/TheRealZoidberg/terraform-deploy) | Creates an EKS cluster, security roles, ECR registry, secrets, etc. needed to host a JupyterHub platform. |
+| [terraform-deploy](https://github.com/spacetelescope/terraform-deploy) | Creates an EKS cluster, security roles, ECR registry, secrets, etc. needed to host a JupyterHub platform. |
 | [hubploy](https://github.com/yuvipanda/hubploy) | A package that builds JupyterHub images, uploads them to ECR, and deploys JupyterHub to a staging or production environment. Hubploy supports iteration with the JupyterHub system and does not interact with the Kubernetes cluster. |
 | [jupyterhub-deploy](https://github.com/spacetelescope/jupyterhub-deploy.git) | Contains JupyterHub deployment configurations for Docker images and and the EKS cluster.
 
@@ -74,14 +74,19 @@ The terraform-deploy repository has two subdirectories with independent Terrafor
 
 ### Setup IAM resources, KMS, and CodeCommit
 
-The **_aws-creds_** subdirectory contains configuration files to set up roles and policies needed to do the overall deployment.  Complete these steps:
+The **_aws-creds_** subdirectory contains configuration files to set up roles and policies needed to do the overall deployment.
 
-- Create a new file called *roles.tfvars* [**is there a template???**]
+**NOTE:** AWS has a hard limit of 10 groups per user. Since terraform-deploy adds 2 groups, you can be a member of at most 8 groups before proceeding.
+
+Complete these steps:
+
+- Customize the file called *roles.tfvars* with your deployment name
 - `terraform init`
-- `terraform apply -var-file=iam.tfvars`
-- WHAT ELSE???
+- `terraform apply -var-file=roles.tfvars`
 
-**_aws-codecommit-secrets_** contains Terraform code to set up a secure way to store secret YAML files for use with hubploy.  There are two subdirectories in this repository: *kms-codecommit* and *terraform_iam*.  Run `git clone https://github.com/yuvipanda/aws-codecommit-secret.git`
+**_aws-codecommit-secrets_** contains Terraform code to setup a secure way to store secret YAML files for use with hubploy.  There are two subdirectories in this repository: *kms-codecommit* and *terraform_iam*.
+
+Run `git clone https://github.com/yuvipanda/aws-codecommit-secret.git`.
 
 First, setup an IAM role with just enough permissions to run the Terraform module in *terraform-iam*:
 
