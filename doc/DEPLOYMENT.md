@@ -85,14 +85,14 @@ Complete these steps:
 - `terraform init`
 - `terraform apply -var-file=roles.tfvars`
 
-**_aws-codecommit-secrets_** contains Terraform code to setup a secure way to store secret YAML files for use with hubploy.  There are two subdirectories in this repository: *kms-codecommit* and *terraform_iam*.
+**_aws-codecommit-secrets_** contains Terraform modules to setup a secure way to store secret YAML files for use with hubploy.  There are two subdirectories in this repository: *kms-codecommit* and *terraform_iam*.
 
 Clone the repository:
 
 - `cd ..`
 - `git clone https://github.com/yuvipanda/aws-codecommit-secret.git`.
 
-Now, setup an IAM role with just enough permissions to run the Terraform module in *terraform-iam*:
+Now, setup an IAM role using the *terraform-iam* module with just enough permissions to run the *kms-codecommit* module:
 
 - `cd terraform-iam`
 - `cp your-vars.tfvars.example roles.tfvars`
@@ -123,9 +123,15 @@ In the *aws* directory, configure the local deployment environment for the EKS c
 - `awsudo arn:aws:iam::162808325377:role/<deployment-name>-hubploy-eks aws eks update-kubeconfig --name <deployment-name>`
 
 Then run Terraform:
+
 - `terraform init`
 - Copy _your-cluster.tfvars.template_ to _deployment-name.tfvars_ and edit the contents
 - `terraform apply -var-file=<deployment-name>.tfvars` (this will take a while...)
+
+Add yourself to the deployers group:
+
+- In the AWS console, navigate to the IAM service.  Check for your user's membership in group *deployment-name-hubploy-deployers*
+- Add your user to the group if necessary
 
 # Hubploy
 
@@ -147,15 +153,15 @@ To get started, clone the repository: `git clone https://github.com/spacetelesco
 
 First, identify an existing deployment in the *deployments* directory that most closely matches your desired configuration, and do a recursive copy (the copied directory name should be the new deployment name).  Modifications to the Docker image, cluster configuration, and *hubploy.yaml* file will need to be made.
 
-An example of *hubploy.yaml* can be found [here](https://github.com/cslocum/jupyterhub-deploy/blob/staging/doc/example-hubploy.yaml).  Modify image_name, role_arn, project (the AWS account), and cluster.
+1) An example of *hubploy.yaml* can be found [here](https://github.com/cslocum/jupyterhub-deploy/blob/staging/doc/example-hubploy.yaml).  Modify image_name, role_arn, project (the AWS account), and cluster.
 
-Go through the *image* directory, change file names and edit files that contain deployment-specific references.  Also make any changes to the Docker image files as needed (for instance, required software).
+2) Go through the *image* directory, change file names and edit files that contain deployment-specific references.  Also make any changes to the Docker image files as needed (for instance, required software).
 
-A file named *common.yaml* file needs to be created in the *config* directory.  An example can be found [here](https://github.com/cslocum/jupyterhub-deploy/blob/staging/doc/example-common.yaml).  Place a copy of this example file in *config*, and edit the contents as appropriate.
+3) A file named *common.yaml* file needs to be created in the *config* directory.  An example can be found [here](https://github.com/cslocum/jupyterhub-deploy/blob/staging/doc/example-common.yaml).  Place a copy of this example file in *config*, and edit the contents as appropriate.
 
-Add, commit, and push all changes.
+4) Add, commit, and push all changes.
 
-Once the configuration changes have been made, change directories to the top level of the jupyterhub-deploy repository.  Then issue this command to build the Docker image and push it to ECR: `hubploy build <deployment-name> --push --check-registry`.
+5) From the top level of the jupyterhub-deploy repository, issue this command to build the Docker image and push it to ECR: `hubploy build <deployment-name> --push --check-registry`.
 
 ### Configure JupyterHub and cluster secrets
 
@@ -166,7 +172,7 @@ There are three categories of secrets involved in the cluster configuration:
 -   MAST authentication **client ID** and **client secret** - these were obtained earlier and will be used during the OAuth authentication process
 -   **SSL private key and certificate** - these were obtained earlier
 
-In the top level of the *jupyterhub-deployment* repository, create a directory structure that will contain a clone of the AWS CodeCommit repository provisioned by Terraform earlier.
+In the top level of the *jupyterhub-deployment* repository, create a directory structure that will contain a clone of the AWS CodeCommit repository provisioned by Terraform earlier:
 
 - `mkdir -p secrets/deployments/<deployment-name>`
 - `cd secrets/deployments/<deployment-name>`
@@ -178,21 +184,23 @@ Next, clone the repository:
 - `git clone https://git-codecommit.us-east-1.amazonaws.com/v1/repos/<deployment-name>-secrets secrets`
 - `cd secrets`
 
-Since we use sops to encrypt and decrypt the secret files, we need to copy the *.sops.yaml* file that was created *terraform-deploy/aws-codecommit-secret/kms-codecommit*:
+Since we use sops to encrypt and decrypt the secret files, we need to copy the *.sops.yaml* file that was created in *terraform-deploy/aws-codecommit-secret/kms-codecommit*:
 
 - `cp terraform-deploy/aws-codecommit-secret/kms-codecommit/.sops.yaml .`
 - `git add .sops.yaml`
 
-**BUG**: the role value in the generated *.sops.yaml* is decrypt, but it should be encrypt
+**BUG**:  it is necessary to manually insert the ARN of the encrypt role into *.sops.yaml* (the encrypt role is able to encrypt and decrypt).  You can see an example of an updated file [here](https://github.com/cslocum/jupyterhub-deploy/blob/staging/doc/example-sops.yaml).
 
-Now we need to create a *staging.yaml* file.  During JupyterHub deployment, helm, via hubploy, will merge this file with the the *common.yaml* file created earlier in the deployment configuration process to generate a master configuration file for JupyterHub.
+**SECURITY ISSUE**: having the encrypt role in *.sops.yaml* will give hubploy/helm more than the minimally required permissions since deployment only needs to decrypt.
+
+Now we need to create a *staging.yaml* file.  During JupyterHub deployment, helm, via hubploy, will merge this file with the the *common.yaml* file created earlier to generate a master configuration file for JupyterHub.
 
 - `awsudo arn:aws:iam::162808325377:role/<deployment-name>-secrets-encrypt sops staging.yaml` - this will open up your editor...
 - Populate the file with the contents of https://github.com/cslocum/jupyterhub-deploy/blob/staging/doc/example-staging.yaml
 - Fill in the areas that say "[REDACTED]" and change the "client_id" value
 - `git add staging.yaml`
 
-Do to a hiccup documented in [JUSI-412](https://jira.stsci.edu/browse/JUSI-412), it is necessary to insert the ARN of the decrypt role, so that sops can decrypt *staging.yaml* during deployment without specifying the role.  Once *staging.yaml* has been created and configured, edit the file (do not use sops) and add the role ARN.  You can see an example of the bottom of the an updated, encrypted file [here](https://github.com/cslocum/jupyterhub-deploy/blob/staging/doc/example-staging-with-inserted-role.yaml).
+Due to a hiccup documented in [JUSI-412](https://jira.stsci.edu/browse/JUSI-412) it is necessary to manually insert the ARN of the decrypt role into *staging.yaml* so that sops can decrypt the file during deployment without specifying the role.  After *staging.yaml* has been created and configured, edit the file (**do not use sops**) and add the role ARN.  You can see an example of the bottom of the an updated, encrypted file [here](https://github.com/cslocum/jupyterhub-deploy/blob/staging/doc/example-staging-with-inserted-role.yaml).
 
 Finally, commit and push the changes to the repository.
 
@@ -203,11 +211,15 @@ Finally, commit and push the changes to the repository.
 
 The second command will output the hub's ingress, indicated by "EXTERNAL-IP".
 
-Now we need to make an entry in AWS **Route53**.  To start, navigate to https://st.awsapps.com/start in your browser.  Use your AD credentials to login.  You will be prompted for a DUO code.
+##  Set up DNS with Route-53
 
-Click on "AWS Account", then select the "aws-stctnetwork".  The menu will expand and show a link for "Management console" for "Route53-User-science.stsci.edu".  Click on that link.  Go to the "Route 53" service.
+Now we need to make an entry in AWS **Route53**.  To start, navigate to https://st.awsapps.com/start in your browser.  Use your AD credentials to login.  You will be prompted for a DUO code.  Either enter "push" or a code.
 
-Click on "Hosted zones", then "science.stsci.edu".  You will see a list of all records under the "science.stsci.edu" zone.  Click on the "Create Record Set" button.  Enter the following information in the pane on the right:
+Click on "AWS Account", then select the "aws-stctnetwork".  The menu will expand and show a link for "Management console" for "Route53-User-science.stsci.edu".  Click on that link and go to the "Route 53" service.
+
+Click on "Hosted zones", then "science.stsci.edu".  You will see a list of all records under the "science.stsci.edu" zone.
+
+Click on the "Create Record Set" button.  Enter the following information in the pane on the right:
 
 - Name: **deployment-name.science.stsci.edu**
 - Type: **A - IPv4 address**
