@@ -262,11 +262,15 @@ Finally, commit and push the changes to the repository.
 
 The second command will output the hub's ingress, indicated by "EXTERNAL-IP".
 
-Now we need to make an entry in AWS **Route53**.  To start, navigate to https://st.awsapps.com/start in your browser.  Use your AD credentials to login.  You will be prompted for a DUO code.
+## Set up DNS with Route-53
+
+Now we need to make an entry in AWS **Route53**.  To start, navigate to https://st.awsapps.com/start in your browser.  Use your AD credentials to login.  You will be prompted for a DUO code.  Either enter "push" or a code.
 
 Click on "AWS Account", then select the "aws-stctnetwork".  The menu will expand and show a link for "Management console" for "Route53-User-science.stsci.edu".  Click on that link.  Go to the "Route 53" service.
 
-Click on "Hosted zones", then "science.stsci.edu".  You will see a list of all records under the "science.stsci.edu" zone.  Click on the "Create Record Set" button.  Enter the following information in the pane on the right:
+Click on "Hosted zones", then "science.stsci.edu".  You will see a list of all records under the "science.stsci.edu" zone.
+
+Click on the "Create Record Set" button.  Enter the following information in the pane on the right:
 
 - Name: **deployment-name.science.stsci.edu**
 - Type: **A - IPv4 address**
