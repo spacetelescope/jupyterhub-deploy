@@ -80,15 +80,19 @@ The **_aws-creds_** subdirectory contains configuration files to set up roles an
 
 Complete these steps:
 
+- `cd aws-creds`
 - Customize the file called *roles.tfvars* with your deployment name
 - `terraform init`
 - `terraform apply -var-file=roles.tfvars`
 
 **_aws-codecommit-secrets_** contains Terraform code to setup a secure way to store secret YAML files for use with hubploy.  There are two subdirectories in this repository: *kms-codecommit* and *terraform_iam*.
 
-Run `git clone https://github.com/yuvipanda/aws-codecommit-secret.git`.
+Clone the repository:
 
-First, setup an IAM role with just enough permissions to run the Terraform module in *terraform-iam*:
+- `cd ..`
+- `git clone https://github.com/yuvipanda/aws-codecommit-secret.git`.
+
+Now, setup an IAM role with just enough permissions to run the Terraform module in *terraform-iam*:
 
 - `cd terraform-iam`
 - `cp your-vars.tfvars.example roles.tfvars`
@@ -96,7 +100,7 @@ First, setup an IAM role with just enough permissions to run the Terraform modul
 	- Update "repo_name" to be "deployment-name-secrets"
 	- Update the user ARN to reflect your user
 - `terraform init`
-- `awsudo arn:aws:iam::162808325377:role/deployment-name-secrets-setup terraform apply -var-file=roles.tfvars`
+- `awsudo arn:aws:iam::162808325377:role/<deployment-name>-secrets-setup terraform apply -var-file=roles.tfvars`
 
 Next, we will setup KMS and CodeCommit with the *kms-codecommit* Terraform module:
 
@@ -106,7 +110,7 @@ Next, we will setup KMS and CodeCommit with the *kms-codecommit* Terraform modul
 	- Update "repo_name" to be "deployment-name-secrets"
 	- Update the user ARNs to reflect your user
 - `terraform init`
-- `awsudo arn:aws:iam::162808325377:role/deployment-name-secrets-setup terraform apply -var-file=code.tfvars`
+- `awsudo arn:aws:iam::162808325377:role/<deployment-name>-secrets-setup terraform apply -var-file=code.tfvars`
 - A file named **_.sops.yaml_** will have been produced, and this will be used in the new CodeCommit repository for appropriate encryption with [sops](https://github.com/mozilla/sops)
 
 ### Provision EKS cluster
@@ -116,12 +120,12 @@ The **_aws_** subdirectory contains configuration files that create the EKS clus
 It creates the EKS cluster, ECR registry for JupyterHub images, IAM roles and policies for hubploy, the EKS autoscaler, etc.
 
 In the *aws* directory, configure the local deployment environment for the EKS cluster:
-- `awsudo arn:aws:iam::162808325377:role/deployment-name-hubploy-eks aws eks update-kubeconfig --name <deployment-name>`
+- `awsudo arn:aws:iam::162808325377:role/<deployment-name>-hubploy-eks aws eks update-kubeconfig --name <deployment-name>`
 
 Then run Terraform:
 - `terraform init`
 - Copy _your-cluster.tfvars.template_ to _deployment-name.tfvars_ and edit the contents
-- `terraform apply -var-file=deployment-name.tfvars` (this will take a while...)
+- `terraform apply -var-file=<deployment-name>.tfvars` (this will take a while...)
 
 # Hubploy
 
@@ -164,14 +168,14 @@ There are three categories of secrets involved in the cluster configuration:
 
 In the top level of the *jupyterhub-deployment* repository, create a directory structure that will contain a clone of the AWS CodeCommit repository provisioned by Terraform earlier.
 
-- `mkdir -p secrets/deployments/deployment-name`
-- `cd secrets/deployments/deployment-name`
+- `mkdir -p secrets/deployments/<deployment-name>`
+- `cd secrets/deployments/<deployment-name>`
 
 In the AWS console, find the URL of the secrets repository by navigating to **Services → CodeCommit → Repositories** and click on the repository named *deployment-name-secrets*.  Click on the drop-down button called "Clone URL" and select "Clone HTTPS".  The copied URL should look something like https://git-codecommit.us-east-1.amazonaws.com/v1/repos/deployment-name-secrets.
 
 Next, clone the repository:
 
-- `git clone https://git-codecommit.us-east-1.amazonaws.com/v1/repos/deployment-name-secrets secrets`
+- `git clone https://git-codecommit.us-east-1.amazonaws.com/v1/repos/<deployment-name>-secrets secrets`
 - `cd secrets`
 
 Since we use sops to encrypt and decrypt the secret files, we need to copy the *.sops.yaml* file that was created *terraform-deploy/aws-codecommit-secret/kms-codecommit*:
