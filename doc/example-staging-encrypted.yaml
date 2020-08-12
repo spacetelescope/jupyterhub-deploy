@@ -12,6 +12,8 @@ jupyterhub:
         custom:
             config:
                 client_secret: ENC[AES256_GCM,data:kOmnHgI/C2N2bo0rTcbhudzWrmHwqgyXyc7yTFyqphgqvMsDKwoLIjwU2TCmqV+RSGJ1Jy5O+vAc7phJGP89bw==,iv:wN0vlpgqnHU23y4HLongPi03SEiT8mreHPMBuoj2tu4=,tag:j8NMbCRW7Ki8eYFEonWVig==,type:str]
+                
+# sops adds this section when it encrypts the file                
 sops:
     kms:
     -   arn: arn:aws:kms:us-east-1:162808325377:key/5f56d94b-a658-4c92-a226-58bf07c88890
