@@ -2,6 +2,7 @@ jupyterhub:
     hub:
         extraEnv:
             OAUTH2_TOKEN_URL: https://auth.mast.stsci.edu/oauth/access_token?client_secret=[REDACTED]
+            # OAUTH2_TOKEN_URL: https://auth.masttest.stsci.edu/oauth/access_token?client_secret=[REDACTED]
     proxy:
         secretToken: [REDACTED]
         https:
