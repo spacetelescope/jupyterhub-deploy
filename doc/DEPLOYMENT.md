@@ -1,4 +1,3 @@
-
 # Actions to take before deployment
 
 **SSL certificates**
@@ -9,7 +8,7 @@ Note: if a DNS entry associated with the certificate is not made within a week, 
 
 **Gather platform requirements**
 
-Get list of desired software/files/notebooks for Docker image. This make take a while because it involves iterating with scientists and stakeholders.
+Get list of desired software/files/notebooks for Docker image. This may take a while because it involves iterating with scientists and stakeholders.
 
 **Register client with MAST**
 
@@ -21,7 +20,7 @@ Notes: 1) there is an ongoing conversation about which authentication method is 
 
 # CI Node Setup
 
-This section documents setting up an EC2 instance on AWS from which to execute subsequent sections of these instructions and JupyterHub deployments.
+This section covers the process of setting up an EC2 instance on AWS that will be used for configuration and deployment.
 
 ### Create EC2 and login using ssh
 
@@ -135,6 +134,8 @@ Add yourself to the deployers group:
 - In the AWS console, navigate to the IAM service.  Check for your user's membership in group *deployment-name-hubploy-deployers*
 - Add your user to the group if necessary
 
+Note: we should not have to add ourselves to the deployers group.  This step will go away eventually...
+
 # Hubploy
 
 To clone and install hubploy:
@@ -198,11 +199,11 @@ Since we use sops to encrypt and decrypt the secret files, we need to copy the *
 Now we need to create a *staging.yaml* file.  During JupyterHub deployment, helm, via hubploy, will merge this file with the the *common.yaml* file created earlier to generate a master configuration file for JupyterHub.
 
 - `awsudo arn:aws:iam::162808325377:role/<deployment-name>-secrets-encrypt sops staging.yaml` - this will open up your editor...
-- Populate the file with the contents of https://github.com/cslocum/jupyterhub-deploy/blob/staging/doc/example-staging.yaml
-- Fill in the areas that say "[REDACTED]" and change the "client_id" value
+- Populate the file with the contents of https://github.com/cslocum/jupyterhub-deploy/blob/staging/doc/example-staging-decrypted.yaml
+- Fill in the areas that say "[REDACTED]" with the appropriate values
 - `git add staging.yaml`
 
-Due to a hiccup documented in [JUSI-412](https://jira.stsci.edu/browse/JUSI-412) it is necessary to manually insert the ARN of the decrypt role into *staging.yaml* so that sops can decrypt the file during deployment without specifying the role.  After *staging.yaml* has been created and configured, edit the file (**do not use sops**) and add the role ARN.  You can see an example of the bottom of the an updated, encrypted file [here](https://github.com/cslocum/jupyterhub-deploy/blob/staging/doc/example-staging-with-inserted-role.yaml).
+**BUG**: After *staging.yaml* has been created and configured, sops adds a section to the end of the file that defines the KMS key ARN and other values necessary for decryption.  Due to a hiccup documented in [JUSI-412](https://jira.stsci.edu/browse/JUSI-412), it is necessary to manually insert the ARN of the decrypt role into the file so that sops can decrypt the file during deployment without specifying the role.  Edit the file (**do not use sops**) and add the role ARN.  You can see an example of the bottom of the an updated, encrypted file [here](https://github.com/cslocum/jupyterhub-deploy/blob/staging/doc/example-staging-encrypted.yaml).
 
 Finally, commit and push the changes to the repository.
 
