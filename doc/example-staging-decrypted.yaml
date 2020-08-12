@@ -18,5 +18,5 @@ jupyterhub:
     auth:
         custom:
             config:
-                client_id: 464f261c10bf04a8
+                client_id: [REDACTED]
                 client_secret: [REDACTED]
