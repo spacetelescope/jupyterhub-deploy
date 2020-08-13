@@ -31,8 +31,8 @@ Use the AWS EC2 Console to create a CI node where you'll deploy from.  The EC2 i
 - EBS storage: **150 GB**
 - Security group: **institute-ssh-only**
 - Tags: **Name = *your-username*-ci**
-- From withing the ST network, connect to your CI node using ssh
-	- Find your EC2 instance on the AWS console and copy the public IPv4 address, then issue this command: `ssh ec2-user@<public-IPv4-address-for-you-ci-node>`
+- From withing the ST network, connect to your CI node using ssh.  You can find your EC2 instance in the AWS console and copy the public IPv4 address, then issue this command:
+  - `ssh ec2-user@<public-IPv4-address-for-you-ci-node>`
 
 Note: some of this may change when we move to the sandbox account.
 
@@ -42,7 +42,11 @@ Note: some of this may change when we move to the sandbox account.
 
 You will need security credentials.  Under **IAM → Users→ yourUsername → Security Credentials → Access Keys** in the AWS console, create a new set.  Save these credentials, as you will not be able to access your secret key again.
 
-On your CI node, execute `aws configure`.  You will be prompted for the following information:
+On your CI node, execute:
+
+- `aws configure`
+
+You will be prompted for the following information:
 
 - Access Key ID: **your-key-id**
 - Secret Access Key: **your-access-key**
@@ -69,7 +73,9 @@ Installing JupyterHub requires working through a flow of several git repositorie
 
 This section describes how to set up an EKS cluster and resources required by the hubploy program, using Terraform.
 
-Get a copy of the repository with this command: `git clone --recursive https://github.com/spacetelescope/terraform-deploy` (Note: eventually, this will be will be merged back into the parent repository).
+Get a copy of the repository with this command:
+
+- `git clone --recursive https://github.com/spacetelescope/terraform-deploy`
 
 The terraform-deploy repository has two subdirectories with independent Terraform modules: *aws-creds* and *aws*.  *aws-codecommit-secrets* is a separate repository and will become a third subdirectory after being cloned.
 
@@ -121,6 +127,7 @@ The **_aws_** subdirectory contains configuration files that create the EKS clus
 It creates the EKS cluster, ECR registry for JupyterHub images, IAM roles and policies for hubploy, the EKS autoscaler, etc.
 
 In the *aws* directory, configure the local deployment environment for the EKS cluster:
+
 - `awsudo arn:aws:iam::162808325377:role/<deployment-name>-hubploy-eks aws eks update-kubeconfig --name <deployment-name>`
 
 Then run Terraform:
@@ -150,21 +157,20 @@ You may remove the hubploy repository clone after installation.
 
 In this section, we will define a Docker image and EKS cluster configuration, as well as build and push the image to ECR.  We will then deploy JupyterHub to the cluster.
 
-To get started, clone the repository: `git clone https://github.com/spacetelescope/jupyterhub-deploy.git`
+To get started, clone the repository:
+
+- `git clone https://github.com/spacetelescope/jupyterhub-deploy.git`
 
 ### Build a Docker image with hubploy
 
-First, identify an existing deployment in the *deployments* directory that most closely matches your desired configuration, and do a recursive copy (the copied directory name should be the new deployment name).  Modifications to the Docker image, cluster configuration, and *hubploy.yaml* file will need to be made.
+First, identify an existing deployment in the *deployments* directory that most closely matches your desired configuration, and do a recursive copy (the copied directory name should be the new deployment name).  Modifications to the Docker image, cluster configuration, and *hubploy.yaml* file will need to be made.  Follow these instructions:
 
-1) An example of *hubploy.yaml* can be found [here](https://github.com/cslocum/jupyterhub-deploy/blob/staging/doc/example-hubploy.yaml).  Modify image_name, role_arn, project (the AWS account), and cluster.
-
-2) Go through the *image* directory, change file names and edit files that contain deployment-specific references.  Also make any changes to the Docker image files as needed (for instance, required software).
-
-3) A file named *common.yaml* file needs to be created in the *config* directory.  An example can be found [here](https://github.com/cslocum/jupyterhub-deploy/blob/staging/doc/example-common.yaml).  Place a copy of this example file in *config*, and edit the contents as appropriate.
-
-4) Add, commit, and push all changes.
-
-5) From the top level of the jupyterhub-deploy repository, issue this command to build the Docker image and push it to ECR: `hubploy build <deployment-name> --push --check-registry`.
+- An example of *hubploy.yaml* can be found [here](https://github.com/cslocum/jupyterhub-deploy/blob/staging/doc/example-hubploy.yaml).  Modify image_name, role_arn, project (the AWS account), and cluster.
+- Go through the *image* directory, change file names and edit files that contain deployment-specific references.  Also make any changes to the Docker image files as needed (for instance, required software).
+- A file named *common.yaml* file needs to be created in the *config* directory.  An example can be found [here](https://github.com/cslocum/jupyterhub-deploy/blob/staging/doc/example-common.yaml).  Place a copy of this example file in *config*, and edit the contents as appropriate.
+- Add, commit, and push all changes.
+- From the top level of the jupyterhub-deploy repository, issue this command to build the Docker image and push it to ECR:
+  - `hubploy build <deployment-name> --push --check-registry`
 
 ### Configure JupyterHub and cluster secrets
 
@@ -196,7 +202,7 @@ Since we use sops to encrypt and decrypt the secret files, we need to copy the *
 
 **SECURITY ISSUE**: having the encrypt role in *.sops.yaml* will give hubploy/helm more than the minimally required permissions since deployment only needs to decrypt.
 
-Now we need to create a *staging.yaml* file.  During JupyterHub deployment, helm, via hubploy, will merge this file with the *common.yaml* file created earlier to generate a master configuration file for JupyterHub.
+Now we need to create a *staging.yaml* file.  During JupyterHub deployment, helm, via hubploy, will merge this file with the *common.yaml* file created earlier to generate a master configuration file for JupyterHub.  Follow these instructions:
 
 - `awsudo arn:aws:iam::162808325377:role/<deployment-name>-secrets-encrypt sops staging.yaml` - this will open up your editor...
 - Populate the file with the contents of https://github.com/cslocum/jupyterhub-deploy/blob/staging/doc/example-staging-decrypted.yaml
