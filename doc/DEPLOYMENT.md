@@ -176,8 +176,8 @@ First, identify an existing deployment in the *deployments* directory that most 
 
 There are three categories of secrets involved in the cluster configuration:
 
--   **JupyterHub proxyToken** - the hub authenticates its requests to the proxy using a secret token that the both services agree upon
-	- Generate the token with this command: `openssl rand -hex 32`
+-   **JupyterHub proxyToken** - the hub authenticates its requests to the proxy using a secret token that the both services agree upon.  Generate the token with this command:
+	- `openssl rand -hex 32`
 -   MAST authentication **client ID** and **client secret** - these were obtained earlier and will be used during the OAuth authentication process
 -   **SSL private key and certificate** - these were obtained earlier
 
