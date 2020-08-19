@@ -97,7 +97,8 @@ Complete these steps:
 Clone the repository:
 
 - `cd ..`
-- `git clone https://github.com/yuvipanda/aws-codecommit-secret.git`.
+- `git clone https://github.com/yuvipanda/aws-codecommit-secret.git`
+- `cd aws-codecommit-secret`
 
 Now, setup an IAM role using the *terraform-iam* module with just enough permissions to run the *kms-codecommit* module:
 
