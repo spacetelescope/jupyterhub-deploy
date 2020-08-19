@@ -1,3 +1,9 @@
+NOTE: discuss creating jupyterhub-deploy, attaching to instance
+
+
+
+
+
 # Actions to take before deployment
 
 **SSL certificates**
@@ -117,8 +123,10 @@ Next, we will setup KMS and CodeCommit with the *kms-codecommit* Terraform modul
 - Edit *codecommit.tfvars*:
 	- Update "repo_name" to be "deployment-name-secrets"
 	- Update the user ARNs to reflect your user
+	- **TODO**: note that allowed_users should look like `"arn:aws:sts::328656936502:assumed-role/jupyterhub-deploy/i-08ec748e6ea6f9292"`
 - `terraform init`
-- `awsudo arn:aws:iam::162808325377:role/<deployment-name>-secrets-setup terraform apply -var-file=code.tfvars`
+- **REMOVE**: `awsudo arn:aws:iam::162808325377:role/<deployment-name>-secrets-setup terraform apply -var-file=code.tfvars`
+- `terraform apply -var-file=code.tfvars`
 - A file named **_.sops.yaml_** will have been produced, and this will be used in the new CodeCommit repository for appropriate encryption with [sops](https://github.com/mozilla/sops)
 
 ### Provision EKS cluster
