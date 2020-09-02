@@ -117,7 +117,7 @@ Next, we will setup KMS and CodeCommit with the *kms-codecommit* Terraform modul
 	- Update "repo_name" to be "deployment-name-secrets"
 	- Update the user ARNs to reflect your user
 - `terraform init`
-- `awsudo arn:aws:iam::162808325377:role/<deployment-name>-secrets-setup terraform apply -var-file=code.tfvars`
+- `awsudo arn:aws:iam::162808325377:role/<deployment-name>-secrets-setup terraform apply -var-file=codecommit.tfvars`
 - A file named **_.sops.yaml_** will have been produced, and this will be used in the new CodeCommit repository for appropriate encryption with [sops](https://github.com/mozilla/sops)
 
 ### Provision EKS cluster
