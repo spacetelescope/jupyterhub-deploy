@@ -128,7 +128,7 @@ It creates the EKS cluster, ECR registry for JupyterHub images, IAM roles and po
 
 In the *aws* directory, configure the local deployment environment for the EKS cluster:
 
-- `awsudo arn:aws:iam::162808325377:role/<deployment-name>-hubploy-eks aws eks update-kubeconfig --name <deployment-name>`
+- `awsudo arn:aws:iam::<account-id>:role/<deployment-name>-hubploy-eks aws eks update-kubeconfig --name <deployment-name>`
 
 Then run Terraform:
 
@@ -202,7 +202,7 @@ Since we use sops to encrypt and decrypt the secret files, we need to copy the *
 
 Now we need to create a *staging.yaml* file.  During JupyterHub deployment, helm, via hubploy, will merge this file with the *common.yaml* file created earlier to generate a master configuration file for JupyterHub.  Follow these instructions:
 
-- `awsudo arn:aws:iam::162808325377:role/<deployment-name>-secrets-encrypt sops staging.yaml` - this will open up your editor...
+- `awsudo arn:aws:iam::<account-id>:role/<deployment-name>-secrets-encrypt sops staging.yaml` - this will open up your editor...
 - Populate the file with the contents of https://github.com/spacetelescope/jupyterhub-deploy/blob/staging/doc/example-staging-decrypted.yaml
 - Fill in the areas that say "[REDACTED]" with the appropriate values
 - `git add staging.yaml`
