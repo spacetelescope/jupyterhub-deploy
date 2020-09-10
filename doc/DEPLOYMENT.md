@@ -112,12 +112,12 @@ Now, setup an IAM role using the *terraform-iam* module with just enough permiss
 Next, we will setup KMS and CodeCommit with the *kms-codecommit* Terraform module:
 
 - `cd ../kms-codecommit`
-- `cp your-vars.tfvars.example codecommit.tfvars`
+- `cp your-vars.tfvars.example codecommit-kms.tfvars`
 - Edit *codecommit.tfvars*:
 	- Update "repo_name" to be "deployment-name-secrets"
 	- Update the user ARNs to reflect your user
 - `terraform init`
-- `awsudo arn:aws:iam::162808325377:role/<deployment-name>-secrets-setup terraform apply -var-file=codecommit.tfvars`
+- `awsudo arn:aws:iam::<account-id>:role/<deployment-name>-secrets-setup terraform apply -var-file=codecommit-kms.tfvars`
 - A file named **_.sops.yaml_** will have been produced, and this will be used in the new CodeCommit repository for appropriate encryption with [sops](https://github.com/mozilla/sops)
 
 ### Provision EKS cluster
