@@ -134,7 +134,7 @@ Then run Terraform:
 
 - `terraform init`
 - Copy _your-cluster.tfvars.template_ to _deployment-name.tfvars_ and edit the contents
-- `terraform apply -var-file=<deployment-name>.tfvars` (this will take a while...)
+- `awsudo arn:aws:iam::<account-id>:role/<deployment-name>-terraform-architect terraform apply -var-file=<deployment-name>.tfvars` (this will take a while...)
 
 Add yourself to the deployers group:
 
