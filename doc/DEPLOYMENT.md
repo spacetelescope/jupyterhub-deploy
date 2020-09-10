@@ -107,7 +107,7 @@ Now, setup an IAM role using the *terraform-iam* module with just enough permiss
 	- Update "repo_name" to be "deployment-name-secrets"
 	- Update the user ARN to reflect your user
 - `terraform init`
-- `awsudo arn:aws:iam::162808325377:role/<deployment-name>-secrets-setup terraform apply -var-file=roles.tfvars`
+- `awsudo arn:aws:iam::<account-id>:role/<deployment-name>-terraform-architect terraform apply -var-file=roles.tfvars`
 
 Next, we will setup KMS and CodeCommit with the *kms-codecommit* Terraform module:
 
