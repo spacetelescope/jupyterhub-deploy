@@ -141,44 +141,6 @@ Add yourself to the deployers group:
 - In the AWS console, navigate to the IAM service.  Check for your user's membership in group *deployment-name-hubploy-deployers*
 - Add your user to the group if necessary
 
-Note: we should not have to add ourselves to the deployers group.  This step will go away eventually...
-
-### Add Trust Relationships
-
-Set up the trust relationships for role _deployment-name-hubploy-eks_ in the IAM service console:
-
-- Open the AWS IAM service console for role _deployment-name-hubploy-eks_
-- Click on the "Trust relationships" tab
-- Click "Edit trust relationship"
-- Replace the "Principal: block with:
-
-```
-      "Principal": {
-        "AWS": [
-          "arn:aws:iam::162808325377:user/<username>",
-          "arn:aws:iam::162808325377:root",
-          "arn:aws:iam::162808325377:role/<deployment-name>-secrets-decrypt"
-        ]
-      },
-```
-
-Next edit the trust relationships for _deployment-name-secrets-decrypt_:
-
-- Open the AWS IAM service console for role _deployment-name-secrets-decrypt_
-- Click on the "Trust relationships" tab
-- Click "Edit trust relationship"
-- Replace the "Principal" block with:
-
-```
-      "Principal": {
-        "AWS": [
-          "arn:aws:iam::162808325377:role/<deployment-name>-hubploy-eks",
-          "arn:aws:iam::162808325377:user/<username>",
-          "arn:aws:iam::162808325377:role/kops_svc"
-        ]
-      },
-```
-
 # Hubploy
 
 To clone and install hubploy:
