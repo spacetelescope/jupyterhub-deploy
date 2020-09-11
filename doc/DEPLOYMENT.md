@@ -126,9 +126,7 @@ The **_aws_** subdirectory contains configuration files that create the EKS clus
 
 It creates the EKS cluster, ECR registry for JupyterHub images, IAM roles and policies for hubploy, the EKS autoscaler, etc.
 
-In the *aws* directory, configure the local deployment environment for the EKS cluster:
-
-- `awsudo arn:aws:iam::<account-id>:role/<deployment-name>-hubploy-eks aws eks update-kubeconfig --name <deployment-name>`
+Navigate to the *aws* directory.
 
 Then run Terraform:
 
@@ -136,10 +134,9 @@ Then run Terraform:
 - Copy _your-cluster.tfvars.template_ to _deployment-name.tfvars_ and edit the contents
 - `awsudo arn:aws:iam::<account-id>:role/<deployment-name>-terraform-architect terraform apply -var-file=<deployment-name>.tfvars` (this will take a while...)
 
-Add yourself to the deployers group:
+Finally, configure the local deployment environment for the EKS cluster:
 
-- In the AWS console, navigate to the IAM service.  Check for your user's membership in group *deployment-name-hubploy-deployers*
-- Add your user to the group if necessary
+- `awsudo arn:aws:iam::<account-id>:role/<deployment-name>-hubploy-eks aws eks update-kubeconfig --name <deployment-name>`
 
 # Hubploy
 
