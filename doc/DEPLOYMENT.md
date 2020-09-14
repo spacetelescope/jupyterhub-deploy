@@ -26,7 +26,9 @@ This section covers the process of setting up an EC2 instance on AWS that will b
 
 Use the AWS EC2 Console to create a CI node where you'll deploy from.  The EC2 instance will be based on an AMI that contains software, tools, and configuration required for deployment.  Things like nodejs, helm3, awsudo, sops, docket, etc. are included.
 
-- Base your EC2 on this AMI: **ami-01956bd49feb578e2**
+- Base your EC2 on this AMI: 
+ * **ami-01956bd49feb578e2** for aws-dmd-test
+ * **ami-085beaef1a51172d3** for sandbox
 - Instance type: **t3.xlarge**
 - EBS storage: **150 GB**
 - Security group: **institute-ssh-only**
@@ -38,7 +40,7 @@ Note: some of this may change when we move to the sandbox account.
 
 **_Please remember to shut down the instance when not in use._**
 
-# Configure AWS
+# Configure AWS, NOT FOR SANDBOX/DEV/TEST/OPS
 
 You will need security credentials.  Under **IAM → Users→ yourUsername → Security Credentials → Access Keys** in the AWS console, create a new set.  Save these credentials, as you will not be able to access your secret key again.
 
@@ -81,9 +83,9 @@ The terraform-deploy repository has two subdirectories with independent Terrafor
 
 ### Setup IAM resources, KMS, and CodeCommit
 
-The **_aws-creds_** subdirectory contains configuration files to set up roles and policies needed to do the overall deployment.
+The **_aws-creds_** subdirectory contains configuration files to set up roles and policies needed to do the overall deployment except for KMS. Note that you only need 1 per account of each of these in the case that some operational cluster has multiple deployments on it.
 
-**Note:** AWS has a hard limit of 10 groups per user. Since terraform-deploy adds 2 groups, you can be a member of at most 8 groups before proceeding.
+**Note (not for sandbox/dev/test/ops):** AWS has a hard limit of 10 groups per user. Since terraform-deploy adds 2 groups, you can be a member of at most 8 groups before proceeding.
 
 Complete these steps:
 
@@ -104,8 +106,8 @@ Now, setup an IAM role using the *terraform-iam* module with just enough permiss
 - `cd terraform-iam`
 - `cp your-vars.tfvars.example roles.tfvars`
 - Edit *roles.tfvars*:
-	- Update "repo_name" to be "deployment-name-secrets"
-	- Update the user ARN to reflect your user
+	- Update "repo_name" to be "<deployment-name>-secrets-repo"
+	- Update the user ARN to reflect your user or the allowed_roles list to include the right ci node IAM role ARN
 - `terraform init`
 - `awsudo arn:aws:iam::<account-id>:role/<deployment-name>-terraform-architect terraform apply -var-file=roles.tfvars`
 
@@ -113,12 +115,12 @@ Next, we will setup KMS and CodeCommit with the *kms-codecommit* Terraform modul
 
 - `cd ../kms-codecommit`
 - `cp your-vars.tfvars.example codecommit-kms.tfvars`
-- Edit *codecommit.tfvars*:
-	- Update "repo_name" to be "deployment-name-secrets"
-	- Update the user ARNs to reflect your user
+- Edit *codecommit-kms.tfvars*:
+	- Update "repo_name" to be "<deployment-name>-secrets"
+	- Update the user ARNs to reflect your user or the roles lists to include the right ci node IAM role ARN
 - `terraform init`
 - `awsudo arn:aws:iam::<account-id>:role/<deployment-name>-secrets-repo-setup terraform apply -var-file=codecommit-kms.tfvars`
-- A file named **_.sops.yaml_** will have been produced, and this will be used in the new CodeCommit repository for appropriate encryption with [sops](https://github.com/mozilla/sops)
+- A file named **_.sops.yaml_** will have been produced, and this will be used in the new CodeCommit repository for appropriate encryption with [sops](https://github.com/mozilla/sops).
 
 ### Provision EKS cluster
 
@@ -131,7 +133,7 @@ Navigate to the *aws* directory.
 Then run Terraform:
 
 - `terraform init`
-- Copy _your-cluster.tfvars.template_ to _deployment-name.tfvars_ and edit the contents
+- Copy _your-cluster.tfvars.template_ to _<deployment-name>.tfvars_ and edit the contents
 - `awsudo arn:aws:iam::<account-id>:role/<deployment-name>-terraform-architect terraform apply -var-file=<deployment-name>.tfvars` (this will take a while...)
 
 Finally, configure the local deployment environment for the EKS cluster:
@@ -181,7 +183,7 @@ In the top level of the *jupyterhub-deployment* repository, create a directory s
 - `mkdir -p secrets/deployments/<deployment-name>`
 - `cd secrets/deployments/<deployment-name>`
 
-In the AWS console, find the URL of the secrets repository by navigating to **Services → CodeCommit → Repositories** and click on the repository named *deployment-name-secrets*.  Click on the drop-down button called "Clone URL" and select "Clone HTTPS".  The copied URL should look something like https://git-codecommit.us-east-1.amazonaws.com/v1/repos/deployment-name-secrets.
+In the AWS console, find the URL of the secrets repository by navigating to **Services → CodeCommit → Repositories** and click on the repository named *<deployment-name>-secrets*.  Click on the drop-down button called "Clone URL" and select "Clone HTTPS".  The copied URL should look something like https://git-codecommit.us-east-1.amazonaws.com/v1/repos/<deployment-name>-secrets.
 
 Next, clone the repository:
 
@@ -225,7 +227,7 @@ Click on "Hosted zones", then "science.stsci.edu".  You will see a list of all r
 
 Click on the "Create Record Set" button.  Enter the following information in the pane on the right:
 
-- Name: **deployment-name.science.stsci.edu**
+- Name: **<deployment-name>.science.stsci.edu**
 - Type: **A - IPv4 address**
 - Alias: **Yes**
 - Alias Target: **<hub's ingress>**
