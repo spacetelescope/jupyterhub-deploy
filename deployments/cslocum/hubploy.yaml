@@ -1,0 +1,16 @@
+images:
+  image_name: 328656936502.dkr.ecr.us-east-1.amazonaws.com/cslocum-user-image
+  registry:
+    provider: aws
+    aws:
+      zone: us-east-1
+      role_arn: arn:aws:iam::328656936502:role/cslocum-hubploy-ecr
+      project: 328656936502
+
+cluster:
+  provider: aws
+  aws:
+      zone: us-east-1
+      role_arn: arn:aws:iam::328656936502:role/cslocum-hubploy-eks
+      cluster: cslocum
+      project: 328656936502
