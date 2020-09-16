@@ -88,7 +88,8 @@ The **_aws-creds_** subdirectory contains configuration files to set up roles an
 Complete these steps:
 
 - `cd aws-creds`
-- Customize the file called *roles.tfvars* with your deployment name
+- `cp roles.tfvars.template roles.tfvars`
+- Customize *roles.tfvars* with your deployment name
 - `terraform init`
 - `terraform apply -var-file=roles.tfvars`
 
