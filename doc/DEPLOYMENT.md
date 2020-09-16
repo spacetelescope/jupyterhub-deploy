@@ -201,7 +201,7 @@ Next, assume the secrets-repo-setup role and clone the repository:
 
 Since we use sops to encrypt and decrypt the secret files, we need to fetch the *.sops.yaml* file from S3 (this was created in *terraform-deploy/aws-codecommit-secret/kms-codecommit*):
 
-- `cp terraform-deploy/aws-codecommit-secret/kms-codecommit/.sops.yaml .`
+- `awsudo arn:aws:iam::<account-id>:role/<deployment-name>-secrets-repo-setup aws s3 cp s3://<deployment-name>-sops-config/.sops.yaml .sops.yaml`
 - `git add .sops.yaml`
 
 **BUG**:  it is necessary to manually insert the ARN of the encrypt role into *.sops.yaml* (the encrypt role is able to encrypt and decrypt).  You can see an example of an updated file [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/staging/doc/example-sops.yaml).
@@ -218,6 +218,7 @@ Now we need to create a *staging.yaml* file.  During JupyterHub deployment, helm
 **BUG**: After *staging.yaml* has been created and configured, sops adds a section to the end of the file that defines the KMS key ARN and other values necessary for decryption.  Due to a hiccup documented in [JUSI-412](https://jira.stsci.edu/browse/JUSI-412), it is necessary to manually insert the ARN of the decrypt role into the file so that sops can decrypt the file during deployment without specifying the role.  Edit the file (**do not use sops**) and add the role ARN.  You can see an example at the end of the an updated, encrypted file [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/staging/doc/example-staging-encrypted.yaml).
 
 Finally, commit and push the changes to the repository.
+TODO: provide a command for this!!!!!!!
 
 ### Deploying JupyterHub to the EKS cluster with hubploy
 
