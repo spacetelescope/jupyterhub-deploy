@@ -156,7 +156,7 @@ To get started, clone the repository:
 
 - `git clone https://github.com/spacetelescope/jupyterhub-deploy.git`
 
-### Build a Docker image with hubploy
+### Configure, build, and push a Docker image to ECR
 
 First, identify an existing deployment in the *deployments* directory that most closely matches your desired configuration, and do a recursive copy (the copied directory name should be the new deployment name).  Modifications to the Docker image, cluster configuration, and *hubploy.yaml* file will need to be made.  Follow these instructions:
 
@@ -164,8 +164,14 @@ First, identify an existing deployment in the *deployments* directory that most 
 - Go through the *image* directory, change file names and edit files that contain deployment-specific references.  Also make any changes to the Docker image files as needed (for instance, required software).
 - A file named *common.yaml* file needs to be created in the *config* directory.  An example can be found [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/staging/doc/example-common.yaml).  Place a copy of this example file in *config*, and edit the contents as appropriate.
 - Add, commit, and push all changes.
-- From the top level of the jupyterhub-deploy repository, issue this command to build the Docker image and push it to ECR:
-  - `hubploy build <deployment-name> --push --check-registry`
+
+Now, we'll build and push the Docker image:
+
+- `cd deployments/<deployment-name>/image`
+- `docker build --tag <account-id>.dkr.ecr.us-east-1.amazonaws.com/<deployment-name>-user-image .`
+- `DOCKER_LOGIN_CMD=$(awsudo arn:aws:iam::<account-id>:role/<deployment-name>-hubploy-ecr aws ecr get-login --region us-east-1 --no-include-email)`
+- `eval $DOCKER_LOGIN_CMD`
+- `docker push <account-id>.dkr.ecr.us-east-1.amazonaws.com/<deployment-name>-user-image:latest`
 
 ### Configure JupyterHub and cluster secrets
 
