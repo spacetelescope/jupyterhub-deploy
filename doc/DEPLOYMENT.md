@@ -217,8 +217,9 @@ Now we need to create a *staging.yaml* file.  During JupyterHub deployment, helm
 
 **BUG**: After *staging.yaml* has been created and configured, sops adds a section to the end of the file that defines the KMS key ARN and other values necessary for decryption.  Due to a hiccup documented in [JUSI-412](https://jira.stsci.edu/browse/JUSI-412), it is necessary to manually insert the ARN of the decrypt role into the file so that sops can decrypt the file during deployment without specifying the role.  Edit the file (**do not use sops**) and add the role ARN.  You can see an example at the end of the an updated, encrypted file [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/staging/doc/example-staging-encrypted.yaml).
 
-Finally, commit and push the changes to the repository.
-TODO: provide a command for this!!!!!!!
+Finally, commit and push the changes to the repository:
+
+- `awsudo arn:aws:iam::<account-id>:role/<deployment-name>-secrets-repo-setup git push`
 
 ### Deploying JupyterHub to the EKS cluster with hubploy
 
