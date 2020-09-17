@@ -137,7 +137,7 @@ Then run Terraform:
 
 Finally, configure the local deployment environment for the EKS cluster:
 
-- `awsudo arn:aws:iam::<account-id>:role/<deployment-name>-hubploy-eks aws eks update-kubeconfig --name <deployment-name>`
+- `aws eks update-kubeconfig --name <deployment-name>`
 
 # Hubploy
 
