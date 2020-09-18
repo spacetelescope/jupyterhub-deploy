@@ -66,7 +66,6 @@ Installing JupyterHub requires working through a flow of several git repositorie
 | Repository | Description |
 |--|--|
 | [terraform-deploy](https://github.com/spacetelescope/terraform-deploy) | Creates an EKS cluster, security roles, ECR registry, secrets, etc. needed to host a JupyterHub platform. |
-| [hubploy](https://github.com/yuvipanda/hubploy) | A package that can build JupyterHub Docker images, upload them to ECR, and deploy JupyterHub to a staging or production environment. We use Hubploy to deploy JupyterHub to a Kubernetes cluster. |
 | [jupyterhub-deploy](https://github.com/spacetelescope/jupyterhub-deploy.git) | Contains JupyterHub deployment configurations for Docker images and and the EKS cluster.
 
 # Terraform-deploy
@@ -138,16 +137,6 @@ Then run Terraform:
 Finally, configure the local deployment environment for the EKS cluster:
 
 - `aws eks update-kubeconfig --name <deployment-name>`
-
-# Hubploy
-
-To clone and install hubploy:
-
-- `git clone https://github.com/yuvipanda/hubploy`
--  `cd hubploy`
-- `pip install .`
-
-You may remove the hubploy repository clone after installation.
 
 # Jupyterhub-deploy
 
