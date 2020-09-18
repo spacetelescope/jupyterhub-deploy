@@ -198,7 +198,7 @@ Since we use sops to encrypt and decrypt the secret files, we need to fetch the 
 
 **SECURITY ISSUE**: having the encrypt role in *.sops.yaml* will give helm more than the minimally required permissions since deployment only needs to decrypt.
 
-Now we need to create a *staging.yaml* file.  During JupyterHub deployment, helm will merge this file with the *common.yaml* file created earlier to generate a master configuration file for JupyterHub.  Follow these instructions:
+Now we need to create a *staging.yaml* file.  During JupyterHub deployment, helm will merge this file with the *common.yaml* file with the other YAML files created earlier to generate a master configuration file for JupyterHub.  Follow these instructions:
 
 - `awsudo arn:aws:iam::<account-id>:role/<deployment-name>-secrets-encrypt sops staging.yaml` - this will open up your editor...
 - Populate the file with the contents of https://github.com/spacetelescope/jupyterhub-deploy/blob/staging/doc/example-staging-decrypted.yaml
