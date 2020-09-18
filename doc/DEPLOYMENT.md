@@ -223,7 +223,9 @@ Finally, commit and push the changes to the repository:
 
 ### Deploying JupyterHub to the EKS cluster with hubploy
 
-- `hubploy deploy <deployment-name> hub staging`
+- `aws eks update-kubeconfig --name <deployment-name> --region us-east-1 --role-arn arn:aws:iam::<account-id>:role/<deployment-name>-hubploy-eks`
+- `sops --decrypt staging.yaml > staging.yaml.decrypted`
+- TODO: run script (helm command)
 - `kubectl -n <deployment-name>-staging get svc proxy-public`
 
 The second command will output the hub's ingress, indicated by "EXTERNAL-IP".
