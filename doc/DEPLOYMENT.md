@@ -24,6 +24,8 @@ This section covers the process of setting up an EC2 instance on AWS that will b
 
 ### Create EC2 and login using ssh
 
+**TODO: Pull this out into it's own doc; update to use Session Manager**
+
 Use the AWS EC2 Console to create a CI node where you'll deploy from.  The EC2 instance will be based on an AMI that contains software, tools, and configuration required for deployment.  Things like nodejs, helm3, awsudo, sops, docket, etc. are included.
 
 - Base your EC2 on this AMI: **ami-01956bd49feb578e2**
