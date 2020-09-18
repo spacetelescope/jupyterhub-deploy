@@ -3,6 +3,8 @@ jupyterhub:
     continuous:
       enabled: false
   singleuser:
+    image:
+      tag: # SPECIFY THE TAG OF THE DOCKER IMAGE YOU WANT TO BE USED
     lifecycleHooks:
       postStart:
         exec:
