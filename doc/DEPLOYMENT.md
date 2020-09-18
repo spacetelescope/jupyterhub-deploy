@@ -137,7 +137,7 @@ Then run Terraform:
 
 Finally, configure the local deployment environment for the EKS cluster:
 
-- `awsudo arn:aws:iam::<account-id>:role/<deployment-name>-hubploy-eks aws eks update-kubeconfig --name <deployment-name>`
+- `aws eks update-kubeconfig --name <deployment-name>`
 
 # Hubploy
 
@@ -190,14 +190,18 @@ In the top level of the *jupyterhub-deployment* repository, create a directory s
 
 In the AWS console, find the URL of the secrets repository by navigating to **Services → CodeCommit → Repositories** and click on the repository named *deployment-name-secrets*.  Click on the drop-down button called "Clone URL" and select "Clone HTTPS".  The copied URL should look something like https://git-codecommit.us-east-1.amazonaws.com/v1/repos/deployment-name-secrets.
 
-Next, clone the repository:
+Next, assume the secrets-repo-setup role and clone the repository:
 
+- `aws sts assume-role --role-arn arn:aws:iam::<account-id>:role/<deployment-name>-secrets-repo-setup --role-session-name clone`
+- export AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and AWS_SESSION_TOKEN with the values returned from the previous command
+- `git config --global credential.helper '!aws codecommit credential-helper $@'`
+- `git config --global credential.UseHttpPath true`
 - `git clone https://git-codecommit.us-east-1.amazonaws.com/v1/repos/<deployment-name>-secrets secrets`
 - `cd secrets`
 
-Since we use sops to encrypt and decrypt the secret files, we need to copy the *.sops.yaml* file that was created in *terraform-deploy/aws-codecommit-secret/kms-codecommit*:
+Since we use sops to encrypt and decrypt the secret files, we need to fetch the *.sops.yaml* file from S3 (this was created in *terraform-deploy/aws-codecommit-secret/kms-codecommit*):
 
-- `cp terraform-deploy/aws-codecommit-secret/kms-codecommit/.sops.yaml .`
+- `awsudo arn:aws:iam::<account-id>:role/<deployment-name>-secrets-repo-setup aws s3 cp s3://<deployment-name>-sops-config/.sops.yaml .sops.yaml`
 - `git add .sops.yaml`
 
 **BUG**:  it is necessary to manually insert the ARN of the encrypt role into *.sops.yaml* (the encrypt role is able to encrypt and decrypt).  You can see an example of an updated file [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/staging/doc/example-sops.yaml).
@@ -213,7 +217,9 @@ Now we need to create a *staging.yaml* file.  During JupyterHub deployment, helm
 
 **BUG**: After *staging.yaml* has been created and configured, sops adds a section to the end of the file that defines the KMS key ARN and other values necessary for decryption.  Due to a hiccup documented in [JUSI-412](https://jira.stsci.edu/browse/JUSI-412), it is necessary to manually insert the ARN of the decrypt role into the file so that sops can decrypt the file during deployment without specifying the role.  Edit the file (**do not use sops**) and add the role ARN.  You can see an example at the end of the an updated, encrypted file [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/staging/doc/example-staging-encrypted.yaml).
 
-Finally, commit and push the changes to the repository.
+Finally, commit and push the changes to the repository:
+
+- `awsudo arn:aws:iam::<account-id>:role/<deployment-name>-secrets-repo-setup git push`
 
 ### Deploying JupyterHub to the EKS cluster with hubploy
 
