@@ -3,6 +3,8 @@ jupyterhub:
     continuous:
       enabled: false
   singleuser:
+    image:
+      tag: latest
     lifecycleHooks:
       postStart:
         exec:
