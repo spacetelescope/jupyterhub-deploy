@@ -1,10 +1,9 @@
 #! /usr/bin/bash
 
 deployment_name=$1
-image_tag=$2
-account_id=$3
-secrets_yaml=$4
-environment=$5
+account_id=$2
+secrets_yaml=$3
+environment=$4
 
 tmp_decrypted=~/staging.yaml.decrypted
 
@@ -13,6 +12,6 @@ pushd $(dirname ${secrets_yaml})
 sops --decrypt $(basename ${secrets_yaml}) > $tmp_decrypted
 
 popd
-helm upgrade --wait --install --namespace ${deployment_name}-${environment} ${deployment_name}-${environment} hub -f deployments/${deployment_name}/config/common.yaml -f deployments/${deployment_name}/config/${environment}.yaml -f ${tmp_decrypted} --set-string jupyterhub.singleuser.image.tag=${image_tag} --set-string jupyterhub.singleuser.image.name=${account_id}.dkr.ecr.us-east-1.amazonaws.com/${deployment_name}-user-image
+helm upgrade --wait --install --namespace ${deployment_name}-${environment} ${deployment_name}-${environment} hub -f deployments/${deployment_name}/config/common.yaml -f deployments/${deployment_name}/config/${environment}.yaml -f ${tmp_decrypted} --set-string jupyterhub.singleuser.image.name=${account_id}.dkr.ecr.us-east-1.amazonaws.com/${deployment_name}-user-image
 
 rm ~/staging.yaml.decrypted
