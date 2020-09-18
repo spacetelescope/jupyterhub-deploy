@@ -215,7 +215,11 @@ Finally, commit and push the changes to the repository:
 
 - `aws eks update-kubeconfig --name <deployment-name> --region us-east-1 --role-arn arn:aws:iam::<account-id>:role/<deployment-name>-hubploy-eks`
 - `sops --decrypt staging.yaml > staging.yaml.decrypted`
-- TODO: run script (helm command)
+- change directories to the top level of jupyterhub-deploy
+- `./tools/deploy <deployment-name> <image-tag> <account-id> <secrets-yaml> <environment>`
+  - environment - staging or prod
+  - image-tag - TODO: describe how to find this...
+  - secrets-yaml - *secrets/deployments/<deployment-name>/secrets/<environment>.yaml.decrypted*
 - `kubectl -n <deployment-name>-staging get svc proxy-public`
 
 The second command will output the hub's ingress, indicated by "EXTERNAL-IP".
