@@ -54,7 +54,7 @@ jupyterhub:
         userdata_method: GET
     users:
       - cslocum@stsci.edu
-      - yuvipanda@stsci.edu
+      - jmiller@stsci.edu
       - gough@stsci.edu
     admin:
       users:
