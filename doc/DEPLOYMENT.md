@@ -178,7 +178,7 @@ In the top level of the *jupyterhub-deployment* repository, create a directory s
 - `mkdir -p secrets/deployments/<deployment-name>`
 - `cd secrets/deployments/<deployment-name>`
 
-In the AWS console, find the URL of the secrets repository by navigating to **Services → CodeCommit → Repositories** and click on the repository named *deployment-name-secrets*.  Click on the drop-down button called "Clone URL" and select "Clone HTTPS".  The copied URL should look something like https://git-codecommit.us-east-1.amazonaws.com/v1/repos/deployment-name-secrets.
+In the AWS console, find the URL of the secrets repository by navigating to **Services → CodeCommit → Repositories** and click on the repository named *<deployment-name>-secrets*.  Click on the drop-down button called "Clone URL" and select "Clone HTTPS".  The copied URL should look something like https://git-codecommit.us-east-1.amazonaws.com/v1/repos/deployment-name-secrets.
 
 Next, assume the secrets-repo-setup role and clone the repository:
 
@@ -215,7 +215,12 @@ Finally, commit and push the changes to the repository:
 
 - `aws eks update-kubeconfig --name <deployment-name> --region us-east-1 --role-arn arn:aws:iam::<account-id>:role/<deployment-name>-hubploy-eks`
 - `sops --decrypt staging.yaml > staging.yaml.decrypted`
-- TODO: run script (helm command)
+- change directories to the top level of jupyterhub-deploy
+- `./tools/deploy <deployment-name> <image-tag> <account-id> <secrets-yaml> <environment>`
+  - environment - staging or prod
+  - image-tag - TODO: describe how to find this...
+  - secrets-yaml - *secrets/deployments/<deployment-name>/secrets/<environment>.yaml.decrypted*
+- `rm secrets/deployments/roman-sit/secrets/staging.yaml`
 - `kubectl -n <deployment-name>-staging get svc proxy-public`
 
 The second command will output the hub's ingress, indicated by "EXTERNAL-IP".
