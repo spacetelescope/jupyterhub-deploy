@@ -5,6 +5,10 @@ account_id=$2
 secrets_yaml=$3
 environment=$4
 
+# clear out and update the helm charts
+rm -r hub/charts/*
+helm dependency update hub
+
 tmp_decrypted=~/staging.yaml.decrypted
 
 # have to be in the same directory as .sops.yaml
