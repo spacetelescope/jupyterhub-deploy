@@ -218,7 +218,7 @@ Finally, commit and push the changes to the repository:
 - `./tools/deploy <deployment-name> <image-tag> <account-id> <secrets-yaml> <environment>`
   - environment - staging or prod
   - image-tag - TODO: describe how to find this...
-  - secrets-yaml - *secrets/deployments/<deployment-name>/secrets/<environment>.yaml.decrypted*
+  - secrets-yaml - *secrets/deployments/<deployment-name>/secrets/<environment>.yaml*
 - `kubectl -n <deployment-name>-staging get svc proxy-public`
 
 The second command will output the hub's ingress, indicated by "EXTERNAL-IP".
