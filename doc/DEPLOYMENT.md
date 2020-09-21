@@ -215,7 +215,7 @@ Finally, commit and push the changes to the repository:
 
 - `aws eks update-kubeconfig --name <deployment-name> --region us-east-1 --role-arn arn:aws:iam::<account-id>:role/<deployment-name>-hubploy-eks`
 - change directories to the top level of jupyterhub-deploy
-- `./tools/deploy <deployment-name> <image-tag> <account-id> <secrets-yaml> <environment>`
+- `./tools/deploy <deployment-name> <account-id> <secrets-yaml> <environment>`
   - environment - staging or prod
   - image-tag - TODO: describe how to find this...
   - secrets-yaml - *secrets/deployments/<deployment-name>/secrets/<environment>.yaml*
