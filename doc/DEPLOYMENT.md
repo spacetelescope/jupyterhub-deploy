@@ -187,6 +187,7 @@ Next, assume the secrets-repo-setup role and clone the repository:
 - `git config --global credential.helper '!aws codecommit credential-helper $@'`
 - `git config --global credential.UseHttpPath true`
 - `git clone https://git-codecommit.us-east-1.amazonaws.com/v1/repos/<deployment-name>-secrets secrets`
+- `unset AWS_ACCESS_KEY_ID; unset AWS_SECRET_ACCESS_KEY; unset AWS_SESSION_TOKEN`
 - `cd secrets`
 
 Since we use sops to encrypt and decrypt the secret files, we need to fetch the *.sops.yaml* file from S3 (this was created in *terraform-deploy/aws-codecommit-secret/kms-codecommit*):
