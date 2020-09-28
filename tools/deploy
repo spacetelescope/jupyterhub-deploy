@@ -9,6 +9,8 @@ environment=$4
 rm -r hub/charts/*
 helm dependency update hub
 
+# TODO: can we maybe decrypt the file in place using sops?
+
 tmp_decrypted=~/staging.yaml.decrypted
 
 # have to be in the same directory as .sops.yaml
