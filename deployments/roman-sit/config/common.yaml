@@ -58,6 +58,7 @@ jupyterhub:
       - cslocum@stsci.edu
       - jmiller@stsci.edu
       - gough@stsci.edu
+      - jmatuskey@stsci.edu
     admin:
       users:
         - cslocum@stsci.edu
