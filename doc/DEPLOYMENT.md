@@ -24,6 +24,8 @@ This section covers the process of setting up an EC2 instance on AWS that will b
 
 ### Create EC2 and login using ssh
 
+**TODO: Pull this out into it's own doc; update to use Session Manager**
+
 Use the AWS EC2 Console to create a CI node where you'll deploy from.  The EC2 instance will be based on an AMI that contains software, tools, and configuration required for deployment.  Things like nodejs, helm3, awsudo, sops, docket, etc. are included.
 
 - Base your EC2 on this AMI: **ami-01956bd49feb578e2**
@@ -66,12 +68,11 @@ Installing JupyterHub requires working through a flow of several git repositorie
 | Repository | Description |
 |--|--|
 | [terraform-deploy](https://github.com/spacetelescope/terraform-deploy) | Creates an EKS cluster, security roles, ECR registry, secrets, etc. needed to host a JupyterHub platform. |
-| [hubploy](https://github.com/yuvipanda/hubploy) | A package that builds JupyterHub images, uploads them to ECR, and deploys JupyterHub to a staging or production environment. Hubploy supports iteration with the JupyterHub system and does not interact with the Kubernetes cluster. |
 | [jupyterhub-deploy](https://github.com/spacetelescope/jupyterhub-deploy.git) | Contains JupyterHub deployment configurations for Docker images and and the EKS cluster.
 
 # Terraform-deploy
 
-This section describes how to set up an EKS cluster and resources required by the hubploy program, using Terraform.
+This section describes how to set up an EKS cluster and resources using Terraform.
 
 Get a copy of the repository with this command:
 
@@ -88,16 +89,17 @@ The **_aws-creds_** subdirectory contains configuration files to set up roles an
 Complete these steps:
 
 - `cd aws-creds`
-- Customize the file called *roles.tfvars* with your deployment name
+- `cp roles.tfvars.template roles.tfvars`
+- Customize *roles.tfvars* with your deployment name
 - `terraform init`
 - `terraform apply -var-file=roles.tfvars`
 
-**_aws-codecommit-secrets_** contains Terraform modules to setup a secure way to store secret YAML files for use with hubploy.  There are two subdirectories in this repository: *kms-codecommit* and *terraform_iam*.
+**_aws-codecommit-secrets_** contains Terraform modules to setup a secure way to store secret YAML files for use with helm.  There are two subdirectories in this repository: *kms-codecommit* and *terraform_iam*.
 
 Clone the repository:
 
 - `cd ..`
-- `git clone https://github.com/yuvipanda/aws-codecommit-secret.git`.
+- `git clone https://github.com/spacetelescope/aws-codecommit-secret.git`.
 
 Now, setup an IAM role using the *terraform-iam* module with just enough permissions to run the *kms-codecommit* module:
 
@@ -107,87 +109,36 @@ Now, setup an IAM role using the *terraform-iam* module with just enough permiss
 	- Update "repo_name" to be "deployment-name-secrets"
 	- Update the user ARN to reflect your user
 - `terraform init`
-- `awsudo arn:aws:iam::162808325377:role/<deployment-name>-secrets-setup terraform apply -var-file=roles.tfvars`
+- `awsudo arn:aws:iam::<account-id>:role/<deployment-name>-terraform-architect terraform apply -var-file=roles.tfvars`
 
 Next, we will setup KMS and CodeCommit with the *kms-codecommit* Terraform module:
 
 - `cd ../kms-codecommit`
-- `cp your-vars.tfvars.example codecommit.tfvars`
+- `cp your-vars.tfvars.example codecommit-kms.tfvars`
 - Edit *codecommit.tfvars*:
 	- Update "repo_name" to be "deployment-name-secrets"
 	- Update the user ARNs to reflect your user
 - `terraform init`
-- `awsudo arn:aws:iam::162808325377:role/<deployment-name>-secrets-setup terraform apply -var-file=code.tfvars`
+- `awsudo arn:aws:iam::<account-id>:role/<deployment-name>-secrets-repo-setup terraform apply -var-file=codecommit-kms.tfvars`
 - A file named **_.sops.yaml_** will have been produced, and this will be used in the new CodeCommit repository for appropriate encryption with [sops](https://github.com/mozilla/sops)
 
 ### Provision EKS cluster
 
 The **_aws_** subdirectory contains configuration files that create the EKS cluster resources needed to run JupyterHub.
 
-It creates the EKS cluster, ECR registry for JupyterHub images, IAM roles and policies for hubploy, the EKS autoscaler, etc.
+It creates the EKS cluster, ECR registry for JupyterHub images, IAM roles and policies for helm, the EKS autoscaler, etc.
 
-In the *aws* directory, configure the local deployment environment for the EKS cluster:
-
-- `awsudo arn:aws:iam::162808325377:role/<deployment-name>-hubploy-eks aws eks update-kubeconfig --name <deployment-name>`
+Navigate to the *aws* directory.
 
 Then run Terraform:
 
 - `terraform init`
 - Copy _your-cluster.tfvars.template_ to _deployment-name.tfvars_ and edit the contents
-- `terraform apply -var-file=<deployment-name>.tfvars` (this will take a while...)
+- `awsudo arn:aws:iam::<account-id>:role/<deployment-name>-terraform-architect terraform apply -var-file=<deployment-name>.tfvars` (this will take a while...)
 
-Add yourself to the deployers group:
+Finally, configure the local deployment environment for the EKS cluster:
 
-- In the AWS console, navigate to the IAM service.  Check for your user's membership in group *deployment-name-hubploy-deployers*
-- Add your user to the group if necessary
-
-Note: we should not have to add ourselves to the deployers group.  This step will go away eventually...
-
-### Add Trust Relationships
-
-Set up the trust relationships for role _deployment-name-hubploy-eks_ in the IAM service console:
-
-- Open the AWS IAM service console for role _deployment-name-hubploy-eks_
-- Click on the "Trust relationships" tab
-- Click "Edit trust relationship"
-- Replace the "Principal: block with:
-
-```
-      "Principal": {
-        "AWS": [
-          "arn:aws:iam::162808325377:user/<username>",
-          "arn:aws:iam::162808325377:root",
-          "arn:aws:iam::162808325377:role/<deployment-name>-secrets-decrypt"
-        ]
-      },
-```
-
-Next edit the trust relationships for _deployment-name-secrets-decrypt_:
-
-- Open the AWS IAM service console for role _deployment-name-secrets-decrypt_
-- Click on the "Trust relationships" tab
-- Click "Edit trust relationship"
-- Replace the "Principal" block with:
-
-```
-      "Principal": {
-        "AWS": [
-          "arn:aws:iam::162808325377:role/<deployment-name>-hubploy-eks",
-          "arn:aws:iam::162808325377:user/<username>",
-          "arn:aws:iam::162808325377:role/kops_svc"
-        ]
-      },
-```
-
-# Hubploy
-
-To clone and install hubploy:
-
-- `git clone https://github.com/yuvipanda/hubploy`
--  `cd hubploy`
-- `pip install .`
-
-You may remove the hubploy repository clone after installation.
+- `aws eks update-kubeconfig --name <deployment-name>`
 
 # Jupyterhub-deploy
 
@@ -197,16 +148,21 @@ To get started, clone the repository:
 
 - `git clone https://github.com/spacetelescope/jupyterhub-deploy.git`
 
-### Build a Docker image with hubploy
+### Configure, build, and push a Docker image to ECR
 
-First, identify an existing deployment in the *deployments* directory that most closely matches your desired configuration, and do a recursive copy (the copied directory name should be the new deployment name).  Modifications to the Docker image, cluster configuration, and *hubploy.yaml* file will need to be made.  Follow these instructions:
+First, identify an existing deployment in the *deployments* directory that most closely matches your desired configuration, and do a recursive copy using `cp -r` (the copied directory name should be the new deployment name).  Modifications to the Docker image and cluster configuration will need to be made.  Follow these instructions:
 
-- An example of *hubploy.yaml* can be found [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/staging/doc/example-hubploy.yaml).  Modify image_name, role_arn, project (the AWS account), and cluster.
 - Go through the *image* directory, change file names and edit files that contain deployment-specific references.  Also make any changes to the Docker image files as needed (for instance, required software).
 - A file named *common.yaml* file needs to be created in the *config* directory.  An example can be found [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/staging/doc/example-common.yaml).  Place a copy of this example file in *config*, and edit the contents as appropriate.
 - Add, commit, and push all changes.
-- From the top level of the jupyterhub-deploy repository, issue this command to build the Docker image and push it to ECR:
-  - `hubploy build <deployment-name> --push --check-registry`
+
+Now, we'll build and push the Docker image:
+
+- `cd deployments/<deployment-name>/image`
+- `docker build --tag <account-id>.dkr.ecr.us-east-1.amazonaws.com/<deployment-name>-user-image .`
+- `DOCKER_LOGIN_CMD=$(awsudo arn:aws:iam::<account-id>:role/<deployment-name>-hubploy-ecr aws ecr get-login --region us-east-1 --no-include-email)`
+- `eval $DOCKER_LOGIN_CMD`
+- `docker push <account-id>.dkr.ecr.us-east-1.amazonaws.com/<deployment-name>-user-image:latest`
 
 ### Configure JupyterHub and cluster secrets
 
@@ -222,36 +178,47 @@ In the top level of the *jupyterhub-deployment* repository, create a directory s
 - `mkdir -p secrets/deployments/<deployment-name>`
 - `cd secrets/deployments/<deployment-name>`
 
-In the AWS console, find the URL of the secrets repository by navigating to **Services → CodeCommit → Repositories** and click on the repository named *deployment-name-secrets*.  Click on the drop-down button called "Clone URL" and select "Clone HTTPS".  The copied URL should look something like https://git-codecommit.us-east-1.amazonaws.com/v1/repos/deployment-name-secrets.
+In the AWS console, find the URL of the secrets repository by navigating to **Services → CodeCommit → Repositories** and click on the repository named *<deployment-name>-secrets*.  Click on the drop-down button called "Clone URL" and select "Clone HTTPS".  The copied URL should look something like https://git-codecommit.us-east-1.amazonaws.com/v1/repos/deployment-name-secrets.
 
-Next, clone the repository:
+Next, assume the secrets-repo-setup role and clone the repository:
 
+- `aws sts assume-role --role-arn arn:aws:iam::<account-id>:role/<deployment-name>-secrets-repo-setup --role-session-name clone`
+- export AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and AWS_SESSION_TOKEN with the values returned from the previous command
+- `git config --global credential.helper '!aws codecommit credential-helper $@'`
+- `git config --global credential.UseHttpPath true`
 - `git clone https://git-codecommit.us-east-1.amazonaws.com/v1/repos/<deployment-name>-secrets secrets`
+- `unset AWS_ACCESS_KEY_ID; unset AWS_SECRET_ACCESS_KEY; unset AWS_SESSION_TOKEN`
 - `cd secrets`
 
-Since we use sops to encrypt and decrypt the secret files, we need to copy the *.sops.yaml* file that was created in *terraform-deploy/aws-codecommit-secret/kms-codecommit*:
+Since we use sops to encrypt and decrypt the secret files, we need to fetch the *.sops.yaml* file from S3 (this was created in *terraform-deploy/aws-codecommit-secret/kms-codecommit*):
 
-- `cp terraform-deploy/aws-codecommit-secret/kms-codecommit/.sops.yaml .`
+- `awsudo arn:aws:iam::<account-id>:role/<deployment-name>-secrets-repo-setup aws s3 cp s3://<deployment-name>-sops-config/.sops.yaml .sops.yaml`
 - `git add .sops.yaml`
 
 **BUG**:  it is necessary to manually insert the ARN of the encrypt role into *.sops.yaml* (the encrypt role is able to encrypt and decrypt).  You can see an example of an updated file [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/staging/doc/example-sops.yaml).
 
-**SECURITY ISSUE**: having the encrypt role in *.sops.yaml* will give hubploy/helm more than the minimally required permissions since deployment only needs to decrypt.
+**SECURITY ISSUE**: having the encrypt role in *.sops.yaml* will give helm more than the minimally required permissions since deployment only needs to decrypt.
 
-Now we need to create a *staging.yaml* file.  During JupyterHub deployment, helm, via hubploy, will merge this file with the *common.yaml* file created earlier to generate a master configuration file for JupyterHub.  Follow these instructions:
+Now we need to create a *staging.yaml* file.  During JupyterHub deployment, helm will merge this file with the *common.yaml* file with the other YAML files created earlier to generate a master configuration file for JupyterHub.  Follow these instructions:
 
-- `awsudo arn:aws:iam::162808325377:role/<deployment-name>-secrets-encrypt sops staging.yaml` - this will open up your editor...
+- `awsudo arn:aws:iam::<account-id>:role/<deployment-name>-secrets-encrypt sops staging.yaml` - this will open up your editor...
 - Populate the file with the contents of https://github.com/spacetelescope/jupyterhub-deploy/blob/staging/doc/example-staging-decrypted.yaml
 - Fill in the areas that say "[REDACTED]" with the appropriate values
 - `git add staging.yaml`
 
 **BUG**: After *staging.yaml* has been created and configured, sops adds a section to the end of the file that defines the KMS key ARN and other values necessary for decryption.  Due to a hiccup documented in [JUSI-412](https://jira.stsci.edu/browse/JUSI-412), it is necessary to manually insert the ARN of the decrypt role into the file so that sops can decrypt the file during deployment without specifying the role.  Edit the file (**do not use sops**) and add the role ARN.  You can see an example at the end of the an updated, encrypted file [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/staging/doc/example-staging-encrypted.yaml).
 
-Finally, commit and push the changes to the repository.
+Finally, commit and push the changes to the repository:
 
-### Deploying JupyterHub to the EKS cluster with hubploy
+- `awsudo arn:aws:iam::<account-id>:role/<deployment-name>-secrets-repo-setup git push`
 
-- `hubploy deploy <deployment-name> hub staging`
+### Deploying JupyterHub to the EKS cluster with helm
+
+- `aws eks update-kubeconfig --name <deployment-name> --region us-east-1 --role-arn arn:aws:iam::<account-id>:role/<deployment-name>-hubploy-eks`
+- change directories to the top level of jupyterhub-deploy
+- `./tools/deploy <deployment-name> <account-id> <secrets-yaml> <environment>`
+  - environment - staging or prod
+  - secrets-yaml - *secrets/deployments/<deployment-name>/secrets/<environment>.yaml*
 - `kubectl -n <deployment-name>-staging get svc proxy-public`
 
 The second command will output the hub's ingress, indicated by "EXTERNAL-IP".
