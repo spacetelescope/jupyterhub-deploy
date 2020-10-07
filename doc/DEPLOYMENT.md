@@ -40,21 +40,6 @@ Note: some of this may change when we move to the sandbox account.
 
 **_Please remember to shut down the instance when not in use._**
 
-# Configure AWS
-
-You will need security credentials.  Under **IAM → Users→ yourUsername → Security Credentials → Access Keys** in the AWS console, create a new set.  Save these credentials, as you will not be able to access your secret key again.
-
-On your CI node, execute:
-
-- `aws configure`
-
-You will be prompted for the following information:
-
-- Access Key ID: **your-key-id**
-- Secret Access Key: **your-access-key**
-- Region: **us-east-1**
-- Default output format: **json**
-
 # Start Docker
 
 `sudo service docker start`
@@ -78,21 +63,12 @@ Get a copy of the repository with this command:
 
 - `git clone --recursive https://github.com/spacetelescope/terraform-deploy`
 
-The terraform-deploy repository has two subdirectories with independent Terraform modules: *aws-creds* and *aws*.  *aws-codecommit-secrets* is a separate repository and will become a third subdirectory after being cloned.
-
 ### Setup IAM resources, KMS, and CodeCommit
 
-The **_aws-creds_** subdirectory contains configuration files to set up roles and policies needed to do the overall deployment.
 
-**Note:** AWS has a hard limit of 10 groups per user. Since terraform-deploy adds 2 groups, you can be a member of at most 8 groups before proceeding.
+==========
 
-Complete these steps:
 
-- `cd aws-creds`
-- `cp roles.tfvars.template roles.tfvars`
-- Customize *roles.tfvars* with your deployment name
-- `terraform init`
-- `terraform apply -var-file=roles.tfvars`
 
 **_aws-codecommit-secrets_** contains Terraform modules to setup a secure way to store secret YAML files for use with helm.  There are two subdirectories in this repository: *kms-codecommit* and *terraform_iam*.
 
