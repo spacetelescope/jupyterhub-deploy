@@ -37,8 +37,6 @@ Use the AWS EC2 Console to create a CI node where you'll deploy from.  The EC2 i
 - From withing the ST network, connect to your CI node using ssh.  You can find your EC2 instance in the AWS console and copy the public IPv4 address, then issue this command:
   - `ssh ec2-user@<public-IPv4-address-for-you-ci-node>`
 
-Note: some of this may change when we move to the sandbox account.
-
 **_Please remember to shut down the instance when not in use._**
 
 # Start Docker
@@ -53,8 +51,8 @@ Installing JupyterHub requires working through a flow of several git repositorie
 
 | Repository | Description |
 |--|--|
-| [terraform-deploy](https://github.com/spacetelescope/terraform-deploy) | Creates an EKS cluster, security roles, ECR registry, secrets, etc. needed to host a JupyterHub platform. |
-| [jupyterhub-deploy](https://github.com/spacetelescope/jupyterhub-deploy.git) | Contains JupyterHub deployment configurations for Docker images and and the EKS cluster.
+| [terraform-deploy](https://github.com/spacetelescope/terraform-deploy) | Creates an EKS cluster and roles used by the cluster, and CodeCommit and ECR repositories |
+| [jupyterhub-deploy](https://github.com/spacetelescope/jupyterhub-deploy.git) | Contains JupyterHub deployment configurations for Docker images and tools to deploy JupyterHub to the EKS cluster.
 
 # Terraform-deploy
 
@@ -66,11 +64,11 @@ Get a copy of the repository with this command:
 
 To make things more convient for the rest of this procedure, set an evironment variable with the ARN of the jupyterhub-admin role, which can be found in the IAM section of the AWS console.
 
-- export ADMIN_ARN=arn:aws:iam::<account-id>:role/jupyterhub-admin
+- `export ADMIN_ARN=arn:aws:iam::<account-id>:role/jupyterhub-admin`
 
-### Setup CodeCommit and an ECR repository for secrets
+### Setup CodeCommit repository for secrets and an ECR repository for Docker images
 
-Next, we will setup KMS and CodeCommit with the *kms-codecommit* Terraform module:
+First, we will setup KMS and CodeCommit with the *kms-codecommit* Terraform module:
 
 - `cd terraform-deploy/kms-codecommit`
 - `terraform init`
@@ -82,9 +80,7 @@ A file named **_.sops.yaml_** will have been produced, and this will be used in 
 
 ### Provision EKS cluster
 
-The **_aws_** subdirectory contains configuration files that are used to create the EKS cluster and supporting resources needed to run JupyterHub.
-
-Configure the module and run Terraform:
+Next, we will configure and deploy an EKS cluster and supporting resources needed to run JupyterHub with the *aws* Terraform module:
 
 - `../aws`
 - `terraform init`
@@ -92,9 +88,9 @@ Configure the module and run Terraform:
 - Update *deployment-name.tfvars* based on the templated values
 - `awsudo $ADMIN_ARN -var-file=<deployment-name>.tfvars -auto-approve` (this will take a while...)
 
-Finally, configure the local deployment environment for the EKS cluster:
+Finally, configure the local environment for the EKS cluster:
 
-- `aws eks update-kubeconfig --name <deployment-name>`
+- `awsudo $ADMIN_ARN aws eks update-kubeconfig --name <deployment-name>`
 
 # Jupyterhub-deploy
 
