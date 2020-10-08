@@ -61,8 +61,8 @@ Installing JupyterHub requires working through a flow of several git repositorie
 To make things more convient for the rest of this procedure, set a few evironment variables.  This will reduce the need to modify copy/paste commands.
 
 - `export ADMIN_ARN=arn:aws:iam::<account-id>:role/jupyterhub-admin`
-- `export ACCOUNT_ID=account-id
-- `export DEPLOYMENT_NAME=deployment-name
+- `export ACCOUNT_ID=account-id`
+- `export DEPLOYMENT_NAME=deployment-name`
 
 # Terraform-deploy
 
