@@ -66,21 +66,9 @@ To make things more convient for the rest of this procedure, set an evironment v
 
 - `export ADMIN_ARN=arn:aws:iam::<account-id>:role/jupyterhub-admin`
 
-### Setup CodeCommit repository for secrets and an ECR repository for Docker images
-
-First, we will setup KMS and CodeCommit with the *kms-codecommit* Terraform module:
-
-- `cd terraform-deploy/kms-codecommit`
-- `terraform init`
-- `cp your-vars.tfvars.example <deployment-name>.tfvars`
-- Update *deployment-name.tfvars* based on the templated values
-- `awsudo $ADMIN_ARN terraform apply -var-file=deployment-name.tfvars -auto-approve`
-
-A file named **_.sops.yaml_** will have been produced, and this will be used in the new CodeCommit repository for appropriate encryption with [sops](https://github.com/mozilla/sops) later in this procedure.
-
 ### Provision EKS cluster
 
-Next, we will configure and deploy an EKS cluster and supporting resources needed to run JupyterHub with the *aws* Terraform module:
+First, we will configure and deploy an EKS cluster and supporting resources needed to run JupyterHub with the *aws* Terraform module:
 
 - `../aws`
 - `terraform init`
@@ -91,6 +79,18 @@ Next, we will configure and deploy an EKS cluster and supporting resources neede
 Finally, configure the local environment for the EKS cluster:
 
 - `awsudo $ADMIN_ARN aws eks update-kubeconfig --name <deployment-name>`
+
+### Setup CodeCommit repository for secrets and an ECR repository for Docker images
+
+Next, we will setup KMS and CodeCommit with the *kms-codecommit* Terraform module:
+
+- `cd terraform-deploy/kms-codecommit`
+- `terraform init`
+- `cp your-vars.tfvars.example <deployment-name>.tfvars`
+- Update *deployment-name.tfvars* based on the templated values
+- `awsudo $ADMIN_ARN terraform apply -var-file=deployment-name.tfvars -auto-approve`
+
+A file named **_.sops.yaml_** will have been produced, and this will be used in the new CodeCommit repository for appropriate encryption with [sops](https://github.com/mozilla/sops) later in this procedure.
 
 # Jupyterhub-deploy
 
