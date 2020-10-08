@@ -122,19 +122,19 @@ There are three categories of secrets involved in the cluster configuration:
 
 -   **JupyterHub proxyToken** - the hub authenticates its requests to the proxy using a secret token that the both services agree upon.  Generate the token with this command:
 	- `openssl rand -hex 32`
--   MAST authentication **client ID** and **client secret** - these were obtained earlier and will be used during the OAuth authentication process
+-   MAST authentication **client ID** and **client secret** - these were obtained earlier and will be used during the OAuth authentication process (Note that this authentication method is likely to change in the future)
 -   **SSL private key and certificate** - these were obtained earlier
 
-In the top level of the *jupyterhub-deployment* repository, create a directory structure that will contain a clone of the AWS CodeCommit repository provisioned by Terraform earlier:
+In the top level of the *jupyterhub-deployment* repository, create a directory structure that will contain a clone of the CodeCommit repository provisioned by Terraform earlier:
 
 - `mkdir -p secrets/deployments/<deployment-name>`
 - `cd secrets/deployments/<deployment-name>`
 
 In the AWS console, find the URL of the secrets repository by navigating to **Services → CodeCommit → Repositories** and click on the repository named *<deployment-name>-secrets*.  Click on the drop-down button called "Clone URL" and select "Clone HTTPS".  The copied URL should look something like https://git-codecommit.us-east-1.amazonaws.com/v1/repos/deployment-name-secrets.
 
-Next, assume the secrets-repo-setup role and clone the repository:
+Next, assume the deployment-admin role and clone the repository:
 
-- `aws sts assume-role --role-arn arn:aws:iam::<account-id>:role/<deployment-name>-secrets-repo-setup --role-session-name clone`
+- `aws sts assume-role $ADMIN_ARN --role-session-name clone`
 - export AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and AWS_SESSION_TOKEN with the values returned from the previous command
 - `git config --global credential.helper '!aws codecommit credential-helper $@'`
 - `git config --global credential.UseHttpPath true`
@@ -142,10 +142,9 @@ Next, assume the secrets-repo-setup role and clone the repository:
 - `unset AWS_ACCESS_KEY_ID; unset AWS_SECRET_ACCESS_KEY; unset AWS_SESSION_TOKEN`
 - `cd secrets`
 
-Since we use sops to encrypt and decrypt the secret files, we need to fetch the *.sops.yaml* file from S3 (this was created in *terraform-deploy/aws-codecommit-secret/kms-codecommit*):
+Since we use sops to encrypt and decrypt the secret files, we need to fetch the *.sops.yaml* file from S3 (this was created in *terraform-deploy/kms-codecommit*):
 
-- `awsudo arn:aws:iam::<account-id>:role/<deployment-name>-secrets-repo-setup aws s3 cp s3://<deployment-name>-sops-config/.sops.yaml .sops.yaml`
-- `git add .sops.yaml`
+- `awsudo $ADMIN_ARN aws s3 cp s3://<deployment-name>-sops-config/.sops.yaml .sops.yaml`
 
 **BUG**:  it is necessary to manually insert the ARN of the encrypt role into *.sops.yaml* (the encrypt role is able to encrypt and decrypt).  You can see an example of an updated file [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/staging/doc/example-sops.yaml).
 
@@ -153,21 +152,22 @@ Since we use sops to encrypt and decrypt the secret files, we need to fetch the 
 
 Now we need to create a *staging.yaml* file.  During JupyterHub deployment, helm will merge this file with the *common.yaml* file with the other YAML files created earlier to generate a master configuration file for JupyterHub.  Follow these instructions:
 
-- `awsudo arn:aws:iam::<account-id>:role/<deployment-name>-secrets-encrypt sops staging.yaml` - this will open up your editor...
+- `awsudo $ADMIN_ARN sops staging.yaml` - this will open up your editor...
 - Populate the file with the contents of https://github.com/spacetelescope/jupyterhub-deploy/blob/staging/doc/example-staging-decrypted.yaml
-- Fill in the areas that say "[REDACTED]" with the appropriate values
-- `git add staging.yaml`
+- Fill in the areas that say "[REDACTED]" with the appropriate values, then save and exit the editor
+- `git add staging.yaml .sops.yaml`
 
-**BUG**: After *staging.yaml* has been created and configured, sops adds a section to the end of the file that defines the KMS key ARN and other values necessary for decryption.  Due to a hiccup documented in [JUSI-412](https://jira.stsci.edu/browse/JUSI-412), it is necessary to manually insert the ARN of the decrypt role into the file so that sops can decrypt the file during deployment without specifying the role.  Edit the file (**do not use sops**) and add the role ARN.  You can see an example at the end of the an updated, encrypted file [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/staging/doc/example-staging-encrypted.yaml).
+**BUG**: After *staging.yaml* has been created and configured, sops adds a section to the end of the file that defines the KMS key ARN and other values necessary for decryption.  Due to a hiccup documented in [JUSI-412](https://jira.stsci.edu/browse/JUSI-412), it is necessary to manually insert the ARN of the jupyterhub-admin role into the file so that sops can decrypt the file during deployment without specifying the role.  Edit the file (**do not use sops**) and add the role ARN.  You can see an example at the end of the an updated, encrypted file [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/staging/doc/example-staging-encrypted.yaml).
 
 Finally, commit and push the changes to the repository:
 
-- `awsudo arn:aws:iam::<account-id>:role/<deployment-name>-secrets-repo-setup git push`
+- `git commit -m "adding secrets"`
+- `awsudo $ADMIN_ARN git push`
 
-### Deploying JupyterHub to the EKS cluster with helm
+### Deploying JupyterHub to the EKS cluster via helm
 
-- `aws eks update-kubeconfig --name <deployment-name> --region us-east-1 --role-arn arn:aws:iam::<account-id>:role/<deployment-name>-hubploy-eks`
-- change directories to the top level of jupyterhub-deploy
+- `aws eks update-kubeconfig --name <deployment-name> --region us-east-1 --role-arn $ADMIN_ARN`
+- Change directories to the top level of the jupyterhub-deploy clone
 - `./tools/deploy <deployment-name> <account-id> <secrets-yaml> <environment>`
   - environment - staging or prod
   - secrets-yaml - *secrets/deployments/<deployment-name>/secrets/<environment>.yaml*
@@ -176,6 +176,8 @@ Finally, commit and push the changes to the repository:
 The second command will output the hub's ingress, indicated by "EXTERNAL-IP".
 
 ##  Set up DNS with Route-53
+
+**WARNING: This is a danger zone.  Mistakes here can take down live servers at the institute.
 
 Now we need to make an entry in AWS **Route53**.  To start, navigate to https://st.awsapps.com/start in your browser.  Use your AD credentials to login.  You will be prompted for a DUO code.  Either enter "push" or a code.
 
