@@ -25,6 +25,7 @@ This section covers the process of setting up an EC2 instance on AWS that will b
 ### Create EC2 and login using ssh
 
 **TODO: Pull this out into it's own doc; update to use Session Manager**
+**NOTE: This section is completely out of date...***
 
 Use the AWS EC2 Console to create a CI node where you'll deploy from.  The EC2 instance will be based on an AMI that contains software, tools, and configuration required for deployment.  Things like nodejs, helm3, awsudo, sops, docket, etc. are included.
 
@@ -57,60 +58,39 @@ Installing JupyterHub requires working through a flow of several git repositorie
 
 # Terraform-deploy
 
-This section describes how to set up an EKS cluster and resources using Terraform.
+This section describes how to set up an EKS cluster and supporting resources using Terraform.
 
 Get a copy of the repository with this command:
 
 - `git clone --recursive https://github.com/spacetelescope/terraform-deploy`
 
-### Setup IAM resources, KMS, and CodeCommit
+To make things more convient for the rest of this procedure, set an evironment variable with the ARN of the jupyterhub-admin role, which can be found in the IAM section of the AWS console.
 
+- export ADMIN_ARN=arn:aws:iam::<account-id>:role/jupyterhub-admin
 
-==========
-
-
-
-**_aws-codecommit-secrets_** contains Terraform modules to setup a secure way to store secret YAML files for use with helm.  There are two subdirectories in this repository: *kms-codecommit* and *terraform_iam*.
-
-Clone the repository:
-
-- `cd ..`
-- `git clone https://github.com/spacetelescope/aws-codecommit-secret.git`.
-
-Now, setup an IAM role using the *terraform-iam* module with just enough permissions to run the *kms-codecommit* module:
-
-- `cd terraform-iam`
-- `cp your-vars.tfvars.example roles.tfvars`
-- Edit *roles.tfvars*:
-	- Update "repo_name" to be "deployment-name-secrets"
-	- Update the user ARN to reflect your user
-- `terraform init`
-- `awsudo arn:aws:iam::<account-id>:role/<deployment-name>-terraform-architect terraform apply -var-file=roles.tfvars`
+### Setup CodeCommit and an ECR repository for secrets
 
 Next, we will setup KMS and CodeCommit with the *kms-codecommit* Terraform module:
 
-- `cd ../kms-codecommit`
-- `cp your-vars.tfvars.example codecommit-kms.tfvars`
-- Edit *codecommit.tfvars*:
-	- Update "repo_name" to be "deployment-name-secrets"
-	- Update the user ARNs to reflect your user
+- `cd terraform-deploy/kms-codecommit`
 - `terraform init`
-- `awsudo arn:aws:iam::<account-id>:role/<deployment-name>-secrets-repo-setup terraform apply -var-file=codecommit-kms.tfvars`
-- A file named **_.sops.yaml_** will have been produced, and this will be used in the new CodeCommit repository for appropriate encryption with [sops](https://github.com/mozilla/sops)
+- `cp your-vars.tfvars.example <deployment-name>.tfvars`
+- Update *deployment-name.tfvars* based on the templated values
+- `awsudo $ADMIN_ARN terraform apply -var-file=deployment-name.tfvars -auto-approve`
+
+A file named **_.sops.yaml_** will have been produced, and this will be used in the new CodeCommit repository for appropriate encryption with [sops](https://github.com/mozilla/sops) later in this procedure.
 
 ### Provision EKS cluster
 
-The **_aws_** subdirectory contains configuration files that create the EKS cluster resources needed to run JupyterHub.
+The **_aws_** subdirectory contains configuration files that are used to create the EKS cluster and supporting resources needed to run JupyterHub.
 
-It creates the EKS cluster, ECR registry for JupyterHub images, IAM roles and policies for helm, the EKS autoscaler, etc.
+Configure the module and run Terraform:
 
-Navigate to the *aws* directory.
-
-Then run Terraform:
-
+- `../aws`
 - `terraform init`
-- Copy _your-cluster.tfvars.template_ to _deployment-name.tfvars_ and edit the contents
-- `awsudo arn:aws:iam::<account-id>:role/<deployment-name>-terraform-architect terraform apply -var-file=<deployment-name>.tfvars` (this will take a while...)
+- `cp your-cluster.tfvars.template to <deployment-name>.tfvars`
+- Update *deployment-name.tfvars* based on the templated values
+- `awsudo $ADMIN_ARN -var-file=<deployment-name>.tfvars -auto-approve` (this will take a while...)
 
 Finally, configure the local deployment environment for the EKS cluster:
 
