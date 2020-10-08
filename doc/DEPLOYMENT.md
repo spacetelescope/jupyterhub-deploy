@@ -37,6 +37,8 @@ Use the AWS EC2 Console to create a CI node where you'll deploy from.  The EC2 i
 - From withing the ST network, connect to your CI node using ssh.  You can find your EC2 instance in the AWS console and copy the public IPv4 address, then issue this command:
   - `ssh ec2-user@<public-IPv4-address-for-you-ci-node>`
 
+**attach the worker sg to your CI-node to give it access to the EKS Private API endpoint needed for Terraform to complete normally.***
+
 **_Please remember to shut down the instance when not in use._**
 
 # Start Docker
