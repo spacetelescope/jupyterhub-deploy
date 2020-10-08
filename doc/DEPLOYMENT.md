@@ -56,6 +56,14 @@ Installing JupyterHub requires working through a flow of several git repositorie
 | [terraform-deploy](https://github.com/spacetelescope/terraform-deploy) | Creates an EKS cluster and roles used by the cluster, and CodeCommit and ECR repositories |
 | [jupyterhub-deploy](https://github.com/spacetelescope/jupyterhub-deploy.git) | Contains JupyterHub deployment configurations for Docker images and tools to deploy JupyterHub to the EKS cluster.
 
+# Set some convenience variables
+
+To make things more convient for the rest of this procedure, set a few evironment variables.  This will reduce the need to modify copy/paste commands
+
+- `export ADMIN_ARN=arn:aws:iam::<account-id>:role/jupyterhub-admin`
+- `export ACCOUNT_ID=<account-id>
+- `export DEPLOYMENT_NAME=<deployment-name>
+
 # Terraform-deploy
 
 This section describes how to set up an EKS cluster and supporting resources using Terraform.
@@ -64,19 +72,15 @@ Get a copy of the repository with this command:
 
 - `git clone --recursive https://github.com/spacetelescope/terraform-deploy`
 
-To make things more convient for the rest of this procedure, set an evironment variable with the ARN of the jupyterhub-admin role, which can be found in the IAM section of the AWS console.
-
-- `export ADMIN_ARN=arn:aws:iam::<account-id>:role/jupyterhub-admin`
-
 ### Setup CodeCommit repository for secrets and an ECR repository for Docker images
 
 First, we will setup KMS and CodeCommit with the *kms-codecommit* Terraform module:
 
 - `cd terraform-deploy/kms-codecommit`
 - `terraform init`
-- `cp your-vars.tfvars.example <deployment-name>.tfvars`
+- `cp your-vars.tfvars.example $DEPLOYMENT_NAME.tfvars`
 - Update *deployment-name.tfvars* based on the templated values
-- `awsudo $ADMIN_ARN terraform apply -var-file=deployment-name.tfvars -auto-approve`
+- `awsudo $ADMIN_ARN terraform apply -var-file=$DEPLOYMENT_NAME.tfvars -auto-approve`
 
 A file named **_.sops.yaml_** will have been produced, and this will be used in the new CodeCommit repository for appropriate encryption with [sops](https://github.com/mozilla/sops) later in this procedure.
 
@@ -86,13 +90,13 @@ Next, we will configure and deploy an EKS cluster and supporting resources neede
 
 - `../aws`
 - `terraform init`
-- `cp your-cluster.tfvars.template to <deployment-name>.tfvars`
+- `cp your-cluster.tfvars.template to $DEPLOYMENT_NAME.tfvars`
 - Update *deployment-name.tfvars* based on the templated values
-- `awsudo $ADMIN_ARN terraform apply -var-file=<deployment-name>.tfvars -auto-approve` (this will take a while...)
+- `awsudo $ADMIN_ARN terraform apply -var-file=$DEPLOYMENT_NAME.tfvars -auto-approve` (this will take a while...)
 
 Finally, configure the local environment for the EKS cluster:
 
-- `awsudo $ADMIN_ARN aws eks update-kubeconfig --name <deployment-name>`
+- `awsudo $ADMIN_ARN aws eks update-kubeconfig --name $DEPLOYMENT_NAME`
 
 # Jupyterhub-deploy
 
@@ -112,11 +116,11 @@ First, identify an existing deployment in the *deployments* directory that most 
 
 Now, we'll build and push the Docker image:
 
-- From the top level of the jupyterhub-deploy clone, `cd deployments/<deployment-name>/image`
-- `docker build --tag <account-id>.dkr.ecr.us-east-1.amazonaws.com/<deployment-name>-user-image .`
+- From the top level of the jupyterhub-deploy clone, `cd deployments/$DEPLOYMENT_NAME/image`
+- `docker build --tag $ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$DEPLOYMENT_NAME-user-image .`
 - `DOCKER_LOGIN_CMD=$(awsudo $ADMIN_ARN aws ecr get-login --region us-east-1 --no-include-email)`
 - `eval $DOCKER_LOGIN_CMD`
-- `docker push <account-id>.dkr.ecr.us-east-1.amazonaws.com/<deployment-name>-user-image:latest`
+- `docker push $ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$DEPLOYMENT_NAME-user-image:latest`
 
 ### Configure JupyterHub and cluster secrets
 
@@ -129,8 +133,8 @@ There are three categories of secrets involved in the cluster configuration:
 
 In the top level of the *jupyterhub-deployment* repository, create a directory structure that will contain a clone of the CodeCommit repository provisioned by Terraform earlier:
 
-- `mkdir -p secrets/deployments/<deployment-name>`
-- `cd secrets/deployments/<deployment-name>`
+- `mkdir -p secrets/deployments/$DEPLOYMENT_NAME`
+- `cd secrets/deployments/$DEPLOYMENT_NAME`
 
 In the AWS console, find the URL of the secrets repository by navigating to **Services → CodeCommit → Repositories** and click on the repository named *<deployment-name>-secrets*.  Click on the drop-down button called "Clone URL" and select "Clone HTTPS".  The copied URL should look something like https://git-codecommit.us-east-1.amazonaws.com/v1/repos/deployment-name-secrets.
 
@@ -140,13 +144,13 @@ Next, assume the deployment-admin role and clone the repository:
 - export AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and AWS_SESSION_TOKEN with the values returned from the previous command
 - `git config --global credential.helper '!aws codecommit credential-helper $@'`
 - `git config --global credential.UseHttpPath true`
-- `git clone https://git-codecommit.us-east-1.amazonaws.com/v1/repos/<deployment-name>-secrets secrets`
+- `git clone https://git-codecommit.us-east-1.amazonaws.com/v1/repos/$DEPLOYMENT_NAME-secrets secrets`
 - `unset AWS_ACCESS_KEY_ID; unset AWS_SECRET_ACCESS_KEY; unset AWS_SESSION_TOKEN`
 - `cd secrets`
 
 Since we use sops to encrypt and decrypt the secret files, we need to fetch the *.sops.yaml* file from S3 (this was created in *terraform-deploy/kms-codecommit*):
 
-- `awsudo $ADMIN_ARN aws s3 cp s3://<deployment-name>-sops-config/.sops.yaml .sops.yaml`
+- `awsudo $ADMIN_ARN aws s3 cp s3://$DEPLOYMENT_NAME-sops-config/.sops.yaml .sops.yaml`
 
 **BUG**:  it is necessary to manually insert the ARN of the encrypt role into *.sops.yaml* (the encrypt role is able to encrypt and decrypt).  You can see an example of an updated file [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/staging/doc/example-sops.yaml).
 
@@ -168,12 +172,12 @@ Finally, commit and push the changes to the repository:
 
 ### Deploying JupyterHub to the EKS cluster via helm
 
-- `aws eks update-kubeconfig --name <deployment-name> --region us-east-1 --role-arn $ADMIN_ARN`
+- `aws eks update-kubeconfig --name $DEPLOYMENT_NAME --region us-east-1 --role-arn $ADMIN_ARN`
 - Change directories to the top level of the jupyterhub-deploy clone
-- `./tools/deploy <deployment-name> <account-id> <secrets-yaml> <environment>`
+- `./tools/deploy $DEPLOYMENT_NAME $ACCOUNT_ID <secrets-yaml> <environment>`
   - environment - staging or prod
   - secrets-yaml - *secrets/deployments/<deployment-name>/secrets/<environment>.yaml*
-- `kubectl -n <deployment-name>-staging get svc proxy-public`
+- `kubectl -n $DEPLOYMENT_NAME-staging get svc proxy-public`
 
 The second command will output the hub's ingress, indicated by "EXTERNAL-IP".
 
