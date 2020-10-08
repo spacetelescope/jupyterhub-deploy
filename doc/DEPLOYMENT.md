@@ -80,7 +80,7 @@ First, we will setup KMS and CodeCommit with the *kms-codecommit* Terraform modu
 - `terraform init`
 - `cp your-vars.tfvars.example $DEPLOYMENT_NAME.tfvars`
 - Update *deployment-name.tfvars* based on the templated values
-- `awsudo $ADMIN_ARN terraform apply -var-file=$DEPLOYMENT_NAME.tfvars -auto-approve`
+- `awsudo -d 3600 $ADMIN_ARN terraform apply -var-file=$DEPLOYMENT_NAME.tfvars -auto-approve`
 
 A file named **_.sops.yaml_** will have been produced, and this will be used in the new CodeCommit repository for appropriate encryption with [sops](https://github.com/mozilla/sops) later in this procedure.
 
@@ -92,7 +92,7 @@ Next, we will configure and deploy an EKS cluster and supporting resources neede
 - `terraform init`
 - `cp your-cluster.tfvars.template to $DEPLOYMENT_NAME.tfvars`
 - Update *deployment-name.tfvars* based on the templated values
-- `awsudo $ADMIN_ARN terraform apply -var-file=$DEPLOYMENT_NAME.tfvars -auto-approve` (this will take a while...)
+- `awsudo -d 3600 $ADMIN_ARN terraform apply -var-file=$DEPLOYMENT_NAME.tfvars -auto-approve` (this will take a while...)
 
 Finally, configure the local environment for the EKS cluster:
 
