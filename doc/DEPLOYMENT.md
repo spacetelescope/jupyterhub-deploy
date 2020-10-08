@@ -88,7 +88,7 @@ Next, we will configure and deploy an EKS cluster and supporting resources neede
 - `terraform init`
 - `cp your-cluster.tfvars.template to <deployment-name>.tfvars`
 - Update *deployment-name.tfvars* based on the templated values
-- `awsudo $ADMIN_ARN -var-file=<deployment-name>.tfvars -auto-approve` (this will take a while...)
+- `awsudo $ADMIN_ARN terraform apply -var-file=<deployment-name>.tfvars -auto-approve` (this will take a while...)
 
 Finally, configure the local environment for the EKS cluster:
 
