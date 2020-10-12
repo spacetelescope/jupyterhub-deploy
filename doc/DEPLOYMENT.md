@@ -172,12 +172,12 @@ Finally, commit and push the changes to the repository:
 
 ### Deploying JupyterHub to the EKS cluster via helm
 
-- `aws eks update-kubeconfig --name $DEPLOYMENT_NAME --region us-east-1 --role-arn $ADMIN_ARN`
+- `awsudo $ADMIN_ARN aws eks update-kubeconfig --name $DEPLOYMENT_NAME --region us-east-1 --role-arn $ADMIN_ARN`
 - Change directories to the top level of the jupyterhub-deploy clone
 - `./tools/deploy $DEPLOYMENT_NAME $ACCOUNT_ID <secrets-yaml> <environment>`
   - environment - staging or prod
   - secrets-yaml - *secrets/deployments/<deployment-name>/secrets/<environment>.yaml*
-- `kubectl -n $DEPLOYMENT_NAME-staging get svc proxy-public`
+- `kubectl get svc proxy-public`
 
 The second command will output the hub's ingress, indicated by "EXTERNAL-IP".
 
