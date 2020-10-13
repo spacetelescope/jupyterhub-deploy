@@ -18,34 +18,50 @@ Hold on to the secret and ID, they will be needed later in the deployment proces
 
 Notes: 1) there is an ongoing conversation about which authentication method is most appropriate for JupyterHub, and 2) there is currently no formalized procedure for requesting these credentials.
 
+
+
+
+
 # CI Node Setup
 
 This section covers the process of setting up an EC2 instance on AWS that will be used for configuration and deployment.
 
 ### Create EC2 and login using ssh
 
-**TODO: Pull this out into it's own doc; update to use Session Manager**
-**NOTE: This section is completely out of date...***
+create security groups
+include ssm security group
 
-Use the AWS EC2 Console to create a CI node where you'll deploy from.  The EC2 instance will be based on an AMI that contains software, tools, and configuration required for deployment.  Things like nodejs, helm3, awsudo, sops, docket, etc. are included.
+
+Use the AWS EC2 Console to create a CI node where you'll deploy from.  The EC2 instance will be based on an AMI that contains software, tools, and configuration required for deployment.  Things like nodejs, helm3, awsudo, sops, docker, etc. are included.
 
 - Base your EC2 on this AMI: **ami-01956bd49feb578e2**
 - Instance type: **t3.xlarge**
 - EBS storage: **150 GB**
 - Security group: **institute-ssh-only**
 - Tags: **Name = *your-username*-ci**
-- From withing the ST network, connect to your CI node using ssh.  You can find your EC2 instance in the AWS console and copy the public IPv4 address, then issue this command:
-  - `ssh ec2-user@<public-IPv4-address-for-you-ci-node>`
+
+
+attach roles
+create and attach security groups***
+discuss how to use ssm to connect (link to ITSD docs)
+
+
+
 
 **attach the worker sg to your CI-node to give it access to the EKS Private API endpoint needed for Terraform to complete normally.***
 
 **_Please remember to shut down the instance when not in use._**
 
-# Start Docker
 
-`sudo service docker start`
 
-(this step will not be necessary once JUSI-419 has been implemented)
+
+
+
+
+
+
+
+
 
 # Repository Overview
 
