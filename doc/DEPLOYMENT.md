@@ -18,13 +18,11 @@ Hold on to the secret and ID, they will be needed later in the deployment proces
 
 Notes: 1) there is an ongoing conversation about which authentication method is most appropriate for JupyterHub, and 2) there is currently no formalized procedure for requesting these credentials.
 
+# AWS Control Tower accounts
 
-
-
-
-
-
-
+TODO:
+- https://st.awsapps.com/start
+- session manager basics, prereqs
 
 # CI Node Setup
 
@@ -48,6 +46,17 @@ TODO: discuss how to use ssm to connect (link to ITSD docs)
 
 **_Please remember to shut down the instance when not in use._**
 
+### Login to your EC2 instance
+
+Use AWS Session Manager to login to your instance.
+
+- Open up a terminal session
+- From the start page of the AWS accounts, click on the account you are working into to expand the list of roles.  Next to the developer role, click on "Command line or programmatic access".  Hover over the code block under "Option 1: Set AWS environment variables" and click on "Click to copy these commands".
+- In your terminal session, paste the commands
+- Identify your instance ID in the EC2 section of the Management console
+- `aws ssm start-session --target <instance-id> --region us-east-1`
+- `sudo su - ec2-user`
+
 # Repository Overview
 
 Installing JupyterHub requires working through a flow of several git repositories, in series, on your CI node:
@@ -61,9 +70,9 @@ Installing JupyterHub requires working through a flow of several git repositorie
 
 To make things more convient for the rest of this procedure, set a few evironment variables.  This will reduce the need to modify copy/paste commands.
 
-- `export ACCOUNT_ID=account-id`
+- `export ACCOUNT_ID=<account-id>`
 - `export ADMIN_ARN=arn:aws:iam::${ACCOUN_ID}:role/jupyterhub-admin`
-- `export DEPLOYMENT_NAME=deployment-name`
+- `export DEPLOYMENT_NAME=<deployment-name>`
 
 # Terraform-deploy
 
