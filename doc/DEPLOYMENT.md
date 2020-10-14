@@ -32,26 +32,22 @@ This section covers the process of setting up an EC2 instance on AWS that will b
 
 ### Create EC2 and login using ssh
 
-how to configure for ssm access?
+how to configure for ssm access (in general)?
 
-
-create security groups
-include ssm security group
 
 
 Use the AWS EC2 Console to create a CI node where you'll deploy from.  The EC2 instance will be based on an AMI that contains software, tools, and configuration required for deployment.  Things like nodejs, helm3, awsudo, sops, docker, etc. are included.
 
 - Base your EC2 instance on this AMI (on the dev acount): **ami-02e15130ac90d12fc**
 - Instance type: **t3.xlarge**
-- Network: **ENV-MISSION-SG
-- Subnet: **ENG-MISSION-SG-Private-**
+- Network: ***ENV-MISSION*-SG
+- Subnet: ***ENV-MISSION*-SG-Private-**
+- Role: **ci-node-instance**
 - EBS storage: **150 GB**
-- Security group: **institute-ssh-only**
 - Tags: **Name = *your-username*-ci**
+- Security group: **jupyterhub-worker-sg**
 
 
-attach roles
-create and attach security groups***
 discuss how to use ssm to connect (link to ITSD docs)
 
 
