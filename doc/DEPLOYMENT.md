@@ -57,7 +57,7 @@ Use AWS Session Manager to login to your instance.
 
 # Repository Overview
 
-Installing JupyterHub requires working through a flow of several git repositories, in series, on your CI node:
+The complete deployment process involves two git repositories:
 
 | Repository | Description |
 |--|--|
