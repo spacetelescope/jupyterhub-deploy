@@ -89,6 +89,7 @@ First, we will setup KMS and CodeCommit with the *kms-codecommit* Terraform modu
 - `cp your-vars.tfvars.example $DEPLOYMENT_NAME.tfvars`
 - Update *deployment-name.tfvars* based on the templated values
 - `awsudo -d 3600 $ADMIN_ARN terraform apply -var-file=$DEPLOYMENT_NAME.tfvars -auto-approve`
+  - When prompted the enter a value for the "Owner" tag, enter the name of the mission (Roman, JWST, etc.)
 
 A file named **_.sops.yaml_** will have been produced, and this will be used in the new CodeCommit repository for appropriate encryption with [sops](https://github.com/mozilla/sops) later in this procedure.
 
