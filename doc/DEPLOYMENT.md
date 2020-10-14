@@ -42,8 +42,6 @@ Use the AWS EC2 Console to create a CI node where you'll deploy from.  The EC2 i
 - Security group: **jupyterhub-worker-sg**
 - Choose no key pair before launching
 
-TODO: discuss how to use ssm to connect (link to ITSD docs)
-
 **_Please remember to shut down the instance when not in use._**
 
 ### Login to your EC2 instance
