@@ -49,7 +49,7 @@ Use the AWS EC2 Console to create a CI node where you'll deploy from.  The EC2 i
 Use AWS Session Manager to login to your instance.
 
 - Open up a terminal session
-- From the start page of the AWS accounts, click on the account you are working into to expand the list of roles.  Next to the developer role, click on "Command line or programmatic access".  Hover over the code block under "Option 1: Set AWS environment variables" and click on "Click to copy these commands".
+- From the start page of the AWS accounts, click on the account you are working in to to expand the list of roles.  Next to the developer role, click on "Command line or programmatic access".  Hover over the code block under "Option 1: Set AWS environment variables" and click on "Click to copy these commands".
 - In your terminal session, paste the commands
 - Identify your instance ID in the EC2 section of the Management console
 - `aws ssm start-session --target <instance-id> --region us-east-1`
