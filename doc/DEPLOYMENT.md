@@ -30,11 +30,7 @@ Notes: 1) there is an ongoing conversation about which authentication method is 
 
 This section covers the process of setting up an EC2 instance on AWS that will be used for configuration and deployment.
 
-### Create EC2 and login using ssh
-
-how to configure for ssm access (in general)?
-
-
+### Create EC2 instance for deployment
 
 Use the AWS EC2 Console to create a CI node where you'll deploy from.  The EC2 instance will be based on an AMI that contains software, tools, and configuration required for deployment.  Things like nodejs, helm3, awsudo, sops, docker, etc. are included.
 
@@ -46,30 +42,11 @@ Use the AWS EC2 Console to create a CI node where you'll deploy from.  The EC2 i
 - EBS storage: **150 GB**
 - Tags: **Name = *your-username*-ci**
 - Security group: **jupyterhub-worker-sg**
+- Choose no key pair before launching
 
-
-discuss how to use ssm to connect (link to ITSD docs)
-
-
-
-
-**attach the worker sg to your CI-node to give it access to the EKS Private API endpoint needed for Terraform to complete normally.***
+TODO: discuss how to use ssm to connect (link to ITSD docs)
 
 **_Please remember to shut down the instance when not in use._**
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 # Repository Overview
 
