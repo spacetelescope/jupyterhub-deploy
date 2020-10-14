@@ -40,8 +40,8 @@ Use the AWS EC2 Console to create a CI node where you'll deploy from.  The EC2 i
 
 - Base your EC2 instance on this AMI (on the dev acount): **ami-02e15130ac90d12fc**
 - Instance type: **t3.xlarge**
-- Network: ***ENV-MISSION*-SG
-- Subnet: ***ENV-MISSION*-SG-Private-**
+- Network: ***ENV-MISSION*-SG**
+- Subnet: ***ENV-MISSION*-SG-Private-*X***
 - Role: **ci-node-instance**
 - EBS storage: **150 GB**
 - Tags: **Name = *your-username*-ci**
