@@ -61,8 +61,8 @@ Installing JupyterHub requires working through a flow of several git repositorie
 
 | Repository | Description |
 |--|--|
-| [terraform-deploy](https://github.com/spacetelescope/terraform-deploy) | Creates an EKS cluster and roles used by the cluster, and CodeCommit and ECR repositories |
-| [jupyterhub-deploy](https://github.com/spacetelescope/jupyterhub-deploy.git) | Contains JupyterHub deployment configurations for Docker images and tools to deploy JupyterHub to the EKS cluster.
+| [terraform-deploy](https://github.com/spacetelescope/terraform-deploy) | Creates an EKS cluster and the roles used by the cluster, CodeCommit, and ECR repositories |
+| [jupyterhub-deploy](https://github.com/spacetelescope/jupyterhub-deploy.git) | Contains configurations for Docker images and JupyterHub deployments, as well as tools to accomplish deployment |
 
 # Set some convenience variables
 
