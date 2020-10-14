@@ -53,7 +53,7 @@ Use AWS Session Manager to login to your instance.
 - In your terminal session, paste the commands
 - Identify your instance ID in the EC2 section of the Management console
 - `aws ssm start-session --target <instance-id> --region us-east-1`
-- `sudo su - ec2-user`
+- `sudo -u ec2-user -i`
 
 # Repository Overview
 
