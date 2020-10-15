@@ -150,7 +150,7 @@ In the AWS console, find the URL of the secrets repository by navigating to **Se
 
 Next, assume the deployment-admin role and clone the repository:
 
-- `aws sts assume-role $ADMIN_ARN --role-session-name clone`
+- `aws sts assume-role --role-arn $ADMIN_ARN --role-session-name clone`
 - export AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and AWS_SESSION_TOKEN with the values returned from the previous command
 - `git config --global credential.helper '!aws codecommit credential-helper $@'`
 - `git config --global credential.UseHttpPath true`
