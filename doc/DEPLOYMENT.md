@@ -105,7 +105,7 @@ Next, we will configure and deploy an EKS cluster and supporting resources neede
 - `awsudo $ADMIN_ARN ./mktags` (Need to edit this first; maybe be Terraformed in the future)
 - `awsudo -d 3600 $ADMIN_ARN terraform apply -var-file=$DEPLOYMENT_NAME.tfvars -auto-approve`
   - This will fail half way through because we haven't defined configuration for the new cluster
-  - Run `awsudo $ADMIN_ARN aws eks update-kubeconfig --name $DEPLOYMENT_NAME`, then re-run the Terraform command
+  - Run `awsudo $ADMIN_ARN aws eks update-kubeconfig --name $DEPLOYMENT_NAME`, then rerun the Terraform command
 
 # Jupyterhub-deploy
 
