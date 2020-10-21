@@ -128,8 +128,7 @@ Now, we'll build and push the Docker image:
 
 - From the top level of the jupyterhub-deploy clone, `cd deployments/$DEPLOYMENT_NAME/image`
 - `docker build --tag $ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$DEPLOYMENT_NAME-user-image .`
-- `DOCKER_LOGIN_CMD=$(awsudo $ADMIN_ARN aws ecr get-login --region us-east-1 --no-include-email)`
-- `eval $DOCKER_LOGIN_CMD`
+- `awsudo $ADMIN_ARN aws ecr get-login-password --region=us-east-1 | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com`
 - `docker push $ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$DEPLOYMENT_NAME-user-image:latest`
 
 ### Configure JupyterHub and cluster secrets
