@@ -4,6 +4,11 @@ FROM buildpack-deps:focal-scm
 
 LABEL maintainer="Science Platforms <cslocum@stsci.edu>"
 
+USER root
+COPY ssl.pem /etc/ssl/certs/ssl.pem
+RUN chmod 644 /etc/ssl/certs/ssl.pem
+RUN update-ca-certificates
+
 # We assume only one user per container, so make it unique
 # UID matches GID
 ARG NB_USER="jovyan"
@@ -22,6 +27,7 @@ ENV MIRAGE_DATA=/data/mirage \
 ENV CONDA_DIR=/opt/conda
 ENV SHELL=/bin/bash
 ENV PATH=${CONDA_DIR}/bin:${PATH}
+
 
 USER root
 
@@ -58,7 +64,7 @@ ENV LC_ALL=en_US.UTF-8 \
 
 # Install sextractor under /usr/local
 RUN cd /tmp && \
-    curl -sSL https://github.com/astromatic/sextractor/archive/2.25.0.tar.gz | tar -xzf - && \
+    curl -sSL --cacert /etc/ssl/certs/ssl.pem https://github.com/astromatic/sextractor/archive/2.25.0.tar.gz | tar -xzf - && \
     cd sextractor-2.25.0 && \
     sh autogen.sh && \
     ./configure --prefix=/usr/local && \
@@ -67,35 +73,76 @@ RUN cd /tmp && \
 
 USER ${NB_USER}
 
-RUN curl -sSL https://github.com/conda-forge/miniforge/releases/download/4.8.3-2/Miniforge3-4.8.3-2-Linux-x86_64.sh > /tmp/miniforge-installer.sh && \
+RUN curl -sSL --cacert /etc/ssl/certs/ssl.pem https://github.com/conda-forge/miniforge/releases/download/4.8.3-2/Miniforge3-4.8.3-2-Linux-x86_64.sh > /tmp/miniforge-installer.sh && \
     bash /tmp/miniforge-installer.sh  -b -p ${CONDA_DIR} && \
     conda clean -tipsy
+
+RUN conda config --set ssl_verify /etc/ssl/certs/ssl.pem
+
 
 USER root
 # Load conda profile scripts by default
 RUN ln -s ${CONDA_DIR}/etc/profile.d/conda.sh /etc/profile.d/conda.sh
 
 USER ${NB_USER}
+
 # Install environments one at a time!
 # Base environment has JupyterLab & related packages
 COPY environments/base.yml /tmp/base.yml
 RUN conda env update --name base -f /tmp/base.yml && \
     conda clean -tipsy
 
-RUN ${CONDA_DIR}/bin/jupyter labextension install @jupyterlab/server-proxy
-#RUN ${CONDA_DIR}/bin/jupyter serverextension enable --py jupyterlab --sys-prefix
+RUN ./${CONDA_DIR}/bin/activate base && \
+    pip install --cert /etc/ssl/certs/ssl.pem nbgitpuller && \
+    #pip install --cert /etc/ssl/certs/ssl.pem git+https://github.com/yuvipanda/jupyter-desktop-server@daecbdbbf89003a1d71fa03f362682a886bb3ad7 && \
+    pip install --cert /etc/ssl/certs/ssl.pem git+https://github.com/yuvipanda/jupyter-desktop-server && \
+    #pip install --cert /etc/ssl/certs/ssl.pem git+https://github.com/yuvipanda/jupyter-server-proxy && \
+    #pip install --cert /etc/ssl/certs/ssl.pem git+https://github.com/yuvipanda/jupyter-rsession-proxy && \
+    ./${CONDA_DIR}/bin/deactivate
+
+
+# BUG: cannot install this...
+
+#RUN ${CONDA_DIR}/bin/jupyter labextension install @jupyterlab/server-proxy
+#RUN ${CONDA_DIR}/bin/jupyter labextension install jupyterlab-server-proxy
+
+#RUN git config --global http.sslVerify false
+#RUN npm config set strict-ssl false
+
+#RUN cd /tmp/ && \
+    #git clone --depth 1 https://github.com/jupyterhub/jupyter-server-proxy && \
+#    git clone https://github.com/jupyterhub/jupyter-server-proxy && \
+#    cd jupyter-server-proxy/jupyterlab-server-proxy && \
+#    npm install && npm run build && jupyter labextension link . && \
+#    npm run build && jupyter lab build
+
 
 COPY environments/roman-sit.yml /tmp/roman-sit.yml
 RUN conda env create -f /tmp/roman-sit.yml && \
     conda clean -tipsy
 
-COPY environments/cvt.yml /tmp/cvt.yml
-RUN conda env create -f /tmp/cvt.yml && \
-    conda clean -tipsy
 
-COPY environments/mirage.yml /tmp/mirage.yml
-RUN conda env create -f /tmp/mirage.yml && \
-    conda clean -tipsy
+#RUN ./${CONDA_DIR}/bin/activate roman-sit && \
+    #pip install --cert /etc/ssl/certs/ssl.pem setuptools==42 && \
+    #pip install --cert /etc/ssl/certs/ssl.pem git+https://github.com/spacetelescope/jwst.git && \
+    #pip install --cert /etc/ssl/certs/ssl.pem git+https://github.com/spacetelescope/crds.git@7.4.1.2#egg=crds[aws] && \
+    #pip install --cert /etc/ssl/certs/ssl.pem astroquery && \
+    #pip install --cert /etc/ssl/certs/ssl.pem jwst-backgrounds==1.1.1 && \
+    #pip install --cert /etc/ssl/certs/ssl.pem pandeia-engine==1.5 && \
+    #pip install --cert /etc/ssl/certs/ssl.pem git+https://github.com/spacetelescope/pandeia-coronagraphy.git@1d5ad4c &&\
+    #./${CONDA_DIR}/bin/deactivate
+
+
+
+#COPY environments/cvt.yml /tmp/cvt.yml
+#RUN conda env create -f /tmp/cvt.yml && \
+#    conda clean -tipsy
+
+#COPY environments/mirage.yml /tmp/mirage.yml
+#RUN conda env create -f /tmp/mirage.yml && \
+#    conda clean -tipsy
+
+
 
 # remove this step once nbgitpuller enabled; these contents will be in the jupyterhub-user-content repo
 COPY default-home-contents/ /etc/default-home-contents/
