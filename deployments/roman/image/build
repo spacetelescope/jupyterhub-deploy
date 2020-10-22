@@ -1,0 +1,6 @@
+#! /bin/sh -eux
+
+cp -f /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem .
+cp -f /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt .
+docker build .
+

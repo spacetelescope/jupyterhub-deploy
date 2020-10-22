@@ -23,6 +23,9 @@ ENV CONDA_DIR=/opt/conda
 ENV SHELL=/bin/bash
 ENV PATH=${CONDA_DIR}/bin:${PATH}
 
+ENV REQUESTS_CA_BUNDLE=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+ENV CURL_CA_BUNDLE=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+
 USER root
 
 # Create user & group jovyan
@@ -56,6 +59,14 @@ ENV LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8
 
+RUN mkdir -p /etc/ssl/certs
+RUN mkdir -p /etc/pki/ca-trust/extracted/pem
+COPY tls-ca-bundle.pem /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+RUN ln -s /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem  /etc/ssl/certs/ca-bundle.crt
+RUN mkdir -p /etc/pki/ca-trust/extracted/openssl
+COPY ca-bundle.trust.crt /etc/pki/ca-trust/extracted/pem/ca-bundle.trust.crt
+RUN ln -s /etc/pki/ca-trust/extracted/pem/ca-bundle.trust.crt  /etc/ssl/certs/ca-bundle.trust.crt
+
 # Install sextractor under /usr/local
 RUN cd /tmp && \
     curl -sSL https://github.com/astromatic/sextractor/archive/2.25.0.tar.gz | tar -xzf - && \
@@ -68,8 +79,9 @@ RUN cd /tmp && \
 USER ${NB_USER}
 
 RUN curl -sSL https://github.com/conda-forge/miniforge/releases/download/4.8.3-2/Miniforge3-4.8.3-2-Linux-x86_64.sh > /tmp/miniforge-installer.sh && \
-    bash /tmp/miniforge-installer.sh  -b -p ${CONDA_DIR} && \
-    conda clean -tipsy
+    bash /tmp/miniforge-installer.sh  -b -p ${CONDA_DIR} &&
+    conda update conda && \
+    conda build purge-all
 
 USER root
 # Load conda profile scripts by default
@@ -80,22 +92,22 @@ USER ${NB_USER}
 # Base environment has JupyterLab & related packages
 COPY environments/base.yml /tmp/base.yml
 RUN conda env update --name base -f /tmp/base.yml && \
-    conda clean -tipsy
+    conda build purge-all
 
 RUN ${CONDA_DIR}/bin/jupyter labextension install @jupyterlab/server-proxy
 #RUN ${CONDA_DIR}/bin/jupyter serverextension enable --py jupyterlab --sys-prefix
 
 COPY environments/roman.yml /tmp/roman.yml
 RUN conda env create -f /tmp/roman.yml && \
-    conda clean -tipsy
+    conda build purge-all
 
 COPY environments/cvt.yml /tmp/cvt.yml
 RUN conda env create -f /tmp/cvt.yml && \
-    conda clean -tipsy
+    conda build purge-all
 
 COPY environments/mirage.yml /tmp/mirage.yml
 RUN conda env create -f /tmp/mirage.yml && \
-    conda clean -tipsy
+    conda build purge-all
 
 # remove this step once nbgitpuller enabled; these contents will be in the jupyterhub-user-content repo
 COPY default-home-contents/ /etc/default-home-contents/
