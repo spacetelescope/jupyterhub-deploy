@@ -9,7 +9,7 @@ jupyterhub:
       postStart:
         exec:
           command: ["rsync", "/etc/default-home-contents/", "/home/jovyan"]
-          #command: ["gitpuller", "https://github.com/spacetelescope/jupyterhub-user-content", "roman-sit", "."]
+          #command: ["gitpuller", "https://github.com/spacetelescope/jupyterhub-user-content", "roman", "."]
     extraEnv:
       CRDS_PATH: /home/jovyan/crds_cache
       CRDS_SERVER_URL: https://jwst-serverless.stsci.edu
@@ -33,13 +33,13 @@ jupyterhub:
         #c.Spawner.cmd = ['jupyter-labhub']
     extraEnv:
       OAUTH2_AUTHORIZE_URL: "https://auth.mast.stsci.edu/oauth/authorize"
-      OAUTH_CALLBACK_URL: "https://roman-sit.science.stsci.edu/hub/oauth_callback"
+      OAUTH_CALLBACK_URL: "https://roman.science.stsci.edu/hub/oauth_callback"
   proxy:
     https:
       enabled: true
       type: manual
       hosts:
-        - roman-sit.science.stsci.edu
+        - roman.science.stsci.edu
   auth:
     type: custom
     custom:
@@ -47,7 +47,7 @@ jupyterhub:
       config:
         client_id: 464f261c10bf04a8
         login_service: "MAST"
-        oauth_callback_url: "https://roman-sit.science.stsci.edu/hub/oauth_callback"
+        oauth_callback_url: "https://roman.science.stsci.edu/hub/oauth_callback"
         authorize_url: "https://auth.mast.stsci.edu/oauth/authorize"
         userdata_url: "https://auth.mast.stsci.edu/info"
         username_key: "eppn"
