@@ -2,4 +2,4 @@
 region = "us-east-1"
 
 # Name of your cluster
-cluster_name = "roman-sit"
+cluster_name = "roman"
