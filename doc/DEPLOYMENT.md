@@ -185,7 +185,7 @@ Finally, commit and push the changes to the repository:
 - Change directories to the top level of the jupyterhub-deploy clone
 - `./tools/deploy $DEPLOYMENT_NAME $ACCOUNT_ID <secrets-yaml> <environment>`
   - environment - staging or prod
-  - secrets-yaml - *secrets/deployments/<deployment-name>/secrets/<environment>.yaml*
+  - secrets-yaml - *secrets/deployments/deployment-name/secrets/environment.yaml*
 - `kubectl get svc proxy-public`
 
 The second command will output the hub's ingress, indicated by "EXTERNAL-IP".
