@@ -118,3 +118,7 @@ COPY default-home-contents/ /etc/default-home-contents/
 COPY user-dirs.defaults /etc/xdg/user-dirs.defaults
 
 WORKDIR /home/jovyan
+
+# To enable activating conda environments from the command line
+RUN conda init --all
+
