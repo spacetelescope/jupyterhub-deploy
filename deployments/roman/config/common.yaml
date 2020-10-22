@@ -1,0 +1,64 @@
+jupyterhub:
+  prePuller:
+    continuous:
+      enabled: false
+  singleuser:
+    image:
+      tag: latest
+    lifecycleHooks:
+      postStart:
+        exec:
+          command: ["rsync", "/etc/default-home-contents/", "/home/jovyan"]
+          #command: ["gitpuller", "https://github.com/spacetelescope/jupyterhub-user-content", "roman-sit", "."]
+    extraEnv:
+      CRDS_PATH: /home/jovyan/crds_cache
+      CRDS_SERVER_URL: https://jwst-serverless.stsci.edu
+      CRDS_S3_ENABLED: "1"
+      CRDS_S3_RETURN_URI: "0"
+      CRDS_MAPPING_URI: "s3://dmd-test-crds/mappings/jwst"
+      CRDS_REFERENCE_URI: "s3://dmd-test-crds/references/jwst"
+      CRDS_CONFIG_URI: "s3://dmd-test-crds/config/jwst"
+      CRDS_USE_PICKLES: "0"
+      CRDS_DOWNLOAD_MODE: plugin
+      CRDS_DOWNLOAD_PLUGIN: "crds_s3_get ${SOURCE_URL} ${OUTPUT_PATH} ${FILE_SIZE} ${FILE_SHA1SUM}"
+    defaultUrl: "/lab"
+    memory:
+      guarantee: 512M
+      limit: 1G
+  hub:
+    #extraConfig:
+      #jupyterlab: |
+        #c.Spawner.default_url = "/lab"
+      #jupyterlab: |
+        #c.Spawner.cmd = ['jupyter-labhub']
+    extraEnv:
+      OAUTH2_AUTHORIZE_URL: "https://auth.mast.stsci.edu/oauth/authorize"
+      OAUTH_CALLBACK_URL: "https://roman-sit.science.stsci.edu/hub/oauth_callback"
+  proxy:
+    https:
+      enabled: true
+      type: manual
+      hosts:
+        - roman-sit.science.stsci.edu
+  auth:
+    type: custom
+    custom:
+      className: oauthenticator.generic.GenericOAuthenticator
+      config:
+        client_id: 464f261c10bf04a8
+        login_service: "MAST"
+        oauth_callback_url: "https://roman-sit.science.stsci.edu/hub/oauth_callback"
+        authorize_url: "https://auth.mast.stsci.edu/oauth/authorize"
+        userdata_url: "https://auth.mast.stsci.edu/info"
+        username_key: "eppn"
+        userdata_params: {'state': 'state'}
+        scope: ["mast:user:info", "mast:proprietary:hst"]
+        userdata_method: GET
+    users:
+      - cslocum@stsci.edu
+      - jmiller@stsci.edu
+      - gough@stsci.edu
+      - jmatuskey@stsci.edu
+    admin:
+      users:
+        - cslocum@stsci.edu
