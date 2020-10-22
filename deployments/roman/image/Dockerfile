@@ -79,8 +79,8 @@ RUN cd /tmp && \
 USER ${NB_USER}
 
 RUN curl -sSL https://github.com/conda-forge/miniforge/releases/download/4.8.3-2/Miniforge3-4.8.3-2-Linux-x86_64.sh > /tmp/miniforge-installer.sh && \
-    bash /tmp/miniforge-installer.sh  -b -p ${CONDA_DIR} &&
-    conda update conda && \
+    bash /tmp/miniforge-installer.sh  -b -p ${CONDA_DIR} && \
+    conda install conda-build && \
     conda build purge-all
 
 USER root
@@ -93,6 +93,8 @@ USER ${NB_USER}
 COPY environments/base.yml /tmp/base.yml
 RUN conda env update --name base -f /tmp/base.yml && \
     conda build purge-all
+
+RUN npm config set cafile /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
 
 RUN ${CONDA_DIR}/bin/jupyter labextension install @jupyterlab/server-proxy
 #RUN ${CONDA_DIR}/bin/jupyter serverextension enable --py jupyterlab --sys-prefix
