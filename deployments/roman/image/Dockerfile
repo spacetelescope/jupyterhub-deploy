@@ -48,7 +48,7 @@ RUN apt-get update --yes > /dev/null && \
     apt-get install --yes \
         curl rsync locales \
         dbus-x11 firefox xfce4 xfce4-panel xfce4-session xfce4-settings xorg xubuntu-icon-theme \
-        automake libtool fftw3-dev libatlas-base-dev build-essential make vim emacs gfortran > /dev/null && \
+        automake libtool fftw3-dev libatlas-base-dev build-essential make vim emacs gfortran less > /dev/null && \
     rm -rf /var/lib/apt/lists/*
 
 # Set up locales, and default to UTF-8
@@ -63,6 +63,8 @@ RUN mkdir -p /etc/ssl/certs
 RUN mkdir -p /etc/pki/ca-trust/extracted/pem
 COPY tls-ca-bundle.pem /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
 RUN ln -s /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem  /etc/ssl/certs/ca-bundle.crt
+RUN mv /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt.org
+RUN cp /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem  /etc/ssl/certs/ca-certificates.crt
 RUN mkdir -p /etc/pki/ca-trust/extracted/openssl
 COPY ca-bundle.trust.crt /etc/pki/ca-trust/extracted/pem/ca-bundle.trust.crt
 RUN ln -s /etc/pki/ca-trust/extracted/pem/ca-bundle.trust.crt  /etc/ssl/certs/ca-bundle.trust.crt
@@ -121,4 +123,8 @@ WORKDIR /home/jovyan
 
 # To enable activating conda environments from the command line
 RUN conda init --all
+
+USER root
+RUN echo `date` > /etc/stsci-image-build-date
+USER jovyan
 
