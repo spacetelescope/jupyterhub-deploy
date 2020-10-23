@@ -161,7 +161,7 @@ Since we use sops to encrypt and decrypt the secret files, we need to fetch the 
 
 - `awsudo $ADMIN_ARN aws s3 cp s3://$DEPLOYMENT_NAME-sops-config/.sops.yaml .sops.yaml`
 
-**BUG**:  it is necessary to manually insert the ARN of the encrypt role into *.sops.yaml* (the encrypt role is able to encrypt and decrypt).  You can see an example of an updated file [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/staging/doc/example-sops.yaml).
+**BUG**:  it is necessary to manually insert ADMIN_ARN *.sops.yaml* (this role has permissions to encrypt and decrypt).  You can see an example of an updated file [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/staging/doc/example-sops.yaml).
 
 **SECURITY ISSUE**: having the encrypt role in *.sops.yaml* will give helm more than the minimally required permissions since deployment only needs to decrypt.
 
@@ -185,7 +185,7 @@ Finally, commit and push the changes to the repository:
 - Change directories to the top level of the jupyterhub-deploy clone
 - `./tools/deploy $DEPLOYMENT_NAME $ACCOUNT_ID <secrets-yaml> <environment>`
   - environment - staging or prod
-  - secrets-yaml - *secrets/deployments/<deployment-name>/secrets/<environment>.yaml*
+  - secrets-yaml - *secrets/deployments/deployment-name/secrets/environment.yaml*
 - `kubectl get svc proxy-public`
 
 The second command will output the hub's ingress, indicated by "EXTERNAL-IP".
