@@ -4,7 +4,8 @@
 #
 # $ source setup-env
 
-source ./setup-env
+
+source $JUPYTERHUB_DIR/setup-env
 
 cd $IMAGE_DIR
 
