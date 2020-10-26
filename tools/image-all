@@ -1,0 +1,7 @@
+#! /bin/bash -eu
+
+# Need to run this from root directory
+source setup-env
+
+image-build  && image-test && image-push && echo "********** Image pipeline succeeded. **********" || echo "!!!!!!!!!!! Image pipeline failed. !!!!!!!!!!!!"
+
