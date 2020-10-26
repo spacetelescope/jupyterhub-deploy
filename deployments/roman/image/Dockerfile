@@ -66,8 +66,8 @@ RUN ln -s /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem  /etc/ssl/certs/ca-b
 RUN mv /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt.org
 RUN ln -s /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem  /etc/ssl/certs/ca-certificates.crt
 RUN mkdir -p /etc/pki/ca-trust/extracted/openssl
-COPY ca-bundle.trust.crt /etc/pki/ca-trust/extracted/pem/ca-bundle.trust.crt
-RUN ln -s /etc/pki/ca-trust/extracted/pem/ca-bundle.trust.crt  /etc/ssl/certs/ca-bundle.trust.crt
+# COPY ca-bundle.trust.crt /etc/pki/ca-trust/extracted/pem/ca-bundle.trust.crt
+# RUN ln -s /etc/pki/ca-trust/extracted/pem/ca-bundle.trust.crt  /etc/ssl/certs/ca-bundle.trust.crt
 
 # Install sextractor under /usr/local
 RUN cd /tmp && \
@@ -125,6 +125,9 @@ WORKDIR /home/jovyan
 RUN conda init --all
 
 USER root
+
+COPY tests /opt/tests/
+
 RUN echo `date` > /etc/stsci-image-build-date
 USER jovyan
 
