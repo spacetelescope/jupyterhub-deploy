@@ -1,6 +1,6 @@
 #! /bin/bash -eux
 
-source setup-env
+source $JUPYTERHUB_DIR/setup-env
 
 cd $IMAGE_DIR
 

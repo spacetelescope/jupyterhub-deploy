@@ -4,6 +4,9 @@ export DEPLOYMENT_NAME="XXXXXX"
 export ACCOUNT_ID="YYYYYYY"
 export ADMIN_ARN="ZZZZZZ"
 export TAG="AAAAAA"
+
+
+export JUPYTERHUB_DIR=`pwd`
 export IMAGE_DIR=`pwd`/deployments/${DEPLOYMENT_NAME}/image
 
 export PATH="`pwd`/tools":${PATH}
