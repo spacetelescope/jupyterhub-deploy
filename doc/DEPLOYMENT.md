@@ -116,7 +116,53 @@ To get started, clone the repository:
 
 - `git clone https://github.com/spacetelescope/jupyterhub-deploy.git`
 
-### Configure, build, and push a Docker image to ECR
+## Configure, build, and push a Docker image to ECR
+
+This section discusses building and pushing a notebook environment to ECR in two
+forms:  the *scripted deployment* relies on an environment setup file and uses
+bash scripts to abstract away required commands.  The *manual deployment*
+discusses the commands which the scripts are based on.
+
+### Scripted Deployment
+
+#### Environment setup
+
+Clone *setup-env.template* in the root directory to *setup-env*.
+
+Specify the requested information and source the setup into your shell environment.
+
+```
+source setup-env
+```
+
+#### Image management scripts
+
+Scripts have been added to the *tools* directory to simplify image development:
+
+- image-build   -- build the Docker image defined by setup-env
+- image-test    -- experimental,  run autmatic image tests.  requires added support in deployment
+- image-push    -- push the built + tested Docker image to ECR at the configured tag
+- image-sh      -- run the image and start a bash shell for poking around
+
+Sourcing *setup-env* should add these scripts to your path, they require no parameters.
+
+Using the scripts is simple, basically some iterative flow of:
+
+```
+# Update deployment Dockerfile in deployments/<your-deployment>/image.
+
+# Build the Docker image
+image-build
+
+# Run any self-tests defined for this deployment under deployments/<your-deployment>/image.
+# Fix problems and re-build until working
+image-test
+
+# Push the completed image to ECR for use on the hub,  proceed to Helm based JupyterHub deployment
+image-push
+```
+
+### Manual Deployment
 
 First, identify an existing deployment in the *deployments* directory that most closely matches your desired configuration, and do a recursive copy using `cp -r <existing-dir> <new-dir>` (the destination directory name should be the new deployment name).  Modifications to the Docker image and cluster configuration will need to be made.  Follow these instructions:
 
