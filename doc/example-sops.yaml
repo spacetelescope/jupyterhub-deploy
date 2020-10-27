@@ -1,4 +1,4 @@
 creation_rules:
   - path_regex: .*
-    kms: "arn:aws:kms:us-east-1:162808325377:key/5f56d94b-a658-4c92-a226-58bf07c88890"
-    role: "arn:aws:iam::162808325377:role/<deployment-name>-secrets-encrypt" # this is the added line
+    kms: "[ARN of KMS key]"
+    role: "[ARN of jupyterhub admin role]"
