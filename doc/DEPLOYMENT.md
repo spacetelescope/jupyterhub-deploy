@@ -125,6 +125,14 @@ discusses the commands which the scripts are based on.
 
 ### Scripted Deployment
 
+#### Configure Docker image
+
+First, identify an existing deployment in the *deployments* directory that most closely matches your desired configuration, and do a recursive copy using `cp -r <existing-dir> <new-dir>` (the destination directory name should be the new deployment name).  Modifications to the Docker image and cluster configuration will need to be made.  Follow these instructions:
+
+- Go through the *image* directory, change file names and edit files that contain deployment-specific references.  Also make any changes to the Docker image files as needed (for instance, required software).
+- A file named *common.yaml* file needs to be created in the *config* directory.  An example can be found [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/staging/doc/example-common.yaml).  Place a copy of this example file in *config*, and edit the contents as appropriate.
+- Git add, commit, and push all changes.
+
 #### Environment setup
 
 Clone *setup-env.template* in the root directory to *setup-env*.
@@ -164,13 +172,9 @@ image-push
 
 ### Manual Deployment
 
-First, identify an existing deployment in the *deployments* directory that most closely matches your desired configuration, and do a recursive copy using `cp -r <existing-dir> <new-dir>` (the destination directory name should be the new deployment name).  Modifications to the Docker image and cluster configuration will need to be made.  Follow these instructions:
+NOTE: Only perform the actions in this section if you do not complete the automated deployment steps.
 
-- Go through the *image* directory, change file names and edit files that contain deployment-specific references.  Also make any changes to the Docker image files as needed (for instance, required software).
-- A file named *common.yaml* file needs to be created in the *config* directory.  An example can be found [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/staging/doc/example-common.yaml).  Place a copy of this example file in *config*, and edit the contents as appropriate.
-- Git add, commit, and push all changes.
-
-Now, we'll build and push the Docker image:
+Build and push the Docker image:
 
 - From the top level of the jupyterhub-deploy clone, `cd deployments/$DEPLOYMENT_NAME/image`
 - `docker build --tag $ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$DEPLOYMENT_NAME-user-image .`
