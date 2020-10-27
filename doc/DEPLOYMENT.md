@@ -135,7 +135,7 @@ First, identify an existing deployment in the *deployments* directory that most 
 
 #### Environment setup
 
-Clone *setup-env.template* in the root directory to *setup-env*.
+Copy *setup-env.template* in the root directory to *setup-env*.
 
 Specify the requested information and source the setup into your shell environment.
 
