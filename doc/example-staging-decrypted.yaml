@@ -1,22 +1,31 @@
 jupyterhub:
-    hub:
-        extraEnv:
-            OAUTH2_TOKEN_URL: https://auth.mast.stsci.edu/oauth/access_token?client_secret=[REDACTED]
-            # OAUTH2_TOKEN_URL: https://auth.masttest.stsci.edu/oauth/access_token?client_secret=[REDACTED]
-    proxy:
-        secretToken: [REDACTED]
-        https:
-            manual:
-                key: |
-                    -----BEGIN RSA PRIVATE KEY-----
-                    [REDACTED]
-                    -----END RSA PRIVATE KEY-----
-                cert: |
-                    -----BEGIN CERTIFICATE-----
-                    [REDACTED]
-                    -----END CERTIFICATE-----
-    auth:
-        custom:
-            config:
-                client_id: [REDACTED]
-                client_secret: [REDACTED]
+  proxy:
+    secretToken: [REDACTED]
+  https:
+    enabled: true
+    type: offload
+  service:
+    annotations:
+      # Certificate ARN
+      service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "<ARN of ssl cert from ACM>"
+      # The protocol to use on the backend, we use TCP since we're using websockets
+      service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "tcp"
+      # Which ports should use SSL
+      service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "https"
+      service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "3600"
+auth:
+  type: custom
+  custom:
+    className: oauthenticator.generic.GenericOAuthenticator
+    config:
+      client_id: [REDACTED]
+      client_secret: [REDACTED]
+      login_service: "MAST"
+      oauth_callback_url: "https://[REDACTED]/hub/oauth_callback"
+      authorize_url: "https://auth.masttest.stsci.edu/oauth/authorize"
+      token_url: "https://auth.masttest.stsci.edu/oauth/token"
+      userdata_url: "https://auth.masttest.stsci.edu/info"
+      username_key: "eppn"
+      userdata_params: {'state': 'state'}
+      scope: ["mast:user:info", "mast:proprietary:hst"]
+      userdata_method: GET

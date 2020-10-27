@@ -2,9 +2,7 @@
 
 **SSL certificates**
 
-Put in a support ticket to obtain SSL certificates for the desired DNS name. You should be provided with a private key and a public certificate. _Make sure to put this request in early as it may take a while for ITSD to generate and provide them._
-
-Note: if a DNS entry associated with the certificate is not made within a week, the certificate will be revoked.
+Put in a support ticket requesting SSL certificates for the desired DNS name.  They will place the private key and a public certificate in AWS Certificate Manager (ACM).
 
 **Gather platform requirements**
 
@@ -18,51 +16,61 @@ Hold on to the secret and ID, they will be needed later in the deployment proces
 
 Notes: 1) there is an ongoing conversation about which authentication method is most appropriate for JupyterHub, and 2) there is currently no formalized procedure for requesting these credentials.
 
+TODO: is this section out of date?
+
+# AWS Control Tower accounts
+
+TODO:
+- https://st.awsapps.com/start
+- session manager basics, prereqs
+
 # CI Node Setup
 
 This section covers the process of setting up an EC2 instance on AWS that will be used for configuration and deployment.
 
-### Create EC2 and login using ssh
+### Create EC2 instance for deployment
 
-**TODO: Pull this out into it's own doc; update to use Session Manager**
-**NOTE: This section is completely out of date...***
+Use the AWS EC2 Console to create a CI node where you'll deploy from.  The EC2 instance will be based on an AMI that contains software, tools, and configuration required for deployment.  Things like nodejs, helm3, awsudo, sops, docker, etc. are included.
 
-Use the AWS EC2 Console to create a CI node where you'll deploy from.  The EC2 instance will be based on an AMI that contains software, tools, and configuration required for deployment.  Things like nodejs, helm3, awsudo, sops, docket, etc. are included.
-
-- Base your EC2 on this AMI: **ami-01956bd49feb578e2**
+- Base your EC2 instance on this AMI (on the dev acount): **ami-02e15130ac90d12fc**
 - Instance type: **t3.xlarge**
+- Network: ***ENV-MISSION*-SG**
+- Subnet: ***ENV-MISSION*-SG-Private-*X***
+- Role: **ci-node-instance**
 - EBS storage: **150 GB**
-- Security group: **institute-ssh-only**
 - Tags: **Name = *your-username*-ci**
-- From withing the ST network, connect to your CI node using ssh.  You can find your EC2 instance in the AWS console and copy the public IPv4 address, then issue this command:
-  - `ssh ec2-user@<public-IPv4-address-for-you-ci-node>`
-
-**attach the worker sg to your CI-node to give it access to the EKS Private API endpoint needed for Terraform to complete normally.***
+- Security group: **jupyterhub-worker-sg**
+- Choose no key pair before launching
 
 **_Please remember to shut down the instance when not in use._**
 
-# Start Docker
+### Login to your EC2 instance
 
-`sudo service docker start`
+Use AWS Session Manager to login to your instance.
 
-(this step will not be necessary once JUSI-419 has been implemented)
+- Open up a terminal session
+- From the start page of the AWS accounts, click on the account you are working in to to expand the list of roles.  Next to the developer role, click on "Command line or programmatic access".  Hover over the code block under "Option 1: Set AWS environment variables" and click on "Click to copy these commands".
+- In your terminal session, paste the commands
+- Identify your instance ID in the EC2 section of the Management console
+- `aws ssm start-session --target <instance-id> --region us-east-1`
+- `sudo -u ec2-user -i`
 
 # Repository Overview
 
-Installing JupyterHub requires working through a flow of several git repositories, in series, on your CI node:
+The complete deployment process involves two git repositories:
 
 | Repository | Description |
 |--|--|
-| [terraform-deploy](https://github.com/spacetelescope/terraform-deploy) | Creates an EKS cluster and roles used by the cluster, and CodeCommit and ECR repositories |
-| [jupyterhub-deploy](https://github.com/spacetelescope/jupyterhub-deploy.git) | Contains JupyterHub deployment configurations for Docker images and tools to deploy JupyterHub to the EKS cluster.
+| [terraform-deploy](https://github.com/spacetelescope/terraform-deploy) | Creates an EKS cluster and the roles used by the cluster, CodeCommit, and ECR repositories |
+| [jupyterhub-deploy](https://github.com/spacetelescope/jupyterhub-deploy.git) | Contains configurations for Docker images and JupyterHub deployments, as well as tools to accomplish deployment |
 
 # Set some convenience variables
 
 To make things more convient for the rest of this procedure, set a few evironment variables.  This will reduce the need to modify copy/paste commands.
 
-- `export ACCOUNT_ID=account-id`
+- `export ACCOUNT_ID=<account-id>`
 - `export ADMIN_ARN=arn:aws:iam::${ACCOUN_ID}:role/jupyterhub-admin`
-- `export DEPLOYMENT_NAME=deployment-name`
+- `export DEPLOYMENT_NAME=<deployment-name>`
 
 # Terraform-deploy
 
@@ -81,6 +89,9 @@ First, we will setup KMS and CodeCommit with the *kms-codecommit* Terraform modu
 - `cp your-vars.tfvars.example $DEPLOYMENT_NAME.tfvars`
 - Update *deployment-name.tfvars* based on the templated values
 - `awsudo -d 3600 $ADMIN_ARN terraform apply -var-file=$DEPLOYMENT_NAME.tfvars -auto-approve`
+  - When prompted the enter a value for the "Owner" tag, enter the name of the mission (Roman, JWST, etc.)
+    - TODO: put the owner tag in the variables template; if it's defined in tfvars, we won't be prompted (I think)
+  - BUG: you will need to run this twice until we add a "depends_on"
 
 A file named **_.sops.yaml_** will have been produced, and this will be used in the new CodeCommit repository for appropriate encryption with [sops](https://github.com/mozilla/sops) later in this procedure.
 
@@ -90,14 +101,12 @@ Next, we will configure and deploy an EKS cluster and supporting resources neede
 
 - `../aws`
 - `terraform init`
-- `cp your-cluster.tfvars.template to $DEPLOYMENT_NAME.tfvars`
+- `cp your-cluster.tfvars.template $DEPLOYMENT_NAME.tfvars`
 - Update *deployment-name.tfvars* based on the templated values
 - `awsudo $ADMIN_ARN ./mktags` (Need to edit this first; maybe be Terraformed in the future)
-- `awsudo -d 3600 $ADMIN_ARN terraform apply -var-file=$DEPLOYMENT_NAME.tfvars -auto-approve` (this will take a while...)
-
-Finally, configure the local environment for the EKS cluster:
-
-- `awsudo $ADMIN_ARN aws eks update-kubeconfig --name $DEPLOYMENT_NAME`
+- `awsudo -d 3600 $ADMIN_ARN terraform apply -var-file=$DEPLOYMENT_NAME.tfvars -auto-approve`
+  - This will fail half way through because we haven't defined configuration for the new cluster
+  - Run `awsudo $ADMIN_ARN aws eks update-kubeconfig --name $DEPLOYMENT_NAME`, then rerun the Terraform command
 
 # Jupyterhub-deploy
 
@@ -140,7 +149,7 @@ In the AWS console, find the URL of the secrets repository by navigating to **Se
 
 Next, assume the deployment-admin role and clone the repository:
 
-- `aws sts assume-role $ADMIN_ARN --role-session-name clone`
+- `aws sts assume-role --role-arn $ADMIN_ARN --role-session-name clone`
 - export AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and AWS_SESSION_TOKEN with the values returned from the previous command
 - `git config --global credential.helper '!aws codecommit credential-helper $@'`
 - `git config --global credential.UseHttpPath true`
@@ -152,7 +161,7 @@ Since we use sops to encrypt and decrypt the secret files, we need to fetch the 
 
 - `awsudo $ADMIN_ARN aws s3 cp s3://$DEPLOYMENT_NAME-sops-config/.sops.yaml .sops.yaml`
 
-**BUG**:  it is necessary to manually insert the ARN of the encrypt role into *.sops.yaml* (the encrypt role is able to encrypt and decrypt).  You can see an example of an updated file [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/staging/doc/example-sops.yaml).
+**BUG**:  it is necessary to manually insert ADMIN_ARN *.sops.yaml* (this role has permissions to encrypt and decrypt).  You can see an example of an updated file [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/staging/doc/example-sops.yaml).
 
 **SECURITY ISSUE**: having the encrypt role in *.sops.yaml* will give helm more than the minimally required permissions since deployment only needs to decrypt.
 
@@ -176,7 +185,7 @@ Finally, commit and push the changes to the repository:
 - Change directories to the top level of the jupyterhub-deploy clone
 - `./tools/deploy $DEPLOYMENT_NAME $ACCOUNT_ID <secrets-yaml> <environment>`
   - environment - staging or prod
-  - secrets-yaml - *secrets/deployments/<deployment-name>/secrets/<environment>.yaml*
+  - secrets-yaml - *secrets/deployments/deployment-name/secrets/environment.yaml*
 - `kubectl get svc proxy-public`
 
 The second command will output the hub's ingress, indicated by "EXTERNAL-IP".
@@ -191,10 +200,10 @@ Click on "AWS Account", then select the "aws-stctnetwork".  The menu will expand
 
 Click on "Hosted zones", then "science.stsci.edu".  You will see a list of all records under the "science.stsci.edu" zone.
 
-Click on the "Create Record Set" button.  Enter the following information in the pane on the right:
+Click on the "Create Record" button and choose "Simple Routing".  Click on "Define simple record" and enter the following information in the pane on the right:
 
 - Name: **deployment-name.science.stsci.edu**
-- Type: **A - IPv4 address**
-- Alias: **Yes**
+- Type: **CNAME**
+- Alias: **No**
 - Alias Target: **<hub's ingress>**
-- Routing Policy: **Simple**
+- TTL: **300**
