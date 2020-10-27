@@ -1,0 +1,17 @@
+#! /bin/sh -eux
+
+#  Clone setup-env.template and modify,  source to shell environment.
+#
+# $ source setup-env
+
+
+source $JUPYTERHUB_DIR/setup-env
+
+cd $IMAGE_DIR
+
+if [[ ! -f tls-ca-bundle.pem ]]; then
+    cp -f /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem .
+fi
+
+docker build --tag ${ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/${DEPLOYMENT_NAME}-user-image:${TAG} .
+

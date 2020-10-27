@@ -1,0 +1,36 @@
+# Clone and customize this for your deployment
+
+export DEPLOYMENT_NAME="XXXXXX"
+export ACCOUNT_ID="YYYYYYY"
+export ADMIN_ARN="ZZZZZZ"
+export TAG="AAAAAA"
+
+
+export JUPYTERHUB_DIR=`pwd`
+export IMAGE_DIR=`pwd`/deployments/${DEPLOYMENT_NAME}/image
+
+export PATH="`pwd`/tools":${PATH}
+
+# ---------------------------------------------------------------------------
+
+if [[ $DEPLOYMENT_NAME ]]; then
+else
+    echo "DEPLOYMENT_NAME is not set.  Create or correct setup-env."
+fi
+if [[ $ACCOUNT_ID ]]; then
+else
+    echo "ACCOUNT_ID is not set.  Create or correct setup-env."
+fi
+if [[ $ADMIN_ARN ]]; then
+else
+    echo "ADMIN_ARN is not set.  Create or correct setup-env."
+fi
+if [[ $TAG ]]; then
+else
+    echo "TAG is not set.  Create or correct setup-env."
+fi
+if [[ $IMAGE_DIR ]]; then
+else
+    echo "IMAGE_DIR is not set.  Create or correct setup-env."
+fi
+
