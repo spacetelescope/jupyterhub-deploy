@@ -2,9 +2,7 @@
 
 **SSL certificates**
 
-Put in a support ticket to obtain SSL certificates for the desired DNS name. You should be provided with a private key and a public certificate. _Make sure to put this request in early as it may take a while for ITSD to generate and provide them._
-
-Note: if a DNS entry associated with the certificate is not made within a week, the certificate will be revoked.
+Put in a support ticket requesting SSL certificates for the desired DNS name.  They will place the private key and a public certificate in AWS Certificate Manager (ACM).
 
 **Gather platform requirements**
 
@@ -17,6 +15,8 @@ JupyterHub will need a client secret and ID to integrate with the MAST authentic
 Hold on to the secret and ID, they will be needed later in the deployment process.
 
 Notes: 1) there is an ongoing conversation about which authentication method is most appropriate for JupyterHub, and 2) there is currently no formalized procedure for requesting these credentials.
+
+TODO: is this section out of date?
 
 # AWS Control Tower accounts
 
