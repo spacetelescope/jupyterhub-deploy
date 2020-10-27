@@ -7,7 +7,7 @@ jupyterhub:
   service:
     annotations:
       # Certificate ARN
-      service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "<arn of ssl cert from ACM>"
+      service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "<ARN of ssl cert from ACM>"
       # The protocol to use on the backend, we use TCP since we're using websockets
       service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "tcp"
       # Which ports should use SSL
