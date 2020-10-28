@@ -4,6 +4,7 @@ export DEPLOYMENT_NAME="XXXXXX"
 export ACCOUNT_ID="YYYYYYY"
 export ADMIN_ARN="ZZZZZZ"
 export TAG="AAAAAA"
+export ENVIRONMENT="[staging|prod]"
 
 
 export JUPYTERHUB_DIR=`pwd`
