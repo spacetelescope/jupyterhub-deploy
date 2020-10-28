@@ -159,14 +159,14 @@ Using the scripts is simple, basically some iterative flow of:
 # Update deployment Dockerfile in deployments/<your-deployment>/image.
 
 # Build the Docker image
-image-build
+tools/image-build
 
 # Run any self-tests defined for this deployment under deployments/<your-deployment>/image.
 # Fix problems and re-build until working
-image-test
+tools/image-test
 
 # Push the completed image to ECR for use on the hub,  proceed to Helm based JupyterHub deployment
-image-push
+tools/image-push
 ```
 
 ### Manual Deployment
