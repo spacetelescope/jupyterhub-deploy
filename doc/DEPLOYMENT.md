@@ -103,7 +103,6 @@ Next, we will configure and deploy an EKS cluster and supporting resources neede
 - `terraform init`
 - `cp your-cluster.tfvars.template $DEPLOYMENT_NAME.tfvars`
 - Update *deployment-name.tfvars* based on the templated values
-- `awsudo $ADMIN_ARN ./mktags` (Need to edit this first; maybe be Terraformed in the future)
 - `awsudo -d 3600 $ADMIN_ARN terraform apply -var-file=$DEPLOYMENT_NAME.tfvars -auto-approve`
   - This will fail half way through because we haven't defined configuration for the new cluster
   - Run `awsudo $ADMIN_ARN aws eks update-kubeconfig --name $DEPLOYMENT_NAME`, then rerun the Terraform command
@@ -125,9 +124,17 @@ discusses the commands which the scripts are based on.
 
 ### Scripted Deployment
 
+#### Configure Docker image
+
+First, identify an existing deployment in the *deployments* directory that most closely matches your desired configuration, and do a recursive copy using `cp -r <existing-dir> <new-dir>` (the destination directory name should be the new deployment name).  Modifications to the Docker image and cluster configuration will need to be made.  Follow these instructions:
+
+- Go through the *image* directory, change file names and edit files that contain deployment-specific references.  Also make any changes to the Docker image files as needed (for instance, required software).
+- A file named *common.yaml* file needs to be created in the *config* directory.  An example can be found [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/staging/doc/example-common.yaml).  Place a copy of this example file in *config*, and edit the contents as appropriate.
+- Git add, commit, and push all changes.
+
 #### Environment setup
 
-Clone *setup-env.template* in the root directory to *setup-env*.
+Copy *setup-env.template* in the root directory to *setup-env*.
 
 Specify the requested information and source the setup into your shell environment.
 
@@ -152,25 +159,21 @@ Using the scripts is simple, basically some iterative flow of:
 # Update deployment Dockerfile in deployments/<your-deployment>/image.
 
 # Build the Docker image
-image-build
+tools/image-build
 
 # Run any self-tests defined for this deployment under deployments/<your-deployment>/image.
 # Fix problems and re-build until working
-image-test
+tools/image-test
 
 # Push the completed image to ECR for use on the hub,  proceed to Helm based JupyterHub deployment
-image-push
+tools/image-push
 ```
 
 ### Manual Deployment
 
-First, identify an existing deployment in the *deployments* directory that most closely matches your desired configuration, and do a recursive copy using `cp -r <existing-dir> <new-dir>` (the destination directory name should be the new deployment name).  Modifications to the Docker image and cluster configuration will need to be made.  Follow these instructions:
+NOTE: Only perform the actions in this section if you do not complete the automated deployment steps.
 
-- Go through the *image* directory, change file names and edit files that contain deployment-specific references.  Also make any changes to the Docker image files as needed (for instance, required software).
-- A file named *common.yaml* file needs to be created in the *config* directory.  An example can be found [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/staging/doc/example-common.yaml).  Place a copy of this example file in *config*, and edit the contents as appropriate.
-- Git add, commit, and push all changes.
-
-Now, we'll build and push the Docker image:
+Build and push the Docker image:
 
 - From the top level of the jupyterhub-deploy clone, `cd deployments/$DEPLOYMENT_NAME/image`
 - `docker build --tag $ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$DEPLOYMENT_NAME-user-image .`
