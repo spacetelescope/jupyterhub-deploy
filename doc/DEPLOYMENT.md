@@ -134,13 +134,7 @@ First, identify an existing deployment in the *deployments* directory that most 
 
 #### Environment setup
 
-Copy *setup-env.template* in the root directory to *setup-env*.
-
-Specify the requested information and source the setup into your shell environment.
-
-```
-source setup-env
-```
+Copy *setup-env.template* in the root directory to *setup-env*.  Edit the file and update the environment variables.
 
 #### Image management scripts
 
