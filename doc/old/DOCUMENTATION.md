@@ -134,7 +134,13 @@ First, identify an existing deployment in the *deployments* directory that most 
 
 #### Environment setup
 
-Copy *setup-env.template* in the root directory to *setup-env*.  Edit the file and update the environment variables.
+Copy *setup-env.template* in the root directory to *setup-env*.
+
+Specify the requested information and source the setup into your shell environment.
+
+```
+source setup-env
+```
 
 #### Image management scripts
 
@@ -162,6 +168,17 @@ tools/image-test
 # Push the completed image to ECR for use on the hub,  proceed to Helm based JupyterHub deployment
 tools/image-push
 ```
+
+### Manual Deployment
+
+NOTE: Only perform the actions in this section if you do not complete the automated deployment steps.
+
+Build and push the Docker image:
+
+- From the top level of the jupyterhub-deploy clone, `cd deployments/$DEPLOYMENT_NAME/image`
+- `docker build --tag $ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$DEPLOYMENT_NAME-user-image .`
+- `awsudo $ADMIN_ARN aws ecr get-login-password --region=us-east-1 | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com`
+- `docker push $ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$DEPLOYMENT_NAME-user-image:latest`
 
 ### Configure JupyterHub and cluster secrets
 
@@ -213,7 +230,14 @@ Finally, commit and push the changes to the repository:
 
 ### Deploying JupyterHub to the EKS cluster via helm
 
-From the top directory of jupyterhub-deploy clone, run `tools/deploy-all`.  The final output of this command will be the hub's ingress, indicated by "EXTERNAL-IP".
+- `awsudo $ADMIN_ARN aws eks update-kubeconfig --name $DEPLOYMENT_NAME --region us-east-1 --role-arn $ADMIN_ARN`
+- Change directories to the top level of the jupyterhub-deploy clone
+- `./tools/deploy $DEPLOYMENT_NAME $ACCOUNT_ID <secrets-yaml> <environment>`
+  - environment - staging or prod
+  - secrets-yaml - *secrets/deployments/deployment-name/secrets/environment.yaml*
+- `kubectl get svc proxy-public`
+
+The second command will output the hub's ingress, indicated by "EXTERNAL-IP".
 
 ##  Set up DNS with Route-53
 
