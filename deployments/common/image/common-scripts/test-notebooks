@@ -1,0 +1,41 @@
+#! /usr/bin/env python
+#-*-python-*-
+
+"""Using the Python env/kernel specified by the first parameter, execute all
+notebooks specified by subsequent parameters.
+"""
+
+import sys
+import subprocess
+
+if (len(sys.argv) < 2):  # accept 0 notebooks...
+    print("test-notebooks <kernel>  <notebooks...>", file=sys.stderr)
+    sys.exit(1)
+
+kernel = sys.argv[1]
+notebooks = sys.argv[2:]
+
+errs = 0
+for notebook in notebooks:
+
+    if notebook.startswith("#"):
+        print("="*10, "Skipping Notebook", notebook, "="*10)
+        continue
+
+    print("="*10, "Testing Notebook", notebook, "="*10)
+
+    err = subprocess.call(f"papermill {notebook} /tmp/test.ipynb -k {kernel}".split())
+    if err == 0:
+        print("Tested notebook", notebook, "... ok")
+    else:
+        print("Tested notebook", notebook, "... FAIL")
+        errs += 1
+
+sys.exit(errs)
+
+#
+# nbconvert version of notebook runner as an alternative to papermill.
+#
+# If needed,  nbconvert also has a switch to specify kernel...
+# err = subprocess.call(f"jupyter nbconvert --to notebook  --NotebookClient.kernel_name={kernel} "
+#                       f"--ExecutePreprocessor.kernel_name={kernel} --execute {notebook}".split())
