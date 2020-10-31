@@ -1,0 +1,8 @@
+This directory contains files which are nominally installed in every environment.
+Currently this is done with the  /opt/common-scripts/install-common script.
+
+IMPORTANT: It's recommended to keep these files at a minimum because the
+likelihood of dependency conflicts increases as more files are added and may
+affect any of the other deployments.  Conflicts can be sidestepped either by
+dropping new conflicting files or inlining variations of install-common in
+the problem deployment.
