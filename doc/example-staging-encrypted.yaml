@@ -30,7 +30,7 @@ jupyterhub:
                 userdata_method: ENC[AES256_GCM,data:v9pH,iv:X6en4FQWl8N7mmrvqaQx6VBSFzESulqjjzBSJjBzn7E=,tag:ZnO57EuelMKF2kRP5EhZSQ==,type:str]
 sops:
     kms:
-    -   arn: arn:aws:kms:us-east-1:257667174570:key/604cc133-46ca-4ec5-a1fd-d090d3faf869
+    -   arn: arn:aws:kms:us-east-1:[ACCOUNT ID]:key/[KEY ID]
         role: [ARN of jupyterhub admin role] # this is the line that was added (remove this comment)
         created_at: '2020-10-21T19:47:00Z'
         enc: AQICAHi5mTtdHlugbF0RuqDAupIT9irJ8ODEuW12fqFNEhZsFgFpqYWpNfBWclTOg2sT5LD/AAAAfjB8BgkqhkiG9w0BBwagbzBtAgEAMGgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMMWWgFYL0LQMoc3hAAgEQgDurowBJDnOP0jNqJH3wDjT14Gbi5JshhKsnpLnROlmf82bqAS6Z0ABCIbchM8CehaKcqqdyhXDoDRJbDA==
