@@ -20,14 +20,14 @@ jupyterhub:
         custom:
             className: oauthenticator.generic.GenericOAuthenticator
             config:
-            client_id: [REDACTED]
-            client_secret: [REDACTED]
-            login_service: "MAST"
-            oauth_callback_url: "https://[URL]/hub/oauth_callback"
-            authorize_url: "https://auth.masttest.stsci.edu/oauth/authorize"
-            token_url: "https://auth.masttest.stsci.edu/oauth/token"
-            userdata_url: "https://auth.masttest.stsci.edu/info"
-            username_key: "eppn"
-            userdata_params: {'state': 'state'}
-            scope: ["mast:user:info", "mast:proprietary:hst"]
-            userdata_method: GET
+                client_id: [REDACTED]
+                client_secret: [REDACTED]
+                login_service: "MAST"
+                oauth_callback_url: "https://[URL]/hub/oauth_callback"
+                authorize_url: "https://auth.masttest.stsci.edu/oauth/authorize"
+                token_url: "https://auth.masttest.stsci.edu/oauth/token"
+                userdata_url: "https://auth.masttest.stsci.edu/info"
+                username_key: "eppn"
+                userdata_params: {'state': 'state'}
+                scope: ["mast:user:info", "mast:proprietary:hst"]
+                userdata_method: GET
