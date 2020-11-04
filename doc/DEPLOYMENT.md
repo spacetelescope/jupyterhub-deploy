@@ -69,7 +69,7 @@ The complete deployment process involves two git repositories:
 To make things more convient for the rest of this procedure, set a few evironment variables.  This will reduce the need to modify copy/paste commands.
 
 - `export ACCOUNT_ID=<account-id>`
-- `export ADMIN_ARN=arn:aws:iam::${ACCOUN_ID}:role/jupyterhub-admin`
+- `export ADMIN_ARN=arn:aws:iam::${ACCOUNT_ID}:role/jupyterhub-admin`
 - `export DEPLOYMENT_NAME=<deployment-name>`
 
 # Terraform-deploy
