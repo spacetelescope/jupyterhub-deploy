@@ -218,7 +218,7 @@ From the top directory of jupyterhub-deploy clone, run:
   - environment - dev, test, or prod
   - secrets-yaml - *secrets/deployments/deployment-name/secrets/environment.yaml*
 
-The final output of the seccond command will be the hub's ingress, indicated by "EXTERNAL-IP".
+The final output of the second command will be the hub's ingress, indicated by "EXTERNAL-IP".
 
 ##  Set up DNS with Route-53
 
