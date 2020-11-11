@@ -21,3 +21,5 @@ popd
 helm upgrade --wait --install ${deployment_name}-${environment} hub -f deployments/${deployment_name}/config/common.yaml -f deployments/${deployment_name}/config/${environment}.yaml -f ${tmp_decrypted} --set-string jupyterhub.singleuser.image.name=${account_id}.dkr.ecr.us-east-1.amazonaws.com/${deployment_name}-user-image
 
 rm ~/staging.yaml.decrypted
+
+kubectl get svc proxy-public
