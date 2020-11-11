@@ -211,7 +211,12 @@ Finally, commit and push the changes to the repository:
 
 ### Deploying JupyterHub to the EKS cluster via helm
 
-From the top directory of jupyterhub-deploy clone, run `tools/deploy-all`.  The final output of this command will be the hub's ingress, indicated by "EXTERNAL-IP".
+From the top directory of jupyterhub-deploy clone, run:
+
+- `source setup_env`
+- `tools/deploy-all`
+
+The final output of these commands will be the hub's ingress, indicated by "EXTERNAL-IP".
 
 ##  Set up DNS with Route-53
 
