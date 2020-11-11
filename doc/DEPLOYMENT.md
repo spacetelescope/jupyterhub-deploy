@@ -213,10 +213,12 @@ Finally, commit and push the changes to the repository:
 
 From the top directory of jupyterhub-deploy clone, run:
 
-- `source setup_env`
-- `tools/deploy-all`
+- `awsudo $ADMIN_ARN aws eks update-kubeconfig --name $DEPLOYMENT_NAME --region us-east-1 --role-arn $ADMIN_ARN`
+- `tools/deploy $DEPLOYMENT_NAME $ACCOUNT_ID <secrets-yaml> <environment>`
+  - environment - dev, test, or prod
+  - secrets-yaml - *secrets/deployments/deployment-name/secrets/environment.yaml*
 
-The final output of these commands will be the hub's ingress, indicated by "EXTERNAL-IP".
+The final output of the seccond command will be the hub's ingress, indicated by "EXTERNAL-IP".
 
 ##  Set up DNS with Route-53
 
