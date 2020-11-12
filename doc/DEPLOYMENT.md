@@ -226,14 +226,7 @@ Finally, commit and push the changes to the repository:
 
 ### Deploying JupyterHub to the EKS cluster via helm
 
-From the top directory of jupyterhub-deploy clone, run:
-
-- `awsudo $ADMIN_ARN aws eks update-kubeconfig --name $DEPLOYMENT_NAME --region us-east-1 --role-arn $ADMIN_ARN`
-- `tools/deploy $DEPLOYMENT_NAME $ACCOUNT_ID <secrets-yaml> <environment>`
-  - environment - dev, test, or prod
-  - secrets-yaml - *secrets/deployments/deployment-name/secrets/environment.yaml*
-
-The final output of the second command will be the hub's ingress, indicated by "EXTERNAL-IP".
+From the top directory of jupyterhub-deploy clone, run `tools/deploy-all`. The final output of this command will be the hub's ingress, indicated by "EXTERNAL-IP".
 
 ##  Set up DNS with Route-53
 
