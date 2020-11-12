@@ -127,5 +127,6 @@ USER root
 COPY tests /opt/tests/
 
 RUN echo `date` > /etc/stsci-image-build-date
+
 USER jovyan
 
