@@ -69,7 +69,7 @@ The complete deployment process involves two git repositories:
 To make things more convient for the rest of this procedure, set a few evironment variables.  This will reduce the need to modify copy/paste commands.
 
 - `export ACCOUNT_ID=<account-id>`
-- `export ADMIN_ARN=arn:aws:iam::${ACCOUN_ID}:role/jupyterhub-admin`
+- `export ADMIN_ARN=arn:aws:iam::${ACCOUNT_ID}:role/jupyterhub-admin`
 - `export DEPLOYMENT_NAME=<deployment-name>`
 
 # Terraform-deploy
@@ -105,7 +105,7 @@ Next, we will configure and deploy an EKS cluster and supporting resources neede
 - Update *deployment-name.tfvars* based on the templated values
 - `awsudo -d 3600 $ADMIN_ARN terraform apply -var-file=$DEPLOYMENT_NAME.tfvars -auto-approve`
 
-EKS kubeconfig is now terraformed removing the chicken-and-egg problem,  so this *should no longer be required*:
+EKS kubeconfig is now terraformed removing the chicken-and-egg problem, so this *should no longer be required*:
 
 - Run `awsudo $ADMIN_ARN aws eks update-kubeconfig --name $DEPLOYMENT_NAME`, then rerun the Terraform command
 
@@ -226,7 +226,7 @@ Finally, commit and push the changes to the repository:
 
 ### Deploying JupyterHub to the EKS cluster via helm
 
-From the top directory of jupyterhub-deploy clone, run `tools/deploy-all`.  The final output of this command will be the hub's ingress, indicated by "EXTERNAL-IP".
+From the top directory of jupyterhub-deploy clone, run `tools/deploy-all`. The final output of this command will be the hub's ingress, indicated by "EXTERNAL-IP".
 
 ##  Set up DNS with Route-53
 
