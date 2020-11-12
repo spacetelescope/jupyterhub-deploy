@@ -1,0 +1,5 @@
+#! /bin/bash -eu
+
+cd $IMAGE_DIR
+
+docker run -it $IMAGE_RUN_PARS  $IMAGE_ID $*
