@@ -1,37 +1,24 @@
 # Clone and customize this for your deployment
+#
+# NOTE:  must be sourced from jupyterhub-deploy root directory
+#
 
-export DEPLOYMENT_NAME="XXXXXX"
-export ACCOUNT_ID="YYYYYYY"
-export ADMIN_ARN="ZZZZZZ"
-export TAG="AAAAAA"
-export ENVIRONMENT="[staging|prod]"
+# ----------------- basic inputs,  must set --------------
 
+export ACCOUNT_ID=XXXXXXXXXXXXXXXXXXX
+export ADMIN_ROLENAME=YYYYYYYYYYYYYYYYYY
+export DEPLOYMENT_NAME=ZZZZZZZZZZZZZZZZZZ
+export ENVIRONMENT=staging    # sandbox, dev, test, ops vs. staging and prod?
+export IMAGE_TAG=latest
+
+# Additional parameters for image-exec Docker run command, e.g. add mounts here
+export IMAGE_RUN_PARS="--rm"
+
+# ----------------- derived inputs, nominally don't change --------------
 
 export JUPYTERHUB_DIR=`pwd`
+
+export ADMIN_ARN=arn:aws:iam::${ACCOUNT_ID}:role/${ADMIN_ROLENAME}
 export IMAGE_DIR=`pwd`/deployments/${DEPLOYMENT_NAME}/image
-
+export IMAGE_ID=${ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/${DEPLOYMENT_NAME}-user-image:${IMAGE_TAG}
 export PATH="`pwd`/tools":${PATH}
-
-# ---------------------------------------------------------------------------
-
-if [[ $DEPLOYMENT_NAME ]]; then
-else
-    echo "DEPLOYMENT_NAME is not set.  Create or correct setup-env."
-fi
-if [[ $ACCOUNT_ID ]]; then
-else
-    echo "ACCOUNT_ID is not set.  Create or correct setup-env."
-fi
-if [[ $ADMIN_ARN ]]; then
-else
-    echo "ADMIN_ARN is not set.  Create or correct setup-env."
-fi
-if [[ $TAG ]]; then
-else
-    echo "TAG is not set.  Create or correct setup-env."
-fi
-if [[ $IMAGE_DIR ]]; then
-else
-    echo "IMAGE_DIR is not set.  Create or correct setup-env."
-fi
-
