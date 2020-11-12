@@ -1,9 +1,3 @@
-#! /bin/bash -eux
+#! /bin/bash -eu
 
-source $JUPYTERHUB_DIR/setup-env
-
-cd $IMAGE_DIR
-
-docker run -it ${ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/${DEPLOYMENT_NAME}-user-image:${TAG} /opt/tests/test
-exit $?
-
+image-exec /opt/common-scripts/test-environments

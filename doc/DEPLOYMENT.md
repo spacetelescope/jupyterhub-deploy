@@ -104,8 +104,10 @@ Next, we will configure and deploy an EKS cluster and supporting resources neede
 - `cp your-cluster.tfvars.template $DEPLOYMENT_NAME.tfvars`
 - Update *deployment-name.tfvars* based on the templated values
 - `awsudo -d 3600 $ADMIN_ARN terraform apply -var-file=$DEPLOYMENT_NAME.tfvars -auto-approve`
-  - This will fail half way through because we haven't defined configuration for the new cluster
-  - Run `awsudo $ADMIN_ARN aws eks update-kubeconfig --name $DEPLOYMENT_NAME`, then rerun the Terraform command
+
+EKS kubeconfig is now terraformed removing the chicken-and-egg problem,  so this *should no longer be required*:
+
+- Run `awsudo $ADMIN_ARN aws eks update-kubeconfig --name $DEPLOYMENT_NAME`, then rerun the Terraform command
 
 # Jupyterhub-deploy
 
@@ -143,7 +145,9 @@ Scripts have been added to the *tools* directory to simplify image development:
 - image-build   -- build the Docker image defined by setup-env
 - image-test    -- experimental,  run autmatic image tests.  requires added support in deployment
 - image-push    -- push the built + tested Docker image to ECR at the configured tag
-- image-sh      -- run the image and start a bash shell for poking around
+- image-sh      -- start a container running an interactive bash shell for poking around
+- image-exec    -- start a container and run an arbitrary command
+- image-all     -- build, test, and push the image.
 
 Sourcing *setup-env* should add these scripts to your path, they require no parameters.
 
@@ -163,12 +167,21 @@ tools/image-test
 tools/image-push
 ```
 
+#### Scan-On-Push Docker Vulnerability Scanning
+
+Our Terraform'ed ECR registries have scan-on-push vulnerability scanning turned
+on.  After pushing visit the ECR registry for your deployment and when ready,
+review the scan results.
+
+Review the image scan and address vulnerabilities as needed before proceeding
+with the deployment.
+
 ### Configure JupyterHub and cluster secrets
 
 There are three categories of secrets involved in the cluster configuration:
 
 -   **JupyterHub proxyToken** - the hub authenticates its requests to the proxy using a secret token that the both services agree upon.  Generate the token with this command:
-	- `openssl rand -hex 32`
+    - `openssl rand -hex 32`
 -   MAST authentication **client ID** and **client secret** - these were obtained earlier and will be used during the OAuth authentication process (Note that this authentication method is likely to change in the future)
 -   **SSL private key and certificate** - these were obtained earlier
 
