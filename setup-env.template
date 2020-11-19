@@ -26,8 +26,8 @@ export ACCOUNT=${ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
 
 export JUPYTERHUB_DIR=`pwd`
 
-IMAGE_REPO=${DEPLOYMENT_NAME}-user-image
-COMMON_REPO=${IMAGE_REPO}
+export IMAGE_REPO=${DEPLOYMENT_NAME}-user-image
+export COMMON_REPO=${IMAGE_REPO}
 
 export ADMIN_ARN=arn:aws:iam::${ACCOUNT_ID}:role/${ADMIN_ROLENAME}
 
