@@ -51,8 +51,8 @@ USER root
 
 # Get webbpsf-data-0.9.0.tar.gz
 RUN mkdir /data && cd /data && \
-    wget --quiet https://stsci.box.com/shared/static/qcptcokkbx7fgi3c00w2732yezkxzb99.gz && \
-    tar zxf qcptcokkbx7fgi3c00w2732yezkxzb99.gz && \
+    wget --quiet https://stsci.box.com/shared/static/qcptcokkbx7fgi3c00w2732yezkxzb99.gz
+RUN cd /data && tar zxf qcptcokkbx7fgi3c00w2732yezkxzb99.gz && \
     rm qcptcokkbx7fgi3c00w2732yezkxzb99.gz && chmod -R a+r /data/webbpsf-data
 
 # Install sextractor under /usr/local
