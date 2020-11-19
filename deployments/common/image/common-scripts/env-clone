@@ -13,5 +13,5 @@ if [[ "$USE_FROZEN" == "1" ]]; then
 fi
 
 echo "-------------------------------------------------------------------------------"
-echo "Cloning env $to from env $1"
+echo "Cloning env $to from env $from"
 conda create --name $to  --clone $from
