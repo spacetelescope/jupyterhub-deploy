@@ -108,7 +108,6 @@ USER root
 RUN ln -s ${CONDA_DIR}/etc/profile.d/conda.sh /etc/profile.d/conda.sh
 
 USER ${NB_UID}
-
 COPY base.yml /tmp/base.yml
 RUN conda update --quiet --name base conda && \
     conda env update --name base -f /tmp/base.yml && \
@@ -116,9 +115,12 @@ RUN conda update --quiet --name base conda && \
     conda install --quiet conda-build && \
     conda build purge-all
 
+USER root
+RUN npm config set cafile /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+
+USER ${NB_UID}
 RUN ${CONDA_DIR}/bin/jupyter labextension install @jupyterlab/server-proxy && \
     ${CONDA_DIR}/bin/jupyter nbextension enable --py --sys-prefix ipyevents && \
-    ${CONDA_DIR}/bin/jupyter labextension install @jupyter-widgets/jupyterlab-manager ipyevents && \
     jupyter lab build -y && \
     jupyter lab clean -y && \
     npm cache clean --force && \
@@ -129,8 +131,6 @@ RUN ${CONDA_DIR}/bin/jupyter labextension install @jupyterlab/server-proxy && \
 # More SSL/TLS cert setup,  add server-proxy labextension
 
 USER root
-
-RUN npm config set cafile /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
 
 # Keep Xfce directories out of home and set up shortcuts for DS9 and CVT.
 COPY user-dirs.defaults /etc/xdg/user-dirs.defaults
