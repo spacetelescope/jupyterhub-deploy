@@ -1,0 +1,3 @@
+#! /bin/bash -eu
+
+grep -E 'cve|description|uri|imageDigest|registryId|repositoryName|imageScanCompletedAt'  $1
