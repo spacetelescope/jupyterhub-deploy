@@ -1,4 +1,8 @@
 jupyterhub:
+  hub:
+    pdb:
+      enabled: True
+      minAvailable: 0
   prePuller:
     continuous:
       enabled: true
