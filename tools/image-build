@@ -1,5 +1,14 @@
 #! /bin/bash -eux
 
+# Build the combined deployment image,  including:
+# 1. Perform any required source code updates,  including updating SSL certs
+#    and regenerating any generated Dockerfiles from constituent parts.
+# 2. Build and tag the common image
+# 3. Build and tag the combined mission image.
+# 4. If operating with USE_FROZEN=0, re-export frozen conda environments
+#    as fully versioned conda config files.  These may still need tweaking
+#    but form the basis for building frozen environments using USE_FROZEN=1.
+
 image-update   # Make automatic source adjustments
 
 cd ${COMMON_DIR}

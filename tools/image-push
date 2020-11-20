@@ -1,5 +1,7 @@
 #! /bin/bash -eu
 
+# Log into the container registry and push the current image.
+
 cd $IMAGE_DIR
 
 image-login

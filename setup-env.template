@@ -17,7 +17,7 @@ export USE_FROZEN=1                 # use 0 for floating versions,  1 production
 # ---------------------------------------------------------
 
 # Additional parameters for image-exec Docker run command, e.g. add mounts here
-export IMAGE_RUN_PARS="--rm -p 8888:8888"
+export IMAGE_RUN_PARS="--rm -p 8888:8888 -it"
 
 export ACCOUNT=${ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
 # ACCOUNT="xxxxx"
