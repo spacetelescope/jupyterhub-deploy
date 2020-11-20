@@ -1,0 +1,18 @@
+#! /bin/bash -eu
+# ----------------------------------------------------------------------
+
+# Install packages common to all conda environments (except base).
+#
+# Actual package lists need to be kept light/spare to avoid conflicts with the
+# core packages of the environment.
+
+env=$1
+
+# *Update* from the conda specs defined by /opt/common-env/*.yml
+/opt/common-scripts/env-update $env `find /opt/common-env -name '*.yml' | sort`
+
+#  Install pip packages defined by /opt/common/*.conda
+/opt/common-scripts/env-update $env `find /opt/common-env -name '*.conda' | sort`
+
+#  Install pip packages defined in all of *.pip
+/opt/common-scripts/env-update $env `find /opt/common-env -name '*.pip' | sort`

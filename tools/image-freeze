@@ -1,0 +1,10 @@
+#! /bin/bash -eu
+
+cd $IMAGE_DIR
+
+for env in `env-list-dirs environments | grep -v base`; do
+    if [[ ! -z "$env" ]]; then
+        echo "Dumping frozen versions for ${env}"
+        image-env-export $env  > environments/${env}/${env}-frozen.yml
+    fi
+done

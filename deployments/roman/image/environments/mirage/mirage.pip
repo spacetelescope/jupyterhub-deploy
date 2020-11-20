@@ -1,0 +1,5 @@
+healpy
+mirage
+git+https://github.com/npirzkal/GRISMCONF#egg=grismconf
+git+https://github.com/npirzkal/NIRCAM_Gsim#egg=nircam_gsim
+git+https://github.com/spacetelescope/jwst@0.17.1

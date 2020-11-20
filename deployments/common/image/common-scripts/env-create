@@ -1,0 +1,41 @@
+#! /bin/bash -eu
+
+#
+# If USE_FROZEN==0:   # development mode to determine new versions
+#
+# Create environment named $1 using the optional conda .yml spec specified as
+# parameter $2.  If no .yml spec is specified then create a default Python
+# environment.
+#
+# If USE_FROZEN==1:   # frozen conda environment with specific versions
+#
+# Create an environment from conda export file
+# /opt/environments/${env}/${env}-frozen.yml where env is $1.
+#
+
+env=$1
+env_yml=${2:-/opt/does-not-exist}
+
+. /etc/profile.d/conda.sh
+
+if [[ "$USE_FROZEN" == "1" ]]; then
+    env_yml=/opt/environments/${env}/${env}-frozen.yml
+fi
+
+echo "-------------------------------------------------------------------------------"
+
+if [[ -f ${env_yml} ]]; then
+    echo "Creating conda env ${env} from ${env_yml}"
+    cp ${env_yml}  /tmp/${env}.yml
+    conda  env create --quiet --name ${env} --file /tmp/${env}.yml
+else
+    if [[ "$USE_FROZEN" == "1" ]]; then
+        echo "You must build with USE_FROZEN=0 first, then image-freeze before USE_FROZEN=1."
+        exit 1
+    fi
+    echo "Creating defult Python environment for ${env}"
+    conda create --quiet --name  ${env} python
+fi
+
+conda clean -fya
+conda build purge-all
