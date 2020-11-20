@@ -26,7 +26,7 @@ jupyterhub:
     lifecycleHooks:
       postStart:
         exec:
-          command: ["rsync", "/etc/default-home-contents/", "/home/jovyan"]
+          command: ["rsync", "-r", "/etc/default-home-contents/", "/home/jovyan"]
           #command: ["gitpuller", "https://github.com/spacetelescope/jupyterhub-user-content", "roman", "."]
     extraEnv:
         CRDS_PATH:  /home/jovyan/crds_cache
