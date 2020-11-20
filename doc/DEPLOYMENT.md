@@ -131,8 +131,11 @@ discusses the commands which the scripts are based on.
 First, identify an existing deployment in the *deployments* directory that most closely matches your desired configuration, and do a recursive copy using `cp -r <existing-dir> <new-dir>` (the destination directory name should be the new deployment name).  Modifications to the Docker image and cluster configuration will need to be made.  Follow these instructions:
 
 - Go through the *image* directory, change file names and edit files that contain deployment-specific references.  Also make any changes to the Docker image files as needed (for instance, required software).
-- A file named *common.yaml* file needs to be created in the *config* directory.  An example can be found [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/staging/doc/example-common.yaml).  Place a copy of this example file in *config*, and edit the contents as appropriate.
+- A file named *common.yaml* file needs to be created in the *config* directory.  An example can be found [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/example-common.yaml).  Place a copy of this example file in *config*, and edit the contents as appropriate.
 - Git add, commit, and push all changes.
+
+**NOTE:** This document covers configuring JupyterHub and deploying a fully specified image.  A secondary
+document describes the strategy/process used to define, update, and test a deployment's Docker image: [FRAMEWORK.md](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/FRAMEWORK.md).
 
 #### Environment setup
 
@@ -178,6 +181,30 @@ with the deployment.
 
 ### Configure JupyterHub and cluster secrets
 
+#### Secrets convenience scripts
+
+Once you've Terraform'ed your secrets repo and know your way around,  these convenience scripts may
+help you check out and update your secrets based on your configured environment.  There's no requirement
+to use them, the manual steps they encapsulate are also documented below.
+
+```
+# Clone your code commit secrets repo.  Note that this repo should never be added directly to jupyterhub-deploy.
+# You may need to add .sops.yaml manually as described below in *Manual Secrets Handling*.
+secrets-clone
+
+# Edit your secrets:  decrypt, edit the secrets file,  commit any changes to the checkout.
+secrets-edit
+
+# Push your updated secrets  back to codecommit
+secrets-push
+
+# Fetch and print AWS session env variables needed to perform the codecommit
+# clone and pushes.  Called automatically.
+secrets-get-exports
+```
+
+#### Manual Secrets Handling
+
 There are three categories of secrets involved in the cluster configuration:
 
 -   **JupyterHub proxyToken** - the hub authenticates its requests to the proxy using a secret token that the both services agree upon.  Generate the token with this command:
@@ -206,18 +233,18 @@ Since we use sops to encrypt and decrypt the secret files, we need to fetch the 
 
 - `awsudo $ADMIN_ARN aws s3 cp s3://$DEPLOYMENT_NAME-sops-config/.sops.yaml .sops.yaml`
 
-**BUG**:  it is necessary to manually insert ADMIN_ARN *.sops.yaml* (this role has permissions to encrypt and decrypt).  You can see an example of an updated file [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/staging/doc/example-sops.yaml).
+**BUG**:  it is necessary to manually insert ADMIN_ARN *.sops.yaml* (this role has permissions to encrypt and decrypt).  You can see an example of an updated file [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/example-sops.yaml).
 
 **SECURITY ISSUE**: having the encrypt role in *.sops.yaml* will give helm more than the minimally required permissions since deployment only needs to decrypt.
 
 Now we need to create a *staging.yaml* file.  During JupyterHub deployment, helm will merge this file with the *common.yaml* file with the other YAML files created earlier to generate a master configuration file for JupyterHub.  Follow these instructions:
 
 - `awsudo $ADMIN_ARN sops staging.yaml` - this will open up your editor...
-- Populate the file with the contents of https://github.com/spacetelescope/jupyterhub-deploy/blob/staging/doc/example-staging-decrypted.yaml
+- Populate the file with the contents of https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/example-staging-decrypted.yaml
 - Fill in the areas that say "[REDACTED]" with the appropriate values, then save and exit the editor
 - `git add staging.yaml .sops.yaml`
 
-**BUG**: After *staging.yaml* has been created and configured, sops adds a section to the end of the file that defines the KMS key ARN and other values necessary for decryption.  Due to a hiccup documented in [JUSI-412](https://jira.stsci.edu/browse/JUSI-412), it is necessary to manually insert the ARN of the jupyterhub-admin role into the file so that sops can decrypt the file during deployment without specifying the role.  Edit the file (**do not use sops**) and add the role ARN.  You can see an example at the end of the an updated, encrypted file [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/staging/doc/example-staging-encrypted.yaml).
+**BUG**: After *staging.yaml* has been created and configured, sops adds a section to the end of the file that defines the KMS key ARN and other values necessary for decryption.  Due to a hiccup documented in [JUSI-412](https://jira.stsci.edu/browse/JUSI-412), it is necessary to manually insert the ARN of the jupyterhub-admin role into the file so that sops can decrypt the file during deployment without specifying the role.  Edit the file (**do not use sops**) and add the role ARN.  You can see an example at the end of the an updated, encrypted file [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/example-staging-encrypted.yaml).
 
 Finally, commit and push the changes to the repository:
 
