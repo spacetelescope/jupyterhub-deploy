@@ -191,6 +191,11 @@ image-scan-report   Focal   medium   >report.yaml
 image-scan-summarize  report.yaml
 ```
 
+You may need to install Python dependency before executing the *image-scan-xxx* scripts:
+```
+pip install --cert /etc/ssl/certs/ca-bundle.crt -r requirements.txt
+```
+
 ### Configure JupyterHub and cluster secrets
 
 #### Secrets convenience scripts
