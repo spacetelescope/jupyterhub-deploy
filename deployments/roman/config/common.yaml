@@ -8,7 +8,7 @@ jupyterhub:
       enabled: true
   singleuser:
     image:
-      tag: dev
+      tag: latest
     lifecycleHooks:
       postStart:
         exec:
