@@ -179,6 +179,18 @@ review the scan results.
 Review the image scan and address vulnerabilities as needed before proceeding
 with the deployment.
 
+Scripts exist to automate ECR scan results:
+
+```
+# Fetch results from ECR,  fetch Ubuntu CVE response status, print combined
+# results as YAML
+image-scan-report   <ubuntu version name sub-string>   <minimum severity level>    > report.yaml
+image-scan-report   Focal   medium   >report.yaml
+
+# Pull the most critical information from the scan report, CVE descriptions and related status
+image-scan-summarize  report.yaml
+```
+
 ### Configure JupyterHub and cluster secrets
 
 #### Secrets convenience scripts
