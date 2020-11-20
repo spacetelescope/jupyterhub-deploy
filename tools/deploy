@@ -1,5 +1,8 @@
 #! /usr/bin/bash
 
+# Perform code deployment for JupyterHub,  including secrets decryption and
+# Helm chart upgrade.
+
 deployment_name=$1
 account_id=$2
 secrets_yaml=$3
