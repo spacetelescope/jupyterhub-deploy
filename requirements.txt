@@ -1,2 +1,3 @@
-hubploy
 pygithub
+requests
+bs4

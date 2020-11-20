@@ -1,9 +1,0 @@
-{
-    "argv": [
-        "/opt/kernel_runner.py",
-        "hstdp",
-        "{connection_file}"
-    ],
-    "display_name": "HSTDP",
-    "language": "python"
-}

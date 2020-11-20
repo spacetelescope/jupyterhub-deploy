@@ -1,0 +1,3 @@
+#! /bin/bash -eu
+
+image-exec  conda env export --no-build --name $1 | sed -e's/\r//g'
