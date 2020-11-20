@@ -1,0 +1,19 @@
+channels:
+  - manics
+  - conda-forge
+  - http://ssb.stsci.edu/astroconda
+dependencies:
+  - jupyterhub
+  - jupyterlab
+  - nodejs
+  - nb_conda_kernels
+  - nb_conda
+  - ipykernel
+  - ipyevents
+  # For Jupyter Desktop Proxy
+  - websockify==0.9.0
+  - pip
+  - pip:
+    - jupyter-server-proxy
+    - nbgitpuller
+    - git+https://github.com/yuvipanda/jupyter-desktop-server@daecbdbbf89003a1d71fa03f362682a886bb3ad7

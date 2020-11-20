@@ -1,13 +1,22 @@
-#! /bin/sh -eu
+#! /bin/bash -eux
 
-#  Clone setup-env.template and modify,  source to shell environment.
-#
-# $ source setup-env
+image-update   # Make automatic source adjustments
 
-cd $IMAGE_DIR
+cd ${COMMON_DIR}
 
-if [[ ! -f tls-ca-bundle.pem ]]; then
-    cp -f /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem .
+# git rev-parse HEAD > common-image-git-hash
+echo "========================= Building Common Image ========================"
+# common image doesn't currently exploit frozen
+time docker build --tag ${COMMON_ID} --build-arg USE_FROZEN=${USE_FROZEN}  .
+
+cd ${IMAGE_DIR}
+
+# git rev-parse HEAD > mission-image-git-hash
+
+echo "========================= Building $IMAGE_ID USE_FROZEN=${USE_FROZEN} =========================="
+time docker build --tag ${IMAGE_ID} --build-arg USE_FROZEN=${USE_FROZEN} --build-arg BASE_IMAGE=${COMMON_ID} .
+
+if [[ "$USE_FROZEN" == "0" ]]; then
+    echo "========================= Freezing Requirements =========================="
+    time image-freeze
 fi
-
-docker build --tag ${IMAGE_ID} .

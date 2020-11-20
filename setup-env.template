@@ -1,3 +1,4 @@
+
 # Clone and customize this for your deployment
 #
 # NOTE:  must be sourced from jupyterhub-deploy root directory
@@ -5,20 +6,35 @@
 
 # ----------------- basic inputs,  must set --------------
 
-export ACCOUNT_ID=XXXXXXXXXXXXXXXXXXX
-export ADMIN_ROLENAME=YYYYYYYYYYYYYYYYYY
-export DEPLOYMENT_NAME=ZZZZZZZZZZZZZZZZZZ
-export ENVIRONMENT=staging    # sandbox, dev, test, ops vs. staging and prod?
-export IMAGE_TAG=latest
+export ACCOUNT_ID=12345678
+export ADMIN_ROLENAME=admin-role
+export DEPLOYMENT_NAME=cluster-name
+export ENVIRONMENT=staging          # sandbox, dev, test, ops vs. staging and prod?
+export IMAGE_TAG=mission-latest
+export COMMON_TAG=common-latest
+export USE_FROZEN=1                 # use 0 for floating versions,  1 production build from fixed versions.
+
+# ---------------------------------------------------------
 
 # Additional parameters for image-exec Docker run command, e.g. add mounts here
-export IMAGE_RUN_PARS="--rm"
+export IMAGE_RUN_PARS="--rm -p 8888:8888"
+
+export ACCOUNT=${ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
+# ACCOUNT="xxxxx"
 
 # ----------------- derived inputs, nominally don't change --------------
 
 export JUPYTERHUB_DIR=`pwd`
 
+export IMAGE_REPO=${DEPLOYMENT_NAME}-user-image
+export COMMON_REPO=${IMAGE_REPO}
+
 export ADMIN_ARN=arn:aws:iam::${ACCOUNT_ID}:role/${ADMIN_ROLENAME}
+
+export COMMON_DIR=`pwd`/deployments/common/image
+export COMMON_ID=${ACCOUNT}/${COMMON_REPO}:${COMMON_TAG}
+
 export IMAGE_DIR=`pwd`/deployments/${DEPLOYMENT_NAME}/image
-export IMAGE_ID=${ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/${DEPLOYMENT_NAME}-user-image:${IMAGE_TAG}
+export IMAGE_ID=${ACCOUNT}/${IMAGE_REPO}:${IMAGE_TAG}
+
 export PATH="`pwd`/tools":${PATH}

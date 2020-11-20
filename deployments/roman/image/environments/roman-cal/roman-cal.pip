@@ -1,0 +1,2 @@
+jwst==0.17.1
+git+https://github.com/spacetelescope/romancal.git
