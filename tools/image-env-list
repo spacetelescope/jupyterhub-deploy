@@ -1,0 +1,3 @@
+#! /bin/bash -eu
+
+image-exec conda env list | grep -v '#' | grep -E '[A-Za-z]+' | cut -d' ' -f1

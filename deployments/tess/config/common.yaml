@@ -17,7 +17,7 @@ jupyterhub:
       enabled: true
   singleuser:
     image:
-      tag: roman-latest
+      tag: mission-latest
       pullPolicy: Always
     lifecycleHooks:
       postStart:
@@ -33,7 +33,13 @@ jupyterhub:
       limit: 1G
   auth:
     users:
-      - add-me@stsci.edu
+      - cslocum@stsci.edu
+      - jmiller@stsci.edu
+      - gough@stsci.edu
+      - jmatuskey@stsci.edu
     admin:
       users:
-      - add-me@stsci.edu
+      - cslocum@stsci.edu
+      - jmiller@stsci.edu
+      - gough@stsci.edu
+      - jmatuskey@stsci.edu

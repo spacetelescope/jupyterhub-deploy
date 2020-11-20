@@ -1,0 +1,17 @@
+#! /bin/bash -eu
+
+# Create a secondary environment $2 by cloning existing environment $1
+
+from=$1
+to=$2
+
+. /etc/profile.d/conda.sh
+
+if [[ "$USE_FROZEN" == "1" ]]; then
+    /opt/common-scripts/env-create  $to  /opt/environments/${to}/${to}-frozen.yml
+    exit $?
+fi
+
+echo "-------------------------------------------------------------------------------"
+echo "Cloning env $to from env $from"
+conda create --name $to  --clone $from

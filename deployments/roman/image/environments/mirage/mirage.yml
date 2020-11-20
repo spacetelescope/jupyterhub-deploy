@@ -1,0 +1,7 @@
+name: mirage
+channels:
+- http://ssb.stsci.edu/astroconda
+- conda-forge
+- defaults
+dependencies:
+- python<3.8

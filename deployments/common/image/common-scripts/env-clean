@@ -1,0 +1,6 @@
+#! /bin/bash -eu
+
+. /etc/profile.d/conda.sh
+
+conda clean -fya
+conda build purge-all
