@@ -1,0 +1,31 @@
+#! /bin/bash -eu
+
+# ----------------- derived inputs, nominally don't change --------------
+# automatically sourced into setup-env
+
+if [[ "$PERSONAL_IMAGE" == "1" ]]; then
+    # Standalone JupyterLab setup,  no ECR scanning
+    ACCOUNT="personal_image"
+    export IMAGE_WAIT_FOR_ECR_SCAN="0"
+else
+    # Octarine AWS JupyterHub setup
+    export ACCOUNT=${ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
+    export IMAGE_WAIT_FOR_ECR_SCAN="1"
+    export IMAGE_UBUNTU_NAME="Focal"
+    export IMAGE_VULNERABILITY_LEVEL="medium"
+fi
+
+export JUPYTERHUB_DIR=`pwd`
+
+export IMAGE_REPO=${DEPLOYMENT_NAME}-user-image
+export COMMON_REPO=${IMAGE_REPO}
+
+export ADMIN_ARN=arn:aws:iam::${ACCOUNT_ID}:role/${ADMIN_ROLENAME}
+
+export COMMON_DIR=`pwd`/deployments/common/image
+export COMMON_ID=${ACCOUNT}/${COMMON_REPO}:${COMMON_TAG}
+
+export IMAGE_DIR=`pwd`/deployments/${DEPLOYMENT_NAME}/image
+export IMAGE_ID=${ACCOUNT}/${IMAGE_REPO}:${IMAGE_TAG}
+
+export PATH="`pwd`/tools":${PATH}
