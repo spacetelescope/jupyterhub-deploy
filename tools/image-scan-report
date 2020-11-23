@@ -63,7 +63,15 @@ KEEP_LEVELS = {
 }
 
 def get_report_dict(version, levels):
+    print("Fetching ECR vulnerability scan",file=sys.stderr)
+    sys.stderr.flush()
     vulnerabilities = get_scan_results()
+    while vulnerabilities["imageScanStatus"]["status"] != "COMPLETE":
+        print("Waiting for ECR scan,  prior status:",
+              vulnerabilities["imageScanStatus"]["status"], file=sys.stderr)
+        sys.stderr.flush()
+        time.sleep(10)
+        vulnerabilities = get_scan_results()
     reduced = limit_levels(version, levels, vulnerabilities)
     return reduced
 
