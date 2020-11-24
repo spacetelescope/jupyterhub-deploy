@@ -19,6 +19,7 @@ ENV MIRAGE_DATA=/data/mirage \
 
 ENV CRDS_PATH=/home/jovyan/crds_cache
 ENV CRDS_SERVER_URL=https://jwst-crds.stsci.edu
+ENV CRDS_VERBOSITY=20
 
 # ----------------------------------------------------------------------
 # Install environments
@@ -83,6 +84,9 @@ COPY environments/    /opt/environments
 
 # remove this step once nbgitpuller enabled; these contents will be in the jupyterhub-user-content repo
 COPY default-home-contents/ /etc/default-home-contents/
+
+# Fix certs in conda for application level SSL, e.g. pass image-test running on CI-node
+RUN /opt/common-scripts/fix-certs
 
 # For standalone operation outside JupyterHub
 COPY default-home-contents/ /home/jovyan
