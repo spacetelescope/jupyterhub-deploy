@@ -1,6 +1,6 @@
 #! /bin/bash -eu
 
-find /opt/conda -name '*.pem' | grep -E 'cert.pem|cacert.pem' >/tmp/certs
+find /opt/conda -name '*.pem' | grep -E 'ssl/cert.pem|ssl/cacert.pem' >/tmp/certs
 
 for cert in `cat /tmp/certs`;
 do
