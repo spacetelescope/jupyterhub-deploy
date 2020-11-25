@@ -10,7 +10,3 @@ image-login
 
 echo "================================== Pushing ${IMAGE_ID} =============================="
 docker push ${IMAGE_ID}
-
-if [[ ${IMAGE_WAIT_FOR_ECR_SCAN} == "1" ]]; then
-    image-scan
-fi
