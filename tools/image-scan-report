@@ -29,6 +29,9 @@ image_repo=os.environ["IMAGE_REPO"]
 image_tag=os.environ["IMAGE_TAG"]
 
 def get_scan_results():
+    """Issue an AWS command to dump the ECR scan results as JSON, load the
+    JSON,  and return the resulting dict.
+    """
     scan_results = subprocess.check_output((
         f"awsudo -d 3600 {admin_arn}  aws ecr describe-image-scan-findings "
         f"--no-paginate "
@@ -37,9 +40,15 @@ def get_scan_results():
     return json.loads(scan_results)
 
 def limit_levels(version, levels, full_results):
+    """Only keep findings with statuses in `levels`.  Assume `full_results` contains
+    everything returned from ECR which e.g. **may** include LOW or INFORMATIONAL CVE's
+    which are normally ignored when scanning for MEDIUM and higher;  remove lower
+    priority CVS's from return dict.
+    """
     reduced_results = copy.deepcopy(full_results)
     findings  = reduced_results["imageScanFindings"]["findings"]
     reduced_results["imageScanFindings"]["findings"] = []
+    reduced_results["overall_status"] = "FAILED"
     for finding in findings:
         if finding["severity"] in levels or "ALL" in levels:
             reduced_results["imageScanFindings"]["findings"].append(finding)
@@ -51,6 +60,8 @@ def limit_levels(version, levels, full_results):
                                         ubuntu_status
             else:
                 print("Unknown CVE URI:", uri)
+        if finding["severity"] in FAIL_LEVELS:
+            reduced_results["overall_status"] = "FAILED"
     return reduced_results
 
 KEEP_LEVELS = {
@@ -62,7 +73,15 @@ KEEP_LEVELS = {
     "ALL" : ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFORMATIONAL"],
 }
 
+FAIL_LEVELS = [
+    "CRITCAL", "HIGH"
+]
+
 def get_report_dict(version, levels):
+    """Get the overall scan report dict which includes both ECR findings which
+    have severities in `levels` and the Ubuntu status string for the CVE for
+    Ubuntu `version`.
+    """
     print("Fetching ECR vulnerability scan",file=sys.stderr)
     sys.stderr.flush()
     vulnerabilities = get_scan_results()
@@ -76,6 +95,11 @@ def get_report_dict(version, levels):
     return reduced
 
 def fetch_ubuntu_uri_status(uri, version_name):
+    """Follow the Ubuntu `uri` included in ECR output for each CVE.  Rip the
+    status for Ubuntu which includes substring `version_name` in its table
+    entry and return a summary string which shows Ubuntu's status on addressing
+    / remediating the CVE.
+    """
     response = requests.get(uri)
     soup = bs4.BeautifulSoup(response.text, "lxml")
     for row in soup.find_all("tr"):
@@ -96,6 +120,9 @@ def main():
     levels = KEEP_LEVELS[sys.argv[2].upper()]
     reduced = get_report_dict(version, levels)
     print(yaml.dump(reduced))
+    if reduced["overall_status"] == "FAILED":
+        return 1
+    return 0
 
 if __name__ == "__main__":
     main()
