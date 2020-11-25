@@ -15,6 +15,8 @@ export COMMON_TAG=common-latest
 # sandbox, dev, test, ops vs. staging and prod?
 export ENVIRONMENT=staging
 
+# ----------------- vvvv less frequently changed vvvv -------------------------------
+
 # use 0 for loosely pinned package versions,  1 production build from fixed versions.
 export USE_FROZEN=1
 
@@ -23,6 +25,13 @@ export PERSONAL_IMAGE=0
 
 # Additional parameters for image-exec Docker run command, e.g. add mounts here
 export IMAGE_RUN_PARS="--rm -p 8888:8888 -it"
+
+# Image scanning,  report Ubuntu status for this version of Ubuntu
+export IMAGE_UBUNTU_NAME="Focal"
+
+# Image scanning,  report CVE's at this severity level and  higher
+export IMAGE_VULNERABILITY_LEVEL="medium"
+
 
 # ----------------- values derived from basic inputs ---------------------
 
