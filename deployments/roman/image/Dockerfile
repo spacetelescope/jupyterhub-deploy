@@ -1,4 +1,5 @@
 
+
 # ========================= vvvvv Custom  vvvvv =========================
 
 ARG BASE_IMAGE
@@ -75,6 +76,9 @@ RUN jupyter kernelspec list | grep conda\- | awk '{print $1;}' | xargs jupyter k
 # ========================= ^^^^^ Custom  ^^^^^ =========================
 # ========================= vvvvv Generic vvvvv  =========================
 
+# As part of Dockerfile.trailer,  these statements are executed from the
+# perspective of the deployment image directory,  not common.
+
 USER root
 
 # Copy everything now that build is complete and cache busting wont occur
@@ -82,16 +86,18 @@ COPY environments/    /opt/environments
 
 # ----------------------------------------------------------------------
 
-# remove this step once nbgitpuller enabled; these contents will be in the jupyterhub-user-content repo
-COPY default-home-contents/ /etc/default-home-contents/
+# remove this step once nbgitpuller enabled; these contents will be in the
+#  jupyterhub-user-content repo.   Install deployment-specific $HOME files.
+COPY default-home-contents/  /etc/default-home-contents
 
 # Fix certs in conda for application level SSL, e.g. pass image-test running on CI-node
 RUN /opt/common-scripts/fix-certs
 
-# For standalone operation outside JupyterHub
-COPY default-home-contents/ /home/jovyan
-RUN  fix-permissions  /home/jovyan  &&\
-     fix-permissions  /opt/environments
+# For standalone operation outside JupyterHub,  note that  /etc also includes
+# common home directory files.
+RUN cp -r /etc/default-home-contents/* /home/jovyan && \
+    fix-permissions  /home/jovyan  &&\
+    fix-permissions  /opt/environments
 
 USER $NB_USER
 WORKDIR /home/$NB_USER

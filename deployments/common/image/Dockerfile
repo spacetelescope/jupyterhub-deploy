@@ -141,3 +141,17 @@ COPY common-env/ /opt/common-env
 RUN cat /opt/common-scripts/global_bashrc >> /etc/bash.bashrc
 
 USER ${NB_UID}
+COPY environments/ /opt/environments/
+
+# ----------------------------------------------------------------------
+# Install additional environments common to all deployments
+# These dedicated environments are used when conflicts are unavoidable
+# but the s/w should still be universally available.
+#
+RUN /opt/common-scripts/env-create  ds9 /opt/environments/ds9/ds9.yml
+RUN /opt/common-scripts/install-common ds9
+
+# Set up astroquery and ds9 desktop short-cut, will be further
+# augmented by specific deployments
+COPY default-home-contents/   /etc/default-home-contents
+
