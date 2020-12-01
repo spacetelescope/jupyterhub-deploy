@@ -2,5 +2,4 @@
 
 IMAGE_RUN_PARS="$IMAGE_RUN_PARS -e JUPYTER_ENABLE_LAB=yes"
 
-exec image-exec
-
+exec image-exec  $*
