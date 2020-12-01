@@ -8,4 +8,5 @@ image-login
 
 # docker push ${COMMON_ID}
 
+echo "================================== Pushing ${IMAGE_ID} =============================="
 docker push ${IMAGE_ID}
