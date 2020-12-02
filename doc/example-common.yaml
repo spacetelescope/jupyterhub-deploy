@@ -5,6 +5,9 @@ jupyterhub:
   singleuser:
     image:
       tag: staging
+    storage:
+      dynamic:
+        storageClass: "aws-efs"
     lifecycleHooks:
       postStart:
         exec:
