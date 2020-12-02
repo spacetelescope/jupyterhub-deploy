@@ -23,6 +23,9 @@ jupyterhub:
     image:
       tag: dev
       pullPolicy: Always
+    storage:
+      dynamic:
+        storageClass: "aws-efs"
     lifecycleHooks:
       postStart:
         exec:
