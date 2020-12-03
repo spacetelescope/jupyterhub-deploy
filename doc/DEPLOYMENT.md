@@ -232,7 +232,7 @@ In the top level of the *jupyterhub-deployment* repository, create a directory s
 - `mkdir -p secrets/deployments/$DEPLOYMENT_NAME`
 - `cd secrets/deployments/$DEPLOYMENT_NAME`
 
-In the AWS console, find the URL of the secrets repository by navigating to **Services → CodeCommit → Repositories** and click on the repository named *<deployment-name>-secrets*.  Click on the drop-down button called "Clone URL" and select "Clone HTTPS".  The copied URL should look something like https://git-codecommit.us-east-1.amazonaws.com/v1/repos/deployment-name-secrets.
+In the AWS console, find the URL of the secrets repository by navigating to **Services → CodeCommit → Repositories** and click on the repository named *deployment-name-secrets*.  Click on the drop-down button called "Clone URL" and select "Clone HTTPS".  The copied URL should look something like https://git-codecommit.us-east-1.amazonaws.com/v1/repos/deployment-name-secrets.
 
 Next, assume the deployment-admin role and clone the repository:
 
