@@ -71,6 +71,6 @@ USER $NB_UID
 
 RUN /opt/common-scripts/kernel-setup
 
-RUN jupyter kernelspec list | grep conda\- | awk '{print $1;}' | xargs jupyter kernelspec remove -f
+# RUN jupyter kernelspec list | grep conda\- | awk '{print $1;}' | xargs jupyter kernelspec remove -f
 
 # ========================= ^^^^^ Custom  ^^^^^ =========================
