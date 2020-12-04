@@ -21,7 +21,7 @@ jupyterhub:
       enabled: true
   singleuser:
     image:
-      tag: dev
+      tag: test
       pullPolicy: Always
     storage:
       dynamic:
@@ -30,7 +30,7 @@ jupyterhub:
       postStart:
         exec:
           command: ["rsync", "-r", "/etc/default-home-contents/", "/home/jovyan"]
-          #command: ["gitpuller", "https://github.com/spacetelescope/jupyterhub-user-content", "roman", "."]
+          #command: ["gitpuller", "https://github.com/spacetelescope/jupyterhub-user-content", "roman", "/home/jovyan/stuff"]
     extraEnv:
         CRDS_PATH:  /home/jovyan/crds_cache
         CRDS_SERVER_URL: https://jwst-crds.stsci.edu

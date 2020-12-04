@@ -2,9 +2,9 @@
 
 # Log into the container registry and push the current image.
 
-cd $IMAGE_DIR
+./tools/image-login
 
-image-login
+cd $IMAGE_DIR
 
 # docker push ${COMMON_ID}
 

@@ -9,7 +9,7 @@
 #    as fully versioned conda config files.  These may still need tweaking
 #    but form the basis for building frozen environments using USE_FROZEN=1.
 
-image-update   # Make automatic source adjustments
+./image-update   # Make automatic source adjustments
 
 cd ${COMMON_DIR}
 
@@ -27,5 +27,5 @@ time docker build --tag ${IMAGE_ID} --build-arg USE_FROZEN=${USE_FROZEN} --build
 
 if [[ "$USE_FROZEN" == "0" ]]; then
     echo "========================= Freezing Requirements =========================="
-    time image-freeze
+    time ./image-freeze
 fi
