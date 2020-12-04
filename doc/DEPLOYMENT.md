@@ -89,8 +89,6 @@ First, we will setup KMS and CodeCommit with the *kms-codecommit* Terraform modu
 - `cp your-vars.tfvars.example $DEPLOYMENT_NAME.tfvars`
 - Update *deployment-name.tfvars* based on the templated values
 - `awsudo -d 3600 $ADMIN_ARN terraform apply -var-file=$DEPLOYMENT_NAME.tfvars -auto-approve`
-  - When prompted the enter a value for the "Owner" tag, enter the name of the mission (Roman, JWST, etc.)
-    - TODO: put the owner tag in the variables template; if it's defined in tfvars, we won't be prompted (I think)
   - BUG: you will need to run this twice until we add a "depends_on"
 
 A file named **_.sops.yaml_** will have been produced, and this will be used in the new CodeCommit repository for appropriate encryption with [sops](https://github.com/mozilla/sops) later in this procedure.
@@ -234,7 +232,7 @@ In the top level of the *jupyterhub-deployment* repository, create a directory s
 - `mkdir -p secrets/deployments/$DEPLOYMENT_NAME`
 - `cd secrets/deployments/$DEPLOYMENT_NAME`
 
-In the AWS console, find the URL of the secrets repository by navigating to **Services → CodeCommit → Repositories** and click on the repository named *<deployment-name>-secrets*.  Click on the drop-down button called "Clone URL" and select "Clone HTTPS".  The copied URL should look something like https://git-codecommit.us-east-1.amazonaws.com/v1/repos/deployment-name-secrets.
+In the AWS console, find the URL of the secrets repository by navigating to **Services → CodeCommit → Repositories** and click on the repository named *deployment-name-secrets*.  Click on the drop-down button called "Clone URL" and select "Clone HTTPS".  The copied URL should look something like https://git-codecommit.us-east-1.amazonaws.com/v1/repos/deployment-name-secrets.
 
 Next, assume the deployment-admin role and clone the repository:
 
