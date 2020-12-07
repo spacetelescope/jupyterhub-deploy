@@ -1,0 +1,8 @@
+# Base environment, with various jupyter components installed
+name: cvt
+channels:
+  - conda-forge
+  - http://ssb.stsci.edu/astroconda
+  - defaults
+dependencies:
+  - python

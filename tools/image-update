@@ -1,0 +1,37 @@
+# /bin/bash -eu
+
+# Update the configured deployment based on files stored in the commmon
+# deployment.
+
+cd ${IMAGE_DIR}
+
+# -------------------------------------------------------------------------
+# Update TLS cert in "common" image directory to CI-node's cert.  This cert
+# enables TLS/SSL to work inside the Docker build process which tunnels through
+# the host OS without decryption, but must be decrypted for the STScI firewall
+# to do packet inspection before continuing on to package distribution sites.
+#
+# This cert bundle should work anywhere enabling the same image to work inside
+# and outside AWS networks.
+
+if [ -f "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem" ]; then
+   cp -f /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem ../../common/image
+fi
+
+# -------------------------------------------------------------------------
+# Ideally mission images are defined by a Dockerfile created from two parts
+# which are concatenated:
+#
+# 1. Dockerfile.custom in the mission image directory.
+#
+# 2. Dockerfile.trailer from the common image directory.
+#
+# If no Dockerfile.custom is defined,  assume the mission has opted out of
+# the standard approach for using the common base image and leave the
+# Dockerfile alone.
+#
+#
+if [[ -f Dockerfile.custom ]]; then
+   # Combine Dockerfile.custom with the common "trailer" to create Dockerfile
+   cat Dockerfile.custom ../../common/image/Dockerfile.trailer >Dockerfile
+fi

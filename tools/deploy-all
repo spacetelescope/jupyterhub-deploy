@@ -1,0 +1,16 @@
+#! /bin/bash -e
+
+# Perform complete deployment of JupyterHub,  including:
+#
+# 1. Update kubeconfig
+# 2. Nested secrets decryption and Helm chart upgrade
+# 3. Fetch service proxy public IP
+#
+
+cd $JUPYTERHUB_DIR
+
+awsudo $ADMIN_ARN aws eks update-kubeconfig --name ${DEPLOYMENT_NAME} --region us-east-1 --role-arn arn:aws:iam::${ACCOUNT_ID}:role/jupyterhub-admin
+
+tools/deploy ${DEPLOYMENT_NAME} ${ACCOUNT_ID} secrets/deployments/${DEPLOYMENT_NAME}/secrets/${ENVIRONMENT}.yaml ${ENVIRONMENT}
+
+kubectl get svc proxy-public

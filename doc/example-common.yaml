@@ -1,23 +1,26 @@
 jupyterhub:
   prePuller:
     continuous:
-      enabled: false
+      enabled: true
   singleuser:
     image:
-      tag: # SPECIFY THE TAG OF THE DOCKER IMAGE YOU WANT TO BE USED
+      tag: staging
+    storage:
+      dynamic:
+        storageClass: "aws-efs"
     lifecycleHooks:
       postStart:
         exec:
           command: ["rsync", "/etc/default-home-contents/", "/home/jovyan"]
           #command: ["gitpuller", "https://github.com/spacetelescope/jupyterhub-user-content", "roman-sit", "."]
     extraEnv:
-      CRDS_PATH: /home/jovyan/crds_cache
-      CRDS_SERVER_URL: https://jwst-serverless.stsci.edu
+      CRDS_PATH: "/home/jovyan/crds_cache"
+      CRDS_SERVER_URL: "https://jwst-serverless.stsci.edu"
       CRDS_S3_ENABLED: "1"
       CRDS_S3_RETURN_URI: "0"
-      CRDS_MAPPING_URI: "s3://[ACCOUNT-NAME]-crds/mappings/jwst"
-      CRDS_REFERENCE_URI: "s3://[ACCOUNT-NAME]/references/jwst"
-      CRDS_CONFIG_URI: "s3://[ACCOUNT-NAME]-crds/config/jwst"
+      CRDS_MAPPING_URI: "s3://dmd-test-crds/mappings/jwst"
+      CRDS_REFERENCE_URI: "s3://dmd-test-crds/references/jwst"
+      CRDS_CONFIG_URI: "s3://dmd-test-crds/config/jwst"
       CRDS_USE_PICKLES: "0"
       CRDS_DOWNLOAD_MODE: plugin
       CRDS_DOWNLOAD_PLUGIN: "crds_s3_get ${SOURCE_URL} ${OUTPUT_PATH} ${FILE_SIZE} ${FILE_SHA1SUM}"
@@ -25,36 +28,11 @@ jupyterhub:
     memory:
       guarantee: 512M
       limit: 1G
-  hub:
-    extraEnv:
-      OAUTH2_AUTHORIZE_URL: "https://auth.mast.stsci.edu/oauth/authorize"
-      # OAUTH2_AUTHORIZE_URL: "https://auth.masttest.stsci.edu/oauth/authorize"
-      OAUTH_CALLBACK_URL: "https://[DEPLOYMENT-NAME].science.stsci.edu/hub/oauth_callback"
-  proxy:
-    https:
-      enabled: true
-      type: manual
-      hosts:
-        - [DEPLOYMENT-NAME].science.stsci.edu
   auth:
-    type: custom
-    custom:
-      className: oauthenticator.generic.GenericOAuthenticator
-      config:
-        login_service: "MAST"
-        oauth_callback_url: "https://[DEPLOYMENT-NAME].science.stsci.edu/hub/oauth_callback"
-        authorize_url: "https://auth.mast.stsci.edu/oauth/authorize"
-        # authorize_url: "https://auth.masttest.stsci.edu/oauth/authorize"
-        userdata_url: "https://auth.mast.stsci.edu/info"
-        # userdata_url: "https://auth.masttest.stsci.edu/info"
-        username_key: "eppn"
-        userdata_params: {'state': 'state'}
-        scope: ["mast:user:info", "mast:proprietary:hst"]
-        userdata_method: GET
     users:
-      - cslocum@stsci.edu
-      # ...
+      - [EMAIL ADDRESS]
+      - ...
     admin:
       users:
-        - cslocum@stsci.edu
-        # ...
+        - [EMAIL ADDRESS]
+        - ...

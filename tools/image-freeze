@@ -1,0 +1,17 @@
+#! /bin/bash -eu
+
+# Export the intended (vs. as-built) conda environments as fully versioned
+# (frozen) environment specifications.  These specs often require tweaking
+# despite their origin from successfully built systems.  These specs originate
+# inside a fully built container but become specs for frozen environments in
+# the Docker source tree.  Nominally this is run when USE_FROZEN=0 and an
+# environment is being resolved from loosely specified version requirements.
+
+cd $IMAGE_DIR
+
+for env in `env-list-dirs environments | grep -v base`; do
+    if [[ ! -z "$env" ]]; then
+        echo "Dumping frozen versions for ${env}"
+        image-env-export $env  > environments/${env}/${env}-frozen.yml
+    fi
+done
