@@ -1,0 +1,5 @@
+#! /bin/bash -eu
+
+# Build, test, and push the image defined by the environment.
+
+image-build  && image-test && image-push && image-scan && echo "********** Image pipeline succeeded. **********" || echo "!!!!!!!!!!! Image pipeline failed. !!!!!!!!!!!!"

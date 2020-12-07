@@ -1,2 +1,5 @@
-hubploy
 pygithub
+requests
+beautifulsoup4
+lxml
+pyyaml
