@@ -206,7 +206,6 @@ to use them, the manual steps they encapsulate are also documented below.
 
 ```
 # Clone your code commit secrets repo.  Note that this repo should never be added directly to jupyterhub-deploy.
-# You may need to add .sops.yaml manually as described below in *Manual Secrets Handling*.
 secrets-clone
 
 # Edit your secrets:  decrypt, edit the secrets file,  commit any changes to the checkout.
@@ -260,8 +259,6 @@ Now we need to create a *staging.yaml* file.  During JupyterHub deployment, helm
 - Populate the file with the contents of https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/example-staging-decrypted.yaml
 - Fill in the areas that say "[REDACTED]" with the appropriate values, then save and exit the editor
 - `git add staging.yaml .sops.yaml`
-
-**BUG**: After *staging.yaml* has been created and configured, sops adds a section to the end of the file that defines the KMS key ARN and other values necessary for decryption.  Due to a hiccup documented in [JUSI-412](https://jira.stsci.edu/browse/JUSI-412), it is necessary to manually insert the ARN of the jupyterhub-admin role into the file so that sops can decrypt the file during deployment without specifying the role.  Edit the file (**do not use sops**) and add the role ARN.  You can see an example at the end of the an updated, encrypted file [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/example-staging-encrypted.yaml).
 
 Finally, commit and push the changes to the repository:
 
