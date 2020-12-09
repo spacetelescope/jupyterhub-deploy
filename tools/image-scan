@@ -4,4 +4,4 @@ cd  $JUPYTERHUB_DIR
 image-scan-report "$IMAGE_UBUNTU_NAME" $IMAGE_VULNERABILITY_LEVEL >ecr-scan-report.yaml
 
 echo "============================== ECR Scan Summary ================================"
-image-scan-summary report.yaml
+image-scan-summary ecr-scan-report.yaml
