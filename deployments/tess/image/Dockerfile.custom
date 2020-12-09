@@ -23,9 +23,6 @@ USER $NB_UID
 
 RUN /opt/common-scripts/kernel-setup
 
-# Drop kernels not explicitly defined by us,  those preceded with conda-
-# RUN jupyter kernelspec list | grep conda\- | awk '{print $1;}' | xargs jupyter kernelspec remove -f
-
 # ---------------------------------------------------------------
 # VARTOOLS Light Curve Analysis Program
 USER root
@@ -46,7 +43,6 @@ RUN chmod 777 /opt/tessworkshop_tutorials
 
 RUN mkdir /opt/notebooks
 RUN chmod 777 /opt/notebooks
-
 
 USER $NB_UID
 RUN git clone https://github.com/spacetelescope/tessworkshop_tutorials.git /opt/tessworkshop_tutorials

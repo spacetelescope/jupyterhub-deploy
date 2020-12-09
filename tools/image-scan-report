@@ -23,6 +23,7 @@ import copy
 
 import requests
 import bs4
+import time
 
 admin_arn=os.environ["ADMIN_ARN"]
 image_repo=os.environ["IMAGE_REPO"]
