@@ -71,8 +71,6 @@ USER $NB_UID
 
 RUN /opt/common-scripts/kernel-setup
 
-RUN jupyter kernelspec list | grep conda\- | awk '{print $1;}' | xargs jupyter kernelspec remove -f
-
 # ========================= ^^^^^ Custom  ^^^^^ =========================
 # ========================= vvvvv Generic vvvvv  =========================
 
@@ -89,6 +87,9 @@ COPY environments/    /opt/environments
 # remove this step once nbgitpuller enabled; these contents will be in the
 #  jupyterhub-user-content repo.   Install deployment-specific $HOME files.
 COPY default-home-contents/  /etc/default-home-contents
+
+COPY global_bashrc  /home/jovyan
+RUN  cat /home/jovyan/global_bashrc   >> /etc/bash.bashrc
 
 # Fix certs in conda for application level SSL, e.g. pass image-test running on CI-node
 RUN /opt/common-scripts/fix-certs

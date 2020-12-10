@@ -15,7 +15,8 @@ if [[ ! -f $HOME/.jupyter/jupyter_config.json  ]]; then
     cat > $HOME/.jupyter/jupyter_config.json  <<EOF
 {
   "CondaKernelSpecManager": {
-    "kernelspec_path": "--user"
+    "kernelspec_path": "--user",
+    "name_format" : "{environment} -- {display_name}"
   }
 }
 EOF
@@ -26,6 +27,8 @@ fi
 
 # Only set up kernels which have actually been installed, e.g. not
 # disabled by Dockerfile edits during debug.
+
+# Potentially among other things,  these are needed so that image-test will run.
 
 for kernel in `conda env list | grep -v '#' | grep -v base | cut -d' ' -f1`; do
 

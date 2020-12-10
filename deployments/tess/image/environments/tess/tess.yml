@@ -30,6 +30,5 @@ dependencies:
 
 # - jwst-visit-parser
 # - jwst_gtvt
-# - cfitsio
 # - fitsverify
 # - stsci

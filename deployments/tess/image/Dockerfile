@@ -13,7 +13,8 @@ USER ${NB_UID}
 
 # TESS
 COPY environments/tess/ /opt/environments/tess
-RUN /opt/common-scripts/env-create  tess /opt/environments/tess/tess.yml
+RUN /opt/common-scripts/env-clone  base  tess
+# RUN /opt/common-scripts/env-create  tess /opt/environments/tess/tess.yml
 RUN /opt/common-scripts/install-common tess
 RUN /opt/common-scripts/env-update  tess /opt/environments/tess/tess.pip
 
@@ -21,9 +22,6 @@ RUN /opt/common-scripts/env-update  tess /opt/environments/tess/tess.pip
 USER $NB_UID
 
 RUN /opt/common-scripts/kernel-setup
-
-# Drop kernels not explicitly defined by us,  those preceded with conda-
-RUN jupyter kernelspec list | grep conda\- | awk '{print $1;}' | xargs jupyter kernelspec remove -f
 
 # ---------------------------------------------------------------
 # VARTOOLS Light Curve Analysis Program
@@ -46,7 +44,6 @@ RUN chmod 777 /opt/tessworkshop_tutorials
 RUN mkdir /opt/notebooks
 RUN chmod 777 /opt/notebooks
 
-
 USER $NB_UID
 RUN git clone https://github.com/spacetelescope/tessworkshop_tutorials.git /opt/tessworkshop_tutorials
 RUN git clone https://github.com/spacetelescope/notebooks.git /opt/notebooks
@@ -54,28 +51,34 @@ RUN git clone https://github.com/spacetelescope/notebooks.git /opt/notebooks
 # ========================= ^^^^^ Custom  ^^^^^ =========================
 # ========================= vvvvv Generic vvvvv  =========================
 
+# As part of Dockerfile.trailer,  these statements are executed from the
+# perspective of the deployment image directory,  not common.
+
 USER root
 
-COPY test /opt/test
+# Copy everything now that build is complete and cache busting wont occur
+COPY environments/    /opt/environments
 
 # ----------------------------------------------------------------------
 
-RUN cat /opt/common-scripts/global_bashrc >> /etc/bash.bashrc
+# remove this step once nbgitpuller enabled; these contents will be in the
+#  jupyterhub-user-content repo.   Install deployment-specific $HOME files.
+COPY default-home-contents/  /etc/default-home-contents
 
-# RUN chown -R ${NB_UID}.${NB_UID} /opt/environments
-RUN  fix-permissions  /opt/environments
+COPY global_bashrc  /home/jovyan
+RUN  cat /home/jovyan/global_bashrc   >> /etc/bash.bashrc  && \
+     rm /home/jovyan/global_bashrc
+
+# Fix certs in conda for application level SSL, e.g. pass image-test running on CI-node
+RUN /opt/common-scripts/fix-certs
+
+# For standalone operation outside JupyterHub,  note that  /etc also includes
+# common home directory files.
+RUN cp -r /etc/default-home-contents/* /home/jovyan && \
+    fix-permissions  /home/jovyan  &&\
+    fix-permissions  /opt/environments
 
 USER $NB_USER
 WORKDIR /home/$NB_USER
-
-# remove this step once nbgitpuller enabled; these contents will be in the jupyterhub-user-content repo
-COPY default-home-contents/ /etc/default-home-contents/
-
-COPY default-home-contents/ /home/jovyan
-
-# FROM scratch
-# COPY --from=build /  /
-
-
 
 CMD [ "start-notebook.sh" ]

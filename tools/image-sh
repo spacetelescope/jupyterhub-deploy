@@ -3,4 +3,4 @@
 # Run a bash shell in the last tagged mission container.  This will lag
 # behind any partially built container with newer image layers.
 
-image-exec /bin/bash
+image-exec /bin/bash --rcfile /etc/bash.bashrc

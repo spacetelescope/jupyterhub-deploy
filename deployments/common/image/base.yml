@@ -3,6 +3,7 @@ channels:
   - conda-forge
   - http://ssb.stsci.edu/astroconda
 dependencies:
+  - cfitsio
   - jupyterhub
   - jupyterlab
   - nodejs
