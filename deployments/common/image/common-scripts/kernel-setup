@@ -11,8 +11,7 @@ source /opt/common-scripts/env-activate base
 
 mkdir -p $HOME/.jupyter
 
-if [[ ! -f $HOME/.jupyter/jupyter_config.json  ]]; then
-    cat > $HOME/.jupyter/jupyter_config.json  <<EOF
+cat > $HOME/.jupyter/jupyter_config.json  <<EOF
 {
   "CondaKernelSpecManager": {
     "kernelspec_path": "--user",
@@ -20,10 +19,6 @@ if [[ ! -f $HOME/.jupyter/jupyter_config.json  ]]; then
   }
 }
 EOF
-else
-    echo "jupyter_config.json has already been installed.  need to improve setup."
-    exit -1
-fi
 
 # Only set up kernels which have actually been installed, e.g. not
 # disabled by Dockerfile edits during debug.
@@ -42,8 +37,8 @@ for kernel in `conda env list | grep -v '#' | grep -v base | cut -d' ' -f1`; do
 
 done
 
-echo "nb_kernels:"
-python -m nb_conda_kernels list
+# echo "nb_kernels:"
+# python -m nb_conda_kernels list
 
 echo "jupyter kernelspecs:"
 jupyter kernelspec list

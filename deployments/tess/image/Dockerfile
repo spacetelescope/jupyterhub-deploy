@@ -51,6 +51,10 @@ RUN git clone https://github.com/spacetelescope/notebooks.git /opt/notebooks
 # ========================= ^^^^^ Custom  ^^^^^ =========================
 # ========================= vvvvv Generic vvvvv  =========================
 
+# ----------------------------------------------------------------------
+USER $NB_UID
+RUN /opt/common-scripts/kernel-setup   # set up Ipython / JupyterLab kernels
+
 # As part of Dockerfile.trailer,  these statements are executed from the
 # perspective of the deployment image directory,  not common.
 

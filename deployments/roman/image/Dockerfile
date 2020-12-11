@@ -66,30 +66,28 @@ RUN cd /tmp && \
     make && \
     make install
 
-# ----------------------------------------------------------------------
-USER $NB_UID
-
-RUN /opt/common-scripts/kernel-setup
-
 # ========================= ^^^^^ Custom  ^^^^^ =========================
 # ========================= vvvvv Generic vvvvv  =========================
+
+# ----------------------------------------------------------------------
+USER $NB_UID
+RUN /opt/common-scripts/kernel-setup   # set up Ipython / JupyterLab kernels
 
 # As part of Dockerfile.trailer,  these statements are executed from the
 # perspective of the deployment image directory,  not common.
 
 USER root
 
-# Copy everything now that build is complete and cache busting wont occur
-COPY environments/    /opt/environments
-
 # ----------------------------------------------------------------------
 
 # remove this step once nbgitpuller enabled; these contents will be in the
 #  jupyterhub-user-content repo.   Install deployment-specific $HOME files.
 COPY default-home-contents/  /etc/default-home-contents
-
+RUN  cp -r /home/jovyan/.local  /etc/default-home-contents && \
+     cp -r /home/jovyan/.jupyter /etc/default-home-contents
 COPY global_bashrc  /home/jovyan
-RUN  cat /home/jovyan/global_bashrc   >> /etc/bash.bashrc
+RUN  cat /home/jovyan/global_bashrc   >> /etc/bash.bashrc  && \
+     rm /home/jovyan/global_bashrc
 
 # Fix certs in conda for application level SSL, e.g. pass image-test running on CI-node
 RUN /opt/common-scripts/fix-certs
@@ -99,6 +97,10 @@ RUN /opt/common-scripts/fix-certs
 RUN cp -r /etc/default-home-contents/* /home/jovyan && \
     fix-permissions  /home/jovyan  &&\
     fix-permissions  /opt/environments
+
+# This top level command runs unit tests for the image,  nominally import tests
+# and notebook runs but it's an arbitrary bash script.
+COPY environments/test    /opt/environments/test
 
 USER $NB_USER
 WORKDIR /home/$NB_USER
