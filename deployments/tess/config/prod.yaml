@@ -1,1 +1,5 @@
-jupyterhub: {}
+jupyterhub:
+  prePuller:
+    continuous:
+      # Don't need continuous pre-puller on staging
+      enabled: true

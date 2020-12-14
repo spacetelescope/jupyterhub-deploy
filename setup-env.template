@@ -6,14 +6,14 @@
 
 # ----------------- basic inputs,  must set --------------
 
-export ACCOUNT_ID=12345678
-export ADMIN_ROLENAME=admin-role
-export DEPLOYMENT_NAME=cluster-name
-export IMAGE_TAG=mission-latest
-export COMMON_TAG=common-latest
+export ACCOUNT_ID=XXX
+export ADMIN_ROLENAME=X
+export DEPLOYMENT_NAME=XXX
+export IMAGE_TAG=latest
+export COMMON_TAG=latest
 
 # sandbox, dev, test, ops vs. staging and prod?
-export ENVIRONMENT=staging
+export ENVIRONMENT=dev
 
 # ----------------- vvvv less frequently changed vvvv -------------------------------
 
