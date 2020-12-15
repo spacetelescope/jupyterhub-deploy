@@ -2,7 +2,7 @@
 
 **SSL certificates**
 
-Put in a support ticket requesting SSL certificates for the desired DNS name.  They will place the private key and a public certificate in AWS Certificate Manager (ACM).
+Put in a support ticket requesting SSL certificates for the desired DNS name.  A private key and a public certificate will be provided.
 
 **Gather platform requirements**
 
