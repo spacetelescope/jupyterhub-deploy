@@ -64,9 +64,7 @@ The complete deployment process involves two git repositories:
 | [terraform-deploy](https://github.com/spacetelescope/terraform-deploy) | Creates an EKS cluster and the roles used by the cluster, CodeCommit, and ECR repositories |
 | [jupyterhub-deploy](https://github.com/spacetelescope/jupyterhub-deploy.git) | Contains configurations for Docker images and JupyterHub deployments, as well as tools to accomplish deployment |
 
-# Set some convenience variables
-
-To make things more convient for the rest of this procedure, set a few evironment variables.  This will reduce the need to modify copy/paste commands.
+# Define Account ID, the Admin ARN, and the Deployment Name
 
 - `export ACCOUNT_ID=<account-id>`
 - `export ADMIN_ARN=<admin-arn>`
@@ -140,7 +138,7 @@ Our terraform'd ECR repositories have scan-on-push vulnerability scanning turned
 
 ### Configure JupyterHub and cluster secrets
 
-**Note**: There is a set of convenience scripts for managing secrets [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/SCRIPTS.md#secrets-convenience-scripts)
+**Note**: There is a set of convenience scripts for managing secrets [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/SCRIPTS.md#secrets-convenience-scripts).
 
 There are three categories of secrets involved in the cluster configuration:
 
@@ -160,7 +158,7 @@ Since we use sops to encrypt and decrypt the secret files, we need to fetch the 
 
 - `awsudo $ADMIN_ARN aws s3 cp s3://$DEPLOYMENT_NAME-sops-config/.sops.yaml .sops.yaml`
 
-**SECURITY ISSUE**: having the encrypt role in *.sops.yaml* will give helm more than the minimally required permissions since deployment only needs to decrypt.
+**SECURITY ISSUE**: having the encrypt role in *.sops.yaml* will give helm more than the minimally required permissions since the deployment process only requires decrypt.
 
 Now we need to create a *environment.yaml* file.  During JupyterHub deployment, helm will merge this file with the *common.yaml* file with the other YAML files created earlier to generate a master configuration file for JupyterHub.  Follow these instructions:
 
