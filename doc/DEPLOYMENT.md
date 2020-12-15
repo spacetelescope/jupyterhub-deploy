@@ -150,6 +150,8 @@ Scripts have been added to the *tools* directory to simplify image development:
 - image-exec    -- start a container and run an arbitrary command
 - image-all     -- build, test, and push the image.
 
+**TODO**: update this list of scripts^^
+
 Sourcing *setup-env* should add these scripts to your path, they require no parameters.
 
 Using the scripts is simple, basically some iterative flow of:
@@ -196,6 +198,44 @@ pip install --cert /etc/ssl/certs/ca-bundle.crt -r requirements.txt
 
 ### Configure JupyterHub and cluster secrets
 
+There are three categories of secrets involved in the cluster configuration:
+
+-   **JupyterHub proxyToken** - the hub authenticates its requests to the proxy using a secret token that the both services agree upon.  Generate the token with this command:
+    - `openssl rand -hex 32`
+-   MAST authentication **client ID** and **client secret** - these were obtained earlier and will be used during the OAuth authentication process (Note that this authentication method is likely to change in the future)
+-   **SSL private key and certificate** - these were obtained earlier
+
+
+Start by assuming the admin role and clone the repository:
+
+- `aws sts assume-role --role-arn $ADMIN_ARN --role-session-name clone`
+- export AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and AWS_SESSION_TOKEN with the values returned from the previous command
+- `tools/secrets-clone`
+- `cd secrets/deployments/$DEPLOYMENT_NAME/secrets`
+
+Since we use sops to encrypt and decrypt the secret files, we need to fetch the *.sops.yaml* file from S3 (this was created in *terraform-deploy/kms-codecommit*):
+
+- `awsudo $ADMIN_ARN aws s3 cp s3://$DEPLOYMENT_NAME-sops-config/.sops.yaml .sops.yaml`
+
+**SECURITY ISSUE**: having the encrypt role in *.sops.yaml* will give helm more than the minimally required permissions since deployment only needs to decrypt.
+
+Now we need to create a *$ENVIRONMENT.yaml* file.  During JupyterHub deployment, helm will merge this file with the *common.yaml* file with the other YAML files created earlier to generate a master configuration file for JupyterHub.  Follow these instructions:
+
+- `awsudo $ADMIN_ARN sops $ENVIRONMENT.yaml` - this will open up your editor...
+- Populate the file with the contents of https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/example-env-decrypted.yaml
+- Fill in the areas that say "[REDACTED]" with the appropriate values, then save and exit the editor
+- `git add $ENVIRONMENT.yaml .sops.yaml`
+
+Finally, commit and push the changes to the repository:
+
+- `git commit -m "adding secrets"`
+- `awsudo $ADMIN_ARN git push`
+
+
+
+
+
+
 #### Secrets convenience scripts
 
 Once you've Terraform'ed your secrets repo and know your way around,  these convenience scripts may
@@ -217,51 +257,9 @@ secrets-push
 secrets-get-exports
 ```
 
-#### Manual Secrets Handling
 
-There are three categories of secrets involved in the cluster configuration:
 
--   **JupyterHub proxyToken** - the hub authenticates its requests to the proxy using a secret token that the both services agree upon.  Generate the token with this command:
-    - `openssl rand -hex 32`
--   MAST authentication **client ID** and **client secret** - these were obtained earlier and will be used during the OAuth authentication process (Note that this authentication method is likely to change in the future)
--   **SSL private key and certificate** - these were obtained earlier
 
-In the top level of the *jupyterhub-deployment* repository, create a directory structure that will contain a clone of the CodeCommit repository provisioned by Terraform earlier:
-
-- `mkdir -p secrets/deployments/$DEPLOYMENT_NAME`
-- `cd secrets/deployments/$DEPLOYMENT_NAME`
-
-In the AWS console, find the URL of the secrets repository by navigating to **Services → CodeCommit → Repositories** and click on the repository named *deployment-name-secrets*.  Click on the drop-down button called "Clone URL" and select "Clone HTTPS".  The copied URL should look something like https://git-codecommit.us-east-1.amazonaws.com/v1/repos/deployment-name-secrets.
-
-Next, assume the deployment-admin role and clone the repository:
-
-- `aws sts assume-role --role-arn $ADMIN_ARN --role-session-name clone`
-- export AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and AWS_SESSION_TOKEN with the values returned from the previous command
-- `git config --global credential.helper '!aws codecommit credential-helper $@'`
-- `git config --global credential.UseHttpPath true`
-- `git clone https://git-codecommit.us-east-1.amazonaws.com/v1/repos/$DEPLOYMENT_NAME-secrets secrets`
-- `unset AWS_ACCESS_KEY_ID; unset AWS_SECRET_ACCESS_KEY; unset AWS_SESSION_TOKEN`
-- `cd secrets`
-
-Since we use sops to encrypt and decrypt the secret files, we need to fetch the *.sops.yaml* file from S3 (this was created in *terraform-deploy/kms-codecommit*):
-
-- `awsudo $ADMIN_ARN aws s3 cp s3://$DEPLOYMENT_NAME-sops-config/.sops.yaml .sops.yaml`
-
-**BUG**:  it is necessary to manually insert ADMIN_ARN *.sops.yaml* (this role has permissions to encrypt and decrypt).  You can see an example of an updated file [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/example-sops.yaml).
-
-**SECURITY ISSUE**: having the encrypt role in *.sops.yaml* will give helm more than the minimally required permissions since deployment only needs to decrypt.
-
-Now we need to create a *staging.yaml* file.  During JupyterHub deployment, helm will merge this file with the *common.yaml* file with the other YAML files created earlier to generate a master configuration file for JupyterHub.  Follow these instructions:
-
-- `awsudo $ADMIN_ARN sops staging.yaml` - this will open up your editor...
-- Populate the file with the contents of https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/example-staging-decrypted.yaml
-- Fill in the areas that say "[REDACTED]" with the appropriate values, then save and exit the editor
-- `git add staging.yaml .sops.yaml`
-
-Finally, commit and push the changes to the repository:
-
-- `git commit -m "adding secrets"`
-- `awsudo $ADMIN_ARN git push`
 
 ### Deploying JupyterHub to the EKS cluster via helm
 
