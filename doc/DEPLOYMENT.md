@@ -16,7 +16,7 @@ Hold on to the secret and ID, they will be needed later in the deployment proces
 
 Notes: 1) there is an ongoing conversation about which authentication method is most appropriate for JupyterHub, and 2) there is currently no formalized procedure for requesting these credentials.
 
-TODO: is this section out of date?
+**TODO**: is this section out of date?
 
 # AWS Control Tower accounts
 
@@ -69,7 +69,7 @@ The complete deployment process involves two git repositories:
 To make things more convient for the rest of this procedure, set a few evironment variables.  This will reduce the need to modify copy/paste commands.
 
 - `export ACCOUNT_ID=<account-id>`
-- `export ADMIN_ARN=arn:aws:iam::${ACCOUNT_ID}:role/jupyterhub-admin`
+- `export ADMIN_ARN=<admin-arn>`
 - `export DEPLOYMENT_NAME=<deployment-name>`
 
 # Terraform-deploy
@@ -103,7 +103,7 @@ Next, we will configure and deploy an EKS cluster and supporting resources neede
 - Update *deployment-name.tfvars* based on the templated values
 - `awsudo -d 3600 $ADMIN_ARN terraform apply -var-file=$DEPLOYMENT_NAME.tfvars -auto-approve`
 
-EKS kubeconfig is now terraformed removing the chicken-and-egg problem, so this *should no longer be required*:
+EKS kubeconfig is now terraform'd removing the chicken-and-egg problem, so this *should no longer be required*:
 
 - Run `awsudo $ADMIN_ARN aws eks update-kubeconfig --name $DEPLOYMENT_NAME`, then rerun the Terraform command
 
@@ -115,29 +115,30 @@ To get started, clone the repository:
 
 - `git clone https://github.com/spacetelescope/jupyterhub-deploy.git`
 
+#### Environment setup
+
+Copy *setup-env.template* in the root directory to *setup-env*.  Edit the file and update the environment variables.
+
 ## Configure, build, and push a Docker image to ECR
-
-This section discusses building and pushing a notebook environment to ECR in two
-forms:  the *scripted deployment* relies on an environment setup file and uses
-bash scripts to abstract away required commands.  The *manual deployment*
-discusses the commands which the scripts are based on.
-
-### Scripted Deployment
 
 #### Configure Docker image
 
 First, identify an existing deployment in the *deployments* directory that most closely matches your desired configuration, and do a recursive copy using `cp -r <existing-dir> <new-dir>` (the destination directory name should be the new deployment name).  Modifications to the Docker image and cluster configuration will need to be made.  Follow these instructions:
 
 - Go through the *image* directory, change file names and edit files that contain deployment-specific references.  Also make any changes to the Docker image files as needed (for instance, required software).
-- A file named *common.yaml* file needs to be created in the *config* directory.  An example can be found [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/example-common.yaml).  Place a copy of this example file in *config*, and edit the contents as appropriate.
+- A file named *common.yaml* file needs to be created in the *config* directory.  An example can be found [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/example-common.yaml).  Edit the contents as appropriate.
+- A file named *$ENVIRONMENT.yaml* also needs to be crated in the *config* directory.  An example can be found [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/example-env.yaml).  Edit the contents as appropriate.
 - Git add, commit, and push all changes.
+
+
+
+
+
 
 **NOTE:** This document covers configuring JupyterHub and deploying a fully specified image.  A secondary
 document describes the strategy/process used to define, update, and test a deployment's Docker image: [FRAMEWORK.md](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/FRAMEWORK.md).
 
-#### Environment setup
 
-Copy *setup-env.template* in the root directory to *setup-env*.  Edit the file and update the environment variables.
 
 #### Image management scripts
 
@@ -172,7 +173,7 @@ tools/image-push
 
 #### Scan-On-Push Docker Vulnerability Scanning
 
-Our Terraform'ed ECR registries have scan-on-push vulnerability scanning turned
+Our terraform'd ECR registries have scan-on-push vulnerability scanning turned
 on.  After pushing visit the ECR registry for your deployment and when ready,
 review the scan results.
 
@@ -222,7 +223,7 @@ Since we use sops to encrypt and decrypt the secret files, we need to fetch the 
 Now we need to create a *$ENVIRONMENT.yaml* file.  During JupyterHub deployment, helm will merge this file with the *common.yaml* file with the other YAML files created earlier to generate a master configuration file for JupyterHub.  Follow these instructions:
 
 - `awsudo $ADMIN_ARN sops $ENVIRONMENT.yaml` - this will open up your editor...
-- Populate the file with the contents of https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/example-env-decrypted.yaml
+- Populate the file with the contents of https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/example-secrets-env-decrypted.yaml
 - Fill in the areas that say "[REDACTED]" with the appropriate values, then save and exit the editor
 - `git add $ENVIRONMENT.yaml .sops.yaml`
 
@@ -238,7 +239,7 @@ Finally, commit and push the changes to the repository:
 
 #### Secrets convenience scripts
 
-Once you've Terraform'ed your secrets repo and know your way around,  these convenience scripts may
+Once you've terraform'd your secrets repo and know your way around,  these convenience scripts may
 help you check out and update your secrets based on your configured environment.  There's no requirement
 to use them, the manual steps they encapsulate are also documented below.
 
