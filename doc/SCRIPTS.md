@@ -1,4 +1,4 @@
-In the `tools` directory, there are a series of convenience scripts.
+# In the `tools` directory, there are a series of convenience scripts.
 
 
 #### Image management scripts
