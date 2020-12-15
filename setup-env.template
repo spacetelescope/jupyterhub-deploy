@@ -6,9 +6,9 @@
 
 # ----------------- basic inputs,  must set --------------
 
-export ACCOUNT_ID=XXX
-export ADMIN_ROLENAME=XXX
-export DEPLOYMENT_NAME=XXX
+export ACCOUNT_ID=12345678
+export ADMIN_ROLENAME=admin-role
+export DEPLOYMENT_NAME=cluster-name
 export IMAGE_TAG=mission-latest
 export COMMON_TAG=common-latest
 
