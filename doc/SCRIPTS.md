@@ -48,3 +48,22 @@ You may need to install Python dependency before executing the *image-scan-xxx* 
 ```
 pip install --cert /etc/ssl/certs/ca-bundle.crt -r requirements.txt
 ```
+
+#### Secrets convenience scripts
+
+Once you've terraform'd your secrets repo and know your way around, these convenience scripts may help you check out and update your secrets based on your configured environment.
+
+```
+# Clone your code commit secrets repo.  Note that this repo should never be added directly to jupyterhub-deploy.
+secrets-clone
+
+# Edit your secrets:  decrypt, edit the secrets file,  commit any changes to the checkout.
+secrets-edit
+
+# Push your updated secrets  back to codecommit
+secrets-push
+
+# Fetch and print AWS session env variables needed to perform the codecommit
+# clone and pushes.  Called automatically.
+secrets-get-exports
+```
