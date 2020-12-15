@@ -14,7 +14,7 @@ JupyterHub will need a client secret and ID to integrate with the MAST authentic
 
 Hold on to the secret and ID, they will be needed later in the deployment process.
 
-Notes: 1) there is an ongoing conversation about which authentication method is most appropriate for JupyterHub, and 2) there is currently no formalized procedure for requesting these credentials.
+Note: There is currently no formalized procedure for requesting these credentials.  Currently, Ben Falk is a good contact.
 
 **TODO**: is this section out of date?
 
