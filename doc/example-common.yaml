@@ -1,10 +1,22 @@
+# Optionally set CRDS_S3_RETURN_URL="1" to do direct-to-cal-memory CRDS transfers.
+# CRDS_PATH: "/home/jovyan/crds_cache"
+# CRDS_SERVER_URL: "https://jwst-serverless.stsci.edu"
+# CRDS_S3_ENABLED: "1"
+# CRDS_S3_RETURN_URI: "0"
+# CRDS_MAPPING_URI: "s3://dmd-test-crds/mappings/jwst"
+# CRDS_REFERENCE_URI: "s3://dmd-test-crds/references/jwst"
+# CRDS_CONFIG_URI: "s3://dmd-test-crds/config/jwst"
+# CRDS_USE_PICKLES: "0"
+# CRDS_DOWNLOAD_MODE: plugin
+# CRDS_DOWNLOAD_PLUGIN: "crds_s3_get ${SOURCE_URL} ${OUTPUT_PATH} ${FILE_SIZE} ${FILE_SHA1SUM}"
+
 jupyterhub:
   prePuller:
     continuous:
-      enabled: true
+      enabled: True
   singleuser:
     image:
-      tag: staging
+      tag: latest
     storage:
       dynamic:
         storageClass: "aws-efs"
@@ -14,20 +26,12 @@ jupyterhub:
           command: ["rsync", "/etc/default-home-contents/", "/home/jovyan"]
           #command: ["gitpuller", "https://github.com/spacetelescope/jupyterhub-user-content", "roman-sit", "."]
     extraEnv:
-      CRDS_PATH: "/home/jovyan/crds_cache"
-      CRDS_SERVER_URL: "https://jwst-serverless.stsci.edu"
-      CRDS_S3_ENABLED: "1"
-      CRDS_S3_RETURN_URI: "0"
-      CRDS_MAPPING_URI: "s3://dmd-test-crds/mappings/jwst"
-      CRDS_REFERENCE_URI: "s3://dmd-test-crds/references/jwst"
-      CRDS_CONFIG_URI: "s3://dmd-test-crds/config/jwst"
-      CRDS_USE_PICKLES: "0"
-      CRDS_DOWNLOAD_MODE: plugin
-      CRDS_DOWNLOAD_PLUGIN: "crds_s3_get ${SOURCE_URL} ${OUTPUT_PATH} ${FILE_SIZE} ${FILE_SHA1SUM}"
+        CRDS_PATH:  /home/jovyan/crds_cache
+        CRDS_SERVER_URL: https://jwst-crds.stsci.edu
     defaultUrl: "/lab"
     memory:
-      guarantee: 512M
-      limit: 1G
+      guarantee: 8G
+      limit: 15G
   auth:
     users:
       - [EMAIL ADDRESS]
