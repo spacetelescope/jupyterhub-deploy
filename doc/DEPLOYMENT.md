@@ -115,6 +115,7 @@ To get started, clone the repository:
 
 #### Environment setup
 
+- `cd jupyterhub-deploy`
 - `cp setup-env.template setup-env`
 - Update the environment variables in *setup-env*.
 - `source setup-env`
