@@ -1,4 +1,0 @@
-creation_rules:
-  - path_regex: .*
-    kms: "[ARN of KMS key]"
-    role: "[ARN of jupyterhub admin role]"
