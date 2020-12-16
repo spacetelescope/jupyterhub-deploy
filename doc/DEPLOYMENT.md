@@ -2,7 +2,7 @@
 
 **SSL certificates**
 
-Put in a support ticket requesting SSL certificates for the desired DNS name.  They will place the private key and a public certificate in AWS Certificate Manager (ACM).
+Put in a support ticket requesting SSL certificates for the desired DNS name.  A private key and a public certificate will be provided.
 
 **Gather platform requirements**
 
@@ -14,9 +14,9 @@ JupyterHub will need a client secret and ID to integrate with the MAST authentic
 
 Hold on to the secret and ID, they will be needed later in the deployment process.
 
-Notes: 1) there is an ongoing conversation about which authentication method is most appropriate for JupyterHub, and 2) there is currently no formalized procedure for requesting these credentials.
+Note: There is currently no formalized procedure for requesting these credentials.  Currently, Ben Falk is a good contact.
 
-TODO: is this section out of date?
+**TODO**: is this section out of date?
 
 # AWS Control Tower accounts
 
@@ -48,10 +48,10 @@ Use the AWS EC2 Console to create a CI node where you'll deploy from.  The EC2 i
 
 Use AWS Session Manager to login to your instance.
 
-- Open up a terminal session
+- Open up a terminal session.
 - From the start page of the AWS accounts, click on the account you are working in to to expand the list of roles.  Next to the developer role, click on "Command line or programmatic access".  Hover over the code block under "Option 1: Set AWS environment variables" and click on "Click to copy these commands".
-- In your terminal session, paste the commands
-- Identify your instance ID in the EC2 section of the Management console
+- In your terminal session, paste the commands.
+- Identify your instance ID in the EC2 section of the Management console.
 - `aws ssm start-session --target <instance-id> --region us-east-1`
 - `sudo -u ec2-user -i`
 
@@ -64,12 +64,10 @@ The complete deployment process involves two git repositories:
 | [terraform-deploy](https://github.com/spacetelescope/terraform-deploy) | Creates an EKS cluster and the roles used by the cluster, CodeCommit, and ECR repositories |
 | [jupyterhub-deploy](https://github.com/spacetelescope/jupyterhub-deploy.git) | Contains configurations for Docker images and JupyterHub deployments, as well as tools to accomplish deployment |
 
-# Set some convenience variables
-
-To make things more convient for the rest of this procedure, set a few evironment variables.  This will reduce the need to modify copy/paste commands.
+# Define Account ID, the Admin ARN, and the Deployment Name
 
 - `export ACCOUNT_ID=<account-id>`
-- `export ADMIN_ARN=arn:aws:iam::${ACCOUNT_ID}:role/jupyterhub-admin`
+- `export ADMIN_ARN=<admin-arn>`
 - `export DEPLOYMENT_NAME=<deployment-name>`
 
 # Terraform-deploy
@@ -86,12 +84,10 @@ First, we will setup KMS and CodeCommit with the *kms-codecommit* Terraform modu
 
 - `cd terraform-deploy/kms-codecommit`
 - `terraform init`
-- `cp your-vars.tfvars.example $DEPLOYMENT_NAME.tfvars`
-- Update *deployment-name.tfvars* based on the templated values
+- `cp your-vars.tfvars.template $DEPLOYMENT_NAME.tfvars`
+- Update *deployment-name.tfvars* based on the templated values.
 - `awsudo -d 3600 $ADMIN_ARN terraform apply -var-file=$DEPLOYMENT_NAME.tfvars -auto-approve`
-  - When prompted the enter a value for the "Owner" tag, enter the name of the mission (Roman, JWST, etc.)
-    - TODO: put the owner tag in the variables template; if it's defined in tfvars, we won't be prompted (I think)
-  - BUG: you will need to run this twice until we add a "depends_on"
+  - BUG: you will need to run this twice until we add a "depends_on".
 
 A file named **_.sops.yaml_** will have been produced, and this will be used in the new CodeCommit repository for appropriate encryption with [sops](https://github.com/mozilla/sops) later in this procedure.
 
@@ -101,13 +97,13 @@ Next, we will configure and deploy an EKS cluster and supporting resources neede
 
 - `../aws`
 - `terraform init`
-- `cp your-cluster.tfvars.template $DEPLOYMENT_NAME.tfvars`
-- Update *deployment-name.tfvars* based on the templated values
+- `cp your-vars.tfvars.template $DEPLOYMENT_NAME.tfvars`
+- Update *deployment-name.tfvars* based on the templated values.
 - `awsudo -d 3600 $ADMIN_ARN terraform apply -var-file=$DEPLOYMENT_NAME.tfvars -auto-approve`
 
-EKS kubeconfig is now terraformed removing the chicken-and-egg problem, so this *should no longer be required*:
+EKS kubeconfig is now terraform'd removing the chicken-and-egg problem, so this *should no longer be required*:
 
-- Run `awsudo $ADMIN_ARN aws eks update-kubeconfig --name $DEPLOYMENT_NAME`, then rerun the Terraform command
+- Run `awsudo $ADMIN_ARN aws eks update-kubeconfig --name $DEPLOYMENT_NAME`, then re-run the Terraform command.
 
 # Jupyterhub-deploy
 
@@ -117,148 +113,60 @@ To get started, clone the repository:
 
 - `git clone https://github.com/spacetelescope/jupyterhub-deploy.git`
 
+#### Environment setup
+
+- `cd jupyterhub-deploy`
+- `cp setup-env.template setup-env`
+- Update the environment variables in *setup-env*.
+- `source setup-env`
+
 ## Configure, build, and push a Docker image to ECR
-
-This section discusses building and pushing a notebook environment to ECR in two
-forms:  the *scripted deployment* relies on an environment setup file and uses
-bash scripts to abstract away required commands.  The *manual deployment*
-discusses the commands which the scripts are based on.
-
-### Scripted Deployment
 
 #### Configure Docker image
 
-First, identify an existing deployment in the *deployments* directory that most closely matches your desired configuration, and do a recursive copy using `cp -r <existing-dir> <new-dir>` (the destination directory name should be the new deployment name).  Modifications to the Docker image and cluster configuration will need to be made.  Follow these instructions:
+First, identify an existing deployment in the *deployments* directory that most closely matches your desired configuration, and do a recursive copy using `cp -r <existing-dir> <new-dir>` (the destination directory name should be the new deployment name).  Modifications to the Docker image and cluster configuration will need to be made.
 
 - Go through the *image* directory, change file names and edit files that contain deployment-specific references.  Also make any changes to the Docker image files as needed (for instance, required software).
-- A file named *common.yaml* file needs to be created in the *config* directory.  An example can be found [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/example-common.yaml).  Place a copy of this example file in *config*, and edit the contents as appropriate.
+- A file named *common.yaml* file needs to be created in the *config* directory.  An example can be found [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/example-common.yaml).  Edit the contents as appropriate.
+- A file named *$ENVIRONMENT.yaml* also needs to be created in the *config* directory.  An example can be found [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/example-env.yaml).  Edit the contents as appropriate.
 - Git add, commit, and push all changes.
 
-**NOTE:** This document covers configuring JupyterHub and deploying a fully specified image.  A secondary
-document describes the strategy/process used to define, update, and test a deployment's Docker image: [FRAMEWORK.md](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/FRAMEWORK.md).
-
-#### Environment setup
-
-Copy *setup-env.template* in the root directory to *setup-env*.  Edit the file and update the environment variables.
-
-#### Image management scripts
-
-Scripts have been added to the *tools* directory to simplify image development:
-
-- image-build   -- build the Docker image defined by setup-env
-- image-test    -- experimental,  run autmatic image tests.  requires added support in deployment
-- image-push    -- push the built + tested Docker image to ECR at the configured tag
-- image-sh      -- start a container running an interactive bash shell for poking around
-- image-exec    -- start a container and run an arbitrary command
-- image-all     -- build, test, and push the image.
-
-Sourcing *setup-env* should add these scripts to your path, they require no parameters.
-
-Using the scripts is simple, basically some iterative flow of:
-
-```
-# Update deployment Dockerfile in deployments/<your-deployment>/image.
-
-# Build the Docker image
-tools/image-build
-
-# Run any self-tests defined for this deployment under deployments/<your-deployment>/image.
-# Fix problems and re-build until working
-tools/image-test
-
-# Push the completed image to ECR for use on the hub,  proceed to Helm based JupyterHub deployment
-tools/image-push
-```
+**NOTE:** This document covers configuring JupyterHub and deploying a fully specified image.  A secondary document describes the strategy/process used to define, update, and test a deployment's Docker image: [FRAMEWORK.md](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/FRAMEWORK.md).  There is a set of convenience scripts for image-related tasks [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/SCRIPTS.md#image-management-scripts).
 
 #### Scan-On-Push Docker Vulnerability Scanning
 
-Our Terraform'ed ECR registries have scan-on-push vulnerability scanning turned
-on.  After pushing visit the ECR registry for your deployment and when ready,
-review the scan results.
-
-Review the image scan and address vulnerabilities as needed before proceeding
-with the deployment.
-
-Scripts exist to automate ECR scan results:
-
-```
-# Fetch results from ECR,  fetch Ubuntu CVE response status, print combined
-# results as YAML
-image-scan-report   <ubuntu version name sub-string>   <minimum severity level>    > report.yaml
-image-scan-report   Focal   medium   >report.yaml
-
-# Pull the most critical information from the scan report, CVE descriptions and related status
-image-scan-summarize  report.yaml
-```
-
-You may need to install Python dependency before executing the *image-scan-xxx* scripts:
-```
-pip install --cert /etc/ssl/certs/ca-bundle.crt -r requirements.txt
-```
+Our terraform'd ECR repositories have scan-on-push vulnerability scanning turned on.  After pushing, visit the ECR repository for your deployment, and when ready, review the scan results.  Address vulnerabilities as needed before proceeding with the deployment.  Scripts to automate the ECR scan results can be found [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/SCRIPTS.md#scripts-to-automate-ecr-scan-results).
 
 ### Configure JupyterHub and cluster secrets
 
-#### Secrets convenience scripts
-
-Once you've Terraform'ed your secrets repo and know your way around,  these convenience scripts may
-help you check out and update your secrets based on your configured environment.  There's no requirement
-to use them, the manual steps they encapsulate are also documented below.
-
-```
-# Clone your code commit secrets repo.  Note that this repo should never be added directly to jupyterhub-deploy.
-secrets-clone
-
-# Edit your secrets:  decrypt, edit the secrets file,  commit any changes to the checkout.
-secrets-edit
-
-# Push your updated secrets  back to codecommit
-secrets-push
-
-# Fetch and print AWS session env variables needed to perform the codecommit
-# clone and pushes.  Called automatically.
-secrets-get-exports
-```
-
-#### Manual Secrets Handling
+**Note**: There is a set of convenience scripts for managing secrets [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/SCRIPTS.md#secrets-convenience-scripts).
 
 There are three categories of secrets involved in the cluster configuration:
 
--   **JupyterHub proxyToken** - the hub authenticates its requests to the proxy using a secret token that the both services agree upon.  Generate the token with this command:
+- **JupyterHub proxyToken** - the hub authenticates its requests to the proxy using a secret token that the both services agree upon.  Generate the token with this command:
     - `openssl rand -hex 32`
--   MAST authentication **client ID** and **client secret** - these were obtained earlier and will be used during the OAuth authentication process (Note that this authentication method is likely to change in the future)
--   **SSL private key and certificate** - these were obtained earlier
+- MAST authentication **client ID** and **client secret** - these were obtained earlier and will be used during the OAuth authentication process.
+- **SSL private key and certificate** - these were obtained earlier.
 
-In the top level of the *jupyterhub-deployment* repository, create a directory structure that will contain a clone of the CodeCommit repository provisioned by Terraform earlier:
-
-- `mkdir -p secrets/deployments/$DEPLOYMENT_NAME`
-- `cd secrets/deployments/$DEPLOYMENT_NAME`
-
-In the AWS console, find the URL of the secrets repository by navigating to **Services → CodeCommit → Repositories** and click on the repository named *<deployment-name>-secrets*.  Click on the drop-down button called "Clone URL" and select "Clone HTTPS".  The copied URL should look something like https://git-codecommit.us-east-1.amazonaws.com/v1/repos/deployment-name-secrets.
-
-Next, assume the deployment-admin role and clone the repository:
+Start by assuming the admin role and clone the repository:
 
 - `aws sts assume-role --role-arn $ADMIN_ARN --role-session-name clone`
-- export AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and AWS_SESSION_TOKEN with the values returned from the previous command
-- `git config --global credential.helper '!aws codecommit credential-helper $@'`
-- `git config --global credential.UseHttpPath true`
-- `git clone https://git-codecommit.us-east-1.amazonaws.com/v1/repos/$DEPLOYMENT_NAME-secrets secrets`
-- `unset AWS_ACCESS_KEY_ID; unset AWS_SECRET_ACCESS_KEY; unset AWS_SESSION_TOKEN`
-- `cd secrets`
+- export AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and AWS_SESSION_TOKEN with the values returned from the previous command.
+- `tools/secrets-clone`
+- `cd secrets/deployments/$DEPLOYMENT_NAME/secrets`
 
 Since we use sops to encrypt and decrypt the secret files, we need to fetch the *.sops.yaml* file from S3 (this was created in *terraform-deploy/kms-codecommit*):
 
 - `awsudo $ADMIN_ARN aws s3 cp s3://$DEPLOYMENT_NAME-sops-config/.sops.yaml .sops.yaml`
 
-**BUG**:  it is necessary to manually insert ADMIN_ARN *.sops.yaml* (this role has permissions to encrypt and decrypt).  You can see an example of an updated file [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/example-sops.yaml).
+**SECURITY ISSUE**: having the encrypt role in *.sops.yaml* will give helm more than the minimally required permissions since the deployment process only requires decrypt.
 
-**SECURITY ISSUE**: having the encrypt role in *.sops.yaml* will give helm more than the minimally required permissions since deployment only needs to decrypt.
+Now we need to create a *environment.yaml* file.  During JupyterHub deployment, helm will merge this file with the *common.yaml* file with the other YAML files created earlier to generate a master configuration file for JupyterHub.
 
-Now we need to create a *staging.yaml* file.  During JupyterHub deployment, helm will merge this file with the *common.yaml* file with the other YAML files created earlier to generate a master configuration file for JupyterHub.  Follow these instructions:
-
-- `awsudo $ADMIN_ARN sops staging.yaml` - this will open up your editor...
-- Populate the file with the contents of https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/example-staging-decrypted.yaml
-- Fill in the areas that say "[REDACTED]" with the appropriate values, then save and exit the editor
-- `git add staging.yaml .sops.yaml`
+- `awsudo $ADMIN_ARN sops $ENVIRONMENT.yaml` - this will open up your editor...
+- Populate the file with the contents of https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/example-secrets-env-decrypted.yaml.
+- Fill in the areas that say "[REDACTED]" with the appropriate values, then save and exit the editor.
+- `git add $ENVIRONMENT.yaml .sops.yaml`
 
 Finally, commit and push the changes to the repository:
 
