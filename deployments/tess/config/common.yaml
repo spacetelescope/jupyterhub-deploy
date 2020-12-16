@@ -33,7 +33,7 @@ jupyterhub:
       limit: 1G
   auth:
     users:
-      - add-mestsci.edu
+      - add-me@stsci.edu
     admin:
       users:
       - add-me@stsci.edu
