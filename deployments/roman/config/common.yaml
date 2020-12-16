@@ -16,12 +16,9 @@ jupyterhub:
     pdb:
       enabled: True
       minAvailable: 0
-  prePuller:
-    continuous:
-      enabled: true
   singleuser:
     image:
-      tag: dev
+      tag: latest 
       pullPolicy: Always
     storage:
       dynamic:

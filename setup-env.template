@@ -12,8 +12,8 @@ export DEPLOYMENT_NAME=cluster-name
 export IMAGE_TAG=mission-latest
 export COMMON_TAG=common-latest
 
-# sandbox, dev, test, ops vs. staging and prod?
-export ENVIRONMENT=staging
+# sandbox, dev, test, or prod
+export ENVIRONMENT=XXX
 
 # ----------------- vvvv less frequently changed vvvv -------------------------------
 
