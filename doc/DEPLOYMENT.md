@@ -131,7 +131,7 @@ First, identify an existing deployment in the *deployments* directory that most 
 - A file named *$ENVIRONMENT.yaml* also needs to be created in the *config* directory.  An example can be found [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/example-env.yaml).  Edit the contents as appropriate.
 - Git add, commit, and push all changes.
 
-**NOTE:** This document covers configuring JupyterHub and deploying a fully specified image.  A secondary document describes the strategy/process used to define, update, and test a deployment's Docker image: [FRAMEWORK.md](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/FRAMEWORK.md).  There is a set of convenience scripts for image-related tasks [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/SCRIPTS.md#image-management-scripts).
+**NOTE:** This document covers configuring JupyterHub and deploying a fully specified image.  A secondary document describes the strategy/process used to define, update, and test a deployment's Docker image: [FRAMEWORK.md](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/FRAMEWORK.md).  There is a set of convenience scripts for image-related tasks described [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/SCRIPTS.md#image-management-scripts).
 
 #### Scan-On-Push Docker Vulnerability Scanning
 
@@ -139,7 +139,7 @@ Our terraform'd ECR repositories have scan-on-push vulnerability scanning turned
 
 ### Configure JupyterHub and cluster secrets
 
-**Note**: There is a set of convenience scripts for managing secrets [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/SCRIPTS.md#secrets-convenience-scripts).
+**Note**: There is a set of convenience scripts for managing secrets, described [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/SCRIPTS.md#secrets-convenience-scripts).
 
 There are three categories of secrets involved in the cluster configuration:
 
