@@ -131,7 +131,7 @@ First, identify an existing deployment in the *deployments* directory that most 
 - A file named *$ENVIRONMENT.yaml* also needs to be created in the *config* directory.  An example can be found [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/example-env.yaml).  Edit the contents as appropriate.
 - Git add, commit, and push all changes.
 
-**NOTE:** This document covers configuring JupyterHub and deploying a fully specified image.  A secondary document describes the strategy/process used to define, update, and test a deployment's Docker image: [FRAMEWORK.md](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/FRAMEWORK.md).  There is a set of convenience scripts for image-related tasks [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/SCRIPTS.md#image-management-scripts).
+**NOTE:** This document covers configuring JupyterHub and deploying a fully specified image.  A secondary document describes the strategy/process used to define, update, and test a deployment's Docker image: [FRAMEWORK.md](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/FRAMEWORK.md).  There is a set of convenience scripts for image-related tasks described [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/SCRIPTS.md#image-management-scripts).
 
 #### Scan-On-Push Docker Vulnerability Scanning
 
@@ -139,7 +139,7 @@ Our terraform'd ECR repositories have scan-on-push vulnerability scanning turned
 
 ### Configure JupyterHub and cluster secrets
 
-**Note**: There is a set of convenience scripts for managing secrets [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/SCRIPTS.md#secrets-convenience-scripts).
+**Note**: There is a set of convenience scripts for managing secrets, described [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/SCRIPTS.md#secrets-convenience-scripts).
 
 There are three categories of secrets involved in the cluster configuration:
 
@@ -148,12 +148,10 @@ There are three categories of secrets involved in the cluster configuration:
 - MAST authentication **client ID** and **client secret** - these were obtained earlier and will be used during the OAuth authentication process.
 - **SSL private key and certificate** - these were obtained earlier.
 
-Start by assuming the admin role and clone the repository:
+Start by cloning the repository:
 
-- `aws sts assume-role --role-arn $ADMIN_ARN --role-session-name clone`
-- export AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and AWS_SESSION_TOKEN with the values returned from the previous command.
-- `tools/secrets-clone`
-- `cd secrets/deployments/$DEPLOYMENT_NAME/secrets`
+- `secrets-clone`
+- `cd deployments/$DEPLOYMENT_NAME/secrets`
 
 Since we use sops to encrypt and decrypt the secret files, we need to fetch the *.sops.yaml* file from S3 (this was created in *terraform-deploy/kms-codecommit*):
 
@@ -175,7 +173,7 @@ Finally, commit and push the changes to the repository:
 
 ### Deploying JupyterHub to the EKS cluster via helm
 
-From the top directory of jupyterhub-deploy clone, run `tools/deploy-all`. The final output of this command will be the hub's ingress, indicated by "EXTERNAL-IP".
+From the top directory of jupyterhub-deploy clone, run `deploy-all`. The final output of this command will be the hub's ingress, indicated by "EXTERNAL-IP".
 
 ##  Set up DNS with Route-53
 
