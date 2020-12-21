@@ -4,7 +4,7 @@
 # https://hub.docker.com/_/buildpack-deps/
 # FROM buildpack-deps:focal-scm AS build
 
-FROM jupyter/scipy-notebook:42f4c82a07ff
+FROM jupyter/scipy-notebook:399cbb986c6b
 
 # ------------------------------------------------------------------------
 
@@ -85,7 +85,10 @@ RUN    apt-get update --yes && \
         cm-super \
         libxpa-dev \
         libxt-dev \
+        libbz2-dev \
+        libcudart10.1 \
         && \
+    apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # ------------------------------------------------------------------------
@@ -154,4 +157,3 @@ RUN /opt/common-scripts/install-common ds9
 # Set up astroquery and ds9 desktop short-cut, will be further
 # augmented by specific deployments
 COPY default-home-contents/   /etc/default-home-contents
-
