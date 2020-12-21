@@ -148,12 +148,10 @@ There are three categories of secrets involved in the cluster configuration:
 - MAST authentication **client ID** and **client secret** - these were obtained earlier and will be used during the OAuth authentication process.
 - **SSL private key and certificate** - these were obtained earlier.
 
-Start by assuming the admin role and clone the repository:
+Start by cloning the repository:
 
-- `aws sts assume-role --role-arn $ADMIN_ARN --role-session-name clone`
-- export AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and AWS_SESSION_TOKEN with the values returned from the previous command.
 - `tools/secrets-clone`
-- `cd secrets/deployments/$DEPLOYMENT_NAME/secrets`
+- `cd deployments/$DEPLOYMENT_NAME/secrets`
 
 Since we use sops to encrypt and decrypt the secret files, we need to fetch the *.sops.yaml* file from S3 (this was created in *terraform-deploy/kms-codecommit*):
 
