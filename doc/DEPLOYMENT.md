@@ -150,7 +150,7 @@ There are three categories of secrets involved in the cluster configuration:
 
 Start by cloning the repository:
 
-- `tools/secrets-clone`
+- `secrets-clone`
 - `cd deployments/$DEPLOYMENT_NAME/secrets`
 
 Since we use sops to encrypt and decrypt the secret files, we need to fetch the *.sops.yaml* file from S3 (this was created in *terraform-deploy/kms-codecommit*):
@@ -173,7 +173,7 @@ Finally, commit and push the changes to the repository:
 
 ### Deploying JupyterHub to the EKS cluster via helm
 
-From the top directory of jupyterhub-deploy clone, run `tools/deploy-all`. The final output of this command will be the hub's ingress, indicated by "EXTERNAL-IP".
+From the top directory of jupyterhub-deploy clone, run `deploy-all`. The final output of this command will be the hub's ingress, indicated by "EXTERNAL-IP".
 
 ##  Set up DNS with Route-53
 
