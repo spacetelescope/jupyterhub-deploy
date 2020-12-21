@@ -139,7 +139,7 @@ Our terraform'd ECR repositories have scan-on-push vulnerability scanning turned
 
 ### Configure JupyterHub and cluster secrets
 
-**Note**: There is a set of convenience scripts for managing secrets, described [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/SCRIPTS.md#secrets-convenience-scripts).
+**Note**: There is a set of convenience scripts for managing secrets described [here](https://github.com/spacetelescope/jupyterhub-deploy/blob/main/doc/SCRIPTS.md#secrets-convenience-scripts).
 
 There are three categories of secrets involved in the cluster configuration:
 
