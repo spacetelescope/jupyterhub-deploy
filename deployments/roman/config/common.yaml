@@ -35,9 +35,3 @@ jupyterhub:
     memory:
       guarantee: 8G
       limit: 15G
-  auth:
-    users:
-      - add-me@stsci.edu
-    admin:
-      users:
-         - add-me@stsci.edu
