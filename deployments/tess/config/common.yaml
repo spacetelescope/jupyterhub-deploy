@@ -19,6 +19,9 @@ jupyterhub:
     image:
       tag: tess-latest
       pullPolicy: Always
+    storage:
+      dynamic:
+        storageClass: "aws-efs"
     lifecycleHooks:
       postStart:
         exec:
