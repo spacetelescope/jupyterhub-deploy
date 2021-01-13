@@ -17,7 +17,7 @@ jupyterhub:
       enabled: true
   singleuser:
     image:
-      tag: tess-latest
+      tag: latest
       pullPolicy: Always
     storage:
       dynamic:
