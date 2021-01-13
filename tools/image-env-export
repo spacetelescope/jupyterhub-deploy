@@ -3,4 +3,4 @@
 # Launch the latest mission image and export the conda environment
 # named $1.
 
-image-exec  conda env export --no-build --name $1 | sed -e's/\r//g'
+image-exec conda env export --no-build --name $1 | sed -e's/\r//g'

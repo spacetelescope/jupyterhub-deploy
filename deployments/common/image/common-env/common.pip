@@ -3,4 +3,3 @@ nbconvert
 ipykernel
 boto3
 awscli
-black

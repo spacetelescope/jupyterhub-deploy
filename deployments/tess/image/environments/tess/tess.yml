@@ -1,34 +1,15 @@
 name: tess
 channels:
-- conda-forge
-- https://ssb.stsci.edu/astroconda
-- defaults
+        - conda-forge
+        - manics
+        - https://ssb.stsci.edu/astroconda
+        - defaults
 dependencies:
-- python<3.8.0a0
-- pip
-- freetds
-- fftw
-- pyfftw
-- mkl_fft
-- ds9
-- pyds9
-- cython
-- numpy
-- astropy
-- mkl-service
-- plotly
-- pymc3
-- boto3
-- emcee
-- starry
-- ginga
-- bokeh
-- pybind11
-- george
-- celerite
-- lightkurve
-
-# - jwst-visit-parser
-# - jwst_gtvt
-# - fitsverify
-# - stsci
+        - python=3.7
+        - freetds
+        - fftw
+        - pyfftw
+        - mkl_fft
+        - ds9
+        - pyds9
+        - mkl-service
