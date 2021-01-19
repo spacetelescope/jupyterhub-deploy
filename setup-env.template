@@ -9,7 +9,7 @@
 export ACCOUNT_ID=12345678
 export ADMIN_ROLENAME=admin-role
 export DEPLOYMENT_NAME=cluster-name
-export IMAGE_TAG=mission-latest
+export IMAGE_TAG=latest
 export COMMON_TAG=common-latest
 
 # sandbox, dev, test, or prod
