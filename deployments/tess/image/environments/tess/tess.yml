@@ -13,3 +13,6 @@ dependencies:
         - ds9
         - pyds9
         - mkl-service
+        - theano==1.0.4
+        - theano-pymc
+        - starry
