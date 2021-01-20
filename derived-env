@@ -25,3 +25,10 @@ export IMAGE_DIR=`pwd`/deployments/${DEPLOYMENT_NAME}/image
 export IMAGE_ID=${ACCOUNT}/${IMAGE_REPO}:${IMAGE_TAG}
 
 export PATH="`pwd`/tools":${PATH}
+
+# --------------- general setup ---------------------------------
+
+export TMOUT=7200
+export TF_LOG=TRACE
+export TF_LOG_PATH=terraform.log
+
