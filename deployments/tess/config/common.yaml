@@ -17,7 +17,7 @@ jupyterhub:
       enabled: true
   singleuser:
     image:
-      tag: mission-latest
+      tag: latest
       pullPolicy: Always
     lifecycleHooks:
       postStart:
