@@ -34,3 +34,15 @@ ellc
 seaborn
 wotan
 dask
+cython
+numpy
+astropy
+plotly
+pymc3
+boto3
+emcee
+bokeh
+pybind11
+george
+celerite
+lightkurve

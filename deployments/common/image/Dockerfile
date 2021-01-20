@@ -4,7 +4,7 @@
 # https://hub.docker.com/_/buildpack-deps/
 # FROM buildpack-deps:focal-scm AS build
 
-FROM jupyter/scipy-notebook:399cbb986c6b
+FROM jupyter/scipy-notebook:703d8b2dcb88
 
 # ------------------------------------------------------------------------
 
