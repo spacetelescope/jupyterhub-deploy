@@ -19,6 +19,9 @@ jupyterhub:
     image:
       tag: latest
       pullPolicy: Always
+    storage:
+      dynamic:
+        storageClass: "aws-efs"
     lifecycleHooks:
       postStart:
         exec:
@@ -29,11 +32,6 @@ jupyterhub:
         CRDS_SERVER_URL: https://jwst-crds.stsci.edu
     defaultUrl: "/lab"
     memory:
-      guarantee: 512M
-      limit: 1G
-  auth:
-    users:
-      - add-me@stsci.edu
-    admin:
-      users:
-      - add-me@stsci.edu
+      guarantee: 4G
+      limit: 10G
+
