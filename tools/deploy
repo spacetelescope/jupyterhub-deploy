@@ -12,6 +12,8 @@ environment=$4
 rm -r hub/charts/*
 helm dependency update hub
 
+kubectl apply -f hub/custom-ui-templates-${environment}.yaml
+
 tmp_decrypted=~/env.yaml.decrypted
 
 # have to be in the same directory as .sops.yaml
