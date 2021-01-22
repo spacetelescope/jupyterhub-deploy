@@ -12,6 +12,20 @@
 # CRDS_DOWNLOAD_PLUGIN: "crds_s3_get ${SOURCE_URL} ${OUTPUT_PATH} ${FILE_SIZE} ${FILE_SHA1SUM}"
 
 jupyterhub:
+  hub:
+    extraConfig:
+      templates: |
+        ## Configure JupyterHub to look for the templates we inject with a ConfigMap
+        c.JupyterHub.template_paths.insert(0, "/etc/jupyterhub/templates")
+    extraVolumes:
+      ## Make the hub pod be able to access a ConfigMap volume
+      - name: hub-templates
+        configMap:
+          name: hub-templates
+    extraVolumeMounts:
+      ## Make the hub pod hub container mount that ConfigMap volume
+      - mountPath: /etc/jupyterhub/templates
+        name: hub-templates
   prePuller:
     continuous:
       enabled: true
@@ -19,6 +33,9 @@ jupyterhub:
     image:
       tag: latest
       pullPolicy: Always
+    profileList:
+      - display_name: "TIKE - Timeseries Integrated Knowledge Engine"
+        default: true
     storage:
       dynamic:
         storageClass: "aws-efs"
@@ -28,10 +45,13 @@ jupyterhub:
           command: ["rsync", "-r", "/etc/default-home-contents/", "/home/jovyan"]
           #command: ["gitpuller", "https://github.com/spacetelescope/jupyterhub-user-content", "roman", "."]
     extraEnv:
-        CRDS_PATH:  /home/jovyan/crds_cache
-        CRDS_SERVER_URL: https://jwst-crds.stsci.edu
+      CRDS_PATH:  /home/jovyan/crds_cache
+      CRDS_SERVER_URL: https://jwst-crds.stsci.edu
     defaultUrl: "/lab"
     memory:
       guarantee: 4G
       limit: 10G
-
+  cull:
+    enabled: true
+    timeout: 1800
+    every: 60
