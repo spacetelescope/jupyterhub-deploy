@@ -15,13 +15,24 @@ data:
 
     <div class="container">
       {% block heading %}
-       <div class="row text-center">
-        <center>
-         Greg can put stuff here...
-         <br/>
-         Like a link to <a href="https://www.stsci.edu/">docs</a>
-        </center>
-        <br/><br/>
+       <div class="row">
+
+          <center><h2>Welcome to the Timeseries Integrated Knowledge Engine (TIKE)</h2></center><br/>
+
+          TIKE is a JupyterHub instance provided by the Space Telescope Science Institute (STScI), and its main goal is to increase the accessibility of scientific data and software. STScI's JupyterHub platforms achieve this by providing users with a pre-defined Linux computing environment hosted by Amazon Web Services (AWS), and by deploying these resouces in the same AWS region hosting MAST's <a href="https://registry.opendata.aws/collab/stsci">AWS Public Datasets</a>. TIKE is a collaboration between the <a href="https://archive.stsci.edu">Mikulski Archive for Space Telescopes (MAST)</a>, the Data Science Mission Office (DSMO), and the Community Missions Office (CMO). Its initial focus is on timeseries data, such as those available from the <a href="https://outerspace.stsci.edu/display/TESS/TESS+Archive+Manual">TESS</>, <a href="https://archive.stsci.edu/missions-and-data/kepler">Kepler</a>, and <a href="https://archive.stsci.edu/missions-and-data/k2">K2</a> missions, and this focus will expand in future releases.<br/><br/>
+
+          <b>Useful information</b>&#58;<br/><br/>
+
+            <ul>
+            <li>TIKE is currently <i><b>under active development</b></i> and as such, you should have no expectations regarding service uptime, data preservation, etc. We anticipate greater reliability as we approach a wider community release.  At this time, <u>no data</u> you upload or create within TIKE is guaranteed to remain for any duration.</li>
+              <li>TIKE is free to use, and users do <i><b>not</b></i> require an AWS account to use TIKE or to access STScI's <a href="https://registry.opendata.aws/collab/stsci">Public Datasets in AWS</a>.</li>
+              <li> Several resources are available to support TIKE usage, and we expect more to be added in the coming months. At this time, the main source is the <a href="https://github.com/spacetelescope/tike_content">TIKE_content Github repository</a>.</li>
+              <ul><li>Additional introductory material is available by drilling down in the above repository, for example&#58; <a href="https&#58;//github.com/spacetelescope/tike_content/blob/master/content/Introduction.md">https&#58;//github.com/spacetelescope/tike_content/blob/master/content/Introduction.md</a></li></ul>
+              <li>This service offers no reasonable expectation of privacy. Usage is monitored, and access will be restricted as needed in order to provide an acceptable level of service to all users.</li>
+            </ul><br/>
+            At this time, we cannot guarantee prompt responses to any support requests.
+
+        <br/><br/><br/>
        </div>
       {% endblock %}
       <div class="row col-sm-offset-2 col-sm-8">
