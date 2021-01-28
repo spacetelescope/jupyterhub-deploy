@@ -34,7 +34,7 @@ jupyterhub:
       tag: latest
       pullPolicy: Always
     profileList:
-      - display_name: "TIKE - Timeseries Integrated Knowledge Engine"
+      - display_name: "TIKE Science Platform"
         default: true
     storage:
       dynamic:
