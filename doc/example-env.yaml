@@ -1,5 +1,19 @@
 jupyterhub:
+  # Pre puller and user placeholders not strictly necessary for dev accounts
   prePuller:
     continuous:
-      # Don't need continuous pre-puller on staging
-      enabled: false
+      enabled: true
+  scheduling:
+    userScheduler:
+      enabled: true
+      pdb:
+        enabled: true
+        minAvailable: 0
+    userPlaceholder:
+      enabled: true
+      replicas: 1
+    podPriority:
+      enabled: true
+      globalDefault: true
+      defaultPriority: 10
+      userPlaceholderPriority: 0
