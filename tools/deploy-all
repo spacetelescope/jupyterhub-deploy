@@ -11,6 +11,8 @@ cd $JUPYTERHUB_DIR
 
 awsudo $ADMIN_ARN aws eks update-kubeconfig --name ${DEPLOYMENT_NAME} --region us-east-1 --role-arn arn:aws:iam::${ACCOUNT_ID}:role/jupyterhub-admin
 
+chmod 600 /home/ec2-user/.kube/config
+
 tools/deploy ${DEPLOYMENT_NAME} ${ACCOUNT_ID} deployments/${DEPLOYMENT_NAME}/secrets/${ENVIRONMENT}.yaml ${ENVIRONMENT}
 
 kubectl get svc proxy-public
