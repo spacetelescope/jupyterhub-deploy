@@ -33,5 +33,5 @@ jupyterhub:
         CRDS_SERVER_URL: https://jwst-crds.stsci.edu
     defaultUrl: "/lab"
     memory:
-      guarantee: 8G
+      guarantee: 7G
       limit: 15G
