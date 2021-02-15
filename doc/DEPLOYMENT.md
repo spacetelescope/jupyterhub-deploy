@@ -83,7 +83,9 @@ Get a copy of the repository with this command:
 First, we will setup KMS and CodeCommit with the *kms-codecommit* Terraform module:
 
 - `cd terraform-deploy/kms-codecommit`
-- `terraform init`
+- `cp backend.conf.template backend.conf`
+- Update *backend.conf* based on the templated values
+- `awsudo -d 3600 $ADMIN_ARN terraform init -backend-config=./backend.conf`
 - `cp your-vars.tfvars.template $DEPLOYMENT_NAME.tfvars`
 - Update *deployment-name.tfvars* based on the templated values.
 - `awsudo -d 3600 $ADMIN_ARN terraform apply -var-file=$DEPLOYMENT_NAME.tfvars -auto-approve`
@@ -96,7 +98,9 @@ A file named **_.sops.yaml_** will have been produced, and this will be used in 
 Next, we will configure and deploy an EKS cluster and supporting resources needed to run JupyterHub with the *aws* Terraform module:
 
 - `../aws`
-- `terraform init`
+- `cp backend.conf.template backend.conf`
+- Update *backend.conf* based on the templated values
+- `awsudo -d 3600 $ADMIN_ARN terraform init -backend-config=./backend.conf`
 - `cp your-vars.tfvars.template $DEPLOYMENT_NAME.tfvars`
 - Update *deployment-name.tfvars* based on the templated values.
 - `awsudo -d 3600 $ADMIN_ARN terraform apply -var-file=$DEPLOYMENT_NAME.tfvars -auto-approve`
