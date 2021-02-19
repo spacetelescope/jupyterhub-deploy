@@ -1,0 +1,32 @@
+jupyterhub:
+  hub:
+    pdb:
+      enabled: true
+      minAvailable: 0
+  proxy:
+    chp:
+      pdb:
+        enabled: true
+        minAvailable: 0
+  singleuser:
+    storage:
+      dynamic:
+        storageClass: "aws-efs"
+    defaultUrl: "/lab"
+  scheduling:
+    userScheduler:
+      enabled: true
+      pdb:
+        enabled: true
+        minAvailable: 0
+    corePods:
+      nodeAffinity:
+        matchNodePurpose: require
+    userPods:
+      nodeAffinity:
+        matchNodePurpose: require
+    podPriority:
+      enabled: true
+      globalDefault: true
+      defaultPriority: 10
+      userPlaceholderPriority: 0
