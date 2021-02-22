@@ -85,7 +85,6 @@ Get a copy of the repository with this command:
 
 First, we will setup KMS and CodeCommit with the *kms-codecommit* Terraform module:
 
-- `awsudo $ADMIN_ARN aws s3api create-bucket --bucket $DEPLOYMENT_NAME-tfstate`
 - `cd terraform-deploy/kms-codecommit`
 - `cp backend.conf.template backend.conf`
 - Update *backend.conf* based on the templated values
