@@ -71,7 +71,7 @@ The complete deployment process involves two git repositories:
 - `export ACCOUNT_ID=<account-id>`
 - `export ADMIN_ARN=<admin-arn>`
 - `export DEPLOYMENT_NAME=<deployment-name>`
-- `export ENVIRONMENT=<sandbox | dev | test | prod>`
+- `export ENVIRONMENT=<sandbox | dev | test | ops>`
 
 # Terraform-deploy
 
