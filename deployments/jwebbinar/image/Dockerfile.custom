@@ -1,0 +1,51 @@
+# ========================= vvvvv Custom  vvvvv =========================
+
+ARG BASE_IMAGE
+FROM $BASE_IMAGE AS build
+
+ARG USE_FROZEN=1
+ENV USE_FROZEN=$USE_FROZEN
+
+# ----------------------------------------------------------------------
+# Install environments
+
+USER ${NB_UID}
+
+# TESS
+COPY environments/jwebbinar/ /opt/environments/jwebbinar
+RUN /opt/common-scripts/env-clone base jwebbinar
+# RUN /opt/common-scripts/env-create jwebbinar /opt/environments/jwebbinar/jwebbinar.yml
+RUN /opt/common-scripts/install-common jwebbinar
+RUN /opt/common-scripts/env-update jwebbinar /opt/environments/jwebbinar/jwebbinar.pip
+
+# ----------------------------------------------------------------------
+USER $NB_UID
+
+RUN /opt/common-scripts/kernel-setup
+
+# ---------------------------------------------------------------
+# VARTOOLS Light Curve Analysis Program
+USER root
+RUN curl --silent --show-error https://www.astro.princeton.edu/~jhartman/vartools/vartools-1.38.tar.gz -o vartools-1.38.tar.gz && \
+   tar zxf vartools-1.38.tar.gz &&\
+   cd vartools-1.38 &&\
+   mkdir -p /usr/local &&\
+   ./configure --prefix=/use/local &&\
+   make &&\
+   make install &&\
+   cd .. &&\
+   rm -rf vartools-1.38 vartools-1.38.tar.gz
+
+# ----------------------------------------------------------------------
+#USER root
+#RUN mkdir /opt/tessworkshop_tutorials
+#RUN chmod 777 /opt/tessworkshop_tutorials
+
+#RUN mkdir /opt/notebooks
+#RUN chmod 777 /opt/notebooks
+
+#USER $NB_UID
+#RUN git clone https://github.com/spacetelescope/tessworkshop_tutorials.git /opt/tessworkshop_tutorials
+#RUN git clone https://github.com/spacetelescope/notebooks.git /opt/notebooks
+
+# ========================= ^^^^^ Custom  ^^^^^ =========================
