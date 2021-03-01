@@ -7,46 +7,57 @@ ARG USE_FROZEN=1
 ENV USE_FROZEN=$USE_FROZEN
 
 # ----------------------------------------------------------------------
+
+# All data is arranged  on /data opening up options for sharing a file system
+ENV MIRAGE_DATA=/data/mirage \
+    PYSYN_CDBS=/data/pysynphot \
+    WEBBPSF_PATH=/data/webbpsf-data \
+    pandeia_refdata=/data/pandeia
+
+# ----------------------------------------------------------------------
+
+ENV CRDS_PATH=/home/jovyan/crds_cache
+ENV CRDS_SERVER_URL=https://jwst-crds.stsci.edu
+ENV CRDS_VERBOSITY=20
+
+# ----------------------------------------------------------------------
 # Install environments
 
 USER ${NB_UID}
 
 # JWebbinar
 COPY environments/jwebbinar/ /opt/environments/jwebbinar
-RUN /opt/common-scripts/env-clone  base  jwebbinar
-# RUN /opt/common-scripts/env-create jwebbinar /opt/environments/jwebbinar/jwebbinar.yml
+RUN /opt/common-scripts/env-create jwebbinar /opt/environments/jwebbinar/jwebbinar.yml
 RUN /opt/common-scripts/install-common jwebbinar
 RUN /opt/common-scripts/env-update jwebbinar /opt/environments/jwebbinar/jwebbinar.pip
 
 # ----------------------------------------------------------------------
-USER $NB_UID
+# BUG: ds9 is installed in the jwebbinar kernel, but it's included also include in the
+#      common image in it's own kernel.  To avoid cluttering up the Launcher tab,
+#      remove the ds9 environment
+RUN conda env remove --name ds9
 
-RUN /opt/common-scripts/kernel-setup
-
-# ---------------------------------------------------------------
-# VARTOOLS Light Curve Analysis Program
 USER root
-RUN curl --silent --show-error https://www.astro.princeton.edu/~jhartman/vartools/vartools-1.38.tar.gz -o vartools-1.38.tar.gz && \
-   tar zxf vartools-1.38.tar.gz &&\
-   cd vartools-1.38 &&\
-   mkdir -p /usr/local &&\
-   ./configure --prefix=/use/local &&\
-   make &&\
-   make install &&\
-   cd .. &&\
-   rm -rf vartools-1.38 vartools-1.38.tar.gz
+RUN unlink /etc/default-home-contents/Desktop/ds9 && \
+    rm /opt/environments/ds9/kernel.name
 
 # ----------------------------------------------------------------------
-#USER root
-#RUN mkdir /opt/tessworkshop_tutorials
-#RUN chmod 777 /opt/tessworkshop_tutorials
+USER root
 
-#RUN mkdir /opt/notebooks
-#RUN chmod 777 /opt/notebooks
+# Get webbpsf-data-0.9.0.tar.gz
+RUN mkdir /data && cd /data && \
+    wget --quiet https://stsci.box.com/shared/static/qcptcokkbx7fgi3c00w2732yezkxzb99.gz
+RUN cd /data && tar zxf qcptcokkbx7fgi3c00w2732yezkxzb99.gz && \
+    rm qcptcokkbx7fgi3c00w2732yezkxzb99.gz && chmod -R a+r /data/webbpsf-data
 
-#USER $NB_UID
-#RUN git clone https://github.com/spacetelescope/tessworkshop_tutorials.git /opt/tessworkshop_tutorials
-#RUN git clone https://github.com/spacetelescope/notebooks.git /opt/notebooks
+# Install sextractor under /usr/local
+RUN cd /tmp && \
+    curl -sSL https://github.com/astromatic/sextractor/archive/2.25.0.tar.gz | tar -xzf - && \
+    cd sextractor-2.25.0 && \
+    sh autogen.sh && \
+    ./configure --prefix=/usr/local && \
+    make && \
+    make install
 
 # ========================= ^^^^^ Custom  ^^^^^ =========================
 # ========================= vvvvv Generic vvvvv  =========================

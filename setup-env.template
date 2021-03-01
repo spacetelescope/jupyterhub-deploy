@@ -32,7 +32,6 @@ export IMAGE_UBUNTU_NAME="Focal"
 # Image scanning,  report CVE's at this severity level and  higher
 export IMAGE_VULNERABILITY_LEVEL="medium"
 
-
 # ----------------- values derived from basic inputs ---------------------
 
 source derived-env

@@ -5,7 +5,7 @@ channels:
 dependencies:
   - cfitsio
   - jupyterhub
-  - jupyterlab
+  - jupyterlab==3.0.9
   - nodejs
   - ipykernel
   - ipyevents
@@ -15,7 +15,8 @@ dependencies:
   - pip:
     - jupyter-server-proxy
     - nbgitpuller
-    - git+https://github.com/yuvipanda/jupyter-desktop-server@daecbdbbf89003a1d71fa03f362682a886bb3ad7
+    #- git+https://github.com/yuvipanda/jupyter-desktop-server@daecbdbbf89003a1d71fa03f362682a886bb3ad7
+    - git+https://github.com/yuvipanda/jupyter-desktop-server
 
 #  - nb_conda_kernels
 #  - nb_conda
