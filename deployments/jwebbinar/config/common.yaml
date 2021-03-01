@@ -17,11 +17,6 @@ jupyterhub:
       templates: |
         ## Configure JupyterHub to look for the templates we inject with a ConfigMap
         c.JupyterHub.template_paths.insert(0, "/etc/jupyterhub/templates")
-      #tike: |
-        #c.Spawner.default_url = "/lab/tree/tike_content/content/Introduction.md"
-        ## This works, but by setting the default notebook directory, users can't navigate to
-        ## their home directory, meaning any files they create will wind up in the repo clone
-        #c.Spawner.notebook_dir = "/home/jovyan/tike_content"
     extraVolumes:
       ## Make the hub pod be able to access a ConfigMap volume
       - name: hub-templates
@@ -39,7 +34,7 @@ jupyterhub:
       tag: latest
       pullPolicy: Always
     profileList:
-      - display_name: "TIKE Science Platform"
+      - display_name: "JWebbinar Science Platform"
         default: true
     storage:
       dynamic:
@@ -52,7 +47,7 @@ jupyterhub:
             - "-c"
             - >
               rsync -r /etc/default-home-contents/ /home/jovyan;
-              #gitpuller https://github.com/spacetelescope/tike_content master /home/jovyan/tike_content
+              gitpuller https://github.com/spacetelescope/jwebbinar_prep test-env /home/jovyan/jwebbinar_prep
     extraEnv:
       CRDS_PATH:  /home/jovyan/crds_cache
       CRDS_SERVER_URL: https://jwst-crds.stsci.edu

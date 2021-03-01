@@ -34,7 +34,7 @@ else
         exit 1
     fi
     echo "Creating defult Python environment for ${env}"
-    conda create --quiet --name  ${env} python
+    conda create --name  ${env} python
 fi
 
 conda clean -fya

@@ -26,15 +26,16 @@ EOF
 # Potentially among other things,  these are needed so that image-test will run.
 
 for kernel in `conda env list | grep -v '#' | grep -v base | cut -d' ' -f1`; do
+    if [ -f "/opt/environments/${kernel}/kernel.name" ]; then
 
-    echo "================== Adding kernel $kernel ====================="
+	echo "================== Adding kernel $kernel ====================="
 
-    source /opt/common-scripts/env-activate $kernel
+        source /opt/common-scripts/env-activate $kernel
 
-    python -m ipykernel install --user --name $kernel --display-name "`cat  /opt/environments/${kernel}/kernel.name`"
+        python -m ipykernel install --user --name $kernel --display-name "`cat  /opt/environments/${kernel}/kernel.name`"
 
-    source /opt/common-scripts/env-deactivate $kernel
-
+        source /opt/common-scripts/env-deactivate $kernel
+    fi
 done
 
 # echo "nb_kernels:"
