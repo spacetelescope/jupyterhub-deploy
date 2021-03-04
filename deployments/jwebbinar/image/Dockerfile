@@ -31,15 +31,20 @@ RUN /opt/common-scripts/env-create jwebbinar /opt/environments/jwebbinar/jwebbin
 RUN /opt/common-scripts/install-common jwebbinar
 RUN /opt/common-scripts/env-update jwebbinar /opt/environments/jwebbinar/jwebbinar.pip
 
+# jdaviz
+COPY environments/jdaviz/ /opt/environments/jdaviz
+RUN /opt/common-scripts/env-create jdaviz /opt/environments/jdaviz/jdaviz.yml
+RUN /opt/common-scripts/install-common jdaviz
+RUN /opt/common-scripts/env-update jdaviz /opt/environments/jdaviz/jdaviz.pip
+
 # ----------------------------------------------------------------------
 # BUG: ds9 is installed in the jwebbinar kernel, but it's included also include in the
 #      common image in it's own kernel.  To avoid cluttering up the Launcher tab,
 #      remove the ds9 environment
 RUN conda env remove --name ds9
 
-USER root
-RUN unlink /etc/default-home-contents/Desktop/ds9 && \
-    rm /opt/environments/ds9/kernel.name
+#USER root
+#RUN chmod +x /opt/conda/envs/jwebbinar/bin/ds9
 
 # ----------------------------------------------------------------------
 USER root

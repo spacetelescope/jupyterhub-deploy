@@ -47,7 +47,10 @@ jupyterhub:
             - "-c"
             - >
               rsync -r /etc/default-home-contents/ /home/jovyan;
-              gitpuller https://github.com/spacetelescope/jwebbinar_prep test-env /home/jovyan/jwebbinar_prep
+              gitpuller https://github.com/spacetelescope/jwebbinar_prep test-env /home/jovyan/jwebbinar_prep;
+              rm -rf /home/jovyan/.local/share/jupyter/kernels/ds9;
+              chmod +x /opt/conda/envs/jwebbinar/bin/ds9;
+              #unlink /home/jovyan/Desktop/ds9
     extraEnv:
       CRDS_PATH:  /home/jovyan/crds_cache
       CRDS_SERVER_URL: https://jwst-crds.stsci.edu

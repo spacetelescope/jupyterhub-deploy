@@ -1,0 +1,9 @@
+name: jdaviz
+channels:
+        - conda-forge
+        - manics
+        - https://ssb.stsci.edu/astroconda
+        - defaults
+dependencies:
+        - python<3.9.0a0
+        - pip
