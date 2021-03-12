@@ -108,7 +108,7 @@ RUN ln -s /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem  /etc/ssl/certs/ca-b
 # ------------------------------------------------------------------------
 USER root
 
-# Load conda profile scripts by default,  symlink target doesn't exist for a bit
+# Load conda profile scripts by default, symlink target doesn't exist for a bit
 RUN ln -s ${CONDA_DIR}/etc/profile.d/conda.sh /etc/profile.d/conda.sh
 
 USER ${NB_UID}
@@ -120,12 +120,18 @@ RUN conda update --quiet --name base conda && \
     conda build purge-all
 
 USER root
-RUN npm config set cafile /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+RUN npm config set cafile /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem && \
+    npm install --save @jupyterlab/services
 
 USER ${NB_UID}
 RUN ${CONDA_DIR}/bin/jupyter labextension install @jupyterlab/server-proxy && \
+    ${CONDA_DIR}/bin/jupyter labextension install jupyter-threejs@1 && \
+    ${CONDA_DIR}/bin/jupyter labextension install @jupyter-widgets/jupyterlab-manager@2 && \
+    ${CONDA_DIR}/bin/jupyter labextension install jupyter-vuetify && \
+    ${CONDA_DIR}/bin/jupyter labextension install @jupyter-widgets/jupyterlab-manager bqplot && \
     ${CONDA_DIR}/bin/jupyter nbextension enable --py --sys-prefix ipyevents && \
-    jupyter lab build -y && \
+    #${CONDA_DIR}/bin/jupyter nbextension enable --py --sys-prefix ipyvuetify && \  NOT NEEDED FOR jupyterlab < 3
+    jupyter lab build -y --debug && \
     jupyter lab clean -y && \
     npm cache clean --force && \
     rm -rf "/home/${NB_USER}/.cache/yarn" && \
