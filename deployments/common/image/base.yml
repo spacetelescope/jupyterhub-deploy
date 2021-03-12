@@ -5,7 +5,6 @@ channels:
 dependencies:
   - cfitsio
   - jupyterhub
-  - jupyterlab==3.0.9
   - nodejs
   - ipykernel
   - ipyevents
@@ -13,8 +12,12 @@ dependencies:
   - websockify==0.9.0
   - pip
   - pip:
+    - jupyterlab_widgets
+    - jupyterlab==2.0.0
+    - git+https://github.com/spacetelescope/jdaviz.git
     - jupyter-server-proxy
     - nbgitpuller
+    - ipyvuetify>=1.4.1
     #- git+https://github.com/yuvipanda/jupyter-desktop-server@daecbdbbf89003a1d71fa03f362682a886bb3ad7
     - git+https://github.com/yuvipanda/jupyter-desktop-server
 
