@@ -125,13 +125,8 @@ RUN npm config set cafile /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem && \
 
 USER ${NB_UID}
 RUN ${CONDA_DIR}/bin/jupyter labextension install @jupyterlab/server-proxy && \
-    ${CONDA_DIR}/bin/jupyter labextension install jupyter-threejs@1 && \
-    ${CONDA_DIR}/bin/jupyter labextension install @jupyter-widgets/jupyterlab-manager@2 && \
-    ${CONDA_DIR}/bin/jupyter labextension install jupyter-vuetify && \
-    ${CONDA_DIR}/bin/jupyter labextension install @jupyter-widgets/jupyterlab-manager bqplot && \
     ${CONDA_DIR}/bin/jupyter nbextension enable --py --sys-prefix ipyevents && \
-    #${CONDA_DIR}/bin/jupyter nbextension enable --py --sys-prefix ipyvuetify && \  NOT NEEDED FOR jupyterlab < 3
-    jupyter lab build -y --debug && \
+    jupyter lab build -y && \
     jupyter lab clean -y && \
     npm cache clean --force && \
     rm -rf "/home/${NB_USER}/.cache/yarn" && \

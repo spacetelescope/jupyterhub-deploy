@@ -72,6 +72,23 @@ RUN cd /tmp && \
     make && \
     make install
 
+# Install additional lab and notebook extensions
+USER ${NB_UID}
+RUN /bin/bash /opt/common-scripts/env-activate jwebbinar && \
+    jupyter nbextension install --py --sys-prefix widgetsnbextension && \
+    jupyter nbextension enable --py --sys-prefix widgetsnbextension && \
+    jupyter labextension install @jupyterlab/server-proxy @jupyter-widgets/jupyterlab-manager@2 && \
+    jupyter nbextension install --py --sys-prefix ipyevents && \
+    jupyter nbextension enable --py --sys-prefix ipyevents && \
+    jupyter nbextension install --py --sys-prefix ipyvuetify&& \
+    jupyter nbextension enable --py --sys-prefix ipyvuetify && \
+    jupyter lab build -y && \
+    jupyter lab clean -y && \
+    npm cache clean --force && \
+    rm -rf "/home/${NB_USER}/.cache/yarn" && \
+    rm -rf "/home/${NB_USER}/.node-gyp" && \
+    /bin/bash /opt/common-scripts/env-deactivate jwebbinar
+
 # ========================= ^^^^^ Custom  ^^^^^ =========================
 # ========================= vvvvv Generic vvvvv  =========================
 
