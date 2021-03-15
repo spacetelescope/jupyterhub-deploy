@@ -13,7 +13,7 @@ dependencies:
   - pip
   - pip:
     - jupyterlab_widgets
-    - jupyterlab==2.0.0
+    - jupyterlab==2.2.9
     - git+https://github.com/spacetelescope/jdaviz.git
     - jupyter-server-proxy
     - nbgitpuller
