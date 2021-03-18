@@ -16,7 +16,7 @@ cd ${COMMON_DIR}
 # git rev-parse HEAD > common-image-git-hash
 echo "========================= Building Common Image ========================"
 # common image doesn't currently exploit frozen
-time docker build --tag ${COMMON_ID} --build-arg USE_FROZEN=${USE_FROZEN}  .
+time docker build --tag ${COMMON_ID} --build-arg USE_FROZEN=${USE_FROZEN} .
 
 cd ${IMAGE_DIR}
 

@@ -31,12 +31,6 @@ RUN /opt/common-scripts/env-create jwebbinar /opt/environments/jwebbinar/jwebbin
 RUN /opt/common-scripts/install-common jwebbinar
 RUN /opt/common-scripts/env-update jwebbinar /opt/environments/jwebbinar/jwebbinar.pip
 
-# jdaviz
-#COPY environments/jdaviz/ /opt/environments/jdaviz
-#RUN /opt/common-scripts/env-create jdaviz /opt/environments/jdaviz/jdaviz.yml
-#RUN /opt/common-scripts/install-common jdaviz
-#RUN /opt/common-scripts/env-update jdaviz /opt/environments/jdaviz/jdaviz.pip
-
 # ----------------------------------------------------------------------
 # BUG: ds9 is installed in the jwebbinar kernel, but it's included also include in the
 #      common image in it's own kernel.  To avoid cluttering up the Launcher tab,
@@ -54,7 +48,6 @@ USER root
 #    pip install -e . && \
 #    ${CONDA_DIR}/bin/jupyter nbextension install --py --symlink --sys-prefix bqplot_image_gl && \
 #    ${CONDA_DIR}/bin/jupyter nbextension enable --py --sys-prefix bqplot_image_gl && \
-#    cd .. && \
 #    rm -rf bqplot-image-gl
 
 # Get webbpsf-data-0.9.0.tar.gz
@@ -74,19 +67,17 @@ RUN cd /tmp && \
 
 # Install additional lab and notebook extensions
 USER ${NB_UID}
-RUN /bin/bash /opt/common-scripts/env-activate jwebbinar && \
-    jupyter nbextension install --py --sys-prefix widgetsnbextension && \
+RUN jupyter nbextension install --py --sys-prefix widgetsnbextension && \
     jupyter nbextension enable --py --sys-prefix widgetsnbextension && \
-    jupyter labextension install @jupyterlab/server-proxy @jupyter-widgets/jupyterlab-manager@2 && \
     jupyter nbextension install --py --sys-prefix ipyevents && \
     jupyter nbextension enable --py --sys-prefix ipyevents && \
     jupyter nbextension install --py --sys-prefix ipyvuetify&& \
     jupyter nbextension enable --py --sys-prefix ipyvuetify && \
+    jupyter labextension install @jupyterlab/server-proxy @jupyter-widgets/jupyterlab-manager@2 ipyevents bqplot bqplot-image-gl jupyter-vuetify && \
     jupyter lab build -y && \
     jupyter lab clean -y && \
     npm cache clean --force && \
     rm -rf "/home/${NB_USER}/.cache/yarn" && \
-    rm -rf "/home/${NB_USER}/.node-gyp" && \
-    /bin/bash /opt/common-scripts/env-deactivate jwebbinar
+    rm -rf "/home/${NB_USER}/.node-gyp"
 
 # ========================= ^^^^^ Custom  ^^^^^ =========================

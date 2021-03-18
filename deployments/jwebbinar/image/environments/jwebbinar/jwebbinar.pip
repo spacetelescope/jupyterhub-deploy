@@ -32,11 +32,10 @@ pysynphot
 stsci.tools
 jwst==0.17.1
 jupyterlab==2.2.9
-specutils@git+https://github.com/astropy/specutils.git@625e05499386e4c48467a4a141d6763e9147fcbc
+#specutils@git+https://github.com/astropy/specutils.git@625e05499386e4c48467a4a141d6763e9147fcbc
 vispy>=0.6.5
 ipyvue>=1.3.4
 jupyterlab_widgets
 #tornado==5.1.1
-#notebook==5.7.9
 #jupyter-server==0.3.0
 #nbconvert>=6.0.0

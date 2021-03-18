@@ -133,7 +133,7 @@ RUN ${CONDA_DIR}/bin/jupyter labextension install @jupyterlab/server-proxy && \
     rm -rf "/home/${NB_USER}/.node-gyp"
 
 # ------------------------------------------------------------------------
-# More SSL/TLS cert setup,  add server-proxy labextension
+# More SSL/TLS cert setup
 
 USER root
 

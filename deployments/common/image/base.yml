@@ -14,7 +14,6 @@ dependencies:
   - pip:
     - jupyterlab_widgets
     - jupyterlab==2.2.9
-    - git+https://github.com/spacetelescope/jdaviz.git
     - jupyter-server-proxy
     - nbgitpuller
     - ipyvuetify>=1.4.1
