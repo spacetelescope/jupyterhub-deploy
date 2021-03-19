@@ -42,6 +42,9 @@ fi
 # building the related environment. To avoid busting,  clear all changes to
 # the xxx-frozen.yml files prior to starting any un-frozen build;  they'll
 # be automatically recreated anyway and don't contribute until USE_FROZEN=1.
-if [[ $USE_FROZEN==0 ]]; then
+
+if [[ $USE_FROZEN == "0" ]]; then
+  # echo "Clearing frozen image specs to avoid Docker cache busting."
+  # echo "Add or commit them to git prior to unfrozen builds to avoid this clear."
   git checkout -- environments/frozen
 fi
