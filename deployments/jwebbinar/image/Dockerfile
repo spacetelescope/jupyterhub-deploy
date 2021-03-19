@@ -21,9 +21,37 @@ ENV CRDS_SERVER_URL=https://jwst-crds.stsci.edu
 ENV CRDS_VERBOSITY=20
 
 # ----------------------------------------------------------------------
+# Install non-environment packages early to avoid constant trailing rebuilds
+# while working conda/pip dependency issues.
+# BUG: we have no standard process for adding tests for these.
+
+USER root
+
+# Get webbpsf-data-0.9.0.tar.gz
+RUN mkdir /data && cd /data && \
+    wget --quiet https://stsci.box.com/shared/static/qcptcokkbx7fgi3c00w2732yezkxzb99.gz
+RUN cd /data && tar zxf qcptcokkbx7fgi3c00w2732yezkxzb99.gz && \
+    rm qcptcokkbx7fgi3c00w2732yezkxzb99.gz && chmod -R a+r /data/webbpsf-data
+
+# Install sextractor under /usr/local
+RUN cd /tmp && \
+    curl -sSL https://github.com/astromatic/sextractor/archive/2.25.0.tar.gz | tar -xzf - && \
+    cd sextractor-2.25.0 && \
+    sh autogen.sh && \
+    ./configure --prefix=/usr/local && \
+    make && \
+    make install
+
+# ----------------------------------------------------------------------
 # Install environments
 
 USER ${NB_UID}
+
+# This is a cache buster when environment freezing creates new specs, so Docker
+# build will back up to this point.  Consequently, image build uses git to
+# clear the new specs, they should be committed to git prior to attempting a
+# new frozen build.
+COPY environments/frozen /opt/environments/frozen
 
 # JWebbinar
 COPY environments/jwebbinar/ /opt/environments/jwebbinar
@@ -50,21 +78,6 @@ USER root
 #    ${CONDA_DIR}/bin/jupyter nbextension enable --py --sys-prefix bqplot_image_gl && \
 #    rm -rf bqplot-image-gl
 
-# Get webbpsf-data-0.9.0.tar.gz
-RUN mkdir /data && cd /data && \
-    wget --quiet https://stsci.box.com/shared/static/qcptcokkbx7fgi3c00w2732yezkxzb99.gz
-RUN cd /data && tar zxf qcptcokkbx7fgi3c00w2732yezkxzb99.gz && \
-    rm qcptcokkbx7fgi3c00w2732yezkxzb99.gz && chmod -R a+r /data/webbpsf-data
-
-# Install sextractor under /usr/local
-RUN cd /tmp && \
-    curl -sSL https://github.com/astromatic/sextractor/archive/2.25.0.tar.gz | tar -xzf - && \
-    cd sextractor-2.25.0 && \
-    sh autogen.sh && \
-    ./configure --prefix=/usr/local && \
-    make && \
-    make install
-
 # Install additional lab and notebook extensions
 USER ${NB_UID}
 RUN jupyter nbextension install --py --sys-prefix widgetsnbextension && \
@@ -80,6 +93,8 @@ RUN jupyter nbextension install --py --sys-prefix widgetsnbextension && \
     npm cache clean --force && \
     rm -rf "/home/${NB_USER}/.cache/yarn" && \
     rm -rf "/home/${NB_USER}/.node-gyp"
+
+RUN gitpuller https://github.com/spacetelescope/jwebbinar_prep test-env /home/jovyan/jwebbinar_prep
 
 # ========================= ^^^^^ Custom  ^^^^^ =========================
 # ========================= vvvvv Generic vvvvv  =========================
@@ -110,8 +125,10 @@ RUN /opt/common-scripts/fix-certs
 # For standalone operation outside JupyterHub,  note that  /etc also includes
 # common home directory files.
 RUN cp -r /etc/default-home-contents/* /home/jovyan && \
-    fix-permissions  /home/jovyan  &&\
-    fix-permissions  /opt/environments
+    fix-permissions  /home/jovyan
+
+#  &&\
+#    fix-permissions  /opt/environments     # Docker cache buster?
 
 # This top level command runs unit tests for the image,  nominally import tests
 # and notebook runs but it's an arbitrary bash script.

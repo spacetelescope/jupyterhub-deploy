@@ -35,3 +35,13 @@ if [[ -f Dockerfile.custom ]]; then
    # Combine Dockerfile.custom with the common "trailer" to create Dockerfile
    cat Dockerfile.custom ../../common/image/Dockerfile.trailer >Dockerfile
 fi
+
+# -------------------------------------------------------------------------
+# If a prior build updated environment xxx-frozen.yml files,  they become
+# Docker cache busters since they must be copied into the image prior to
+# building the related environment. To avoid busting,  clear all changes to
+# the xxx-frozen.yml files prior to starting any un-frozen build;  they'll
+# be automatically recreated anyway and don't contribute until USE_FROZEN=1.
+if [[ $USE_FROZEN==0 ]]; then
+  git checkout -- environments/frozen
+fi
