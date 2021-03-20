@@ -53,12 +53,6 @@ USER ${NB_UID}
 # new frozen build.
 COPY environments/frozen /opt/environments/frozen
 
-# JWebbinar
-COPY environments/jwebbinar/ /opt/environments/jwebbinar
-RUN /opt/common-scripts/env-create jwebbinar /opt/environments/jwebbinar/jwebbinar.yml
-RUN /opt/common-scripts/install-common jwebbinar
-RUN /opt/common-scripts/env-update jwebbinar /opt/environments/jwebbinar/jwebbinar.pip
-
 # ----------------------------------------------------------------------
 # BUG: ds9 is installed in the jwebbinar kernel, but it's included also include in the
 #      common image in it's own kernel.  To avoid cluttering up the Launcher tab,
@@ -67,6 +61,20 @@ RUN conda env remove --name ds9
 
 #USER root
 #RUN chmod +x /opt/conda/envs/jwebbinar/bin/ds9
+
+# ----------------------------------------------------------------------
+# JWebbinar
+COPY environments/jwebbinar/ /opt/environments/jwebbinar
+RUN /opt/common-scripts/env-create jwebbinar /opt/environments/jwebbinar/jwebbinar.yml
+RUN /opt/common-scripts/install-common jwebbinar
+RUN /opt/common-scripts/env-update jwebbinar /opt/environments/jwebbinar/jwebbinar.pip
+
+# ----------------------------------------------------------------------
+# Jdaviz
+COPY environments/jdaviz/ /opt/environments/jdaviz
+RUN /opt/common-scripts/env-create jdaviz /opt/environments/jdaviz/jdaviz.yml
+RUN /opt/common-scripts/install-common jdaviz
+RUN /opt/common-scripts/env-update jdaviz /opt/environments/jdaviz/jdaviz.pip
 
 # ----------------------------------------------------------------------
 USER root
