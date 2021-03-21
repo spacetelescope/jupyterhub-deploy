@@ -64,17 +64,22 @@ RUN conda env remove --name ds9
 
 # ----------------------------------------------------------------------
 # JWebbinar
-COPY environments/jwebbinar/ /opt/environments/jwebbinar
-RUN /opt/common-scripts/env-create jwebbinar /opt/environments/jwebbinar/jwebbinar.yml
-RUN /opt/common-scripts/install-common jwebbinar
-RUN /opt/common-scripts/env-update jwebbinar /opt/environments/jwebbinar/jwebbinar.pip
+# --- COPY environments/jwebbinar/ /opt/environments/jwebbinar
+# --- RUN /opt/common-scripts/env-create jwebbinar /opt/environments/jwebbinar/jwebbinar.yml
+# --- RUN /opt/common-scripts/install-common jwebbinar
+# --- RUN /opt/common-scripts/env-update jwebbinar /opt/environments/jwebbinar/jwebbinar.pip
 
 # ----------------------------------------------------------------------
 # Jdaviz
-COPY environments/jdaviz/ /opt/environments/jdaviz
+COPY environments/jdaviz /opt/environments/jdaviz/jdaviz.yml
 RUN /opt/common-scripts/env-create jdaviz /opt/environments/jdaviz/jdaviz.yml
-RUN /opt/common-scripts/install-common jdaviz
+
+COPY environments/jdaviz/jdaviz.pip /opt/environments/jdaviz/jdaviz.pip
 RUN /opt/common-scripts/env-update jdaviz /opt/environments/jdaviz/jdaviz.pip
+
+# RUN /opt/common-scripts/install-common jdaviz
+
+COPY environments/jdaviz/ /opt/environments/jdaviz
 
 # ----------------------------------------------------------------------
 USER root
@@ -87,22 +92,22 @@ USER root
 #    rm -rf bqplot-image-gl
 
 # Install additional lab and notebook extensions
-USER ${NB_UID}
-RUN jupyter nbextension install --py --sys-prefix widgetsnbextension && \
-    jupyter nbextension enable --py --sys-prefix widgetsnbextension && \
-    jupyter nbextension install --py --sys-prefix ipyevents && \
-    jupyter nbextension enable --py --sys-prefix ipyevents && \
-    jupyter nbextension install --py --sys-prefix ipyvuetify&& \
-    jupyter nbextension enable --py --sys-prefix ipyvuetify && \
-    jupyter labextension install @jupyterlab/server-proxy @jupyter-widgets/jupyterlab-manager ipyevents bqplot bqplot-image-gl jupyter-vuetify && \
-    jupyter labextension update --all && \
-    #jupyter lab build -y && \
-    jupyter lab clean -y && \
-    npm cache clean --force && \
-    rm -rf "/home/${NB_USER}/.cache/yarn" && \
-    rm -rf "/home/${NB_USER}/.node-gyp"
+# --- USER ${NB_UID}
+# --- RUN jupyter nbextension install --py --sys-prefix widgetsnbextension && \
+# ---     jupyter nbextension enable --py --sys-prefix widgetsnbextension && \
+# ---     jupyter nbextension install --py --sys-prefix ipyevents && \
+# ---     jupyter nbextension enable --py --sys-prefix ipyevents && \
+# ---     jupyter nbextension install --py --sys-prefix ipyvuetify&& \
+# ---     jupyter nbextension enable --py --sys-prefix ipyvuetify && \
+# ---     jupyter labextension install @jupyterlab/server-proxy @jupyter-widgets/jupyterlab-manager ipyevents bqplot bqplot-image-gl jupyter-vuetify && \
+# ---     jupyter labextension update --all && \
+# ---     #jupyter lab build -y && \
+# ---     jupyter lab clean -y && \
+# ---     npm cache clean --force && \
+# ---     rm -rf "/home/${NB_USER}/.cache/yarn" && \
+# ---     rm -rf "/home/${NB_USER}/.node-gyp"
 
-RUN gitpuller https://github.com/spacetelescope/jwebbinar_prep test-env /home/jovyan/jwebbinar_prep
+RUN gitpuller https://github.com/spacetelescope/jwebbinar_prep test-env /home/jovyan/default-home-contents/jwebbinar_prep
 
 # ========================= ^^^^^ Custom  ^^^^^ =========================
 # ========================= vvvvv Generic vvvvv  =========================
