@@ -1,1 +1,4 @@
-^C
+name: jwebbinar
+channels:
+  - conda-forge
+prefix: /opt/conda/envs/jwebbinar
