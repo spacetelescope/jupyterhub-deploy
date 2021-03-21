@@ -77,7 +77,7 @@ RUN /opt/common-scripts/env-create jdaviz /opt/environments/jdaviz/jdaviz.yml
 COPY environments/jdaviz/jdaviz.pip /opt/environments/jdaviz/jdaviz.pip
 RUN /opt/common-scripts/env-update jdaviz /opt/environments/jdaviz/jdaviz.pip
 
-# RUN /opt/common-scripts/install-common jdaviz
+RUN /opt/common-scripts/install-common jdaviz
 
 COPY environments/jdaviz/ /opt/environments/jdaviz
 
@@ -107,7 +107,7 @@ USER root
 # ---     rm -rf "/home/${NB_USER}/.cache/yarn" && \
 # ---     rm -rf "/home/${NB_USER}/.node-gyp"
 
-RUN gitpuller https://github.com/spacetelescope/jwebbinar_prep test-env /home/jovyan/default-home-contents/jwebbinar_prep
+RUN gitpuller https://github.com/spacetelescope/jwebbinar_prep test-env jwebbinar_prep
 
 # ========================= ^^^^^ Custom  ^^^^^ =========================
 # ========================= vvvvv Generic vvvvv  =========================
@@ -135,14 +135,6 @@ RUN  cat /home/jovyan/global_bashrc   >> /etc/bash.bashrc  && \
 # Fix certs in conda for application level SSL, e.g. pass image-test running on CI-node
 RUN /opt/common-scripts/fix-certs
 
-# For standalone operation outside JupyterHub,  note that  /etc also includes
-# common home directory files.
-RUN cp -r /etc/default-home-contents/* /home/jovyan && \
-    fix-permissions  /home/jovyan
-
-#  &&\
-#    fix-permissions  /opt/environments     # Docker cache buster?
-
 # This top level command runs unit tests for the image,  nominally import tests
 # and notebook runs but it's an arbitrary bash script.
 COPY environments/test    /opt/environments/test
@@ -152,7 +144,15 @@ RUN apt-get update && \
     apt-get dist-upgrade --yes && \
     apt-get clean
 
+# For standalone operation outside JupyterHub,  note that  /etc also includes
+# common home directory files.
+RUN cp -r /etc/default-home-contents/* /home/jovyan && \
+    fix-permissions  /home/jovyan
+
 USER $NB_USER
 WORKDIR /home/$NB_USER
+
+#  &&\
+#    fix-permissions  /opt/environments     # Docker cache buster?
 
 CMD [ "start-notebook.sh" ]

@@ -77,7 +77,7 @@ RUN /opt/common-scripts/env-create jdaviz /opt/environments/jdaviz/jdaviz.yml
 COPY environments/jdaviz/jdaviz.pip /opt/environments/jdaviz/jdaviz.pip
 RUN /opt/common-scripts/env-update jdaviz /opt/environments/jdaviz/jdaviz.pip
 
-# RUN /opt/common-scripts/install-common jdaviz
+RUN /opt/common-scripts/install-common jdaviz
 
 COPY environments/jdaviz/ /opt/environments/jdaviz
 
@@ -107,6 +107,6 @@ USER root
 # ---     rm -rf "/home/${NB_USER}/.cache/yarn" && \
 # ---     rm -rf "/home/${NB_USER}/.node-gyp"
 
-RUN gitpuller https://github.com/spacetelescope/jwebbinar_prep test-env /home/jovyan/default-home-contents/jwebbinar_prep
+RUN gitpuller https://github.com/spacetelescope/jwebbinar_prep test-env jwebbinar_prep
 
 # ========================= ^^^^^ Custom  ^^^^^ =========================
