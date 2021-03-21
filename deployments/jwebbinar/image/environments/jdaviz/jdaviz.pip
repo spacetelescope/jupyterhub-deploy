@@ -1,2 +1,3 @@
 git+https://github.com/spacetelescope/jdaviz.git@3501796
+jwst==0.17.1
 
