@@ -1,9 +1,3 @@
-git+https://github.com/glue-viz/echo.git
-#git+https://github.com/glue-viz/glue-jupyter.git
-git+https://github.com/glue-viz/glue.git@v1.0.1
-#git+https://github.com/glue-viz/glue-astronomy.git
-#git+https://github.com/spacetelescope/jdaviz.git
-jdaviz
 urllib3
 matplotlib
 bokeh

@@ -10,7 +10,7 @@
 # If USE_FROZEN==1:   # frozen conda environment with specific versions
 #
 # Create an environment from conda export file
-# /opt/environments/${env}/${env}-frozen.yml where env is $1.
+# /opt/environments/frozen/${env}-frozen.yml where env is $1.
 #
 
 env=$1
