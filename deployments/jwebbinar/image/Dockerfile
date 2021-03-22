@@ -109,6 +109,7 @@ RUN jupyter nbextension install --py --sys-prefix widgetsnbextension && \
     rm -rf "/home/${NB_USER}/.node-gyp"
 
 RUN gitpuller https://github.com/spacetelescope/jwebbinar_prep test-env jwebbinar_prep
+RUN /opt/common-scripts/set-notebook-kernel jdaviz jdaviz jwebbinar_prep/test_environment/*.ipynb
 
 # ========================= ^^^^^ Custom  ^^^^^ =========================
 # ========================= vvvvv Generic vvvvv  =========================
