@@ -2,7 +2,8 @@ git+https://github.com/glue-viz/echo.git
 #git+https://github.com/glue-viz/glue-jupyter.git
 git+https://github.com/glue-viz/glue.git@v1.0.1
 #git+https://github.com/glue-viz/glue-astronomy.git
-git+https://github.com/spacetelescope/jdaviz.git
+#git+https://github.com/spacetelescope/jdaviz.git
+jdaviz
 urllib3
 matplotlib
 bokeh
@@ -33,12 +34,14 @@ pysiaf
 pysynphot
 stsci.tools
 jwst==0.17.1
-jupyterlab>=3.*
+jupyterlab==3.0.11
 #specutils@git+https://github.com/astropy/specutils.git@625e05499386e4c48467a4a141d6763e9147fcbc
 vispy>=0.6.5
 ipyvue>=1.3.4
 jupyterlab_widgets
 bqplot
+traitlets==5.0.5
+traittypes==0.2.1
 #tornado==5.1.1
 #jupyter-server==0.3.0
 #nbconvert>=6.0.0

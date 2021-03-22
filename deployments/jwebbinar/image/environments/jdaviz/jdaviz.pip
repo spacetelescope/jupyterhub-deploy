@@ -1,6 +1,2 @@
-git+https://github.com/glue-viz/echo.git
-git+https://github.com/glue-viz/glue-jupyter.git
-git+https://github.com/glue-viz/glue.git
-git+https://github.com/glue-viz/glue-astronomy.git
-jdaviz
-nbconvert==5.5.0
+git+https://github.com/spacetelescope/jdaviz.git@3501796
+jwst==0.17.1
