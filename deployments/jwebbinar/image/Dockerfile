@@ -48,9 +48,10 @@ RUN cd /tmp && \
 USER ${NB_UID}
 
 # This is a cache buster when environment freezing creates new specs, so Docker
-# build will back up to this point.  Consequently, image build uses git to
-# clear the new specs, they should be committed to git prior to attempting a
-# new frozen build.
+# build will back up to this point.  Consequently image-update/image-build reverts
+# the frozen specs whenever USE_FROZEN=0.  Note that since the specs aren't
+# updated until a floating build is complete,  unless USE_FROZEN=1 the specs in
+# the image don't reflect the as-built environment.
 COPY environments/frozen /opt/environments/frozen
 
 # ----------------------------------------------------------------------
@@ -92,20 +93,20 @@ USER root
 #    rm -rf bqplot-image-gl
 
 # Install additional lab and notebook extensions
-# --- USER ${NB_UID}
-# --- RUN jupyter nbextension install --py --sys-prefix widgetsnbextension && \
-# ---     jupyter nbextension enable --py --sys-prefix widgetsnbextension && \
-# ---     jupyter nbextension install --py --sys-prefix ipyevents && \
-# ---     jupyter nbextension enable --py --sys-prefix ipyevents && \
-# ---     jupyter nbextension install --py --sys-prefix ipyvuetify&& \
-# ---     jupyter nbextension enable --py --sys-prefix ipyvuetify && \
-# ---     jupyter labextension install @jupyterlab/server-proxy @jupyter-widgets/jupyterlab-manager ipyevents bqplot bqplot-image-gl jupyter-vuetify && \
-# ---     jupyter labextension update --all && \
-# ---     #jupyter lab build -y && \
-# ---     jupyter lab clean -y && \
-# ---     npm cache clean --force && \
-# ---     rm -rf "/home/${NB_USER}/.cache/yarn" && \
-# ---     rm -rf "/home/${NB_USER}/.node-gyp"
+USER ${NB_UID}
+RUN jupyter nbextension install --py --sys-prefix widgetsnbextension && \
+    jupyter nbextension enable --py --sys-prefix widgetsnbextension && \
+    jupyter nbextension install --py --sys-prefix ipyevents && \
+    jupyter nbextension enable --py --sys-prefix ipyevents && \
+    jupyter nbextension install --py --sys-prefix ipyvuetify&& \
+    jupyter nbextension enable --py --sys-prefix ipyvuetify && \
+    jupyter labextension install @jupyterlab/server-proxy @jupyter-widgets/jupyterlab-manager ipyevents bqplot bqplot-image-gl jupyter-vuetify && \
+    jupyter labextension update --all && \
+    #jupyter lab build -y && \
+    jupyter lab clean -y && \
+    npm cache clean --force && \
+    rm -rf "/home/${NB_USER}/.cache/yarn" && \
+    rm -rf "/home/${NB_USER}/.node-gyp"
 
 RUN gitpuller https://github.com/spacetelescope/jwebbinar_prep test-env jwebbinar_prep
 
