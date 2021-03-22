@@ -19,7 +19,7 @@ env_yml=${2:-/opt/does-not-exist}
 . /etc/profile.d/conda.sh
 
 if [[ "$USE_FROZEN" == "1" ]]; then
-    env_yml=/opt/environments/${env}/${env}-frozen.yml
+    env_yml=/opt/environments/frozen/${env}-frozen.yml
 fi
 
 echo "-------------------------------------------------------------------------------"
