@@ -1,7 +1,7 @@
 name: jdaviz
 channels:
-  - http://ssb.stsci.edu/astroconda
   - defaults
+  - conda-forge
 dependencies:
   - _libgcc_mutex=0.1
   - ca-certificates=2021.1.19
@@ -22,6 +22,7 @@ dependencies:
   - xz=5.2.5
   - zlib=1.2.11
   - pip:
+    - alabaster==0.7.12
     - ansiwrap==0.8.4
     - anyio==2.2.0
     - appdirs==1.4.4
@@ -29,19 +30,27 @@ dependencies:
     - asdf==2.7.3
     - asteval==0.9.23
     - astropy==4.2
+    - astropy-sphinx-theme==1.1
     - async-generator==1.10
     - attrs==20.3.0
+    - awscli==1.19.34
     - babel==2.9.0
     - backcall==0.2.0
     - black==20.8b1
     - bleach==3.3.0
+    - boto3==1.17.34
+    - botocore==1.20.34
     - bottleneck==1.3.2
     - bqplot==0.12.23
     - bqplot-image-gl==1.2.0
     - cached-property==1.5.2
     - cffi==1.14.5
     - chardet==4.0.0
+    - ci-watson==0.5
     - click==7.1.2
+    - codecov==2.1.11
+    - colorama==0.4.3
+    - coverage==5.5
     - crds==10.3.14
     - cycler==0.10.0
     - cython==0.29.22
@@ -49,11 +58,13 @@ dependencies:
     - decorator==4.4.2
     - defusedxml==0.7.1
     - dill==0.3.3
+    - docutils==0.15.2
     - drizzle==1.13.1
     - echo==0.5
     - entrypoints==0.3
     - fast-histogram==0.9
     - filelock==3.0.12
+    - flake8==3.9.0
     - freetype-py==2.2.0
     - glue-astronomy==0.1
     - glue-core==1.0.1
@@ -63,7 +74,9 @@ dependencies:
     - h5py==3.2.1
     - idna==2.10
     - imageio==2.9.0
+    - imagesize==1.2.0
     - importlib-metadata==3.7.3
+    - iniconfig==1.1.1
     - ipydatawidgets==4.2.0
     - ipygoldenlayout==0.3.0
     - ipykernel==5.5.0
@@ -76,9 +89,10 @@ dependencies:
     - ipyvuetify==1.6.2
     - ipywebrtc==0.5.0
     - ipywidgets==7.6.3
-    - git+https://github.com/spacetelescope/jdaviz.git@3501796
+    - jdaviz==1.0.4.dev400+g3501796
     - jedi==0.18.0
     - jinja2==2.11.3
+    - jmespath==0.10.0
     - joblib==1.0.1
     - json5==0.9.5
     - jsonschema==3.2.0
@@ -92,9 +106,10 @@ dependencies:
     - jupyterlab-widgets==1.0.0
     - jwst==0.17.1
     - kiwisolver==1.3.1
-    - lxml==4.6.2
+    - lxml==4.6.3
     - markupsafe==1.1.1
     - matplotlib==3.3.4
+    - mccabe==0.6.1
     - mistune==0.8.4
     - mpl-scatter-density==0.7
     - mypy-extensions==0.4.3
@@ -107,6 +122,7 @@ dependencies:
     - networkx==2.5
     - notebook==6.2.0
     - numpy==1.20.1
+    - numpydoc==1.1.0
     - packaging==20.9
     - pandas==1.2.3
     - pandocfilters==1.4.3
@@ -118,15 +134,25 @@ dependencies:
     - photutils==1.1.0
     - pickleshare==0.7.5
     - pillow==8.1.2
+    - pluggy==1.0.0.dev0
     - prometheus-client==0.9.0
-    - prompt-toolkit==3.0.17
+    - prompt-toolkit==3.0.18
+    - psutil==5.8.0
     - ptyprocess==0.7.0
+    - py==1.10.0
+    - pyasn1==0.4.8
+    - pycodestyle==2.7.0
     - pycparser==2.20
     - pyerfa==1.7.2
+    - pyflakes==2.3.0
     - pygments==2.8.1
     - pyopengl==3.1.5
     - pyparsing==2.4.7
     - pyrsistent==0.17.3
+    - pytest==6.2.2
+    - pytest-cov==2.11.1
+    - pytest-doctestplus==0.9.0
+    - pytest-openfiles==0.5.0
     - python-dateutil==2.8.1
     - pythreejs==2.3.0
     - pytz==2021.1
@@ -139,17 +165,35 @@ dependencies:
     - regex==2021.3.17
     - regions==0.4
     - requests==2.25.1
+    - requests-mock==1.8.0
+    - rsa==4.5
+    - s3transfer==0.3.6
     - scikit-image==0.18.1
     - scipy==1.6.1
     - semantic-version==2.8.5
     - send2trash==1.5.0
     - six==1.15.0
     - sniffio==1.2.0
+    - snowballstemmer==2.1.0
     - spectral-cube==0.5.0
     - specutils==1.2
     - spherical-geometry==1.2.19
+    - sphinx==3.5.3
+    - sphinx-asdf==0.1.1
+    - sphinx-astropy==1.3
+    - sphinx-automodapi==0.13
+    - sphinx-bootstrap-theme==0.7.1
+    - sphinx-gallery==0.8.2
+    - sphinx-rtd-theme==0.5.1
+    - sphinxcontrib-applehelp==1.0.2
+    - sphinxcontrib-devhelp==1.0.2
+    - sphinxcontrib-htmlhelp==1.0.3
+    - sphinxcontrib-jsmath==1.0.1
+    - sphinxcontrib-qthelp==1.0.3
+    - sphinxcontrib-serializinghtml==1.1.4
     - stsci-image==2.3.3
     - stsci-imagestats==1.6.2
+    - stsci-rtd-theme==0.0.2
     - stsci-stimage==0.2.4
     - tenacity==7.0.0
     - terminado==0.9.3
@@ -173,4 +217,4 @@ dependencies:
     - widgetsnbextension==3.5.1
     - xlrd==2.0.1
     - zipp==3.4.1
-prefix: /home/jmiller/miniconda3/envs/jdaviz
+prefix: /opt/conda/envs/jdaviz
