@@ -1,0 +1,10 @@
+#! /bin/bash -eu
+
+# This is a standard entry-point used to set up notebooks for this
+# Docker image.   It is nominally used to pull notebook repos using
+# nbgitpuller and then update the default kernels specified in the
+# notebook files using set-notebook-kernels.
+
+gitpuller https://github.com/spacetelescope/jwebbinar_prep test-env jwebbinar_prep
+
+/opt/common-scripts/set-notebook-kernel jdaviz jdaviz jwebbinar_prep/test_environment/*.ipynb
