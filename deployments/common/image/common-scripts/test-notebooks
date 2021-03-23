@@ -6,6 +6,7 @@ notebooks specified by subsequent parameters.
 """
 
 import sys
+import os.path
 import subprocess
 
 if (len(sys.argv) < 2):  # accept 0 notebooks...
@@ -23,6 +24,8 @@ for notebook in notebooks:
         continue
 
     print("="*10, "Testing Notebook", notebook, "="*10)
+
+    os.chdir(os.path.dirname(notebook))
 
     err = subprocess.call(f"papermill {notebook} /tmp/test.ipynb -k {kernel}".split())
     if err == 0:
