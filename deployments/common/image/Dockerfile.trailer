@@ -40,7 +40,4 @@ RUN cp -r /etc/default-home-contents/* /home/jovyan && \
 USER $NB_USER
 WORKDIR /home/$NB_USER
 
-#  &&\
-#    fix-permissions  /opt/environments     # Docker cache buster?
-
 CMD [ "start-notebook.sh" ]
