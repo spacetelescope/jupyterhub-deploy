@@ -1,4 +1,0 @@
-name: jdaviz
-channels:
-  - conda-forge
-prefix: /opt/conda/envs/jdaviz
