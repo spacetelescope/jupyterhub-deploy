@@ -1,7 +1,9 @@
 name: jdaviz
 channels:
+  - https://ssb.stsci.edu/astroconda
   - defaults
-  - conda-forge
+  # - defaults
+  # - conda-forge
 dependencies:
   - _libgcc_mutex=0.1
   - ca-certificates=2021.1.19
@@ -89,7 +91,7 @@ dependencies:
     - ipyvuetify==1.6.2
     - ipywebrtc==0.5.0
     - ipywidgets==7.6.3
-    - jdaviz==1.0.4.dev400+g3501796
+    - git+https://github.com/spacetelescope/jdaviz.git@3501796
     - jedi==0.18.0
     - jinja2==2.11.3
     - jmespath==0.10.0
