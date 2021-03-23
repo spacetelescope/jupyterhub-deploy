@@ -74,9 +74,7 @@ RUN conda env remove --name ds9
 # Jdaviz
 
 COPY environments/jdaviz/jdaviz.yml /opt/environments/jdaviz/jdaviz.yml
-# RUN /opt/common-scripts/env-create jdaviz /opt/environments/jdaviz/jdaviz.yml
-COPY env-create /tmp/env-create
-RUN /tmp/env-create jdaviz /opt/environments/jdaviz/jdaviz.yml
+RUN /opt/common-scripts/env-create jdaviz /opt/environments/jdaviz/jdaviz.yml
 
 COPY environments/jdaviz/jdaviz.pip /opt/environments/jdaviz/jdaviz.pip
 RUN /opt/common-scripts/env-update jdaviz /opt/environments/jdaviz/jdaviz.pip
