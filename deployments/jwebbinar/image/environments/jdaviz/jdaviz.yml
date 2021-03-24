@@ -1,10 +1,6 @@
-#        - conda-forge
-#        - manics
-
 name: jdaviz
 channels:
         - https://ssb.stsci.edu/astroconda
         - defaults
 dependencies:
-        - python~=3.7.0
         - pip

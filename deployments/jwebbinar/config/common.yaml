@@ -1,4 +1,4 @@
-# Use this  CRDS config,  maybe with a different S3 bucket, for scalable performance on AWS.
+ Use this  CRDS config,  maybe with a different S3 bucket, for scalable performance on AWS.
 # Optionally set CRDS_S3_RETURN_URL="1" to do direct-to-cal-memory CRDS transfers.
 # CRDS_PATH: "/home/jovyan/crds_cache"
 # CRDS_SERVER_URL: "https://jwst-serverless.stsci.edu"
@@ -46,16 +46,13 @@ jupyterhub:
             - "sh"
             - "-c"
             - >
-              # the rm of the ds9 and jdaviz kernels are only here because they may be present in
-              # the home directories of some users who logged in earlier (when those kernels existed)
+              # the rm of the ds9 kernel is only here because it may be present in
+              # the home directories of some users who logged in earlier (when that kernel existed)
               rsync -r /etc/default-home-contents/ /home/jovyan;
               /opt/environments/setup-notebooks
-              # gitpuller https://github.com/spacetelescope/jwebbinar_prep test-env /home/jovyan/jwebbinar_prep;
               rm -rf /home/jovyan/.local/share/jupyter/kernels/ds9;
-              rm -rf /home/jovyan/.local/share/jupyter/kernels/jdaviz;
+              #rm -rf /home/jovyan/.local/share/jupyter/kernels/jdaviz;
               chmod +x /opt/conda/envs/jwebbinar/bin/ds9;
-              # the rm of the ds9 and jdaviz kernels are only here because they may be present in
-              # the home directories of some users who logged in earlier (when those kernels existed)
               #unlink /home/jovyan/Desktop/ds9
     extraEnv:
       CRDS_PATH:  /home/jovyan/crds_cache
