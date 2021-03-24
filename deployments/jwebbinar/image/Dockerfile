@@ -149,6 +149,9 @@ RUN apt-get update && \
 
 # For standalone operation outside JupyterHub,  note that  /etc also includes
 # common home directory files.
+
+RUN tree /etc/default-home-contents/
+
 RUN cp -r /etc/default-home-contents/* /home/jovyan && \
     fix-permissions  /home/jovyan
 
