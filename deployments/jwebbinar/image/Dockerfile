@@ -47,11 +47,10 @@ RUN cd /tmp && \
 
 USER ${NB_UID}
 
-# This is a cache buster when environment freezing creates new specs, so Docker
-# build will back up to this point.  Consequently image-update/image-build reverts
-# the frozen specs whenever USE_FROZEN=0.  Note that since the specs aren't
-# updated until a floating build is complete,  unless USE_FROZEN=1 the specs in
-# the image don't reflect the as-built environment.
+ # This is a cache buster when environment freezing creates new specs, so Docker
+ # build will back up to this point.  Consequently, image build uses git to
+ # clear the new specs, they should be added/committed to git prior to attempting a
+ # new frozen build.
 COPY environments/frozen /opt/environments/frozen
 
 # ----------------------------------------------------------------------
@@ -70,18 +69,20 @@ RUN /opt/common-scripts/env-create jwebbinar /opt/environments/jwebbinar/jwebbin
 RUN /opt/common-scripts/install-common jwebbinar
 RUN /opt/common-scripts/env-update jwebbinar /opt/environments/jwebbinar/jwebbinar.pip
 
+RUN /opt/common-scripts/install-common jwebbinar
+
+COPY environments/jwebbinar/ /opt/environments/jwebbinar
+
 # ----------------------------------------------------------------------
 # Jdaviz
+COPY environments/jdaviz/jdaviz.yml /opt/environments/jdaviz/jdaviz.yml
+RUN /opt/common-scripts/env-create jdaviz /opt/environments/jdaviz/jdaviz.yml
+COPY environments/jdaviz/jdaviz.pip /opt/environments/jdaviz/jdaviz.pip
+RUN /opt/common-scripts/env-update jdaviz /opt/environments/jdaviz/jdaviz.pip
 
-# --- COPY environments/jdaviz/jdaviz.yml /opt/environments/jdaviz/jdaviz.yml
-# --- RUN /opt/common-scripts/env-create jdaviz /opt/environments/jdaviz/jdaviz.yml
+RUN /opt/common-scripts/install-common jdaviz
 
-# --- COPY environments/jdaviz/jdaviz.pip /opt/environments/jdaviz/jdaviz.pip
-# --- RUN /opt/common-scripts/env-update jdaviz /opt/environments/jdaviz/jdaviz.pip
-
-# --- RUN /opt/common-scripts/install-common jdaviz
-
-# --- COPY environments/jdaviz/ /opt/environments/jdaviz
+COPY environments/jdaviz/ /opt/environments/jdaviz
 
 # ----------------------------------------------------------------------
 USER root

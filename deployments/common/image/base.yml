@@ -13,7 +13,7 @@ dependencies:
   - pip
   - pip:
     - jupyterlab_widgets
-    - jupyterlab>=3.*
+    - jupyterlab==3.0.11
     - jupyter-server-proxy
     - nbgitpuller
     - ipyvuetify>=1.4.1
