@@ -5,13 +5,3 @@
 echo "Wiping out all images and containers..."
 
 docker system prune --all --force  $*
-
-containers=$(docker container ls -a -q)
-if [[ ! -z $containers ]]; then
-    docker container rm -f $containers  # >/dev/null
-fi
-
-images=$(docker image ls -a -q)
-if [[ ! -z $images ]]; then
-    docker image rm -f $images   # >/dev/null
-fi
