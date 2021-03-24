@@ -39,6 +39,7 @@ USER root
 
 RUN    apt-get update --yes && \
        DEBIAN_FRONTEND=noninteractive apt-get install --yes \
+        tree \
         curl \
         wget \
         rsync \
