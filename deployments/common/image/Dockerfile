@@ -120,8 +120,7 @@ RUN conda update --quiet --name base conda && \
     conda build purge-all
 
 USER root
-RUN npm config set cafile /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem && \
-    npm install --save @jupyterlab/services
+RUN npm config set cafile /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
 
 USER ${NB_UID}
 RUN ${CONDA_DIR}/bin/jupyter labextension install @jupyterlab/server-proxy && \
