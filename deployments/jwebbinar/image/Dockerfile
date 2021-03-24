@@ -47,10 +47,10 @@ RUN cd /tmp && \
 
 USER ${NB_UID}
 
- # This is a cache buster when environment freezing creates new specs, so Docker
- # build will back up to this point.  Consequently, image build uses git to
- # clear the new specs, they should be added/committed to git prior to attempting a
- # new frozen build.
+# This is a cache buster when environment freezing creates new specs, so Docker
+# build will back up to this point.  Consequently, image build uses git to
+# clear the new specs, they should be committed to git prior to attempting a
+# new frozen build.
 COPY environments/frozen /opt/environments/frozen
 
 # ----------------------------------------------------------------------
@@ -155,5 +155,8 @@ RUN cp -r /etc/default-home-contents/* /home/jovyan && \
 
 USER $NB_USER
 WORKDIR /home/$NB_USER
+
+#  &&\
+#    fix-permissions  /opt/environments     # Docker cache buster?
 
 CMD [ "start-notebook.sh" ]
