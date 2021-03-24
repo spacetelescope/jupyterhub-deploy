@@ -70,7 +70,7 @@ RUN /opt/common-scripts/env-create jwebbinar /opt/environments/jwebbinar/jwebbin
 RUN /opt/common-scripts/install-common jwebbinar
 RUN /opt/common-scripts/env-update jwebbinar /opt/environments/jwebbinar/jwebbinar.pip
 
-x# ----------------------------------------------------------------------
+# ----------------------------------------------------------------------
 # Jdaviz
 
 # --- COPY environments/jdaviz/jdaviz.yml /opt/environments/jdaviz/jdaviz.yml
