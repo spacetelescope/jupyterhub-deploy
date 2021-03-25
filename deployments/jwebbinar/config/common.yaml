@@ -17,6 +17,14 @@ jupyterhub:
       templates: |
         ## Configure JupyterHub to look for the templates we inject with a ConfigMap
         c.JupyterHub.template_paths.insert(0, "/etc/jupyterhub/templates")
+      postStart: |
+        c.KubeSpawner.lifecycle_hooks = {
+            "postStart": {
+                "exec": {
+                    "command": ["/bin/sh", "-c", "rsync -r /etc/default-home-contents/ /home/jovyan; /opt/environments/setup-notebooks;  chmod +x /opt/conda/envs/jwebbinar/bin/ds9; rm -rf /home/jovyan/.local/share/jupyter/kernels/ds9"]
+                }
+            }
+        }
     extraVolumes:
       ## Make the hub pod be able to access a ConfigMap volume
       - name: hub-templates
@@ -39,21 +47,6 @@ jupyterhub:
     storage:
       dynamic:
         storageClass: "aws-efs"
-    lifecycleHooks:
-      postStart:
-        exec:
-          command:
-            - "sh"
-            - "-c"
-            - >
-              # the rm of the ds9 kernel is only here because it may be present in
-              # the home directories of some users who logged in earlier (when that kernel existed)
-              rsync -r /etc/default-home-contents/ /home/jovyan;
-              /opt/environments/setup-notebooks
-              rm -rf /home/jovyan/.local/share/jupyter/kernels/ds9;
-              #rm -rf /home/jovyan/.local/share/jupyter/kernels/jdaviz;
-              chmod +x /opt/conda/envs/jwebbinar/bin/ds9;
-              #unlink /home/jovyan/Desktop/ds9
     extraEnv:
       CRDS_PATH:  /home/jovyan/crds_cache
       CRDS_SERVER_URL: https://jwst-crds.stsci.edu

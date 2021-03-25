@@ -54,15 +54,15 @@ dependencies:
     - astroscrappy==1.0.8
     - async-generator==1.10
     - attrs==20.3.0
-    - awscli==1.19.34
+    - awscli==1.19.35
     - babel==2.9.0
     - backcall==0.2.0
     - beautifulsoup4==4.9.3
     - black==20.8b1
     - bleach==3.3.0
     - bokeh==2.3.0
-    - boto3==1.17.34
-    - botocore==1.20.34
+    - boto3==1.17.35
+    - botocore==1.20.35
     - bqplot==0.12.23
     - cached-property==1.5.2
     - cffi==1.14.5
@@ -114,7 +114,7 @@ dependencies:
     - jupyter-client==6.1.12
     - jupyter-core==4.7.1
     - jupyter-packaging==0.7.12
-    - jupyter-server==1.4.1
+    - jupyter-server==1.5.0
     - jupyterlab==3.0.11
     - jupyterlab-pygments==0.1.2
     - jupyterlab-server==2.3.0
@@ -166,7 +166,7 @@ dependencies:
     - pyasn1==0.4.8
     - pycodestyle==2.7.0
     - pycparser==2.20
-    - pyflakes==2.3.0
+    - pyflakes==2.3.1
     - pygments==2.8.1
     - pyparsing==3.0.0b2
     - pyrsistent==0.17.3
@@ -187,7 +187,7 @@ dependencies:
     - regex==2021.3.17
     - requests==2.25.1
     - requests-mock==1.8.0
-    - rsa==4.5
+    - rsa==4.7.2
     - s3transfer==0.3.6
     - scikit-image==0.18.1
     - scikit-learn==0.24.1

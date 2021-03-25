@@ -39,6 +39,7 @@ USER root
 
 RUN    apt-get update --yes && \
        DEBIAN_FRONTEND=noninteractive apt-get install --yes \
+        tree \
         curl \
         wget \
         rsync \
@@ -118,9 +119,8 @@ RUN conda update --quiet --name base conda && \
     conda install --quiet conda-build && \
     conda build purge-all
 
-USER ${NB_UID}
-RUN npm config set cafile /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem && \
-    npm install --save @jupyterlab/services
+USER root
+RUN npm config set cafile /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
 
 RUN ${CONDA_DIR}/bin/jupyter labextension install @jupyterlab/server-proxy && \
     ${CONDA_DIR}/bin/jupyter nbextension enable --py --sys-prefix ipyevents && \
