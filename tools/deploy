@@ -12,7 +12,7 @@ environment=$4
 rm -r hub/charts/*
 helm dependency update hub
 
-kubectl apply -f hub/custom-ui-templates-${environment}.yaml
+kubectl apply -f hub/custom-ui-templates-${environment}-${deployment_name}.yaml
 
 tmp_decrypted=~/env.yaml.decrypted
 
@@ -21,6 +21,6 @@ pushd $(dirname ${secrets_yaml})
 awsudo $ADMIN_ARN sops --decrypt $(basename ${secrets_yaml}) > $tmp_decrypted
 
 popd
-helm upgrade --debug --wait --install ${deployment_name}-${environment} hub -f deployments/common/config/all.yaml -f deployments/${deployment_name}/config/common.yaml -f deployments/${deployment_name}/config/${environment}.yaml -f ${tmp_decrypted} --set-string jupyterhub.singleuser.image.name=${account_id}.dkr.ecr.us-east-1.amazonaws.com/${deployment_name}-user-image
+helm upgrade --debug --wait --install ${deployment_name}-${environment} hub -f deployments/common/config/all.yaml -f deployments/${deployment_name}/config/common.yaml -f deployments/${deployment_name}/config/${environment}.yaml -f ${tmp_decrypted} --set-string jupyterhub.singleuser.image.name=${account_id}.dkr.ecr.us-east-1.amazonaws.com/${deployment_name}-user-image --set global.safeToShowValues=true
 
 rm ~/env.yaml.decrypted

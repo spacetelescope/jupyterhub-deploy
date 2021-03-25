@@ -3,8 +3,7 @@
 # Use latest ubuntu LTS from community maintained buildpack-deps
 # https://hub.docker.com/_/buildpack-deps/
 # FROM buildpack-deps:focal-scm AS build
-
-FROM jupyter/scipy-notebook:703d8b2dcb88
+FROM jupyter/scipy-notebook:9fe5186aba96
 
 # ------------------------------------------------------------------------
 
@@ -40,6 +39,7 @@ USER root
 
 RUN    apt-get update --yes && \
        DEBIAN_FRONTEND=noninteractive apt-get install --yes \
+        tree \
         curl \
         wget \
         rsync \
@@ -108,7 +108,7 @@ RUN ln -s /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem  /etc/ssl/certs/ca-b
 # ------------------------------------------------------------------------
 USER root
 
-# Load conda profile scripts by default,  symlink target doesn't exist for a bit
+# Load conda profile scripts by default, symlink target doesn't exist for a bit
 RUN ln -s ${CONDA_DIR}/etc/profile.d/conda.sh /etc/profile.d/conda.sh
 
 USER ${NB_UID}
@@ -132,7 +132,7 @@ RUN ${CONDA_DIR}/bin/jupyter labextension install @jupyterlab/server-proxy && \
     rm -rf "/home/${NB_USER}/.node-gyp"
 
 # ------------------------------------------------------------------------
-# More SSL/TLS cert setup,  add server-proxy labextension
+# More SSL/TLS cert setup
 
 USER root
 
