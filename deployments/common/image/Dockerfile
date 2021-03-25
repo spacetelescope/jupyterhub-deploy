@@ -122,6 +122,7 @@ RUN conda update --quiet --name base conda && \
 USER root
 RUN npm config set cafile /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
 
+USER ${NB_UID}
 RUN ${CONDA_DIR}/bin/jupyter labextension install @jupyterlab/server-proxy && \
     ${CONDA_DIR}/bin/jupyter nbextension enable --py --sys-prefix ipyevents && \
     jupyter lab build -y && \
