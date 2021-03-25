@@ -34,7 +34,6 @@ for kernel in `conda env list | grep -v '#' | grep -v base | cut -d' ' -f1`; do
     python -m ipykernel install --user --name $kernel --display-name "`cat  /opt/environments/${kernel}/kernel.name`"
 
     source /opt/common-scripts/env-deactivate $kernel
-
 done
 
 # echo "nb_kernels:"

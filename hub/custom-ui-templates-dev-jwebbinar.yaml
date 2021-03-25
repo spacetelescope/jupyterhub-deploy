@@ -1,0 +1,44 @@
+# Inspired by https://gitmemory.com/issue/jupyterhub/zero-to-jupyterhub-k8s/1266/632726020
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hub-templates
+data:
+  spawn.html: |
+    {% extends "page.html" %}
+    {% if announcement_spawn %}
+      {% set announcement = announcement_spawn %}
+    {% endif %}
+
+    {% block main %}
+
+    <div class="container">
+      {% block heading %}
+       <div class="row">
+
+          <center><h2>Welcome to JWebbinar</h2></center><br/>
+
+          <center>Welcome to the JWebbinar compute platform. Use this service to work along with class material.</center>
+
+        <br/><br/><br/>
+       </div>
+      {% endblock %}
+      <div class="row col-sm-offset-2 col-sm-8">
+        {% if for_user and user.name != for_user.name -%}
+          <p>Spawning server for {{ for_user.name }}</p>
+        {% endif -%}
+        {% if error_message -%}
+          <p class="spawn-error-msg text-danger">
+            Error: {{error_message}}
+          </p>
+        {% endif %}
+        <form enctype="multipart/form-data" id="spawn_form" action="{{url}}" method="post" role="form">
+          {{spawner_options_form | safe}}
+          <br>
+          <input type="submit" value="Start server" class="btn btn-jupyter form-control">
+        </form>
+      </div>
+    </div>
+
+    {% endblock %}

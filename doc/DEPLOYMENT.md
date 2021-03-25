@@ -30,6 +30,8 @@ This section covers the process of setting up an EC2 instance on AWS that will b
 
 ### Create EC2 instance for deployment
 
+**TODO: update this section; use launch template**
+
 Use the AWS EC2 Console to create a CI node where you'll deploy from.  The EC2 instance will be based on an AMI that contains software, tools, and configuration required for deployment.  Things like nodejs, helm3, awsudo, sops, docker, etc. are included.
 
 - Base your EC2 instance on this AMI (on the dev acount): **ami-02e15130ac90d12fc**
@@ -69,6 +71,7 @@ The complete deployment process involves two git repositories:
 - `export ACCOUNT_ID=<account-id>`
 - `export ADMIN_ARN=<admin-arn>`
 - `export DEPLOYMENT_NAME=<deployment-name>`
+- `export ENVIRONMENT=<sandbox | dev | test | ops>`
 
 # Terraform-deploy
 

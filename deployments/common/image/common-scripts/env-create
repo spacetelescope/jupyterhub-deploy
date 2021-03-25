@@ -10,7 +10,7 @@
 # If USE_FROZEN==1:   # frozen conda environment with specific versions
 #
 # Create an environment from conda export file
-# /opt/environments/${env}/${env}-frozen.yml where env is $1.
+# /opt/environments/frozen/${env}-frozen.yml where env is $1.
 #
 
 env=$1
@@ -19,7 +19,7 @@ env_yml=${2:-/opt/does-not-exist}
 . /etc/profile.d/conda.sh
 
 if [[ "$USE_FROZEN" == "1" ]]; then
-    env_yml=/opt/environments/${env}/${env}-frozen.yml
+    env_yml=/opt/environments/frozen/${env}-frozen.yml
 fi
 
 echo "-------------------------------------------------------------------------------"
@@ -34,7 +34,7 @@ else
         exit 1
     fi
     echo "Creating defult Python environment for ${env}"
-    conda create --quiet --name  ${env} python
+    conda create --name  ${env} python
 fi
 
 conda clean -fya
