@@ -1,4 +1,4 @@
- Use this  CRDS config,  maybe with a different S3 bucket, for scalable performance on AWS.
+# Use this  CRDS config,  maybe with a different S3 bucket, for scalable performance on AWS.
 # Optionally set CRDS_S3_RETURN_URL="1" to do direct-to-cal-memory CRDS transfers.
 # CRDS_PATH: "/home/jovyan/crds_cache"
 # CRDS_SERVER_URL: "https://jwst-serverless.stsci.edu"
