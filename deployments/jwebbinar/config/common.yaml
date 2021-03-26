@@ -21,7 +21,7 @@ jupyterhub:
         c.KubeSpawner.lifecycle_hooks = {
             "postStart": {
                 "exec": {
-                    "command": ["/bin/sh", "-c", "rsync -r /etc/default-home-contents/ /home/jovyan; gitpuller https://github.com/spacetelescope/jwebbinar_prep test-env /home/jovyan/jwebbinar_prep; chmod +x /opt/conda/envs/jwebbinar/bin/ds9; rm -rf /home/jovyan/.local/share/jupyter/kernels/ds9"]
+                    "command": ["/bin/sh", "-c", "rsync -r /etc/default-home-contents/ /home/jovyan; /opt/environments/setup-notebooks;  chmod +x /opt/conda/envs/jwebbinar/bin/ds9; rm -rf /home/jovyan/.local/share/jupyter/kernels/ds9"]
                 }
             }
         }
