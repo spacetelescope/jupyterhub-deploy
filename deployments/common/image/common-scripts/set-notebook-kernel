@@ -16,9 +16,9 @@ def set_kernel(kernel, display_name, notebook):
     with open(notebook) as nbf:
         loaded = json.loads(nbf.read())
         spec = loaded["metadata"]["kernelspec"]
-        spec["display_name"] = kernel
+        spec["display_name"] = display_name
         spec["language"] = "python"
-        spec["name"] = display_name
+        spec["name"] = kernel
     with open(notebook, "w+") as nbf:
         nbf.write(json.dumps(loaded, indent=1))
 
