@@ -112,7 +112,8 @@ RUN npm i jupyter-splitpanes && \
     rm -rf "/home/${NB_USER}/.cache/yarn" && \
     rm -rf "/home/${NB_USER}/.node-gyp"
 
-RUN gitpuller https://github.com/spacetelescope/jwebbinar_prep test-env jwebbinar_prep
+COPY environments/setup-notebooks  /opt/environments
+RUN  /opt/environments/setup-notebooks
 
 # ========================= ^^^^^ Custom  ^^^^^ =========================
 # ========================= vvvvv Generic vvvvv  =========================
