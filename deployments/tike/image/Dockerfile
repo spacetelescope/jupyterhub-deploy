@@ -11,6 +11,9 @@ ENV USE_FROZEN=$USE_FROZEN
 
 USER ${NB_UID}
 
+# All specs for frozen builds need to be available before their normal installs
+COPY environments/frozen/  /opt/environments/frozen
+
 # TESS
 COPY environments/tess/ /opt/environments/tess
 RUN /opt/common-scripts/env-clone  base  tess
@@ -74,12 +77,6 @@ RUN  cat /home/jovyan/global_bashrc   >> /etc/bash.bashrc  && \
 # Fix certs in conda for application level SSL, e.g. pass image-test running on CI-node
 RUN /opt/common-scripts/fix-certs
 
-# For standalone operation outside JupyterHub,  note that  /etc also includes
-# common home directory files.
-RUN cp -r /etc/default-home-contents/* /home/jovyan && \
-    fix-permissions  /home/jovyan  &&\
-    fix-permissions  /opt/environments
-
 # This top level command runs unit tests for the image,  nominally import tests
 # and notebook runs but it's an arbitrary bash script.
 COPY environments/test    /opt/environments/test
@@ -89,7 +86,20 @@ RUN apt-get update && \
     apt-get dist-upgrade --yes && \
     apt-get clean
 
+# For standalone operation outside JupyterHub,  note that  /etc also includes
+# common home directory files.
+
+RUN tree -a /etc/default-home-contents/
+
+RUN cp -r /etc/default-home-contents/* /home/jovyan && \
+    fix-permissions  /home/jovyan
+
+RUN tree -a /home/jovyan
+
 USER $NB_USER
 WORKDIR /home/$NB_USER
+
+#  &&\
+#    fix-permissions  /opt/environments     # Docker cache buster?
 
 CMD [ "start-notebook.sh" ]
