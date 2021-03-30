@@ -27,6 +27,9 @@ ENV CRDS_VERBOSITY=20
 
 USER ${NB_UID}
 
+# All specs for frozen builds need to be available before their normal installs
+COPY environments/frozen/  /opt/environments/frozen
+
 # Roman CAL
 COPY environments/roman-cal/ /opt/environments/roman-cal
 # RUN /opt/common-scripts/env-clone base roman-cal   # too many conflicts

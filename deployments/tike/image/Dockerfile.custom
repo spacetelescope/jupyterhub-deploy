@@ -11,6 +11,9 @@ ENV USE_FROZEN=$USE_FROZEN
 
 USER ${NB_UID}
 
+# All specs for frozen builds need to be available before their normal installs
+COPY environments/frozen/  /opt/environments/frozen
+
 # TESS
 COPY environments/tess/ /opt/environments/tess
 RUN /opt/common-scripts/env-clone  base  tess
