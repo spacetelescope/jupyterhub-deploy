@@ -96,15 +96,17 @@ USER root
 
 # Install additional lab and notebook extensions
 USER ${NB_UID}
-RUN jupyter nbextension install --py --sys-prefix widgetsnbextension && \
+RUN npm i jupyter-splitpanes && \
+    npm i ipygoldenlayout && \
+    jupyter nbextension install --py --sys-prefix widgetsnbextension && \
     jupyter nbextension enable --py --sys-prefix widgetsnbextension && \
     jupyter nbextension install --py --sys-prefix ipyevents && \
     jupyter nbextension enable --py --sys-prefix ipyevents && \
-    jupyter nbextension install --py --sys-prefix ipyvuetify&& \
+    jupyter nbextension install --py --sys-prefix ipyvuetify && \
     jupyter nbextension enable --py --sys-prefix ipyvuetify && \
-    jupyter labextension install @jupyterlab/server-proxy @jupyter-widgets/jupyterlab-manager ipyevents bqplot bqplot-image-gl jupyter-vuetify && \
+    jupyter labextension install @jupyterlab/server-proxy @jupyter-widgets/jupyterlab-manager ipyevents bqplot bqplot-image-gl jupyter-vuetify jupyter-golden-layout jupyter-splitpanes && \
     jupyter labextension update --all && \
-    #jupyter lab build -y && \
+    jupyter lab build -y && \
     jupyter lab clean -y && \
     npm cache clean --force && \
     rm -rf "/home/${NB_USER}/.cache/yarn" && \
@@ -150,10 +152,12 @@ RUN apt-get update && \
 # For standalone operation outside JupyterHub,  note that  /etc also includes
 # common home directory files.
 
-RUN tree /etc/default-home-contents/
+RUN tree -a /etc/default-home-contents/
 
 RUN cp -r /etc/default-home-contents/* /home/jovyan && \
     fix-permissions  /home/jovyan
+
+RUN tree -a /home/jovyan
 
 USER $NB_USER
 WORKDIR /home/$NB_USER

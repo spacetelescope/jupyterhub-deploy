@@ -11,3 +11,5 @@ dependencies:
         - pyfftw
         - ds9
         - pyds9
+        - bqplot
+        - jupyterlab_widgets
