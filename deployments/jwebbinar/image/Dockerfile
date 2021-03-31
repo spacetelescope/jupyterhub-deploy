@@ -96,15 +96,15 @@ USER root
 
 # Install additional lab and notebook extensions
 USER ${NB_UID}
-RUN npm i jupyter-splitpanes && \
-    npm i ipygoldenlayout && \
-    jupyter nbextension install --py --sys-prefix widgetsnbextension && \
+#RUN npm i jupyter-splitpanes && \
+#    npm i ipygoldenlayout && \
+RUN jupyter nbextension install --py --sys-prefix widgetsnbextension && \
     jupyter nbextension enable --py --sys-prefix widgetsnbextension && \
     jupyter nbextension install --py --sys-prefix ipyevents && \
     jupyter nbextension enable --py --sys-prefix ipyevents && \
     jupyter nbextension install --py --sys-prefix ipyvuetify && \
     jupyter nbextension enable --py --sys-prefix ipyvuetify && \
-    jupyter labextension install @jupyterlab/server-proxy @jupyter-widgets/jupyterlab-manager ipyevents bqplot bqplot-image-gl jupyter-vuetify jupyter-golden-layout jupyter-splitpanes && \
+    jupyter labextension install @jupyterlab/server-proxy @jupyter-widgets/jupyterlab-manager ipyevents bqplot jupyter-vuetify jupyter-golden-layout jupyter-splitpanes d3-selection-multi bqplot-image-gl && \
     jupyter labextension update --all && \
     jupyter lab build -y && \
     jupyter lab clean -y && \

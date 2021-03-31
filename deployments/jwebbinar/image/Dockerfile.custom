@@ -87,24 +87,15 @@ COPY environments/jdaviz/ /opt/environments/jdaviz
 # ----------------------------------------------------------------------
 USER root
 
-#RUN git clone https://github.com/glue-viz/bqplot-image-gl.git && \
-#    cd bqplot-image-gl && \
-#    pip install -e . && \
-#    ${CONDA_DIR}/bin/jupyter nbextension install --py --symlink --sys-prefix bqplot_image_gl && \
-#    ${CONDA_DIR}/bin/jupyter nbextension enable --py --sys-prefix bqplot_image_gl && \
-#    rm -rf bqplot-image-gl
-
 # Install additional lab and notebook extensions
 USER ${NB_UID}
-RUN npm i jupyter-splitpanes && \
-    npm i ipygoldenlayout && \
-    jupyter nbextension install --py --sys-prefix widgetsnbextension && \
+RUN jupyter nbextension install --py --sys-prefix widgetsnbextension && \
     jupyter nbextension enable --py --sys-prefix widgetsnbextension && \
     jupyter nbextension install --py --sys-prefix ipyevents && \
     jupyter nbextension enable --py --sys-prefix ipyevents && \
     jupyter nbextension install --py --sys-prefix ipyvuetify && \
     jupyter nbextension enable --py --sys-prefix ipyvuetify && \
-    jupyter labextension install @jupyterlab/server-proxy @jupyter-widgets/jupyterlab-manager ipyevents bqplot bqplot-image-gl jupyter-vuetify jupyter-golden-layout jupyter-splitpanes && \
+    jupyter labextension install @jupyterlab/server-proxy @jupyter-widgets/jupyterlab-manager ipyevents bqplot jupyter-vuetify jupyter-golden-layout jupyter-splitpanes d3-selection-multi bqplot-image-gl && \
     jupyter labextension update --all && \
     jupyter lab build -y && \
     jupyter lab clean -y && \
