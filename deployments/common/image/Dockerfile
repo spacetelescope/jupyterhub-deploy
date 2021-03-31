@@ -136,7 +136,7 @@ RUN ${CONDA_DIR}/bin/jupyter labextension install @jupyterlab/server-proxy && \
 
 USER root
 
-# Keep Xfce directories out of home and set up shortcuts for DS9 and CVT.
+# Keep Xfce directories out of home and set up shortcuts for DS9.
 COPY user-dirs.defaults /etc/xdg/user-dirs.defaults
 
 COPY common-scripts/ /opt/common-scripts

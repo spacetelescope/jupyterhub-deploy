@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Jdaviz - CubeViz
+Comment=
+Exec=/opt/conda/envs/jdaviz/bin/jdaviz --layout cubeviz /home/jovyan/.jdaviz-example-data/cubeviz.fits
+Icon=applications-python
+Path=/home/jovyan
+Terminal=false
+StartupNotify=false

@@ -1,9 +1,9 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=DS9
+Name=Jdaviz Specviz
 Comment=
-Exec=/opt/conda/envs/jwebbinar/bin/ds9
+Exec=jdaviz --layout specviz /home/jovyan/.jdaviz-example-data/specviz.fits
 Icon=non-starred
 Path=/home/jovyan
 Terminal=false
