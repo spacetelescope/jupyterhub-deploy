@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Jdaviz - MosViz
+Comment=
+Exec=/opt/conda/envs/jdaviz/bin/jdaviz --layout mosviz /home/jovyan/.jdaviz-example-data/mosviz.fits
+Icon=applications-python
+Path=/home/jovyan
+Terminal=false
+StartupNotify=false

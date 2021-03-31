@@ -21,10 +21,12 @@ jupyterhub:
         c.KubeSpawner.lifecycle_hooks = {
             "postStart": {
                 "exec": {
-                    "command": ["/bin/sh", "-c", "rsync -r /etc/default-home-contents/ /home/jovyan; /opt/environments/setup-notebooks;  chmod +x /opt/conda/envs/jwebbinar/bin/ds9; rm -rf /home/jovyan/.local/share/jupyter/kernels/ds9"]
+                     "command": ["/bin/sh", "-c", "rsync -r /etc/default-home-contents/ /home/jovyan; /opt/environments/setup-notebooks;  chmod +x /opt/conda/envs/jwebbinar/bin/ds9; rm -rf /home/jovyan/.local/share/jupyter/kernels/ds9; rm /home/jovyan/Desktop/DS9.desktop; chmod +x /home/jovyan/Desktop/*.desktop"]
                 }
             }
         }
+      increaseSpawnerTimeout: |
+        c.DockerSpawner.start_timeout = 1200
     extraVolumes:
       ## Make the hub pod be able to access a ConfigMap volume
       - name: hub-templates
@@ -44,6 +46,9 @@ jupyterhub:
     profileList:
       - display_name: "JWebbinar Science Platform"
         default: true
+      - display_name: "JWebbinar [jwst==0.17.1]"
+        kubespawner_override:
+          image: '289559068117.dkr.ecr.us-east-1.amazonaws.com/jwebbinar-user-image@sha256:666f3d22514658dc61cd64171fba195810c5aeea950676ea98a163db4e1a244f'
     storage:
       dynamic:
         storageClass: "aws-efs"
