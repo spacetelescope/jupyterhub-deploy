@@ -25,6 +25,8 @@ jupyterhub:
                 }
             }
         }
+      increaseSpawnerTimeout: |
+        c.DockerSpawner.start_timeout = 1200
     extraVolumes:
       ## Make the hub pod be able to access a ConfigMap volume
       - name: hub-templates
