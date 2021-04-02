@@ -106,4 +106,6 @@ RUN jupyter nbextension install --py --sys-prefix widgetsnbextension && \
 COPY environments/setup-notebooks  /opt/environments
 RUN  /opt/environments/setup-notebooks
 
+#RUN echo '@reboot kill -9 $(pgrep -f light-locker)' | crontab -
+
 # ========================= ^^^^^ Custom  ^^^^^ =========================

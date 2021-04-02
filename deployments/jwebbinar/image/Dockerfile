@@ -87,17 +87,8 @@ COPY environments/jdaviz/ /opt/environments/jdaviz
 # ----------------------------------------------------------------------
 USER root
 
-#RUN git clone https://github.com/glue-viz/bqplot-image-gl.git && \
-#    cd bqplot-image-gl && \
-#    pip install -e . && \
-#    ${CONDA_DIR}/bin/jupyter nbextension install --py --symlink --sys-prefix bqplot_image_gl && \
-#    ${CONDA_DIR}/bin/jupyter nbextension enable --py --sys-prefix bqplot_image_gl && \
-#    rm -rf bqplot-image-gl
-
 # Install additional lab and notebook extensions
 USER ${NB_UID}
-#RUN npm i jupyter-splitpanes && \
-#    npm i ipygoldenlayout && \
 RUN jupyter nbextension install --py --sys-prefix widgetsnbextension && \
     jupyter nbextension enable --py --sys-prefix widgetsnbextension && \
     jupyter nbextension install --py --sys-prefix ipyevents && \
@@ -114,6 +105,8 @@ RUN jupyter nbextension install --py --sys-prefix widgetsnbextension && \
 
 COPY environments/setup-notebooks  /opt/environments
 RUN  /opt/environments/setup-notebooks
+
+#RUN echo '@reboot kill -9 $(pgrep -f light-locker)' | crontab -
 
 # ========================= ^^^^^ Custom  ^^^^^ =========================
 # ========================= vvvvv Generic vvvvv  =========================
@@ -132,10 +125,10 @@ USER root
 # remove this step once nbgitpuller enabled; these contents will be in the
 #  jupyterhub-user-content repo.   Install deployment-specific $HOME files.
 COPY default-home-contents/  /etc/default-home-contents
-RUN  cp -r /home/jovyan/.local  /etc/default-home-contents && \
+RUN  cp -r /home/jovyan/.local /etc/default-home-contents && \
      cp -r /home/jovyan/.jupyter /etc/default-home-contents
 COPY global_bashrc  /home/jovyan
-RUN  cat /home/jovyan/global_bashrc   >> /etc/bash.bashrc  && \
+RUN  cat /home/jovyan/global_bashrc >> /etc/bash.bashrc  && \
      rm /home/jovyan/global_bashrc
 
 # Fix certs in conda for application level SSL, e.g. pass image-test running on CI-node

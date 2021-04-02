@@ -91,6 +91,13 @@ RUN    apt-get update --yes && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# Remove light-locker to prevent screen lock
+# BUG: get rid of --no-check-certificate
+RUN wget https://sourceforge.net/projects/turbovnc/files/2.2.6/turbovnc_2.2.6_amd64.deb --no-check-certificate && \
+    dpkg -i turbovnc_2.2.6_amd64.deb && \
+    rm turbovnc_2.2.6_amd64.deb && \
+    apt-get remove -y -q light-locker
+
 # ------------------------------------------------------------------------
 # SSL/TLS cert setup for STScI AWS firewalling
 
