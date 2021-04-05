@@ -3,6 +3,9 @@ jupyterhub:
     pdb:
       enabled: true
       minAvailable: 0
+    extraConfig:
+      spawning: |
+        c.KubeSpawner.start_timeout = 15 * 60  # Up to 15 minutes
   proxy:
     chp:
       pdb:
