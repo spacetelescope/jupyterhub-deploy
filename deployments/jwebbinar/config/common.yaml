@@ -14,8 +14,6 @@
 jupyterhub:
   hub:
     extraConfig:
-      spawning: |
-        c.KubeSpawner.start_timeout = 60 * 10  # Up to 10 minutes
       templates: |
         ## Configure JupyterHub to look for the templates we inject with a ConfigMap
         c.JupyterHub.template_paths.insert(0, "/etc/jupyterhub/templates")
