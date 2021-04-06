@@ -130,8 +130,20 @@ USER root
 RUN npm config set cafile /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
 
 USER ${NB_UID}
-RUN ${CONDA_DIR}/bin/jupyter labextension install @jupyterlab/server-proxy && \
-    ${CONDA_DIR}/bin/jupyter nbextension enable --py --sys-prefix ipyevents && \
+RUN jupyter labextension install @jupyterlab/server-proxy && \
+    jupyter nbextension enable --py --sys-prefix ipyevents && \
+    jupyter nbextension install --py --sys-prefix widgetsnbextension && \
+    jupyter nbextension enable --py --sys-prefix widgetsnbextension && \
+    jupyter nbextension install --py --sys-prefix ipyevents && \
+    jupyter nbextension enable --py --sys-prefix ipyevents && \
+    jupyter nbextension install --py --sys-prefix ipyvuetify && \
+    jupyter nbextension enable --py --sys-prefix ipyvuetify && \
+    jupyter nbextension install --py --sys-prefix ipysplitpanes && \
+    jupyter nbextension enable --py --sys-prefix ipysplitpanes && \
+    jupyter nbextension install --py --sys-prefix bqplot && \
+    jupyter nbextension enable --py --sys-prefix bqplot && \
+    jupyter nbextension install --py --sys-prefix bqplot_image_gl && \
+    jupyter nbextension enable --py --sys-prefix bqplot_image_gl && \
     jupyter lab build -y && \
     jupyter lab clean -y && \
     npm cache clean --force && \

@@ -169,7 +169,7 @@ dependencies:
     - pygments==2.8.1
     - pyparsing==2.4.7
     - pyrsistent==0.17.3
-    - pysiaf==0.10.0
+    - pysiaf==0.11.0
     - pysynphot==1.0.0
     - pytest==6.2.3
     - pytest-cov==2.11.1

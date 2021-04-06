@@ -1,8 +1,17 @@
 channels:
-  - manics
+  #- manics
   - conda-forge
   - http://ssb.stsci.edu/astroconda
+  - defaults
 dependencies:
+  - bqplot-image-gl
+  - bqplot
+  - jupyterlab_widgets
+  - ipywidgets
+  - ipydatawidgets
+  - ipywidgets
+  - ipykernel
+  - ipyvuetify
   - cfitsio
   - jupyterhub
   - nodejs
@@ -12,13 +21,13 @@ dependencies:
   - websockify==0.9.0
   - pip
   - pip:
-    - jupyterlab_widgets
     - jupyterlab==3.0.11
     - jupyter-server-proxy
     - nbgitpuller
     - ipyvuetify>=1.4.1
-    #- git+https://github.com/yuvipanda/jupyter-desktop-server@daecbdbbf89003a1d71fa03f362682a886bb3ad7
     - git+https://github.com/yuvipanda/jupyter-desktop-server
+    - ipygoldenlayout
+    - ipysplitpanes
 
 #  - nb_conda_kernels
 #  - nb_conda
