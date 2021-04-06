@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=DS9
+Comment=
+Exec=/opt/conda/envs/jwebbinar/bin/ds9
+Icon=model
+Path=/home/jovyan
+Terminal=false
+StartupNotify=false
