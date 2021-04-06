@@ -5,7 +5,7 @@
 # nbgitpuller and then update the default kernels specified in the
 # notebook files using set-notebook-kernels.
 
-gitpuller https://github.com/spacetelescope/jwebbinar_prep test-env jwebbinar_prep
+gitpuller https://github.com/spacetelescope/jwebbinar_prep main jwebbinar_prep
 
 /opt/common-scripts/set-notebook-kernel jdaviz jdaviz jwebbinar_prep/test_environment/JWebbinar_viztool_tests.ipynb
 
