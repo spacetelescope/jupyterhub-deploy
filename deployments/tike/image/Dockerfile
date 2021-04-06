@@ -12,10 +12,10 @@ ENV USE_FROZEN=$USE_FROZEN
 USER ${NB_UID}
 
 # All specs for frozen builds need to be available before their normal installs
-COPY environments/frozen/  /opt/environments/frozen
+COPY --chown=${NB_UID}:${NB_GID} environments/frozen/  /opt/environments/frozen
 
 # TESS
-COPY environments/tess/ /opt/environments/tess
+COPY --chown=${NB_UID}:${NB_GID}  environments/tess/ /opt/environments/tess
 RUN /opt/common-scripts/env-clone  base  tess
 # RUN /opt/common-scripts/env-create  tess /opt/environments/tess/tess.yml
 RUN /opt/common-scripts/install-common tess
@@ -79,7 +79,7 @@ RUN /opt/common-scripts/fix-certs
 
 # This top level command runs unit tests for the image,  nominally import tests
 # and notebook runs but it's an arbitrary bash script.
-COPY environments/test    /opt/environments/test
+COPY --chown=${NB_UID}:${NB_GID} environments/test    /opt/environments/test
 
 # Install security patches now that build is complete;  potentially this could be done sooner
 RUN apt-get update && \
@@ -89,12 +89,8 @@ RUN apt-get update && \
 # For standalone operation outside JupyterHub,  note that  /etc also includes
 # common home directory files.
 
-RUN tree -a /etc/default-home-contents/
-
 RUN cp -r /etc/default-home-contents/* /home/jovyan && \
     fix-permissions  /home/jovyan
-
-RUN tree -a /home/jovyan
 
 USER $NB_USER
 WORKDIR /home/$NB_USER

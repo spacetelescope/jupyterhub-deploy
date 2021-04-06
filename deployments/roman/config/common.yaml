@@ -14,7 +14,7 @@
 jupyterhub:
   singleuser:
     image:
-      tag: latest 
+      tag: latest
       pullPolicy: Always
     memory:
       guarantee: 7G
@@ -22,7 +22,7 @@ jupyterhub:
       # lifecycleHooks:
       # postStart:
       #  exec:
-      #    command: ["rsync", "-r", "/etc/default-home-contents/", "/home/jovyan"] 
+      #    command: ["rsync", "-r", "/etc/default-home-contents/", "/home/jovyan"]
     extraEnv:
         CRDS_PATH:  /home/jovyan/crds_cache
         CRDS_SERVER_URL: https://jwst-crds.stsci.edu
