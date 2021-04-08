@@ -118,6 +118,9 @@ USER root
 # Load conda profile scripts by default, symlink target doesn't exist for a bit
 RUN ln -s ${CONDA_DIR}/etc/profile.d/conda.sh /etc/profile.d/conda.sh
 
+# BUG: remove this!!!
+RUN npm config set strict-ssl false
+
 USER ${NB_UID}
 COPY base.yml /tmp/base.yml
 RUN conda update --quiet --name base conda && \

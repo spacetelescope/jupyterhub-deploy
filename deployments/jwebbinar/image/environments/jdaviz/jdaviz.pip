@@ -99,10 +99,12 @@ webencodings==0.5.1
 widgetsnbextension==3.5.1
 xlrd==2.0.1
 jupyter-client
-ipysplitpanes
+#ipysplitpanes
+#ipygoldenlayout
+git+https://github.com/mariobuikhuizen/ipysplitpanes.git
+git+https://github.com/mariobuikhuizen/ipygoldenlayout.git
 ipython-genutils
 jupyter-core
 jupyterlab-widgets
-ipygoldenlayout
 jupyterlab-pygments
 jupyter-server

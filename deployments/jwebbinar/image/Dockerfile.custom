@@ -8,7 +8,7 @@ ENV USE_FROZEN=$USE_FROZEN
 
 # ----------------------------------------------------------------------
 
-# All data is arranged  on /data opening up options for sharing a file system
+# All data is arranged on /data opening up options for sharing a file system
 ENV MIRAGE_DATA=/data/mirage \
     PYSYN_CDBS=/data/pysynphot \
     WEBBPSF_PATH=/data/webbpsf-data \
@@ -95,7 +95,8 @@ RUN jupyter nbextension install --py --sys-prefix widgetsnbextension && \
     jupyter nbextension enable --py --sys-prefix ipyevents && \
     jupyter nbextension install --py --sys-prefix ipyvuetify && \
     jupyter nbextension enable --py --sys-prefix ipyvuetify && \
-    jupyter labextension install @jupyterlab/server-proxy @jupyter-widgets/jupyterlab-manager ipyevents bqplot jupyter-vuetify jupyter-golden-layout jupyter-splitpanes d3-selection-multi bqplot-image-gl && \
+    #jupyter labextension install @jupyterlab/server-proxy @jupyter-widgets/jupyterlab-manager ipyevents bqplot jupyter-vuetify jupyter-golden-layout jupyter-splitpanes d3-selection-multi bqplot-image-gl && \
+    jupyter labextension install @jupyterlab/server-proxy @jupyter-widgets/jupyterlab-manager ipyevents jupyter-vuetify jupyter-golden-layout jupyter-splitpanes d3-selection-multi bqplot-image-gl && \
     jupyter labextension update --all && \
     jupyter lab build -y && \
     jupyter lab clean -y && \
@@ -106,6 +107,8 @@ RUN jupyter nbextension install --py --sys-prefix widgetsnbextension && \
 COPY environments/setup-notebooks  /opt/environments
 RUN  /opt/environments/setup-notebooks
 
-#RUN echo '@reboot kill -9 $(pgrep -f light-locker)' | crontab -
+# Fix JS encoding issue that prevents widgets from displaying properly in notebook mode
+# See https://github.com/jupyter/notebook/issues/6033 for details
+RUN sed -i 's/data-base-url="{{base_url | urlencode}}"/data-base-url="{{base_url}}"/g' ${CONDA_DIR}/lib/python3.8/site-packages/notebook/templates/notebook.html
 
 # ========================= ^^^^^ Custom  ^^^^^ =========================
