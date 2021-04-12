@@ -153,6 +153,7 @@ dependencies:
   - notebook=6.2.0
   - numba=0.53.0
   - numexpr=2.7.3
+  - numpy=1.20.2
   - oauthlib=3.0.1
   - olefile=0.46
   - openjpeg=2.4.0
@@ -208,7 +209,6 @@ dependencies:
   - ruamel_yaml=0.15.80
   - scikit-image=0.18.1
   - scikit-learn=0.24.1
-  - scipy=1.6.1
   - seaborn=0.11.1
   - seaborn-base=0.11.1
   - send2trash=1.5.0
@@ -271,13 +271,13 @@ dependencies:
     - astunparse==1.6.3
     - async-timeout==3.0.1
     - autograd==1.3
-    - awscli==1.19.50
+    - awscli==1.19.52
     - batman-package==2.4.7
     - black==20.8b1
     - blessings==1.7
     - bls-py==0.1.2
-    - boto3==1.17.50
-    - botocore==1.20.50
+    - boto3==1.17.52
+    - botocore==1.20.52
     - bs4==0.0.1
     - cachetools==4.2.1
     - celerite==0.4.0
@@ -307,14 +307,14 @@ dependencies:
     - google-auth==1.28.1
     - google-auth-oauthlib==0.4.4
     - google-pasta==0.2.0
-    - grpcio==1.32.0
+    - grpcio==1.37.0
     - h5py==2.10.0
     - html5lib==1.1
     - imagesize==1.2.0
     - iniconfig==1.1.1
     - ipyfilechooser==0.4.3
     - ipygoldenlayout==0.3.0
-    - ipysplitpanes==0.1.0
+    - ipysplitpanes==0.1.0a0
     - jax==0.2.12
     - jaxlib==0.1.65
     - jeepney==0.6.0
@@ -342,11 +342,10 @@ dependencies:
     - nbgitpuller==0.9.0
     - nbsphinx==0.8.3
     - netcdf4==1.5.6
-    - numpy==1.19.5
     - numpydoc==1.1.0
     - oktopus==0.1.2
     - opt-einsum==3.3.0
-    - panel==0.11.2
+    - panel==0.11.3
     - papermill==2.3.3
     - param==1.10.1
     - pathspec==0.8.1
@@ -383,7 +382,8 @@ dependencies:
     - requests-oauthlib==1.3.0
     - retrying==1.3.3
     - rsa==4.7.2
-    - s3transfer==0.3.6
+    - s3transfer==0.3.7
+    - scipy==1.4.1
     - secretstorage==3.3.1
     - semver==2.13.0
     - simpervisor==0.4
@@ -404,10 +404,10 @@ dependencies:
     - stsci-rtd-theme==0.0.2
     - tele-scope==1.0.5
     - tenacity==7.0.0
-    - tensorboard==2.4.1
+    - tensorboard==2.2.2
     - tensorboard-plugin-wit==1.8.0
-    - tensorflow==2.4.1
-    - tensorflow-estimator==2.4.0
+    - tensorflow==2.2.0
+    - tensorflow-estimator==2.2.0
     - termcolor==1.1.0
     - tess-point==0.6.1
     - text-unidecode==1.3
@@ -418,7 +418,7 @@ dependencies:
     - tvguide==1.0.3
     - typed-ast==1.4.3
     - ultranest==3.2.0
-    - uncertainties==2.4.4
+    - uncertainties==3.1.5
     - vaneska==0.0.dev0
     - werkzeug==1.0.1
     - wotan==1.9

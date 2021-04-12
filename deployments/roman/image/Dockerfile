@@ -86,10 +86,10 @@ USER root
 # remove this step once nbgitpuller enabled; these contents will be in the
 #  jupyterhub-user-content repo.   Install deployment-specific $HOME files.
 COPY default-home-contents/  /etc/default-home-contents
-RUN  cp -r /home/jovyan/.local  /etc/default-home-contents && \
+RUN  cp -r /home/jovyan/.local /etc/default-home-contents && \
      cp -r /home/jovyan/.jupyter /etc/default-home-contents
 COPY global_bashrc  /home/jovyan
-RUN  cat /home/jovyan/global_bashrc   >> /etc/bash.bashrc  && \
+RUN  cat /home/jovyan/global_bashrc >> /etc/bash.bashrc  && \
      rm /home/jovyan/global_bashrc
 
 # Fix certs in conda for application level SSL, e.g. pass image-test running on CI-node
@@ -102,17 +102,14 @@ COPY --chown=${NB_UID}:${NB_GID} environments/test    /opt/environments/test
 # Install security patches now that build is complete;  potentially this could be done sooner
 RUN apt-get update && \
     apt-get dist-upgrade --yes && \
-    apt-get clean
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # For standalone operation outside JupyterHub,  note that  /etc also includes
 # common home directory files.
 
-RUN tree -a /etc/default-home-contents/
-
 RUN cp -r /etc/default-home-contents/* /home/jovyan && \
     fix-permissions  /home/jovyan
-
-RUN tree -a /home/jovyan
 
 USER $NB_USER
 WORKDIR /home/$NB_USER

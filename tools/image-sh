@@ -3,4 +3,6 @@
 # Run a bash shell in the last tagged mission container.  This will lag
 # behind any partially built container with newer image layers.
 
+IMAGE_RUN_PARS="$IMAGE_RUN_PARS -it"
+
 image-exec /bin/bash --rcfile /etc/bash.bashrc
