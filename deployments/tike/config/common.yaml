@@ -18,7 +18,7 @@ jupyterhub:
         ## Configure JupyterHub to look for the templates we inject with a ConfigMap
         c.JupyterHub.template_paths.insert(0, "/etc/jupyterhub/templates")
       tike: |
-        #c.Spawner.default_url = "/lab/tree/tike_content/content/Introduction.md"
+        c.Spawner.default_url = "/lab/tree/tike_content/content/Introduction.md"
         ## This works, but by setting the default notebook directory, users can't navigate to
         ## their home directory, meaning any files they create will wind up in the repo clone
         #c.Spawner.notebook_dir = "/home/jovyan/tike_content"
@@ -52,7 +52,9 @@ jupyterhub:
             - "-c"
             - >
               rsync -r /etc/default-home-contents/ /home/jovyan;
-              gitpuller https://github.com/spacetelescope/tike_content master /home/jovyan/tike_content
+              gitpuller https://github.com/spacetelescope/tike_content master /home/jovyan/tike_content;
+              mkdir -p '.jupyter/lab/user-settings/@jupyterlab/docmanager-extension';
+              echo '{ defaultViewers: { markdown: "Markdown Preview" }}' > '.jupyter/lab/user-settings/@jupyterlab/docmanager-extension/plugin.jupyterlab-settings'
     extraEnv:
       CRDS_PATH:  /home/jovyan/crds_cache
       CRDS_SERVER_URL: https://jwst-crds.stsci.edu
