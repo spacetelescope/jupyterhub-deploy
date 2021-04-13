@@ -47,14 +47,7 @@ jupyterhub:
     lifecycleHooks:
       postStart:
         exec:
-          command:
-            - "sh"
-            - "-c"
-            - >
-              rsync -r /etc/default-home-contents/ /home/jovyan;
-              gitpuller https://github.com/spacetelescope/tike_content master /home/jovyan/tike_content;
-              mkdir -p '.jupyter/lab/user-settings/@jupyterlab/docmanager-extension';
-              echo '{ defaultViewers: { markdown: "Markdown Preview" }}' > '.jupyter/lab/user-settings/@jupyterlab/docmanager-extension/plugin.jupyterlab-settings'
+          command: ["/opt/setup-home"]
     extraEnv:
       CRDS_PATH:  /home/jovyan/crds_cache
       CRDS_SERVER_URL: https://jwst-crds.stsci.edu

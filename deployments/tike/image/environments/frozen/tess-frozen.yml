@@ -418,7 +418,7 @@ dependencies:
     - tvguide==1.0.3
     - typed-ast==1.4.3
     - ultranest==3.2.0
-    - uncertainties==3.1.5
+    - uncertainties==2.4.4
     - vaneska==0.0.dev0
     - werkzeug==1.0.1
     - wotan==1.9
