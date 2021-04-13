@@ -46,3 +46,4 @@ pybind11
 george
 celerite
 lightkurve
+jupyterlab==3.0.11

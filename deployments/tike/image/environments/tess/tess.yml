@@ -5,7 +5,7 @@ channels:
         - https://ssb.stsci.edu/astroconda
         - defaults
 dependencies:
-        - python=3.7
+        - python
         - freetds
         - fftw
         - pyfftw
@@ -13,6 +13,6 @@ dependencies:
         - ds9
         - pyds9
         - mkl-service
-        - theano==1.0.4
+        - theano
         - theano-pymc
         - starry

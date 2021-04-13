@@ -12,10 +12,10 @@ ENV USE_FROZEN=$USE_FROZEN
 USER ${NB_UID}
 
 # All specs for frozen builds need to be available before their normal installs
-COPY --chown=${NB_UID}:${NB_GID} environments/frozen/  /opt/environments/frozen
+COPY --chown=${NB_UID}:${NB_GID} environments/frozen/ /opt/environments/frozen
 
 # TESS
-COPY --chown=${NB_UID}:${NB_GID}  environments/tess/ /opt/environments/tess
+COPY --chown=${NB_UID}:${NB_GID} environments/tess/ /opt/environments/tess
 RUN /opt/common-scripts/env-clone  base  tess
 # RUN /opt/common-scripts/env-create  tess /opt/environments/tess/tess.yml
 RUN /opt/common-scripts/install-common tess
@@ -47,9 +47,15 @@ RUN chmod 777 /opt/tessworkshop_tutorials
 RUN mkdir /opt/notebooks
 RUN chmod 777 /opt/notebooks
 
+COPY --chown=${NB_UID}:${NB_GID} setup-home /opt
+
 USER $NB_UID
+
+# Might want to move these into setup-home
 RUN git clone https://github.com/spacetelescope/tessworkshop_tutorials.git /opt/tessworkshop_tutorials
 RUN git clone https://github.com/spacetelescope/notebooks.git /opt/notebooks
+
+RUN /opt/setup-home
 
 # ========================= ^^^^^ Custom  ^^^^^ =========================
 # ========================= vvvvv Generic vvvvv  =========================
@@ -68,10 +74,10 @@ USER root
 # remove this step once nbgitpuller enabled; these contents will be in the
 #  jupyterhub-user-content repo.   Install deployment-specific $HOME files.
 COPY default-home-contents/  /etc/default-home-contents
-RUN  cp -r /home/jovyan/.local  /etc/default-home-contents && \
+RUN  cp -r /home/jovyan/.local /etc/default-home-contents && \
      cp -r /home/jovyan/.jupyter /etc/default-home-contents
 COPY global_bashrc  /home/jovyan
-RUN  cat /home/jovyan/global_bashrc   >> /etc/bash.bashrc  && \
+RUN  cat /home/jovyan/global_bashrc >> /etc/bash.bashrc  && \
      rm /home/jovyan/global_bashrc
 
 # Fix certs in conda for application level SSL, e.g. pass image-test running on CI-node
