@@ -3,7 +3,7 @@
 # Use latest ubuntu LTS from community maintained buildpack-deps
 # https://hub.docker.com/_/buildpack-deps/
 # FROM buildpack-deps:focal-scm AS build
-FROM jupyter/scipy-notebook:9fe5186aba96
+#FROM jupyter/scipy-notebook:9fe5186aba96
 
 # ------------------------------------------------------------------------
 
@@ -29,8 +29,8 @@ ENV CONDA_DIR=/opt/conda
 ENV SHELL=/bin/bash
 ENV PATH=${CONDA_DIR}/bin:${PATH}
 
-ENV REQUESTS_CA_BUNDLE=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
-ENV CURL_CA_BUNDLE=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+#ENV REQUESTS_CA_BUNDLE=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+#ENV CURL_CA_BUNDLE=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
 
 # ------------------------------------------------------------------------
 USER root
