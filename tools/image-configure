@@ -1,0 +1,15 @@
+#! /bin/bash -eu
+
+
+cp   setup-env.template   setup-env
+
+DEPLOYMENT_NAME=$1
+perl -pi -e "s/DEPLOYMENT_NAME=cluster-name/DEPLOYMENT_NAME=$DEPLOYMENT_NAME/g" setup-env
+
+USE_FROZEN=${2:-0}
+perl -pi -e "s/USE_FROZEN=[\d]/USE_FROZEN=$USE_FROZEN/g" setup-env
+
+perl -pi -e "s/PERSONAL_IMAGE=[\d]/PERSONAL_IMAGE=1/g" setup-env
+
+
+cat  setup-env

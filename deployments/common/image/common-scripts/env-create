@@ -37,5 +37,4 @@ else
     conda create --name  ${env} python
 fi
 
-conda clean -fya
-conda build purge-all
+/opt/common-scripts/env-clean

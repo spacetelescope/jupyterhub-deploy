@@ -13,7 +13,7 @@ export IMAGE_TAG=latest
 export COMMON_TAG=common-latest
 
 # sandbox, dev, test, or prod
-export ENVIRONMENT=XXX
+export ENVIRONMENT=sandbox
 
 # ----------------- vvvv less frequently changed vvvv -------------------------------
 
@@ -24,7 +24,7 @@ export USE_FROZEN=1
 export PERSONAL_IMAGE=0
 
 # Additional parameters for image-exec Docker run command, e.g. add mounts here
-export IMAGE_RUN_PARS="--rm -p 8888:8888 -it"
+export IMAGE_RUN_PARS="--rm -e JUPYTER_ENABLE_LAB=yes"
 
 # Image scanning,  report Ubuntu status for this version of Ubuntu
 export IMAGE_UBUNTU_NAME="Focal"
