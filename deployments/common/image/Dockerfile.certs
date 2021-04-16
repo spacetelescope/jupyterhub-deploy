@@ -24,7 +24,9 @@ RUN ln -s /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem  /etc/ssl/certs/ca-b
     ln -s /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem /usr/lib/ssl/cert.pem && \
     mkdir -p /etc/pki/ca-trust/extracted/openssl
 
-RUN echo "export REQUESTS_CA_BUNDLE=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem" >> ~/.bashrc
-RUN echo "export CURL_CA_BUNDLE=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem" >> ~/.bashrc
+RUN mkdir /home/jovyan
+RUN echo "export REQUESTS_CA_BUNDLE=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem" >> /home/jovyan/.bashrc
+RUN echo "export CURL_CA_BUNDLE=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem" >> /home/jovyan/.bashrc
+RUN echo "ssl_verify: /etc/ssl/certs/ca-certificates.crt" >> /home/jovyan/.condarc
 
 #RUN update-ca-certificates

@@ -3,7 +3,7 @@
 # Use latest ubuntu LTS from community maintained buildpack-deps
 # https://hub.docker.com/_/buildpack-deps/
 # FROM buildpack-deps:focal-scm AS build
-#FROM jupyter/scipy-notebook:9fe5186aba96
+FROM jupyter/scipy-notebook
 
 # ------------------------------------------------------------------------
 
