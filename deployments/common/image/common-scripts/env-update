@@ -34,15 +34,15 @@ for filepath in $*; do
         yml)
             echo "Updating env ${env} from: ${filepath}"
             cp ${filepath}  /tmp/${filename}
-            conda env update --quiet --name ${env} --file /tmp/${filename}
+            ${CONDA_VER} env update --quiet --name ${env} --file /tmp/${filename}
             ;;
         conda)
             echo "Installing conda pkgs into env ${env} from: ${filepath}"
-            conda install --quiet --name ${env} `cat ${filepath}`
+            ${CONDA_VER} install --quiet --name ${env} `cat ${filepath}`
             ;;
         pip)
             echo "Installing pip pkgs into env ${env} from: ${filepath}"
-	    pip install --no-cache-dir -r ${filepath}
+            pip install --no-cache-dir -r ${filepath}
             ;;
         *)
             echo "Invalid package spec file: ${filepath}"

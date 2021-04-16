@@ -2,5 +2,5 @@
 
 . /etc/profile.d/conda.sh
 
-conda clean -fya
-conda build purge-all
+${CONDA_VER} clean -fya
+${CONDA_VER} build purge-all

@@ -23,6 +23,11 @@ export USE_FROZEN=1
 # Set to 1 for e.g. personal laptop build
 export PERSONAL_IMAGE=0
 
+# Select "conda" tool used to install conda package and environments: conda or mamba
+#   mamba is largely a drop-in replacement for mamba with improved dependency resolution,
+#   parallel downloads, and C++ implementation.
+export CONDA_VER=conda
+
 # Additional parameters for image-exec Docker run command, e.g. add mounts here
 export IMAGE_RUN_PARS="--rm -e JUPYTER_ENABLE_LAB=yes"
 
