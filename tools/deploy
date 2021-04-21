@@ -12,7 +12,7 @@ environment=$4
 rm -r hub/charts/*
 helm dependency update hub
 
-#kubectl apply -f hub/custom-ui-templates-${environment}-${deployment_name}.yaml
+kubectl apply -f hub/custom-ui-templates-${environment}-${deployment_name}.yaml
 
 tmp_decrypted=~/env.yaml.decrypted
 
