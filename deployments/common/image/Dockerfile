@@ -111,8 +111,6 @@ RUN npm config -g set cafile /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
 RUN git config --global http.sslCAinfo /etc/ssl/certs/ca-certificates.crt
 
 # ------------------------------------------------------------------------
-USER ${NB_UID}
-
 RUN git config --global http.sslCAinfo /etc/ssl/certs/ca-certificates.crt
 
 COPY base.yml /tmp/base.yml
