@@ -44,9 +44,6 @@ jupyterhub:
     profileList:
       - display_name: "JWebbinar Science Platform"
         default: true
-      #- display_name: "JWebbinar [jwst==0.17.1]"
-      #  kubespawner_override:
-      #    image: '289559068117.dkr.ecr.us-east-1.amazonaws.com/jwebbinar-user-image@sha256:666f3d22514658dc61cd64171fba195810c5aeea950676ea98a163db4e1a244f'
     storage:
       dynamic:
         storageClass: "aws-efs"
@@ -55,8 +52,8 @@ jupyterhub:
       CRDS_SERVER_URL: https://jwst-crds.stsci.edu
     defaultUrl: "/lab"
     memory:
-      guarantee: 4G
-      limit: 10G
+      guarantee: 7G
+      limit: 8G
   cull:
     enabled: true
     timeout: 1800
