@@ -1,8 +1,8 @@
 # ================ vvvvv Generic Image vvvvv ==================
 
-# Use latest ubuntu LTS from community maintained buildpack-deps
-# https://hub.docker.com/_/buildpack-deps/
-# FROM buildpack-deps:focal-scm AS build
+
+# If the image (jupyter/scipy-notebook) exists locally it will be used,
+# otherwise the latest from https://hub.docker.com/_/buildpack-deps will be used
 FROM jupyter/scipy-notebook
 
 # ------------------------------------------------------------------------
@@ -29,8 +29,8 @@ ENV CONDA_DIR=/opt/conda
 ENV SHELL=/bin/bash
 ENV PATH=${CONDA_DIR}/bin:${PATH}
 
-#ENV REQUESTS_CA_BUNDLE=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
-#ENV CURL_CA_BUNDLE=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+ENV REQUESTS_CA_BUNDLE=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+ENV CURL_CA_BUNDLE=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
 
 # ------------------------------------------------------------------------
 USER root
@@ -86,7 +86,7 @@ RUN    apt-get update --yes && \
         libxpa-dev \
         libxt-dev \
         libbz2-dev \
-        libcudart10.1 \
+        nvidia-cuda-toolkit \
         && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -101,16 +101,16 @@ RUN wget https://sourceforge.net/projects/turbovnc/files/2.2.6/turbovnc_2.2.6_am
 # ------------------------------------------------------------------------
 # SSL/TLS cert setup for STScI AWS firewalling
 
-USER root
+#USER root
 
-RUN mkdir -p /etc/ssl/certs && \
-    mkdir -p /etc/pki/ca-trust/extracted/pem
-COPY tls-ca-bundle.pem /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
-RUN ln -s /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem  /etc/ssl/certs/ca-bundle.crt && \
-    mv /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt.org && \
-    ln -s /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem  /etc/ssl/certs/ca-certificates.crt && \
-    ln -s /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem /usr/lib/ssl/cert.pem && \
-    mkdir -p /etc/pki/ca-trust/extracted/openssl
+#RUN mkdir -p /etc/ssl/certs && \
+#    mkdir -p /etc/pki/ca-trust/extracted/pem
+#COPY tls-ca-bundle.pem /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+#RUN ln -s /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem  /etc/ssl/certs/ca-bundle.crt && \
+#    mv /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt.org && \
+#    ln -s /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem  /etc/ssl/certs/ca-certificates.crt && \
+#    ln -s /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem /usr/lib/ssl/cert.pem && \
+#    mkdir -p /etc/pki/ca-trust/extracted/openssl
 
 # ------------------------------------------------------------------------
 USER root
@@ -118,10 +118,15 @@ USER root
 # Load conda profile scripts by default, symlink target doesn't exist for a bit
 RUN ln -s ${CONDA_DIR}/etc/profile.d/conda.sh /etc/profile.d/conda.sh
 
-# BUG: remove this!!!
-RUN npm config set strict-ssl false
+#RUN npm config set cafile "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem"
+
+#RUN echo 'export NODE_EXTRA_CA_CERTS=["/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem"]' >> /home/jovyan/.bashrc
+
 
 USER ${NB_UID}
+
+RUN git config --global http.sslCAinfo /etc/ssl/certs/ca-certificates.crt
+
 COPY base.yml /tmp/base.yml
 RUN conda update --quiet --name base conda && \
     conda env update --name base -f /tmp/base.yml && \
@@ -129,8 +134,8 @@ RUN conda update --quiet --name base conda && \
     conda install --quiet conda-build && \
     conda build purge-all
 
-USER root
-RUN npm config set cafile /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+#USER root
+#RUN npm config set cafile /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
 
 USER ${NB_UID}
 RUN jupyter labextension install @jupyterlab/server-proxy && \

@@ -7,7 +7,7 @@ USER root
 ARG TZ='America/New_York'
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
-    apt-get install -y tzdata ca-certificates openssl wget && \
+    apt-get install -y tzdata ca-certificates openssl wget vim npm nodejs && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -25,8 +25,12 @@ RUN ln -s /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem  /etc/ssl/certs/ca-b
     mkdir -p /etc/pki/ca-trust/extracted/openssl
 
 RUN mkdir /home/jovyan
+RUN echo "export REQUESTS_CA_BUNDLE=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem" >> ~/.bashrc
 RUN echo "export REQUESTS_CA_BUNDLE=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem" >> /home/jovyan/.bashrc
+RUN echo "export CURL_CA_BUNDLE=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem" >> ~/.bashrc
 RUN echo "export CURL_CA_BUNDLE=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem" >> /home/jovyan/.bashrc
+RUN echo "export NODE_EXTRA_CA_CERTS=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem" >> ~/.bashrc
+RUN echo "export NODE_EXTRA_CA_CERTS=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem" >> /home/jovyan/.bashrc
 RUN echo "ssl_verify: /etc/ssl/certs/ca-certificates.crt" >> /home/jovyan/.condarc
 
-#RUN update-ca-certificates
+RUN npm config set cafile "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem"

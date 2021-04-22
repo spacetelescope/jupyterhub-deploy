@@ -26,8 +26,6 @@ dependencies:
     - nbgitpuller
     - ipyvuetify>=1.4.1
     - git+https://github.com/yuvipanda/jupyter-desktop-server
-    #- ipygoldenlayout
-    #- ipysplitpanes
     - git+https://github.com/mariobuikhuizen/ipysplitpanes --trusted-host github.com
     - git+https://github.com/mariobuikhuizen/ipygoldenlayout --trusted-host github.com
 
