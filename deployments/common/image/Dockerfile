@@ -29,9 +29,6 @@ ENV CONDA_DIR=/opt/conda
 ENV SHELL=/bin/bash
 ENV PATH=${CONDA_DIR}/bin:${PATH}
 
-ENV REQUESTS_CA_BUNDLE=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
-ENV CURL_CA_BUNDLE=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
-
 # ------------------------------------------------------------------------
 USER root
 
@@ -118,11 +115,12 @@ USER root
 # Load conda profile scripts by default, symlink target doesn't exist for a bit
 RUN ln -s ${CONDA_DIR}/etc/profile.d/conda.sh /etc/profile.d/conda.sh
 
-#RUN npm config set cafile "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem"
+# This must be run after conda installs
+RUN npm config -g set cafile /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
 
-#RUN echo 'export NODE_EXTRA_CA_CERTS=["/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem"]' >> /home/jovyan/.bashrc
+RUN git config --global http.sslCAinfo /etc/ssl/certs/ca-certificates.crt
 
-
+# ------------------------------------------------------------------------
 USER ${NB_UID}
 
 RUN git config --global http.sslCAinfo /etc/ssl/certs/ca-certificates.crt
@@ -133,9 +131,6 @@ RUN conda update --quiet --name base conda && \
     conda init --all     && \
     conda install --quiet conda-build && \
     conda build purge-all
-
-#USER root
-#RUN npm config set cafile /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
 
 USER ${NB_UID}
 RUN jupyter labextension install @jupyterlab/server-proxy && \
@@ -159,8 +154,6 @@ RUN jupyter labextension install @jupyterlab/server-proxy && \
     rm -rf "/home/${NB_USER}/.node-gyp"
 
 # ------------------------------------------------------------------------
-# More SSL/TLS cert setup
-
 USER root
 
 # Keep Xfce directories out of home and set up shortcuts for DS9.
