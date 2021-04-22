@@ -11,6 +11,8 @@
 
 image-update   # Make automatic source adjustments
 
+image-base     # Build base image, e.g. our version of scipy-notebook including cert handling
+
 cd ${COMMON_DIR}
 
 # git rev-parse HEAD > common-image-git-hash
