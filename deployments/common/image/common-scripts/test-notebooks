@@ -11,16 +11,14 @@ import subprocess
 import glob
 import shutil
 import uuid
+import tempfile
 
 
-def test_notebooks(kernel, notebook_globs):
+def test_notebooks(kernel, notebooks):
     """Run all the notebooks specified by globbing `notebook_globs` using `kernel`.
 
     Return   count of failed notebooks
     """
-    notebooks = [
-        notebook for pattern in notebook_globs for notebook in glob.glob(pattern)
-    ]
     errs = 0
     for notebook in notebooks:
         if notebook.startswith("#"):
@@ -36,21 +34,15 @@ def test_notebooks(kernel, notebook_globs):
 def test_notebook(kernel, notebook):
     here = os.getcwd()
     err = 1  # assume failed
-    try:
+    with tempfile.TemporaryDirectory() as temp_dir:
         source_path = os.path.dirname(os.path.abspath(notebook))
-
-        temp_dir = "/tmp/" + str(uuid.uuid4())
-        shutil.copytree(source_path, temp_dir)
-        os.chdir(temp_dir)
-
-        notebook_copy = f"{temp_dir}/{os.path.basename(notebook)}"
+        test_dir = temp_dir + "/test"
+        shutil.copytree(source_path, test_dir)
+        os.chdir(test_dir)
         err = subprocess.call(
-            f"papermill {notebook_copy} test.ipynb -k {kernel}".split()
+            f"papermill {os.path.basename(notebook)} test.ipynb -k {kernel}".split()
         )  # maybe succeeds
-
-        shutil.rmtree(temp_dir, ignore_errors=True)
-    finally:
-        os.chdir(here)
+    os.chdir(here)
     return int(err != 0)
 
 
