@@ -7,13 +7,19 @@
 # the Docker source tree.  Nominally this is run when USE_FROZEN=0 and an
 # environment is being resolved from loosely specified version requirements.
 
-cd $IMAGE_DIR
+freeze_deployment() {
+    cd $1
 
-mkdir -p environments/frozen
+    mkdir -p environments/frozen
 
-for env in `env-list-dirs environments | grep -v base | grep -v frozen`; do
-    if [[ ! -z "$env" ]]; then
-        echo "Dumping frozen versions for ${env}"
-        image-env-export $env  > environments/frozen/${env}-frozen.yml
-    fi
-done
+    for env in `env-list-dirs environments | grep -v base | grep -v frozen`; do
+        if [[ ! -z "$env" ]]; then
+            echo "Dumping frozen versions for ${env}"
+            image-env-export $env  > environments/frozen/${env}-frozen.yml
+        fi
+    done
+}
+
+freeze_deployment $IMAGE_DIR
+
+freeze_deployment $IMAGE_DIR/../../common/image

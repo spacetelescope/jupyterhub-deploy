@@ -1,0 +1,54 @@
+#! /usr/bin/env python
+# -*- python -*-
+
+"""This script uses the pip 'safety' package to do vulnerability checking for
+the pip dependencies found in a conda environment spec, e.g. a jupyterhub-deploy
+frozen spec.
+"""
+
+import os
+import sys
+import yaml
+import tempfile
+import subprocess
+
+
+def main(*frozen_specs_to_scan):
+    errs = False
+    for spec in frozen_specs_to_scan:
+        print(f"==== Safety scanning spec {os.path.basename(spec)} ====")
+        errs = errs or scan_spec(spec)
+        print(f"==== End {os.path.basename(spec)} ====")
+    return errs
+
+
+def scan_spec(spec):
+    pkgs = get_pip_dependencies(spec)
+    requirements = "\n".join(pkgs)
+    with tempfile.NamedTemporaryFile(mode="w+", delete=False) as file:
+        file.write(requirements)
+        file.close()
+        print(open(file.name).read())
+        print("-------------")
+        sys.stdout.flush()
+        completion = subprocess.run(("safety", "check", "--full-report", "--file", file.name))
+        sys.stdout.flush()
+        return completion.returncode != 0
+
+
+def get_pip_dependencies(spec):
+    with open(spec) as file:
+        if spec.endswith((".yml",".yaml")):
+            loaded = yaml.safe_load(file)
+            conda_deps = loaded["dependencies"]
+            for dep in conda_deps:
+                if isinstance(dep, dict):
+                    pkgs = dep.get("pip")
+                    if pkgs is not None:
+                        return pkgs
+        else:
+            return file.read().splitlines()
+
+
+if __name__ == "__main__":
+    sys.exit(int(main(*sys.argv[1:])))

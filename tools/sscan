@@ -1,0 +1,18 @@
+#! /bin/bash -u
+
+cd $JUPYTERHUB_DIR
+
+echo "====================================================="
+echo "Scanning source code for vulnerabilities using bandit"
+echo "====================================================="
+sscan-bandit
+bandit_status=$?
+
+echo "====================================================="
+echo "Scanning environment dependencies using safety       "
+echo "====================================================="
+sscan-safety
+safety_status=$?
+
+fail=`expr $bandit_status + $safety_status`
+exit $fail

@@ -1,3 +1,5 @@
+#! /bin/bash
+
 # Undefined variables cause "random" failures during activation and deactivation,  first seen for TESS
 
 env=${1:-undefined}  # no real need to define ATM

@@ -21,6 +21,10 @@ LABEL maintainer="Science Platforms <dmd_octarine@stsci.edu>"
 ARG USE_FROZEN=1
 ENV USE_FROZEN=$USE_FROZEN
 
+# Enable easy swap of conda with e.g. mamba
+ARG CONDA_VER=conda
+ENV CONDA_VER=${CONDA_VER}
+
 # Environment variables
 ENV MKL_THREADING_LAYER="GNU"
 
@@ -126,11 +130,11 @@ USER ${NB_UID}
 RUN git config --global http.sslCAinfo /etc/ssl/certs/ca-certificates.crt
 
 COPY base.yml /tmp/base.yml
-RUN conda update --quiet --name base conda && \
-    conda env update --name base -f /tmp/base.yml && \
-    conda init --all     && \
-    conda install --quiet conda-build && \
-    conda build purge-all
+RUN ${CONDA_VER} update --quiet --name base conda && \
+    ${CONDA_VER} env update --name base -f /tmp/base.yml && \
+    ${CONDA_VER} init --all     && \
+    ${CONDA_VER} install --quiet conda-build && \
+    ${CONDA_VER} build purge-all
 
 USER ${NB_UID}
 RUN jupyter labextension install @jupyterlab/server-proxy && \

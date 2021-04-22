@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-#-*-python-*-
+# -*-python-*-
 
 """Using the Python env/kernel specified by the first parameter, execute all
 notebooks specified by subsequent parameters.
@@ -8,37 +8,53 @@ notebooks specified by subsequent parameters.
 import sys
 import os.path
 import subprocess
+import glob
+import shutil
+import uuid
+import tempfile
 
-if (len(sys.argv) < 2):  # accept 0 notebooks...
-    print("test-notebooks <kernel>  <notebooks...>", file=sys.stderr)
-    sys.exit(1)
 
-kernel = sys.argv[1]
-notebooks = sys.argv[2:]
+def test_notebooks(kernel, notebooks):
+    """Run all the notebooks specified by globbing `notebook_globs` using `kernel`.
 
-errs = 0
-for notebook in notebooks:
+    Return   count of failed notebooks
+    """
+    errs = 0
+    for notebook in notebooks:
+        if notebook.startswith("#"):
+            print("=" * 10, "Skipping Notebook", notebook, "=" * 10)
+            continue
+        print("=" * 10, "Testing Notebook", notebook, "=" * 10)
+        err = test_notebook(kernel, notebook)
+        print("Tested notebook", notebook, "... ok" if not err else "... FAIL")
+        errs += err
+    return errs
 
-    if notebook.startswith("#"):
-        print("="*10, "Skipping Notebook", notebook, "="*10)
-        continue
 
-    print("="*10, "Testing Notebook", notebook, "="*10)
+def test_notebook(kernel, notebook):
+    here = os.getcwd()
+    err = 1  # assume failed
+    with tempfile.TemporaryDirectory() as temp_dir:
+        source_path = os.path.dirname(os.path.abspath(notebook))
+        test_dir = temp_dir + "/test"
+        shutil.copytree(source_path, test_dir)
+        os.chdir(test_dir)
+        err = subprocess.call(
+            f"papermill {os.path.basename(notebook)} test.ipynb -k {kernel}".split()
+        )  # maybe succeeds
+    os.chdir(here)
+    return int(err != 0)
 
-    os.chdir(os.path.dirname(notebook))
 
-    err = subprocess.call(f"papermill {notebook} /tmp/test.ipynb -k {kernel}".split())
-    if err == 0:
-        print("Tested notebook", notebook, "... ok")
-    else:
-        print("Tested notebook", notebook, "... FAIL")
-        errs += 1
+def main(*args):
+    if len(args) < 2:  # accept 0 notebooks...
+        print("test-notebooks <kernel>  <notebooks...>", file=sys.stderr)
+        sys.exit(2)
+    kernel = sys.argv[1]
+    notebook_globs = sys.argv[2:]
+    return test_notebooks(kernel, notebook_globs)
 
-sys.exit(errs)
 
-#
-# nbconvert version of notebook runner as an alternative to papermill.
-#
-# If needed,  nbconvert also has a switch to specify kernel...
-# err = subprocess.call(f"jupyter nbconvert --to notebook  --NotebookClient.kernel_name={kernel} "
-#                       f"--ExecutePreprocessor.kernel_name={kernel} --execute {notebook}".split())
+if __name__ == "__main__":
+    if main(*sys.argv):
+        sys.exit(1)

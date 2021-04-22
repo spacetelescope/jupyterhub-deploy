@@ -14,4 +14,6 @@ fi
 
 echo "-------------------------------------------------------------------------------"
 echo "Cloning env $to from env $from"
-conda create --name $to  --clone $from
+${CONDA_VER} create --name $to  --clone $from
+
+/opt/common-scripts/env-clean

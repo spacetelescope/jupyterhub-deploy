@@ -17,15 +17,21 @@ cd ${COMMON_DIR}
 
 # git rev-parse HEAD > common-image-git-hash
 echo "========================= Building Common Image ========================"
+
+# DOCKER_BUILDKIT=1 mentioned here:
+# https://stackoverflow.com/questions/51115856/docker-failed-to-export-image-failed-to-create-image-failed-to-get-layer
+# as a solution to build fail like:
+# failed to export image: failed to create image: failed to get layer sha256:...: layer does not exist
+
 # common image doesn't currently exploit frozen
-time docker build --tag ${COMMON_ID} --build-arg USE_FROZEN=${USE_FROZEN} .
+time   DOCKER_BUILDKIT=1  docker build --tag ${COMMON_ID} --build-arg USE_FROZEN=${USE_FROZEN} .
 
 cd ${IMAGE_DIR}
 
 # git rev-parse HEAD > mission-image-git-hash
 
 echo "========================= Building $IMAGE_ID USE_FROZEN=${USE_FROZEN} =========================="
-time docker build --tag ${IMAGE_ID} --build-arg USE_FROZEN=${USE_FROZEN} --build-arg BASE_IMAGE=${COMMON_ID} .
+time  DOCKER_BUILDKIT=1  docker build --tag ${IMAGE_ID} --build-arg USE_FROZEN=${USE_FROZEN} --build-arg BASE_IMAGE=${COMMON_ID} .
 
 if [[ "$USE_FROZEN" == "0" ]]; then
     echo "========================= Freezing Requirements =========================="
