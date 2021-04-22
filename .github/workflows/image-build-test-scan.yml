@@ -1,0 +1,101 @@
+name:  Image Build, Test, Scan
+on:
+   schedule:
+     - cron: '0 0 */7 * *'
+   push:
+      # branches:
+      #   - main
+   pull_request:
+      # branches:
+      #   - main
+
+jobs:
+  docker:
+    name: "${{ matrix.DEPLOYMENT_NAME }}  -- Image Build, Test, Scan"
+    runs-on: ubuntu-18.04
+
+    strategy:
+      max-parallel: 5
+      fail-fast: false
+      matrix:
+        DEPLOYMENT_NAME: [ jwebbinar, roman, tike]
+        USE_FROZEN: [ 0 ]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Free Disk Space,  Enlarge Swapfile
+        run: |
+             df -h
+             sudo apt clean
+             docker rmi $(docker image ls -aq)
+             docker container prune -f
+             sudo rm -rf "/usr/local/share/boost"
+             sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+             sudo rm -rf /usr/local/lib/android # will release about 10 GB if you don't need Android
+             sudo rm -rf /usr/share/dotnet # will release about 20GB if you don't need .NET
+             sudo swapoff -a
+             sudo rm -f /swapfile
+             sudo fallocate -l 20G /swapfile
+             sudo chmod 0600 /swapfile
+             sudo mkswap /swapfile
+             sudo swapon /swapfile
+             cat /proc/meminfo
+             df -h
+
+      - name: Set Up Environment
+        run: |
+           tools/image-configure ${{ matrix.DEPLOYMENT_NAME }}  ${{ matrix.USE_FROZEN }}
+           df -h
+
+      - name: Image Build
+        run: |
+           source setup-env
+           tools/image-build
+           df -h
+           docker image ls
+
+      - name: Git Diffs (Frozen Version Specs)
+        run: git diff
+
+      - name: Anchore Image Scan
+        id: anchore_image_scan
+        uses: anchore/scan-action@v2
+        with:
+           image: standalone_jupyterlab/${{ matrix.DEPLOYMENT_NAME }}-user-image:latest
+           acs-report-enable: true
+           fail-build: false
+           severity-cutoff: high
+
+      - name: Upload Anchore Scan SARIF Report
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: ${{ steps.anchore_image_scan.outputs.sarif }}
+
+      # - name: Snyk Image Scan
+      #   id: snyk_image_scan
+      #   continue-on-error: true
+      #   uses: snyk/actions/docker@master
+      #   env:
+      #     # In order to use the Snyk Action you will need to have a Snyk API token.
+      #     # More details in https://github.com/snyk/actions#getting-your-snyk-token
+      #     # or you can signup for free at https://snyk.io/login
+      #     SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      #   with:
+      #     image: standalone_jupyterlab/${{ matrix.DEPLOYMENT_NAME }}-user-image:latest
+      #     args: --file=deployments/${{ matrix.DEPLOYMENT_NAME }}/image/Dockerfile
+
+      # - name: Upload Snyk Scan SARIF Report
+      #   continue-on-error: true
+      #   if: ${{ github.event_name == 'push' }}
+      #   uses: github/codeql-action/upload-sarif@v1
+      #   with:
+      #       sarif_file: snyk.sarif
+
+      - name: Image Functional Tests
+        run: |
+           df -h
+           source setup-env
+           tools/image-test
+           df -h

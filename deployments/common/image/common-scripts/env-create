@@ -27,15 +27,14 @@ echo "--------------------------------------------------------------------------
 if [[ -f ${env_yml} ]]; then
     echo "Creating conda env ${env} from ${env_yml}"
     cp ${env_yml}  /tmp/${env}.yml
-    conda  env create --quiet --name ${env} --file /tmp/${env}.yml
+    ${CONDA_VER}  env create --quiet --name ${env} --file /tmp/${env}.yml
 else
     if [[ "$USE_FROZEN" == "1" ]]; then
         echo "You must build with USE_FROZEN=0 first, then image-freeze before USE_FROZEN=1."
         exit 1
     fi
     echo "Creating defult Python environment for ${env}"
-    conda create --name  ${env} python
+    ${CONDA_VER} create --name  ${env} python
 fi
 
-conda clean -fya
-conda build purge-all
+/opt/common-scripts/env-clean

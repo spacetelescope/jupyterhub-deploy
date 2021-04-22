@@ -29,9 +29,10 @@ USER root
 
 # Get webbpsf-data-0.9.0.tar.gz
 RUN mkdir /data && cd /data && \
-    wget --quiet https://stsci.box.com/shared/static/qcptcokkbx7fgi3c00w2732yezkxzb99.gz
-RUN cd /data && tar zxf qcptcokkbx7fgi3c00w2732yezkxzb99.gz && \
-    rm qcptcokkbx7fgi3c00w2732yezkxzb99.gz && chmod -R a+r /data/webbpsf-data
+    wget --quiet https://stsci.box.com/shared/static/qcptcokkbx7fgi3c00w2732yezkxzb99.gz && \
+    tar zxf qcptcokkbx7fgi3c00w2732yezkxzb99.gz && \
+    rm qcptcokkbx7fgi3c00w2732yezkxzb99.gz && \
+    chmod -R a+r /data/webbpsf-data
 
 # Install sextractor under /usr/local
 RUN cd /tmp && \
@@ -51,7 +52,7 @@ USER ${NB_UID}
 # build will back up to this point.  Consequently, image build uses git to
 # clear the new specs, they should be committed to git prior to attempting a
 # new frozen build.
-COPY environments/frozen /opt/environments/frozen
+COPY --chown=${NB_UID}:${NB_GID} environments/frozen /opt/environments/frozen
 
 # ----------------------------------------------------------------------
 # BUG: ds9 is installed in the jwebbinar kernel, but it's included also include in the
@@ -64,14 +65,14 @@ RUN conda env remove --name ds9
 
 # ----------------------------------------------------------------------
 # JWebbinar
-COPY environments/jwebbinar/ /opt/environments/jwebbinar
+COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/ /opt/environments/jwebbinar
 RUN /opt/common-scripts/env-create jwebbinar /opt/environments/jwebbinar/jwebbinar.yml
 RUN /opt/common-scripts/install-common jwebbinar
 RUN /opt/common-scripts/env-update jwebbinar /opt/environments/jwebbinar/jwebbinar.pip
 
 RUN /opt/common-scripts/install-common jwebbinar
 
-COPY environments/jwebbinar/ /opt/environments/jwebbinar
+COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/ /opt/environments/jwebbinar
 
 # ----------------------------------------------------------------------
 # Jdaviz
@@ -82,7 +83,7 @@ RUN /opt/common-scripts/env-update jdaviz /opt/environments/jdaviz/jdaviz.pip
 
 RUN /opt/common-scripts/install-common jdaviz
 
-COPY environments/jdaviz/ /opt/environments/jdaviz
+COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/ /opt/environments/jdaviz
 
 # ----------------------------------------------------------------------
 USER root
@@ -104,7 +105,7 @@ RUN jupyter nbextension install --py --sys-prefix widgetsnbextension && \
     rm -rf "/home/${NB_USER}/.cache/yarn" && \
     rm -rf "/home/${NB_USER}/.node-gyp"
 
-COPY environments/setup-notebooks  /opt/environments
+COPY  --chown=${NB_UID}:${NB_GID} environments/setup-notebooks  /opt/environments
 RUN  /opt/environments/setup-notebooks
 
 # Fix JS encoding issue that prevents widgets from displaying properly in notebook mode
@@ -144,7 +145,8 @@ COPY --chown=${NB_UID}:${NB_GID} environments/test    /opt/environments/test
 # Install security patches now that build is complete;  potentially this could be done sooner
 RUN apt-get update && \
     apt-get dist-upgrade --yes && \
-    apt-get clean
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # For standalone operation outside JupyterHub,  note that  /etc also includes
 # common home directory files.

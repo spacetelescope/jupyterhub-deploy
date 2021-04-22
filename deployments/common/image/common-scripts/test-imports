@@ -17,7 +17,7 @@ for pkg in import_list:
         print("Skipping", pkg)
         continue
     try:
-        exec(f"import {pkg}")
+        __import__(pkg)
         print("Importing", pkg, "... ok")
     except ImportError:
         print("Importing", pkg, "... FAIL")
