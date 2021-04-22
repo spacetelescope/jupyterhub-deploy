@@ -100,20 +100,6 @@ RUN wget https://sourceforge.net/projects/turbovnc/files/2.2.6/turbovnc_2.2.6_am
     apt-get remove -y -q light-locker
 
 # ------------------------------------------------------------------------
-# SSL/TLS cert setup for STScI AWS firewalling
-
-#USER root
-
-#RUN mkdir -p /etc/ssl/certs && \
-#    mkdir -p /etc/pki/ca-trust/extracted/pem
-#COPY tls-ca-bundle.pem /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
-#RUN ln -s /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem  /etc/ssl/certs/ca-bundle.crt && \
-#    mv /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt.org && \
-#    ln -s /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem  /etc/ssl/certs/ca-certificates.crt && \
-#    ln -s /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem /usr/lib/ssl/cert.pem && \
-#    mkdir -p /etc/pki/ca-trust/extracted/openssl
-
-# ------------------------------------------------------------------------
 USER root
 
 # Load conda profile scripts by default, symlink target doesn't exist for a bit
