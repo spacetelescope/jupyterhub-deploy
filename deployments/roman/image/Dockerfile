@@ -62,8 +62,9 @@ RUN cd /data && tar zxf qcptcokkbx7fgi3c00w2732yezkxzb99.gz && \
 
 # Install sextractor under /usr/local
 RUN cd /tmp && \
-    curl -sSL https://github.com/astromatic/sextractor/archive/2.25.0.tar.gz | tar -xzf - && \
-    cd sextractor-2.25.0 && \
+    wget https://github.com/astromatic/sextractor/archive/master.zip && \
+    unzip master.zip && \
+    cd sextractor-master && \
     sh autogen.sh && \
     ./configure --prefix=/usr/local && \
     make && \

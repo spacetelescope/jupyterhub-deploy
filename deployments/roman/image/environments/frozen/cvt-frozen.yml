@@ -1,292 +1,316 @@
 name: cvt
 channels:
-  - manics
   - conda-forge
 dependencies:
   - _libgcc_mutex=0.1
   - _openmp_mutex=4.5
-  - alembic=1.4.3
+  - alembic=1.5.8
+  - anyio=2.2.0
+  - appdirs=1.4.4
   - argon2-cffi=20.1.0
   - async_generator=1.10
   - attrs=20.3.0
+  - babel=2.9.0
   - backcall=0.2.0
   - backports=1.0
-  - backports.functools_lru_cache=1.6.1
+  - backports.functools_lru_cache=1.6.4
   - beautifulsoup4=4.9.3
-  - blas=2.14
-  - bleach=3.2.1
+  - blas=2.108
+  - blas-devel=3.9.0
+  - bleach=3.3.0
   - blinker=1.4
-  - blosc=1.20.1
-  - bokeh=2.2.3
+  - blosc=1.21.0
+  - bokeh=2.3.1
   - bottleneck=1.3.2
+  - bqplot=0.12.26
+  - bqplot-image-gl=1.0.0
   - brotli=1.0.9
   - brotlipy=0.7.0
   - brunsli=0.1
   - bzip2=1.0.8
   - c-ares=1.17.1
   - ca-certificates=2020.12.5
-  - cached-property=1.5.1
+  - cached-property=1.5.2
+  - cached_property=1.5.2
   - certifi=2020.12.5
   - certipy=0.1.3
-  - cffi=1.14.4
+  - cffi=1.14.5
   - cfitsio=3.470
-  - chardet=3.0.4
-  - charls=2.1.0
+  - chardet=4.0.0
+  - charls=2.2.0
   - click=7.1.2
   - cloudpickle=1.6.0
-  - conda-package-handling=1.7.2
-  - configurable-http-proxy=1.3.0
-  - cryptography=3.3.1
+  - conda-package-handling=1.7.3
+  - configurable-http-proxy=4.3.2
+  - cryptography=3.4.7
   - cycler=0.10.0
-  - cython=0.29.21
+  - cython=0.29.23
   - cytoolz=0.11.0
-  - dask=2.30.0
-  - dask-core=2.30.0
+  - dask=2021.4.0
+  - dask-core=2021.4.0
   - decorator=4.4.2
-  - defusedxml=0.6.0
+  - defusedxml=0.7.1
+  - deprecation=2.1.0
   - dill=0.3.3
-  - distributed=2.30.1
+  - distributed=2021.4.0
   - entrypoints=0.3
   - filelock=3.0.12
   - freetype=2.10.4
-  - fsspec=0.8.4
+  - fsspec=2021.4.0
   - giflib=5.2.1
   - glob2=0.7
   - gmp=6.2.1
   - gmpy2=2.1.0b1
+  - greenlet=1.0.0
   - h5py=3.1.0
   - hdf5=1.10.6
   - heapdict=1.0.1
-  - icu=67.1
+  - icu=68.1
   - idna=2.10
-  - imagecodecs=2020.5.30
+  - imagecodecs=2021.3.31
   - imageio=2.9.0
-  - importlib-metadata=3.1.1
-  - importlib_metadata=3.1.1
-  - ipyevents=0.8.1
-  - ipykernel=5.3.4
-  - ipympl=0.5.8
-  - ipython=7.19.0
+  - importlib-metadata=4.0.1
+  - ipydatawidgets=4.2.0
+  - ipyevents=0.8.2
+  - ipykernel=5.5.3
+  - ipympl=0.7.0
+  - ipython=7.22.0
   - ipython_genutils=0.2.0
-  - ipywidgets=7.5.1
-  - jedi=0.17.2
-  - jinja2=2.11.2
-  - joblib=0.17.0
+  - ipyvue=1.5.0
+  - ipyvuetify=1.6.2
+  - ipywidgets=7.6.3
+  - jedi=0.18.0
+  - jinja2=2.11.3
+  - joblib=1.0.1
   - jpeg=9d
   - json5=0.9.5
   - jsonschema=3.2.0
-  - jupyter_client=6.1.7
-  - jupyter_core=4.7.0
+  - jupyter_client=6.1.12
+  - jupyter_core=4.7.1
+  - jupyter_server=1.6.4
   - jupyter_telemetry=0.1.0
-  - jupyterhub=1.2.2
-  - jupyterhub-base=1.2.2
-  - jupyterlab=2.2.9
+  - jupyterhub=1.3.0
+  - jupyterhub-base=1.3.0
   - jupyterlab_pygments=0.1.2
-  - jupyterlab_server=1.2.0
+  - jupyterlab_server=2.4.0
+  - jupyterlab_widgets=1.0.0
   - jxrlib=1.1
   - kiwisolver=1.3.1
   - krb5=1.17.2
-  - lcms2=2.11
+  - lcms2=2.12
   - ld_impl_linux-64=2.35.1
-  - lerc=2.2
+  - lerc=2.2.1
   - libaec=1.0.4
-  - libarchive=3.5.0
-  - libblas=3.8.0
-  - libcblas=3.8.0
-  - libcurl=7.71.1
+  - libarchive=3.5.1
+  - libblas=3.9.0
+  - libcblas=3.9.0
+  - libcurl=7.76.1
+  - libdeflate=1.7
   - libedit=3.1.20191231
   - libev=4.33
   - libffi=3.3
   - libgcc-ng=9.3.0
-  - libgfortran-ng=7.5.0
-  - libgfortran4=7.5.0
-  - libgomp=9.3.0
+  - libgfortran-ng=9.3.0
+  - libgfortran5=9.3.0
   - libiconv=1.16
-  - liblapack=3.8.0
-  - liblapacke=3.8.0
+  - liblapack=3.9.0
+  - liblapacke=3.9.0
   - liblief=0.10.1
   - libllvm10=10.0.1
-  - libnghttp2=1.41.0
-  - libopenblas=0.3.7
+  - libnghttp2=1.43.0
+  - libopenblas=0.3.12
   - libpng=1.6.37
-  - libprotobuf=3.13.0.1
+  - libprotobuf=3.15.8
   - libsodium=1.0.18
+  - libsolv=0.7.18
   - libssh2=1.9.0
   - libstdcxx-ng=9.3.0
-  - libtiff=4.1.0
-  - libuv=1.40.0
-  - libwebp-base=1.1.0
+  - libtiff=4.2.0
+  - libuv=1.41.0
+  - libwebp-base=1.2.0
   - libxml2=2.9.10
   - libzopfli=1.0.3
-  - llvmlite=0.34.0
+  - llvm-openmp=11.1.0
+  - llvmlite=0.36.0
   - locket=0.2.0
-  - lz4-c=1.9.2
+  - lz4-c=1.9.3
   - lzo=2.10
-  - mako=1.1.3
+  - mako=1.1.4
   - markupsafe=1.1.1
-  - matplotlib-base=3.3.3
+  - matplotlib-base=3.4.1
   - mistune=0.8.4
-  - mock=4.0.2
+  - mock=4.0.3
   - mpc=1.1.0
   - mpfr=4.0.2
-  - mpmath=1.1.0
-  - msgpack-python=1.0.0
-  - nbclient=0.5.1
+  - mpmath=1.2.1
+  - msgpack-python=1.0.2
+  - nbclassic=0.2.7
+  - nbclient=0.5.3
   - nbconvert=6.0.7
-  - nbformat=5.0.8
+  - nbformat=5.1.3
   - ncurses=6.2
-  - nest-asyncio=1.4.3
-  - networkx=2.5
-  - nodejs=12.19.0
-  - notebook=6.1.5
-  - numba=0.51.2
-  - numexpr=2.7.1
-  - numpy=1.19.4
+  - nest-asyncio=1.5.1
+  - networkx=2.5.1
+  - nodejs=15.14.0
+  - notebook=6.3.0
+  - numba=0.53.1
+  - numexpr=2.7.3
+  - numpy=1.20.2
   - oauthlib=3.0.1
   - olefile=0.46
-  - openjpeg=2.3.1
-  - openssl=1.1.1h
-  - packaging=20.7
+  - openblas=0.3.12
+  - openjpeg=2.4.0
+  - openssl=1.1.1k
+  - packaging=20.9
   - pamela=1.0.0
-  - pandas=1.1.4
-  - pandoc=2.11.2
+  - pandas=1.2.4
+  - pandoc=2.12
   - pandocfilters=1.4.2
-  - parso=0.7.1
-  - partd=1.1.0
+  - parso=0.8.2
+  - partd=1.2.0
   - patchelf=0.11
   - patsy=0.5.1
   - pexpect=4.8.0
   - pickleshare=0.7.5
-  - pillow=8.0.1
-  - pip=20.3.1
-  - pkginfo=1.6.1
-  - prometheus_client=0.9.0
-  - prompt-toolkit=3.0.8
-  - protobuf=3.13.0.1
-  - psutil=5.7.3
-  - ptyprocess=0.6.0
+  - pillow=8.1.2
+  - pip=21.0.1
+  - pkginfo=1.7.0
+  - pooch=1.3.0
+  - prometheus_client=0.10.1
+  - prompt-toolkit=3.0.18
+  - protobuf=3.15.8
+  - psutil=5.8.0
+  - ptyprocess=0.7.0
   - py-lief=0.10.1
   - pycosat=0.6.3
   - pycparser=2.20
   - pycurl=7.43.0.6
-  - pygments=2.7.3
-  - pyjwt=1.7.1
-  - pyopenssl=20.0.0
+  - pygments=2.8.1
+  - pyjwt=2.0.1
+  - pyopenssl=20.0.1
   - pyparsing=2.4.7
   - pyrsistent=0.17.3
   - pysocks=1.7.1
   - pytables=3.6.1
-  - python=3.8.6
+  - python=3.8.8
   - python-dateutil=2.8.1
   - python-editor=1.0.4
   - python-json-logger=2.0.1
   - python-libarchive-c=2.9
   - python_abi=3.8
-  - pytz=2020.4
+  - pytz=2021.1
   - pywavelets=1.1.1
-  - pyyaml=5.3.1
-  - pyzmq=20.0.0
-  - readline=8.0
-  - requests=2.25.0
+  - pyyaml=5.4.1
+  - pyzmq=22.0.3
+  - readline=8.1
+  - reproc=14.2.1
+  - reproc-cpp=14.2.1
+  - requests=2.25.1
   - ripgrep=12.1.1
   - ruamel.yaml=0.16.12
   - ruamel.yaml.clib=0.2.2
   - ruamel_yaml=0.15.80
-  - scikit-image=0.17.2
-  - scikit-learn=0.23.2
-  - scipy=1.5.3
-  - seaborn=0.11.0
-  - seaborn-base=0.11.0
+  - scikit-image=0.18.1
+  - scikit-learn=0.24.1
+  - scipy=1.6.2
+  - seaborn=0.11.1
+  - seaborn-base=0.11.1
   - send2trash=1.5.0
   - setuptools=49.6.0
   - six=1.15.0
   - snappy=1.1.8
+  - sniffio=1.2.0
   - sortedcontainers=2.3.0
   - soupsieve=2.0.1
-  - sqlalchemy=1.3.20
-  - sqlite=3.34.0
-  - statsmodels=0.12.1
-  - sympy=1.7
-  - tblib=1.6.0
-  - terminado=0.9.1
+  - sqlalchemy=1.4.11
+  - sqlite=3.35.4
+  - statsmodels=0.12.2
+  - sympy=1.7.1
+  - tblib=1.7.0
+  - terminado=0.9.4
   - testpath=0.4.4
   - threadpoolctl=2.1.0
-  - tifffile=2020.12.8
+  - tifffile=2021.4.8
   - tini=0.18.0
   - tk=8.6.10
+  - tomlkit=0.7.0
   - toolz=0.11.1
   - tornado=6.1
-  - tqdm=4.54.1
+  - tqdm=4.60.0
   - traitlets=5.0.5
+  - traittypes=0.2.1
   - typing_extensions=3.7.4.3
-  - urllib3=1.25.11
+  - urllib3=1.26.4
   - vincent=0.4.4
   - wcwidth=0.2.5
   - webencodings=0.5.1
   - websockify=0.9.0
-  - wheel=0.36.1
+  - wheel=0.36.2
   - widgetsnbextension=3.5.1
-  - xlrd=1.2.0
+  - xlrd=2.0.1
   - xz=5.2.5
   - yaml=0.2.5
-  - zeromq=4.3.3
+  - zeromq=4.3.4
   - zfp=0.5.5
   - zict=2.0.0
-  - zipp=3.4.0
+  - zipp=3.4.1
   - zlib=1.2.11
-  - zstd=1.4.5
+  - zstd=1.4.9
   - pip:
-    - aiohttp==3.7.3
+    - aiohttp==3.7.4.post0
     - alabaster==0.7.12
     - ansiwrap==0.8.4
-    - appdirs==1.4.4
     - astropy-sphinx-theme==1.1
     - async-timeout==3.0.1
-    - awscli==1.18.194
-    - babel==2.9.0
+    - awscli==1.19.55
     - black==20.8b1
-    - boto3==1.16.34
-    - botocore==1.19.34
+    - boto3==1.17.55
+    - botocore==1.20.55
     - ci-watson==0.5
-    - codecov==2.1.10
+    - codecov==2.1.11
     - colorama==0.4.3
-    - coverage==5.3
+    - coverage==5.5
     - docutils==0.15.2
-    - flake8==3.8.4
+    - flake8==3.9.1
     - imagesize==1.2.0
     - iniconfig==1.1.1
+    - ipygoldenlayout==0.3.0
+    - ipysplitpanes==0.1.0a0
     - jmespath==0.10.0
-    - jupyter-desktop-server==0.1.2
-    - jupyter-server-proxy==1.5.0
+    - jupyter-desktop-server==0.1.3
+    - jupyter-packaging==0.7.12
+    - jupyter-server==1.6.1
+    - jupyter-server-proxy==3.0.2
+    - jupyterlab==3.0.11
     - mccabe==0.6.1
     - multidict==5.1.0
     - mypy-extensions==0.4.3
     - nbgitpuller==0.9.0
     - numpydoc==1.1.0
-    - papermill==2.2.2
+    - papermill==2.3.3
     - pathspec==0.8.1
     - pluggy==0.13.1
-    - py==1.9.0
+    - py==1.10.0
     - pyasn1==0.4.8
-    - pycodestyle==2.6.0
-    - pyflakes==2.2.0
-    - pytest==6.1.2
-    - pytest-cov==2.10.1
-    - pytest-doctestplus==0.8.0
+    - pycodestyle==2.7.0
+    - pyflakes==2.3.1
+    - pytest==6.2.3
+    - pytest-cov==2.11.1
+    - pytest-doctestplus==0.9.0
     - pytest-openfiles==0.5.0
-    - regex==2020.11.13
+    - regex==2021.4.4
     - requests-mock==1.8.0
-    - rsa==4.5
-    - s3transfer==0.3.3
-    - simpervisor==0.3
-    - snowballstemmer==2.0.0
-    - sphinx==3.3.1
-    - sphinx-asdf==0.1.0rc8
+    - rsa==4.7.2
+    - s3transfer==0.4.1
+    - simpervisor==0.4
+    - snowballstemmer==2.1.0
+    - sphinx==3.5.4
+    - sphinx-asdf==0.1.1
     - sphinx-astropy==1.3
     - sphinx-automodapi==0.13
     - sphinx-bootstrap-theme==0.7.1
-    - sphinx-gallery==0.8.1
-    - sphinx-rtd-theme==0.5.0
+    - sphinx-gallery==0.8.2
+    - sphinx-rtd-theme==0.5.2
     - sphinxcontrib-applehelp==1.0.2
     - sphinxcontrib-devhelp==1.0.2
     - sphinxcontrib-htmlhelp==1.0.3
@@ -294,9 +318,9 @@ dependencies:
     - sphinxcontrib-qthelp==1.0.3
     - sphinxcontrib-serializinghtml==1.1.4
     - stsci-rtd-theme==0.0.2
-    - tenacity==6.2.0
+    - tenacity==7.0.0
     - textwrap3==0.9.2
     - toml==0.10.2
-    - typed-ast==1.4.1
+    - typed-ast==1.4.3
     - yarl==1.6.3
 prefix: /opt/conda/envs/cvt
