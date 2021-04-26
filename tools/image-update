@@ -1,4 +1,4 @@
-# /bin/bash -eu
+#! /bin/bash -eu
 
 # Update the configured deployment based on files stored in the commmon
 # deployment.
