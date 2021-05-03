@@ -24,3 +24,6 @@ popd
 helm upgrade --debug --wait --install ${deployment_name}-${environment} hub -f deployments/common/config/all.yaml -f deployments/${deployment_name}/config/common.yaml -f deployments/${deployment_name}/config/${environment}.yaml -f ${tmp_decrypted} --set-string jupyterhub.singleuser.image.name=${account_id}.dkr.ecr.us-east-1.amazonaws.com/${deployment_name}-user-image
 
 rm ~/env.yaml.decrypted
+
+# Only use 1 more IP address than is needed at all times
+kubectl set env ds aws-node -n kube-system WARM_IP_TARGET=1
