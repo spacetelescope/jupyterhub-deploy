@@ -1,6 +1,6 @@
-#! /bin/bash -e
+#! /bin/bash
 
-set -u
+set -eu
 
 # Update the configured deployment based on files stored in the commmon
 # deployment.
