@@ -1,9 +1,9 @@
 # ================ vvvvv Generic Image vvvvv ==================
 
-# Use latest ubuntu LTS from community maintained buildpack-deps
-# https://hub.docker.com/_/buildpack-deps/
-# FROM buildpack-deps:focal-scm AS build
-FROM jupyter/scipy-notebook:9fe5186aba96
+
+# If the image (jupyter/scipy-notebook) exists locally it will be used,
+# otherwise the latest from https://hub.docker.com/_/buildpack-deps will be used
+FROM jupyter/scipy-notebook
 
 # ------------------------------------------------------------------------
 
@@ -32,9 +32,6 @@ ENV MKL_THREADING_LAYER="GNU"
 ENV CONDA_DIR=/opt/conda
 ENV SHELL=/bin/bash
 ENV PATH=${CONDA_DIR}/bin:${PATH}
-
-ENV REQUESTS_CA_BUNDLE=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
-ENV CURL_CA_BUNDLE=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
 
 # ------------------------------------------------------------------------
 USER root
@@ -90,7 +87,7 @@ RUN    apt-get update --yes && \
         libxpa-dev \
         libxt-dev \
         libbz2-dev \
-        libcudart10.1 \
+        nvidia-cuda-toolkit \
         && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -103,38 +100,25 @@ RUN wget https://sourceforge.net/projects/turbovnc/files/2.2.6/turbovnc_2.2.6_am
     apt-get remove -y -q light-locker
 
 # ------------------------------------------------------------------------
-# SSL/TLS cert setup for STScI AWS firewalling
-
-USER root
-
-RUN mkdir -p /etc/ssl/certs && \
-    mkdir -p /etc/pki/ca-trust/extracted/pem
-COPY tls-ca-bundle.pem /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
-RUN ln -s /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem  /etc/ssl/certs/ca-bundle.crt && \
-    mv /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt.org && \
-    ln -s /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem  /etc/ssl/certs/ca-certificates.crt && \
-    ln -s /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem /usr/lib/ssl/cert.pem && \
-    mkdir -p /etc/pki/ca-trust/extracted/openssl
-
-# ------------------------------------------------------------------------
 USER root
 
 # Load conda profile scripts by default, symlink target doesn't exist for a bit
 RUN ln -s ${CONDA_DIR}/etc/profile.d/conda.sh /etc/profile.d/conda.sh
 
-# BUG: remove this!!!
-RUN npm config set strict-ssl false
+# This must be run after conda installs
+RUN npm config -g set cafile /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
 
-USER ${NB_UID}
+RUN git config --global http.sslCAinfo /etc/ssl/certs/ca-certificates.crt
+
+# ------------------------------------------------------------------------
+RUN git config --global http.sslCAinfo /etc/ssl/certs/ca-certificates.crt
+
 COPY base.yml /tmp/base.yml
 RUN ${CONDA_VER} update --quiet --name base conda && \
     ${CONDA_VER} env update --name base -f /tmp/base.yml && \
     ${CONDA_VER} init --all     && \
     ${CONDA_VER} install --quiet conda-build && \
     ${CONDA_VER} build purge-all
-
-USER root
-RUN npm config set cafile /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
 
 USER ${NB_UID}
 RUN jupyter labextension install @jupyterlab/server-proxy && \
@@ -158,8 +142,6 @@ RUN jupyter labextension install @jupyterlab/server-proxy && \
     rm -rf "/home/${NB_USER}/.node-gyp"
 
 # ------------------------------------------------------------------------
-# More SSL/TLS cert setup
-
 USER root
 
 # Keep Xfce directories out of home and set up shortcuts for DS9.

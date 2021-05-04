@@ -62,8 +62,9 @@ RUN cd /data && tar zxf qcptcokkbx7fgi3c00w2732yezkxzb99.gz && \
 
 # Install sextractor under /usr/local
 RUN cd /tmp && \
-    curl -sSL https://github.com/astromatic/sextractor/archive/2.25.0.tar.gz | tar -xzf - && \
-    cd sextractor-2.25.0 && \
+    wget https://github.com/astromatic/sextractor/archive/master.zip && \
+    unzip master.zip && \
+    cd sextractor-master && \
     sh autogen.sh && \
     ./configure --prefix=/usr/local && \
     make && \
@@ -100,10 +101,10 @@ RUN /opt/common-scripts/fix-certs
 COPY --chown=${NB_UID}:${NB_GID} environments/test    /opt/environments/test
 
 # Install security patches now that build is complete;  potentially this could be done sooner
-RUN apt-get update && \
-    apt-get dist-upgrade --yes && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+# -- RUN apt-get update && \
+# --     apt-get dist-upgrade --yes && \
+# --     apt-get clean && \
+# --     rm -rf /var/lib/apt/lists/*
 
 # For standalone operation outside JupyterHub,  note that  /etc also includes
 # common home directory files.

@@ -1,0 +1,82 @@
+
+#! /bin/bash -eu
+
+# This script is used to generate a new version of an existing image by running
+# a patch script inside a container created from the image.  The container is
+# then commited using "docker commit ..." to store it's writable layer in a new
+# image.   See doc/SCRIPTS.md for more info on using this script.
+#
+# WARNING: use this sparingly because the transparency of the image build is
+# more limited than a Dockerfile based build.
+#
+# WARNING: this script starts with the local image defined by setup-env and
+# eventually replaces that tag with the patched image.  The original image continues
+# to exist and is part of the patched image...  but it is no longer tagged that way.
+
+if [ $# -lt 3 ]; then
+    echo "usage:  patch-image  patch-script   admin-email   description  [source-image-hash]"
+    exit 2
+fi
+
+PATCH_FILE=$1
+ADMIN_EMAIL=$2
+DESCRIPTION=$3
+
+# By default,  use the hash of $IMAGE_ID as defined in setup-env for source image
+IMAGE_HASH=` docker image ls ${IMAGE_ID} | tail -1 | awk '{ print $3; }'`
+
+# Otherwise use the value of the 4th parameter as the hash of the source image
+SRC_HASH=${4:-${IMAGE_HASH}}
+
+PATCH_DIR=/opt/patches/${SRC_HASH}
+INSTALLED_PATCH=${PATCH_DIR}/`basename $PATCH_FILE`
+
+PATCH_CONTAINER=image-patched
+
+# -----------------------------------------------------------------------------------
+docker container rm -f ${PATCH_CONTAINER}  >& /dev/null
+
+# Start a container to use as a target for cp and exec;  use sleep to keep it running.
+echo "========= Starting container ${PATCH_CONTAINER} from image ${SRC_HASH}"
+docker run -d --name ${PATCH_CONTAINER} ${SRC_HASH} /bin/sleep 3600000  >& /dev/null
+
+# Inside container,  create patch history directory specific to source image.
+echo "========= Creating patch directory ${PATCH_DIR} in container ${PATCH_CONTAINER}"
+docker container exec --user root ${PATCH_CONTAINER} /bin/mkdir -p ${PATCH_DIR}
+
+# Store docker inspect output for source image in container
+echo "========= Storing 'docker inspect ${SRC_HASH}' in container as ${PATCH_DIR}/source-inspect.json"
+docker inspect ${SRC_HASH} > source-inspect.json
+docker container cp source-inspect.json ${PATCH_CONTAINER}:${PATCH_DIR}/source-inspect.json
+rm source-inspect.json
+
+# Store metadata for patch in history directory for this patch
+echo "========= Storing patch metadata in container as ${PATCH_DIR}/metadata.yaml"
+cat >metadata.yaml  <<EOF
+author: "${ADMIN_EMAIL}"
+description: "${DESCRIPTION}"
+EOF
+docker container cp metadata.yaml ${PATCH_CONTAINER}:${PATCH_DIR}/metadata.yaml
+rm metadata.yaml
+
+# Store the patch script in the container history directory for this patch
+echo "========= Copying script ${PATCH_FILE} into container as ${INSTALLED_PATCH}"
+docker container cp $PATCH_FILE   ${PATCH_CONTAINER}:$INSTALLED_PATCH
+
+# Execute the patch script inside the container and capture log output to patch.log
+echo "========= Executing script ${PATCH_FILE} in container, logging to ${PATCH_DIR}/patch.log"
+docker container exec --user root --workdir ${PATCH_DIR}  ${PATCH_CONTAINER}  /bin/bash -x ${INSTALLED_PATCH}  2>&1 | tee patch.log
+docker container cp patch.log ${PATCH_CONTAINER}:${PATCH_DIR}/patch.log
+rm patch.log
+
+# Make sure final user is jovyan again
+echo "========== Reverting current user in container to jovyan"
+docker container exec --user root ${PATCH_CONTAINER}  su jovyan
+
+# Snapshot the side effects from exec and cp into a new image with the old tag.
+echo "========== Saving container ${PATCH_CONTAINER} in new image ${IMAGE_ID}"
+docker commit  -a "${ADMIN_EMAIL}" -m "${DESCRIPTION}"  --change 'CMD ["start-notebook.sh"]'  ${PATCH_CONTAINER}  ${IMAGE_ID}   >& /dev/null
+
+# Stop and remove the container used to create the patch image.
+echo "========== Stopping and removing container ${PATCH_CONTAINER}"
+docker container rm -f ${PATCH_CONTAINER} >& /dev/null
