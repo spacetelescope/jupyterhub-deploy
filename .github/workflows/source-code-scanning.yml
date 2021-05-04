@@ -35,14 +35,14 @@ jobs:
            tools/image-configure ${{ matrix.DEPLOYMENT_NAME }}  ${{ matrix.USE_FROZEN }}
            df -h
 
-      - name: Snyk Python-3.8 Security Scan
-        continue-on-error: false
-        if: ${{ github.event_name == 'push' }}
-        uses: snyk/actions/python-3.8@master
-        env:
-           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-           args: --severity-threshold=high
+      # - name: Snyk Python-3.8 Security Scan
+      #   continue-on-error: false
+      #   if: ${{ github.event_name == 'push' }}
+      #   uses: snyk/actions/python-3.8@master
+      #   env:
+      #      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      #   with:
+      #      args: --severity-threshold=high
 
       - name: Bandit Scan
         continue-on-error: false
