@@ -1,0 +1,9 @@
+#! /bin/bash
+
+cd $IMAGE_DIR
+
+image-login
+
+echo "================================== Pulling ${IMAGE_ID} =============================="
+docker image rm $IMAGE_ID
+docker pull $IMAGE_ID

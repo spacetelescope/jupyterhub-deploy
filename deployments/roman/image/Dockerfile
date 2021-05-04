@@ -101,10 +101,10 @@ RUN /opt/common-scripts/fix-certs
 COPY --chown=${NB_UID}:${NB_GID} environments/test    /opt/environments/test
 
 # Install security patches now that build is complete;  potentially this could be done sooner
-RUN apt-get update && \
-    apt-get dist-upgrade --yes && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+# -- RUN apt-get update && \
+# --     apt-get dist-upgrade --yes && \
+# --     apt-get clean && \
+# --     rm -rf /var/lib/apt/lists/*
 
 # For standalone operation outside JupyterHub,  note that  /etc also includes
 # common home directory files.

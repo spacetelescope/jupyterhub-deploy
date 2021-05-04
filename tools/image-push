@@ -1,12 +1,14 @@
 #! /bin/bash -eu
 
-# Log into the container registry and push the current image.
+# Log into the container registry and push the current image
 
 cd $IMAGE_DIR
 
 image-login
 
-# docker push ${COMMON_ID}
+UNSCANNED_ID=`echo $IMAGE_ID | perl -pi -e 's/:latest/:unscanned-latest/g'`
 
-echo "================================== Pushing ${IMAGE_ID} =============================="
-docker push ${IMAGE_ID}
+echo "================================== Pushing ${IMAGE_ID} as ${UNSCANNED_ID} =============================="
+# docker image tag $IMAGE_ID $UNSCANNED_ID
+# docker push ${UNSCANNED_ID}
+docker push ${IMAGE_ID}       # XXX comment out / remove this once ITSD quarantine scheme is in place.
