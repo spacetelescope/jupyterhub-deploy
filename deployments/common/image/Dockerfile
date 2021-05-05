@@ -111,7 +111,7 @@ RUN npm config -g set cafile /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
 RUN git config --global http.sslCAinfo /etc/ssl/certs/ca-certificates.crt
 
 # ------------------------------------------------------------------------
-RUN git config --global http.sslCAinfo /etc/ssl/certs/ca-certificates.crt
+USER ${NB_UID}
 
 COPY base.yml /tmp/base.yml
 RUN ${CONDA_VER} update --quiet --name base conda && \
@@ -120,8 +120,8 @@ RUN ${CONDA_VER} update --quiet --name base conda && \
     ${CONDA_VER} install --quiet conda-build && \
     ${CONDA_VER} build purge-all
 
-USER ${NB_UID}
-RUN jupyter labextension install @jupyterlab/server-proxy && \
+#RUN jupyter labextension install @jupyterlab/server-proxy && \
+RUN jupyter labextension install @jupyterlab/server-proxy @jupyter-widgets/jupyterlab-manager ipyevents jupyter-vuetify jupyter-golden-layout jupyter-splitpanes d3-selection-multi bqplot-image-gl && \
     jupyter nbextension enable --py --sys-prefix ipyevents && \
     jupyter nbextension install --py --sys-prefix widgetsnbextension && \
     jupyter nbextension enable --py --sys-prefix widgetsnbextension && \

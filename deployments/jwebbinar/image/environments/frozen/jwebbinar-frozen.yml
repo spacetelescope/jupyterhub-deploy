@@ -54,15 +54,15 @@ dependencies:
     - astroscrappy==1.0.8
     - async-generator==1.10
     - attrs==20.3.0
-    - awscli==1.19.64
+    - awscli==1.19.65
     - babel==2.9.1
     - backcall==0.2.0
     - beautifulsoup4==4.9.3
-    - black==21.4b2
+    - black==21.5b0
     - bleach==3.3.0
     - bokeh==2.3.1
-    - boto3==1.17.64
-    - botocore==1.20.64
+    - boto3==1.17.65
+    - botocore==1.20.65
     - cached-property==1.5.2
     - cffi==1.14.5
     - chardet==4.0.0
@@ -172,7 +172,7 @@ dependencies:
     - pyrsistent==0.17.3
     - pysiaf==0.11.0
     - pysynphot==1.0.0
-    - pytest==6.2.3
+    - pytest==6.2.4
     - pytest-cov==2.11.1
     - pytest-doctestplus==0.9.0
     - pytest-openfiles==0.5.0

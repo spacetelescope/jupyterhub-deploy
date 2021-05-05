@@ -35,9 +35,12 @@ RUN mkdir /data && cd /data && \
     chmod -R a+r /data/webbpsf-data
 
 # Install sextractor under /usr/local
+# NOTE: using master because this fix is required:
+#       https://github.com/astromatic/sextractor/commit/46dd48faff6a7b59939096ba55e83e02e865ddfc
 RUN cd /tmp && \
-    curl -sSL https://github.com/astromatic/sextractor/archive/2.25.0.tar.gz | tar -xzf - && \
-    cd sextractor-2.25.0 && \
+    wget https://github.com/astromatic/sextractor/archive/master.zip && \
+    unzip master.zip && \
+    cd sextractor-master && \
     sh autogen.sh && \
     ./configure --prefix=/usr/local && \
     make && \
@@ -90,15 +93,39 @@ USER root
 
 # Install additional lab and notebook extensions
 USER ${NB_UID}
-RUN jupyter nbextension install --py --sys-prefix widgetsnbextension && \
+#RUN jupyter nbextension install --py --sys-prefix widgetsnbextension && \
+#    jupyter nbextension enable --py --sys-prefix widgetsnbextension && \
+#    jupyter nbextension install --py --sys-prefix ipyevents && \
+#    jupyter nbextension enable --py --sys-prefix ipyevents && \
+#    jupyter nbextension install --py --sys-prefix ipyvuetify && \
+#    jupyter nbextension enable --py --sys-prefix ipyvuetify && \
+#    jupyter nbextension install --py --sys-prefix jupyter-golden-layout && \
+#    jupyter nbextension enable --py --sys-prefix  jupyter-golden-layout && \
+#    jupyter nbextension install --py --sys-prefix ipysplitpanes && \
+#    jupyter nbextension enable --py --sys-prefix  ipysplitpanes && \
+    #jupyter labextension install @jupyterlab/server-proxy @jupyter-widgets/jupyterlab-manager ipyevents jupyter-vuetify jupyter-golden-layout jupyter-splitpanes d3-selection-multi bqplot-image-gl && \
+#    jupyter labextension install @jupyterlab/server-proxy @jupyter-widgets/jupyterlab-manager ipyevents jupyter-vuetify ipygoldenlayout ipysplitpanes d3-selection-multi bqplot-image-gl && \
+#    jupyter labextension update --all && \
+#    jupyter lab build -y && \
+#    jupyter lab clean -y && \
+#    npm cache clean --force && \
+#    rm -rf "/home/${NB_USER}/.cache/yarn" && \
+#    rm -rf "/home/${NB_USER}/.node-gyp"
+
+RUN jupyter labextension install @jupyterlab/server-proxy @jupyter-widgets/jupyterlab-manager ipyevents jupyter-vuetify jupyter-golden-layout jupyter-splitpanes d3-selection-multi bqplot-image-gl && \
+    jupyter nbextension enable --py --sys-prefix ipyevents && \
+    jupyter nbextension install --py --sys-prefix widgetsnbextension && \
     jupyter nbextension enable --py --sys-prefix widgetsnbextension && \
     jupyter nbextension install --py --sys-prefix ipyevents && \
     jupyter nbextension enable --py --sys-prefix ipyevents && \
     jupyter nbextension install --py --sys-prefix ipyvuetify && \
     jupyter nbextension enable --py --sys-prefix ipyvuetify && \
-    #jupyter labextension install @jupyterlab/server-proxy @jupyter-widgets/jupyterlab-manager ipyevents bqplot jupyter-vuetify jupyter-golden-layout jupyter-splitpanes d3-selection-multi bqplot-image-gl && \
-    jupyter labextension install @jupyterlab/server-proxy @jupyter-widgets/jupyterlab-manager ipyevents jupyter-vuetify jupyter-golden-layout jupyter-splitpanes d3-selection-multi bqplot-image-gl && \
-    jupyter labextension update --all && \
+    jupyter nbextension install --py --sys-prefix ipysplitpanes && \
+    jupyter nbextension enable --py --sys-prefix ipysplitpanes && \
+    jupyter nbextension install --py --sys-prefix bqplot && \
+    jupyter nbextension enable --py --sys-prefix bqplot && \
+    jupyter nbextension install --py --sys-prefix bqplot_image_gl && \
+    jupyter nbextension enable --py --sys-prefix bqplot_image_gl && \
     jupyter lab build -y && \
     jupyter lab clean -y && \
     npm cache clean --force && \
