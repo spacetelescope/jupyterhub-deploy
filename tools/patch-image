@@ -14,7 +14,7 @@
 # to exist and is part of the patched image...  but it is no longer tagged that way.
 
 if [ $# -lt 3 ]; then
-    echo "usage:  patch-image  patch-script   admin-email   description  [source-image-hash]"
+    echo "usage:  patch-image  <patch-script>   <admin-email>   <description>  [<source-image-hash>]"
     exit 2
 fi
 
