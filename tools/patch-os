@@ -1,0 +1,21 @@
+#! /bin/bash
+
+set -eu
+
+# This script is used to generate a new version of an existing image after
+# performing an OS update.
+#
+
+if [ $# -lt 1 ]; then
+    echo "usage:  patch-os  <admin-email>   [<description>]  [<source-image-hash>]"
+    exit 2
+fi
+
+ADMIN_EMAIL=$1
+DESCRIPTION=${2:-"OS update"}
+IMAGE_HASH=${3:-""}
+
+# -----------------------------------------------------------------------------------
+cd $JUPYTERHUB_DIR
+
+patch-image  tools/apt-upgrade    "${ADMIN_EMAIL}"   "${DESCRIPTION}"   "${IMAGE_HASH}"
