@@ -1,4 +1,4 @@
-name: jdaviz
+^[[Aname: jdaviz
 channels:
   - conda-forge
 dependencies:
