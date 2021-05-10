@@ -58,15 +58,6 @@ USER ${NB_UID}
 COPY --chown=${NB_UID}:${NB_GID} environments/frozen /opt/environments/frozen
 
 # ----------------------------------------------------------------------
-# BUG: ds9 is installed in the jwebbinar kernel, but it's included also include in the
-#      common image in it's own kernel.  To avoid cluttering up the Launcher tab,
-#      remove the ds9 environment
-RUN conda env remove --name ds9
-
-#USER root
-#RUN chmod +x /opt/conda/envs/jwebbinar/bin/ds9
-
-# ----------------------------------------------------------------------
 # JWebbinar
 COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/ /opt/environments/jwebbinar
 RUN /opt/common-scripts/env-create jwebbinar /opt/environments/jwebbinar/jwebbinar.yml
@@ -165,8 +156,5 @@ RUN cp -r /etc/default-home-contents/* /home/jovyan && \
 
 USER $NB_USER
 WORKDIR /home/$NB_USER
-
-#  &&\
-#    fix-permissions  /opt/environments     # Docker cache buster?
 
 CMD [ "start-notebook.sh" ]

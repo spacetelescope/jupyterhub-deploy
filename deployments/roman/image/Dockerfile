@@ -23,36 +23,10 @@ ENV CRDS_SERVER_URL=https://jwst-crds.stsci.edu
 ENV CRDS_VERBOSITY=20
 
 # ----------------------------------------------------------------------
-# Install environments
-
-USER ${NB_UID}
-
-# All specs for frozen builds need to be available before their normal installs
-COPY --chown=${NB_UID}:${NB_GID} environments/frozen/  /opt/environments/frozen
-
-# Roman CAL
-COPY --chown=${NB_UID}:${NB_GID} environments/roman-cal/ /opt/environments/roman-cal
-# RUN /opt/common-scripts/env-clone base roman-cal   # too many conflicts
-RUN /opt/common-scripts/env-create  roman-cal /opt/environments/roman-cal/roman-cal.yml
-RUN /opt/common-scripts/install-common roman-cal
-RUN /opt/common-scripts/env-update  roman-cal /opt/environments/roman-cal/roman-cal.pip
-RUN /opt/common-scripts/env-update  roman-cal /opt/environments/roman-cal/octarine.pip
-
-# MIRAGE
-COPY --chown=${NB_UID}:${NB_GID} environments/mirage/ /opt/environments/mirage
-# RUN /opt/common-scripts/env-create  mirage /opt/environments/mirage/mirage.yml
-RUN /opt/common-scripts/env-clone base mirage
-RUN /opt/common-scripts/env-update  mirage /opt/environments/mirage/mirage.pip
-RUN /opt/common-scripts/install-common mirage
-
-# CVT
-COPY --chown=${NB_UID}:${NB_GID} environments/cvt/ /opt/environments/cvt
-RUN /opt/common-scripts/env-clone  base   cvt
-# RUN /opt/common-scripts/env-create  cvt /opt/environments/cvt/cvt.yml
-RUN /opt/common-scripts/install-common cvt
+USER root
 
 # ----------------------------------------------------------------------
-USER root
+# UNIX build unaffected by environments
 
 # Get webbpsf-data-0.9.0.tar.gz
 RUN mkdir /data && cd /data && \
@@ -61,6 +35,8 @@ RUN cd /data && tar zxf qcptcokkbx7fgi3c00w2732yezkxzb99.gz && \
     rm qcptcokkbx7fgi3c00w2732yezkxzb99.gz && chmod -R a+r /data/webbpsf-data
 
 # Install sextractor under /usr/local
+# NOTE: using master because this fix is required:
+#       https://github.com/astromatic/sextractor/commit/46dd48faff6a7b59939096ba55e83e02e865ddfc
 RUN cd /tmp && \
     wget https://github.com/astromatic/sextractor/archive/master.zip && \
     unzip master.zip && \
@@ -69,6 +45,54 @@ RUN cd /tmp && \
     ./configure --prefix=/usr/local && \
     make && \
     make install
+
+# ------------------------------------------------------------------------------
+# Install environments
+
+# All specs for frozen builds need to be available before their normal installs
+USER ${NB_UID}
+
+COPY --chown=${NB_UID}:${NB_GID} environments/frozen/  /opt/environments/frozen
+
+# ------------------------------------------------------------------------------
+# MIRAGE
+# RUN /opt/common-scripts/env-create  mirage /opt/environments/mirage/mirage.yml
+RUN /opt/common-scripts/env-clone base mirage
+
+COPY --chown=${NB_UID}:${NB_GID} environments/mirage/mirage.pip /opt/environments/mirage/mirage.pip
+RUN /opt/common-scripts/env-update  mirage /opt/environments/mirage/mirage.pip
+
+RUN /opt/common-scripts/install-common mirage
+
+# ------------------------------------------------------------------------------
+# CVT
+RUN /opt/common-scripts/env-clone  base   cvt
+
+COPY --chown=${NB_UID}:${NB_GID} environments/cvt/cvt.yml /opt/environments/cvt.yml
+RUN /opt/common-scripts/env-create  cvt /opt/environments/cvt/cvt.yml
+
+RUN /opt/common-scripts/install-common cvt
+
+# ----------------------------------------------------------------------
+# Roman CAL
+# RUN /opt/common-scripts/env-clone base roman-cal   # too many conflicts
+
+COPY --chown=${NB_UID}:${NB_GID} environments/roman-cal/roman-cal.yml /opt/environments/roman-cal/roman-cal.yml
+RUN /opt/common-scripts/env-create  roman-cal /opt/environments/roman-cal/roman-cal.yml
+
+COPY --chown=${NB_UID}:${NB_GID} environments/roman-cal/roman-cal.pip /opt/environments/roman-cal/roman-cal.pip
+RUN /opt/common-scripts/env-update  roman-cal /opt/environments/roman-cal/roman-cal.pip
+
+COPY --chown=${NB_UID}:${NB_GID} environments/roman-cal/octarine.pip /opt/environments/roman-cal/octarine.pip
+RUN /opt/common-scripts/env-update  roman-cal /opt/environments/roman-cal/octarine.pip
+
+RUN /opt/common-scripts/install-common roman-cal
+
+# ------------------------------------------------------------------------------
+# All environments files,  including test files
+COPY --chown=${NB_UID}:${NB_GID} environments/  /opt/environments
+
+RUN /opt/environments/post-start-hook
 
 # ========================= ^^^^^ Custom  ^^^^^ =========================
 # ========================= vvvvv Generic vvvvv  =========================
@@ -114,8 +138,5 @@ RUN cp -r /etc/default-home-contents/* /home/jovyan && \
 
 USER $NB_USER
 WORKDIR /home/$NB_USER
-
-#  &&\
-#    fix-permissions  /opt/environments     # Docker cache buster?
 
 CMD [ "start-notebook.sh" ]

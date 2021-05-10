@@ -1,4 +1,0 @@
-name: ds9
-channels:
-  - conda-forge
-prefix: /opt/conda/envs/ds9

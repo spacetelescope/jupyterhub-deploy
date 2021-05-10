@@ -1,0 +1,73 @@
+#!/bin/bash
+
+# ------------------------------------------------------------------------------------
+#
+# This file is used to initialize aspects of JupyterHub which are common to both
+# cloud and standalone usage.  post start actions which are unique to the cloud
+# should be placed either in the config YAML or in another file so that they
+# don't break the standalone/CI use case.   Only this file should be called from
+# both the Dockerfile and the hub post start hook.
+#
+# This file implements:
+#
+# 1. Setup and update of the default-home-contents
+#
+# 2. Notebook setup for class and test notebooks.
+#
+# It should not implement e.g. CRDS symlink setup which is tied to EFS/cloud
+# and won't work standalone.
+#
+# It's a good idea to keep this relatively light weight / short running.
+#
+set -eu
+
+rsync -r /etc/default-home-contents/ /home/jovyan
+
+# .............................................................................................
+
+git clone https://github.com/spacetelescope/tike_content /home/jovyan/tike_content
+TESS_ALL_NOTEBOOKS=`find /home/jovyan/tike_content/code/test_notebooks -name '*.ipynb'`
+
+/opt/common-scripts/set-notebook-kernel tess 'TESS' ${TESS_ALL_NOTEBOOKS}
+
+mkdir -p /opt/environments/tess/tests
+echo /home/jovyan/tike_content/code/test-cloud-lightkurve.py >>/opt/environments/tess/tests/notebooks
+
+# echo /home/jovyan/tike_content/code/test_notebooks/packages_priority1.ipynb >>/opt/environments/tess/tests/notebooks
+
+echo /home/jovyan/tike_content/code/test_notebooks/packages_priority2.ipynb >>/opt/environments/tess/tests/notebooks
+
+mkdir -p /opt/environments/exoplanet/tests
+echo /home/jovyan/tike_content/code/test_notebooks/packages_priority3.ipynb >>/opt/environments/exoplanet/tests/notebooks
+
+# .............................................................................................
+# This is legacy content from prior Tess deployments.  Move to $HOME?
+# git clone https://github.com/spacetelescope/tessworkshop_tutorials.git  /opt/tessworkshop_tutorials
+git clone https://github.com/spacetelescope/notebooks.git   /home/jovyan/spacetelescope-notebooks
+
+MAST_NOTEBOOKS=`find /home/jovyan/spacetelescope-notebooks/notebooks/MAST/TESS  -name '*.ipynb'`
+
+# echo "${MAST_NOTEBOOKS}" >>/opt/environments/tess/tests/notebooks
+for notebook in \
+    /home/jovyan/spacetelescope-notebooks/notebooks/MAST/TESS/beginner_how_to_use_lc/beginner_how_to_use_lc.ipynb \
+    /home/jovyan/spacetelescope-notebooks/notebooks/MAST/TESS/beginner_how_to_use_dvt/beginner_how_to_use_dvt.ipynb \
+    /home/jovyan/spacetelescope-notebooks/notebooks/MAST/TESS/beginner_tour_lc_tp/beginner_tour_lc_tp.ipynb \
+    /home/jovyan/spacetelescope-notebooks/notebooks/MAST/TESS/tess_removing_scattered_light_using_regression/tess_removing_scattered_light_using_regression.ipynb \
+    /home/jovyan/spacetelescope-notebooks/notebooks/MAST/TESS/beginner_tess_exomast/beginner_tess_exomast.ipynb \
+    /home/jovyan/spacetelescope-notebooks/notebooks/MAST/TESS/beginner_tic_search_hd209458/beginner_tic_search_hd209458.ipynb \
+    /home/jovyan/spacetelescope-notebooks/notebooks/MAST/TESS/interm_gi_query/interm_gi_query.ipynb \
+    /home/jovyan/spacetelescope-notebooks/notebooks/MAST/TESS/beginner_astroquery_dv/beginner_astroquery_dv.ipynb \
+    /home/jovyan/spacetelescope-notebooks/notebooks/MAST/TESS/beginner_how_to_use_ffi/beginner_how_to_use_ffi.ipynb \
+    /home/jovyan/spacetelescope-notebooks/notebooks/MAST/TESS/beginner_how_to_use_tp/beginner_how_to_use_tp.ipynb;
+do
+    /opt/common-scripts/set-notebook-kernel tess 'TESS' $notebook
+    echo $notebook >> /opt/environments/tess/tests/notebooks
+done
+
+# FAILING:
+#    /home/jovyan/spacetelescope-notebooks/notebooks/MAST/TESS/interm_tasc_lc/interm_tasc_lc.ipynb \
+#    /home/jovyan/spacetelescope-notebooks/notebooks/MAST/TESS/interm_tesscut_dss_overlay/interm_tesscut_dss_overlay.ipynb \
+#    /home/jovyan/spacetelescope-notebooks/notebooks/MAST/TESS/interm_tesscut_astroquery/interm_tesscut_astroquery.ipynb \
+#    /home/jovyan/spacetelescope-notebooks/notebooks/MAST/TESS/interm_tess_prf_retrieve/interm_tess_prf_retrieve.ipynb \
+#    /home/jovyan/spacetelescope-notebooks/notebooks/MAST/TESS/beginner_tess_tap_search/beginner_tess_tap_search.ipynb \
+#    /home/jovyan/spacetelescope-notebooks/notebooks/MAST/TESS/interm_tesscut_requests/interm_tesscut_requests.ipynb \

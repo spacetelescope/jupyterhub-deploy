@@ -6,26 +6,6 @@ FROM $BASE_IMAGE AS build
 ARG USE_FROZEN=1
 ENV USE_FROZEN=$USE_FROZEN
 
-# ----------------------------------------------------------------------
-# Install environments
-
-USER ${NB_UID}
-
-# All specs for frozen builds need to be available before their normal installs
-COPY --chown=${NB_UID}:${NB_GID} environments/frozen/ /opt/environments/frozen
-
-# TESS
-COPY --chown=${NB_UID}:${NB_GID} environments/tess/ /opt/environments/tess
-RUN /opt/common-scripts/env-clone  base  tess
-# RUN /opt/common-scripts/env-create  tess /opt/environments/tess/tess.yml
-RUN /opt/common-scripts/install-common tess
-RUN /opt/common-scripts/env-update  tess /opt/environments/tess/tess.pip
-
-# ----------------------------------------------------------------------
-USER $NB_UID
-
-RUN /opt/common-scripts/kernel-setup
-
 # ---------------------------------------------------------------
 # VARTOOLS Light Curve Analysis Program
 USER root
@@ -40,22 +20,61 @@ RUN curl --silent --show-error https://www.astro.princeton.edu/~jhartman/vartool
    rm -rf vartools-1.38 vartools-1.38.tar.gz
 
 # ----------------------------------------------------------------------
-USER root
-RUN mkdir /opt/tessworkshop_tutorials
-RUN chmod 777 /opt/tessworkshop_tutorials
+# Install environments
 
-RUN mkdir /opt/notebooks
-RUN chmod 777 /opt/notebooks
+USER ${NB_UID}
 
-COPY --chown=${NB_UID}:${NB_GID} setup-home /opt
 
-USER $NB_UID
 
-# Might want to move these into setup-home
-RUN git clone https://github.com/spacetelescope/tessworkshop_tutorials.git /opt/tessworkshop_tutorials
-RUN git clone https://github.com/spacetelescope/notebooks.git /opt/notebooks
+# --------------------------- TESS -------------------------------------
+# ---- RUN /opt/common-scripts/env-clone  base  tess &&\
+# ----     /opt/common-scripts/env-update tess /opt/environments/tess/tess.yml  &&\
 
-RUN /opt/setup-home
+COPY --chown=${NB_UID}:${NB_GID} environments/tess/tess.yml /opt/environments/tess/tess.yml
+RUN /opt/common-scripts/env-create  tess /opt/environments/tess/tess.yml
+
+RUN /opt/common-scripts/install-common tess
+
+COPY --chown=${NB_UID}:${NB_GID} environments/tess/basic.pip  /opt/environments/tess/basic.pip
+RUN /opt/common-scripts/env-update  tess /opt/environments/tess/basic.pip
+
+COPY --chown=${NB_UID}:${NB_GID} environments/tess/tess.pip  /opt/environments/tess/tess.pip
+RUN /opt/common-scripts/env-update  tess /opt/environments/tess/tess.pip
+
+# COPY --chown=${NB_UID}:${NB_GID} environments/tess/ml.pip  /opt/environments/tess/ml.pip
+# RUN /opt/common-scripts/env-update  tess /opt/environments/tess/ml.pip
+
+# --------------------------- EXOPLANET -------------------------------------
+
+COPY --chown=${NB_UID}:${NB_GID} environments/exoplanet/exoplanet.yml /opt/environments/exoplanet/exoplanet.yml
+RUN /opt/common-scripts/env-create  exoplanet /opt/environments/exoplanet/exoplanet.yml
+
+RUN /opt/common-scripts/install-common exoplanet
+
+COPY --chown=${NB_UID}:${NB_GID} environments/exoplanet/basic.pip  /opt/environments/exoplanet/basic.pip
+RUN /opt/common-scripts/env-update  exoplanet /opt/environments/exoplanet/basic.pip
+
+COPY --chown=${NB_UID}:${NB_GID} environments/exoplanet/exoplanet.pip  /opt/environments/exoplanet/exoplanet.pip
+RUN /opt/common-scripts/env-update  exoplanet /opt/environments/exoplanet/exoplanet.pip
+
+COPY --chown=${NB_UID}:${NB_GID} environments/exoplanet/ml.pip  /opt/environments/exoplanet/ml.pip
+RUN /opt/common-scripts/env-update  exoplanet /opt/environments/exoplanet/ml.pip
+
+# ----------------------------------------------------------------------
+# Do this only if incremental builds succeed since it busts the cache
+# if anything changed.
+COPY --chown=${NB_UID}:${NB_GID} environments/ /opt/environments
+
+# ----------------------------------------------------------------------
+# Run the hook script for updates which are common to both the standalone
+# image and to hub cloud operation.
+#
+COPY environments/post-start-hook  /opt/environments/post-start-hook
+RUN /opt/environments/post-start-hook
+
+# Tensorflow
+# ENV TF_XLA_FLAGS='--tf_xla_enable_xla_devices'.
+# ENV CUDA_VISIBLE_DEVICES = "-1"
 
 # ========================= ^^^^^ Custom  ^^^^^ =========================
 # ========================= vvvvv Generic vvvvv  =========================
@@ -101,8 +120,5 @@ RUN cp -r /etc/default-home-contents/* /home/jovyan && \
 
 USER $NB_USER
 WORKDIR /home/$NB_USER
-
-#  &&\
-#    fix-permissions  /opt/environments     # Docker cache buster?
 
 CMD [ "start-notebook.sh" ]

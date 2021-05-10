@@ -1,0 +1,59 @@
+#! /bin/bash
+
+# This script is used to launch a Docker container based on the common base
+# image so that a developer can incrementally execute steps of the common or
+# mission Dockerfiles.  As part of launching the container, this script maps
+# source code from the host Docker machine into the container rw.  This enables
+# a developer to modify specs inside the container session, repeating only the
+# appropriate build steps... and the modifications will appear outside the
+# container in the host's git clone ready for add and commit.  Once the specs
+# and build steps and tests are fully worked out, possibly even frozen, the
+# developer can run the Dockerfile normally to build a full mission image in a
+# repeatable way.
+
+# The principle benefit of this method is that working incrementally inside the
+# container, the developer can avoid constant redownloads and rebuilds of
+# environments which really only have limited changes.  Since our images are so
+# large, simple Docker builds are effectively an O(N^2) problem, because the
+# more content that is in the image, the greater the number of rebuilds
+# required to get it all right, and the greater the time for each build when
+# Docker caching doesn't perform well and more than is necessary is rebuilt.
+
+# Another benefit of this method is that multiple installation steps can be
+# combined into a single RUN in the Dockerfile, which in the case of conda
+# environments can result in major space savings as dependencies for most of
+# the environment are tackled together within the same image layer rather than
+# building up layers which have duplicate content caused by incremental
+# dependency resolution.
+
+# A final benefit of this method is that specs in the Dockerfile can be COPY'ed
+# into the image en masse rather than individually.  The problem with simple
+# mass copies is that they force rebuilds of all artifacts from that stage
+# forward if any file in the blanket COPY has changed.  A problem with copies
+# is that since they are explicit Docker commands executing with reference to
+# the host file system, they cannot be factored out into the env-xxx
+# installation scripts automatically since those can only see the container
+# file system and have no place to copy from.  Unlike the docker run command,
+# docker builds cannot mount external file systems into the build explicitly,
+# so I see no way to avoid the COPY.  While they work, granular copies are
+# tedious, error prone, and result in extra image layers and the resulting
+# performance costs.
+
+set -eu
+
+# To work on earlier layers pass in the name/tag or hash on the command line.
+# Using IMAGE_ID,  build up Dockerfile.custom incrementally resolving problems
+# as you go.
+STARTING_IMAGE=${1:-$IMAGE_ID}
+
+cd ${JUPYTERHUB_DIR}
+
+COMMON_MOUNTS="-v ${JUPYTERHUB_DIR}/deployments/common/image/common-scripts:/opt/common-scripts:rw"
+COMMON_MOUNTS="${COMMON_MOUNTS} -v ${JUPYTERHUB_DIR}/deployments/common/image/common-env:/opt/common-env:rw"
+
+MISSION_MOUNTS="-v ${JUPYTERHUB_DIR}/deployments/${DEPLOYMENT_NAME}/image/environments:/opt/environments:rw"
+
+# skip automatic --rm so files can be recovered from stopped container if needed
+IMAGE_RUN_PARS="-it ${COMMON_MOUNTS} ${MISSION_MOUNTS} -e JH_DEVELOP=1 -e PATH=/opt/TurboVNC/bin:/opt/conda/bin:/opt/conda/condabin:/opt/conda/bin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/common-scripts"
+
+docker run ${IMAGE_RUN_PARS} ${STARTING_IMAGE} /bin/bash

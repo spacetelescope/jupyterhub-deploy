@@ -32,6 +32,7 @@ ENV MKL_THREADING_LAYER="GNU"
 ENV CONDA_DIR=/opt/conda
 ENV SHELL=/bin/bash
 ENV PATH=${CONDA_DIR}/bin:${PATH}
+ENV CFLAGS="-fcommon"
 
 # ------------------------------------------------------------------------
 USER root
@@ -120,27 +121,6 @@ RUN ${CONDA_VER} update --quiet --name base conda && \
     ${CONDA_VER} install --quiet conda-build && \
     ${CONDA_VER} build purge-all
 
-#RUN jupyter labextension install @jupyterlab/server-proxy && \
-RUN jupyter labextension install @jupyterlab/server-proxy @jupyter-widgets/jupyterlab-manager ipyevents jupyter-vuetify jupyter-golden-layout jupyter-splitpanes d3-selection-multi bqplot-image-gl && \
-    jupyter nbextension enable --py --sys-prefix ipyevents && \
-    jupyter nbextension install --py --sys-prefix widgetsnbextension && \
-    jupyter nbextension enable --py --sys-prefix widgetsnbextension && \
-    jupyter nbextension install --py --sys-prefix ipyevents && \
-    jupyter nbextension enable --py --sys-prefix ipyevents && \
-    jupyter nbextension install --py --sys-prefix ipyvuetify && \
-    jupyter nbextension enable --py --sys-prefix ipyvuetify && \
-    jupyter nbextension install --py --sys-prefix ipysplitpanes && \
-    jupyter nbextension enable --py --sys-prefix ipysplitpanes && \
-    jupyter nbextension install --py --sys-prefix bqplot && \
-    jupyter nbextension enable --py --sys-prefix bqplot && \
-    jupyter nbextension install --py --sys-prefix bqplot_image_gl && \
-    jupyter nbextension enable --py --sys-prefix bqplot_image_gl && \
-    jupyter lab build -y && \
-    jupyter lab clean -y && \
-    npm cache clean --force && \
-    rm -rf "/home/${NB_USER}/.cache/yarn" && \
-    rm -rf "/home/${NB_USER}/.node-gyp"
-
 # ------------------------------------------------------------------------
 USER root
 
@@ -151,17 +131,30 @@ COPY common-scripts/ /opt/common-scripts
 COPY common-env/ /opt/common-env
 RUN cat /opt/common-scripts/global_bashrc >> /etc/bash.bashrc
 
-USER ${NB_UID}
-COPY environments/ /opt/environments/
+# ----------------------------------------------------------------------
+# Common conda environments
+# USER ${NB_UID}
+# COPY environments/ /opt/environments/
 
 # ----------------------------------------------------------------------
 # Install additional environments common to all deployments
 # These dedicated environments are used when conflicts are unavoidable
 # but the s/w should still be universally available.
 #
-RUN /opt/common-scripts/env-create  ds9 /opt/environments/ds9/ds9.yml
-RUN /opt/common-scripts/install-common ds9
+# RUN /opt/common-scripts/env-create  ds9 /opt/environments/ds9/ds9.yml
+# RUN /opt/common-scripts/install-common ds9  # not needed for standalone ds9
 
+USER root
+# RUN  ln -s /opt/conda/envs/ds9/bin/ds9   /usr/local/bin/ds9
+RUN apt-get update --yes && apt-get install --yes saods9
+
+# ----------------------------------------------------------------------
 # Set up astroquery and ds9 desktop short-cut, will be further
 # augmented by specific deployments
+USER ${NB_UID}
 COPY default-home-contents/   /etc/default-home-contents
+
+# ----------------------------------------------------------------------
+# Add jupyter-lab-extensions to base environment
+
+RUN /opt/common-scripts/jupyter-lab-extension-setup
