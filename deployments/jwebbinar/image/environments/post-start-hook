@@ -1,0 +1,12 @@
+#! /bin/bash
+
+set -eu
+
+# This is a placeholder version of post-start-hook which eventually should
+# fully replace setup-notebooks once common.yaml and this file are appropriately
+# refactored.   This file should container only those functions which need to
+# be performed both on AWS and standalone.  AWS-only functions should be included
+# directly in common.yaml or perhaps another script.
+
+/opt/environments/setup-notebooks
+

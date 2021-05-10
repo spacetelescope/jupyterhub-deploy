@@ -9,5 +9,4 @@ dependencies:
         - freetds
         - fftw
         - pyfftw
-        - ds9
-        - pyds9
+        - python==3.8

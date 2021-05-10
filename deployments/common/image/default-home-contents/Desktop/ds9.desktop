@@ -1,10 +1,10 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=SAOImageDS9
+Name=DS9
 Comment=
-Exec=/opt/conda/envs/ds9/bin/ds9
-Icon=non-starred
+Exec=/usr/bin/ds9
+Icon=application-vnd.oasis.opendocument.chart
 Path=/home/jovyan
 Terminal=false
 StartupNotify=false

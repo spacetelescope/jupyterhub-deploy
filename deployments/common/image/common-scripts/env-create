@@ -37,4 +37,6 @@ else
     ${CONDA_VER} create --name  ${env} python
 fi
 
+/opt/common-scripts/fix-conda-certs   # new env may install new certs
+
 /opt/common-scripts/env-clean

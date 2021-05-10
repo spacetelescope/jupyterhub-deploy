@@ -5,7 +5,7 @@ cd $JUPYTERHUB_DIR
 # Run safety on jupyterhub-deploy requirements.txt and deployment
 # frozen specs to check package dependencies for security issues.
 
-pip freeze >/tmp/requirements.txt
+pip list --format=freeze >/tmp/requirements.txt
 
 sscan-run-safety /tmp/requirements.txt
 

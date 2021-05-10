@@ -34,15 +34,12 @@ COPY --chown=${NB_UID}:${NB_GID} environments/test    /opt/environments/test
 # --     rm -rf /var/lib/apt/lists/*
 
 # For standalone operation outside JupyterHub,  note that  /etc also includes
-# common home directory files.
-
-RUN cp -r /etc/default-home-contents/* /home/jovyan && \
-    fix-permissions  /home/jovyan
+# common home directory files.   post-start-hook may not include everything required
+# for running on AWS,  just common functions needed for both AWS and standalone/CI.
 
 USER $NB_USER
 WORKDIR /home/$NB_USER
 
-#  &&\
-#    fix-permissions  /opt/environments     # Docker cache buster?
+RUN /opt/environments/post-start-hook
 
 CMD [ "start-notebook.sh" ]

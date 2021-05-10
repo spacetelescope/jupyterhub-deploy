@@ -3,3 +3,5 @@ requests
 beautifulsoup4
 lxml
 pyyaml
+safety
+bandit

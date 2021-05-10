@@ -16,4 +16,7 @@ echo "--------------------------------------------------------------------------
 echo "Cloning env $to from env $from"
 ${CONDA_VER} create --name $to  --clone $from
 
+
+/opt/common-scripts/fix-conda-certs   # not sure this is required,  new env may have new certs
+
 /opt/common-scripts/env-clean
