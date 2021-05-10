@@ -3,3 +3,34 @@ jupyterhub:
     continuous:
       # Don't need continuous pre-puller on staging
       enabled: false
+  singleuser:
+    storage:
+      extraVolumes:
+      - name:  preloaded-fits-volume
+        persistentVolumeClaim:
+          claimName: preloaded-fits
+      - name:  preloaded-astropy-volume
+        persistentVolumeClaim:
+          claimName: preloaded-astropy
+      - name:  preloaded-crds-volume
+        persistentVolumeClaim:
+          claimName: preloaded-crds
+      extraVolumeMounts:
+      - name:  preloaded-fits-volume
+        mountPath: /home/shared/preloaded-fits
+        readOnly: true
+      - name:  preloaded-astropy-volume
+        mountPath: /home/shared/preloaded-astropy
+        readOnly: true
+      - name:  preloaded-crds-volume
+        mountPath: /home/shared/preloaded-crds
+        readOnly: true
+    lifecycleHooks:
+      postStart:
+        exec:
+          command:
+            - "sh"
+            - "-c"
+            - >
+              rsync -url /home/shared/preloaded-crds/ /home/jovyan/crds_cache;
+              rsync -url /home/shared/preloaded-astropy/ /home/jovyan/.astropy_cache;
