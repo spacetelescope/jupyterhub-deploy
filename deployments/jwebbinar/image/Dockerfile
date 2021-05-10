@@ -93,24 +93,6 @@ USER root
 
 # Install additional lab and notebook extensions
 USER ${NB_UID}
-#RUN jupyter nbextension install --py --sys-prefix widgetsnbextension && \
-#    jupyter nbextension enable --py --sys-prefix widgetsnbextension && \
-#    jupyter nbextension install --py --sys-prefix ipyevents && \
-#    jupyter nbextension enable --py --sys-prefix ipyevents && \
-#    jupyter nbextension install --py --sys-prefix ipyvuetify && \
-#    jupyter nbextension enable --py --sys-prefix ipyvuetify && \
-#    jupyter nbextension install --py --sys-prefix jupyter-golden-layout && \
-#    jupyter nbextension enable --py --sys-prefix  jupyter-golden-layout && \
-#    jupyter nbextension install --py --sys-prefix ipysplitpanes && \
-#    jupyter nbextension enable --py --sys-prefix  ipysplitpanes && \
-    #jupyter labextension install @jupyterlab/server-proxy @jupyter-widgets/jupyterlab-manager ipyevents jupyter-vuetify jupyter-golden-layout jupyter-splitpanes d3-selection-multi bqplot-image-gl && \
-#    jupyter labextension install @jupyterlab/server-proxy @jupyter-widgets/jupyterlab-manager ipyevents jupyter-vuetify ipygoldenlayout ipysplitpanes d3-selection-multi bqplot-image-gl && \
-#    jupyter labextension update --all && \
-#    jupyter lab build -y && \
-#    jupyter lab clean -y && \
-#    npm cache clean --force && \
-#    rm -rf "/home/${NB_USER}/.cache/yarn" && \
-#    rm -rf "/home/${NB_USER}/.node-gyp"
 
 RUN jupyter labextension install @jupyterlab/server-proxy @jupyter-widgets/jupyterlab-manager ipyevents jupyter-vuetify jupyter-golden-layout jupyter-splitpanes d3-selection-multi bqplot-image-gl && \
     jupyter nbextension enable --py --sys-prefix ipyevents && \
