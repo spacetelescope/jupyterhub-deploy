@@ -11,6 +11,8 @@ gitpuller https://github.com/spacetelescope/jwebbinar_prep current_webbinar jweb
 
 #/opt/common-scripts/set-notebook-kernel jwebbinar JWebbinar jwebbinar_prep/test_environment/pipeline_testenv_nirissdata.ipynb
 
-/opt/common-scripts/set-notebook-kernel jwebbinar JWebbinar jwebbinar_prep/pipeline_products_session/*.ipynb
+#/opt/common-scripts/set-notebook-kernel jwebbinar JWebbinar jwebbinar_prep/pipeline_products_session/*.ipynb
+
+/opt/common-scripts/set-notebook-kernel jdaviz Jdaviz jwebbinar_prep/jdat_session/*.ipynb
 
 # /opt/common-scripts/set-notebook-kernel jwebbinar JWebbinar jwebbinar_prep/imaging_mode/*.ipynb

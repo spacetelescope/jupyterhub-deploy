@@ -108,3 +108,4 @@ jupyter-core
 jupyterlab-widgets
 jupyterlab-pygments
 jupyter-server
+jupyterlab==3.0.11
