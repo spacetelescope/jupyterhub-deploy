@@ -3,13 +3,3 @@ jupyterhub:
     continuous:
       # Don't need continuous pre-puller on staging
       enabled: true
-  singleuser:
-    storage:
-      extraVolumes:
-      - name:  preloaded-fits-volume
-        persistentVolumeClaim:
-          claimName: preloaded-fits
-      extraVolumeMounts:
-      - name:  preloaded-fits-volume
-        mountPath: /home/shared/preloaded-fits
-        readOnly: true
