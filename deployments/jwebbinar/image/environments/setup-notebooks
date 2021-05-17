@@ -13,6 +13,8 @@
 
 #/opt/common-scripts/set-notebook-kernel jwebbinar JWebbinar jwebbinar_prep/pipeline_products_session/*.ipynb
 
-/opt/common-scripts/set-notebook-kernel jdaviz Jdaviz jwebbinar_prep/jdat_session/*.ipynb
+/opt/common-scripts/set-notebook-kernel jwebbinar JWebbinar jwebbinar_prep/imaging_mode/*.ipynb
 
 # /opt/common-scripts/set-notebook-kernel jwebbinar JWebbinar jwebbinar_prep/imaging_mode/*.ipynb
+
+ls -1 /home/jovyan/jwebbinar_prep/imaging_mode/*.ipynb   >/opt/environments/jwebbinar/tests/notebooks

@@ -1,0 +1,14 @@
+#! /bin/bash
+
+# This script is used to initialize the CRDS persistent volume claim by mounting it rw into
+# the CI-node Docker container created by image-test.   When image test runs,  CRDS files cached
+# during the course of running the notebooks pass transparently out to EFS.
+
+set -eu
+
+cd ${JUPYTERHUB_DIR}
+
+export IMAGE_RUN_PARS="${IMAGE_RUN_PARS} -v /home/shared/crds_cache:/home/jovyan/crds_cache:rw -u 0:0"
+
+image-test
+
