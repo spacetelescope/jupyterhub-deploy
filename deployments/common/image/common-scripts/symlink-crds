@@ -9,5 +9,5 @@ for dir in `find . -type d`; do
 done
 
 for f in `find . -type f | sed -e's%^./%%g'`; do
-    ln -s  /home/shared/preloaded-crds/${f}   /home/jovyan/crds_cache/${f}
+    ln -fs  /home/shared/preloaded-crds/${f}   /home/jovyan/crds_cache/${f}
 done
