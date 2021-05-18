@@ -8,7 +8,9 @@ set -eu
 
 cd ${JUPYTERHUB_DIR}
 
-export IMAGE_RUN_PARS="${IMAGE_RUN_PARS} -v /home/shared/crds_cache:/home/jovyan/crds_cache:rw -u 0:0"
+export CRDS_PVC=`ls -1d /efs/preloaded-crds-*`
+
+export IMAGE_RUN_PARS="${IMAGE_RUN_PARS} -v ${CRDS_PVC}:/home/jovyan/crds_cache:rw -u 0:0"
 
 image-test
 

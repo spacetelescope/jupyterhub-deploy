@@ -15,6 +15,4 @@
 
 /opt/common-scripts/set-notebook-kernel jwebbinar JWebbinar jwebbinar_prep/imaging_mode/*.ipynb
 
-# /opt/common-scripts/set-notebook-kernel jwebbinar JWebbinar jwebbinar_prep/imaging_mode/*.ipynb
-
-ls -1 /home/jovyan/jwebbinar_prep/imaging_mode/*.ipynb   >/opt/environments/jwebbinar/tests/notebooks
+ls -1 /home/jovyan/jwebbinar_prep/imaging_mode/*.ipynb  | grep -v __ | grep -v _live  >/opt/environments/jwebbinar/tests/notebooks
