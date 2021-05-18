@@ -64,6 +64,7 @@ jupyterhub:
     extraEnv:
       CRDS_PATH:  /home/jovyan/crds_cache
       CRDS_SERVER_URL: https://jwst-crds.stsci.edu
+      CRDS_CONTEXT: jwst_0717.pmap
     defaultUrl: "/lab"
     memory:
       guarantee: 14G
