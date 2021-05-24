@@ -30,6 +30,8 @@ USER ${NB_UID}
 # ---- RUN /opt/common-scripts/env-clone  base  tess &&\
 # ----     /opt/common-scripts/env-update tess /opt/environments/tess/tess.yml  &&\
 
+COPY --chown=${NB_UID}:${NB_GID}  environments/frozen/  /opt/environments/frozen
+
 COPY --chown=${NB_UID}:${NB_GID} environments/tess/tess.yml /opt/environments/tess/tess.yml
 RUN /opt/common-scripts/env-create  tess /opt/environments/tess/tess.yml
 
