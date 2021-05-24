@@ -93,6 +93,11 @@ RUN    apt-get update --yes && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# ------------------------------------------------------------------------
+# This must be run after conda installs
+RUN /opt/common-scripts/fix-certs
+
+# ------------------------------------------------------------------------
 # Remove light-locker to prevent screen lock
 # BUG: get rid of --no-check-certificate
 RUN wget https://sourceforge.net/projects/turbovnc/files/2.2.6/turbovnc_2.2.6_amd64.deb --no-check-certificate && \
@@ -105,11 +110,6 @@ USER root
 
 # Load conda profile scripts by default, symlink target doesn't exist for a bit
 RUN ln -s ${CONDA_DIR}/etc/profile.d/conda.sh /etc/profile.d/conda.sh
-
-# This must be run after conda installs
-RUN npm config -g set cafile /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
-
-RUN git config --global http.sslCAinfo /etc/ssl/certs/ca-certificates.crt
 
 # ------------------------------------------------------------------------
 USER ${NB_UID}

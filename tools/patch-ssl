@@ -34,24 +34,14 @@ fi
 # Construct "self-extracting" cert patch script with embedded cert
 
 cat >patch-cert  <<EOF
-cat >tls-ca-bundle.pem <<END_CERT
+cs /etc/ssl/certs
+cat >stsci-tls-ca-bundle.pem <<END_CERT
 EOF
 
 cat ${CERT_FILE} >>patch-cert
 
 cat >>patch-cert  <<EOF
 END_CERT
-
-function update_cert {
-  target=$1
-  rm -f target
-  ln -s `pwd`/tls-ca-bundle.pem  ${target}
-}
-
-update_cert   /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
-update_cert   /etc/ssl/certs/ca-bundle.crt
-update_cert   /etc/ssl/certs/ca-certificates.crt
-update_cert   /usr/lib/ssl/cert.pem
 
 /opt/common-scripts/fix-certs
 
