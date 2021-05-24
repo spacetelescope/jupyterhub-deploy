@@ -34,7 +34,7 @@ fi
 # Construct "self-extracting" cert patch script with embedded cert
 
 cat >patch-cert  <<EOF
-cs /etc/ssl/certs
+cd /etc/ssl/certs
 cat >stsci-tls-ca-bundle.pem <<END_CERT
 EOF
 
