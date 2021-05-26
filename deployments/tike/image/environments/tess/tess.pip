@@ -1,5 +1,5 @@
-# radvel binary compatibility with numpy
-numpy<1.20
+# Tensorflow 1.15.5
+numpy~=1.19.0
 
 lightkurve
 eleanor
