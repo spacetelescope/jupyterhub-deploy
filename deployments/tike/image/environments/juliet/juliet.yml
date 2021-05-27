@@ -1,0 +1,13 @@
+name: tess
+channels:
+  - conda-forge
+  - manics
+  - defaults
+dependencies:
+  - python~=3.7.0   # Tensorflow < 2.0.0
+  - freetds
+  - fftw
+  - pyfftw
+  - mkl_fft
+  - mkl
+  - mkl-service

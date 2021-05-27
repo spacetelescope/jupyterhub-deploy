@@ -24,13 +24,25 @@ RUN curl --silent --show-error https://www.astro.princeton.edu/~jhartman/vartool
 
 USER ${NB_UID}
 
+# This enables installation of ALL frozen environments and needs to be at the top
+COPY --chown=${NB_UID}:${NB_GID}  environments/frozen/  /opt/environments/frozen
 
+# --------------------------- JULIET -------------------------------------
+
+COPY --chown=${NB_UID}:${NB_GID} environments/juliet/juliet.yml /opt/environments/juliet/juliet.yml
+RUN /opt/common-scripts/env-create  juliet /opt/environments/juliet/juliet.yml
+
+RUN /opt/common-scripts/install-common juliet
+
+COPY --chown=${NB_UID}:${NB_GID} environments/juliet/basic.pip  /opt/environments/juliet/basic.pip
+RUN /opt/common-scripts/env-update  juliet /opt/environments/juliet/basic.pip
+
+COPY --chown=${NB_UID}:${NB_GID} environments/juliet/juliet.pip  /opt/environments/juliet/juliet.pip
+RUN /opt/common-scripts/env-update  juliet /opt/environments/juliet/juliet.pip
 
 # --------------------------- TESS -------------------------------------
 # ---- RUN /opt/common-scripts/env-clone  base  tess &&\
 # ----     /opt/common-scripts/env-update tess /opt/environments/tess/tess.yml  &&\
-
-COPY --chown=${NB_UID}:${NB_GID}  environments/frozen/  /opt/environments/frozen
 
 COPY --chown=${NB_UID}:${NB_GID} environments/tess/tess.yml /opt/environments/tess/tess.yml
 RUN /opt/common-scripts/env-create  tess /opt/environments/tess/tess.yml
@@ -42,6 +54,10 @@ RUN /opt/common-scripts/env-update  tess /opt/environments/tess/basic.pip
 
 COPY --chown=${NB_UID}:${NB_GID} environments/tess/tess.pip  /opt/environments/tess/tess.pip
 RUN /opt/common-scripts/env-update  tess /opt/environments/tess/tess.pip
+
+# RUN  /opt/common-scripts/env-src-install   https://files.pythonhosted.org/packages/95/5c/2a97a352d0c4ba59a0decf06964f5660a13ac57004014a62fe4a9e2a891a/juliet-2.1.2.tar.gz
+
+# RUN  /opt/common-scripts/env-src-install  https://files.pythonhosted.org/packages/f3/33/3eda063897edb8bd267347da08a9874ddf77eea8244e91daa37411f8bc56/batman-package-2.4.8.tar.gz
 
 # COPY --chown=${NB_UID}:${NB_GID} environments/tess/ml.pip  /opt/environments/tess/ml.pip
 # RUN /opt/common-scripts/env-update  tess /opt/environments/tess/ml.pip

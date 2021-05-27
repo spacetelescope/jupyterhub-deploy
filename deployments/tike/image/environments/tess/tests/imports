@@ -12,8 +12,8 @@ panel
 scipy
 sklearn
 bokeh
-batman
-juliet
+#batman
+#juliet
 requests
 
 pyvo

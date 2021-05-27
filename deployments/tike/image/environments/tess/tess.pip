@@ -3,7 +3,6 @@ numpy~=1.19.0
 
 lightkurve
 eleanor
-juliet
 emcee
 george
 celerite
