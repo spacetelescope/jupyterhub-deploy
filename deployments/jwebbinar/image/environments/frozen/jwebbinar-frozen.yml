@@ -49,15 +49,15 @@ dependencies:
     - astroscrappy==1.0.8
     - async-generator==1.10
     - attrs==21.2.0
-    - awscli==1.19.79
+    - awscli==1.19.81
     - babel==2.9.1
     - backcall==0.2.0
     - beautifulsoup4==4.9.3
     - black==21.5b1
     - bleach==3.3.0
     - bokeh==2.3.2
-    - boto3==1.17.79
-    - botocore==1.20.79
+    - boto3==1.17.81
+    - botocore==1.20.81
     - cffi==1.14.5
     - chardet==4.0.0
     - ci-watson==0.5
@@ -88,7 +88,7 @@ dependencies:
     - idna==2.10
     - imageio==2.9.0
     - imagesize==1.2.0
-    - importlib-metadata==4.0.1
+    - importlib-metadata==4.2.0
     - importlib-resources==5.1.4
     - iniconfig==1.1.1
     - ipykernel==5.5.5
@@ -179,7 +179,7 @@ dependencies:
     - pyvo==1.1
     - pywavelets==1.1.1
     - pyyaml==5.4.1
-    - pyzmq==22.0.3
+    - pyzmq==22.1.0
     - qtpy==1.9.0
     - regex==2021.4.4
     - requests==2.25.1
@@ -232,7 +232,7 @@ dependencies:
     - traitlets==5.0.5
     - tweakwcs==0.7.2
     - typing-extensions==3.10.0.0
-    - urllib3==1.26.4
+    - urllib3==1.26.5
     - vispy==0.6.6
     - wcwidth==0.2.5
     - webbpsf==0.9.1

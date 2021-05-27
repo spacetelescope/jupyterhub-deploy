@@ -12,7 +12,7 @@ dependencies:
   - backports.functools_lru_cache=1.6.4
   - bleach=3.3.0
   - blosc=1.21.0
-  - bqplot=0.12.26
+  - bqplot=0.12.27
   - bqplot-image-gl=1.0.0
   - brotli=1.0.9
   - brotlipy=0.7.0
@@ -35,7 +35,7 @@ dependencies:
   - idna=2.10
   - imagecodecs=2021.3.31
   - imageio=2.9.0
-  - importlib-metadata=4.0.1
+  - importlib-metadata=4.2.0
   - ipydatawidgets=4.2.0
   - ipykernel=5.5.5
   - ipympl=0.7.0
@@ -109,7 +109,6 @@ dependencies:
   - pytz=2021.1
   - pywavelets=1.1.1
   - pyyaml=5.4.1
-  - pyzmq=22.0.3
   - readline=8.1
   - requests=2.25.1
   - scikit-image=0.18.1
@@ -123,7 +122,6 @@ dependencies:
   - traitlets=5.0.5
   - traittypes=0.2.1
   - tzdata=2021a
-  - urllib3=1.26.4
   - wcwidth=0.2.5
   - webencodings=0.5.1
   - wheel=0.36.2
@@ -145,11 +143,11 @@ dependencies:
     - astropy==4.2
     - astropy-sphinx-theme==1.1
     - attrs==20.3.0
-    - awscli==1.19.79
+    - awscli==1.19.81
     - babel==2.9.1
     - black==21.5b1
-    - boto3==1.17.79
-    - botocore==1.20.79
+    - boto3==1.17.81
+    - botocore==1.20.81
     - bottleneck==1.3.2
     - ci-watson==0.5
     - click==7.1.2
@@ -222,6 +220,7 @@ dependencies:
     - pytest-cov==2.12.0
     - pytest-doctestplus==0.9.0
     - pytest-openfiles==0.5.0
+    - pyzmq==22.0.3
     - qtconsole==5.0.3
     - qtpy==1.9.0
     - radio-beam==0.3.3
@@ -263,6 +262,7 @@ dependencies:
     - toml==0.10.2
     - tqdm==4.61.0
     - tweakwcs==0.7.2
+    - urllib3==1.26.4
     - vispy==0.6.6
     - voila==0.2.7
     - xlrd==2.0.1
