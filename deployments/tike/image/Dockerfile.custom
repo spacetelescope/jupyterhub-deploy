@@ -43,7 +43,7 @@ COPY --chown=${NB_UID}:${NB_GID} environments/tess/tess.pip  /opt/environments/t
 RUN /opt/common-scripts/env-update  tess /opt/environments/tess/tess.pip
 
 # ----------
-# juliet equires batman-package and radvel but as supplied by PyPi they are currently built with
+# juliet requires batman-package and radvel but as supplied by PyPi they are currently built with
 # a version of numpy which is too agressive for the current exoplanet overall dependency solution.
 # eventually these source installs should be reverted to standard pip installs as part of the juliet.pip
 # package bundle.
