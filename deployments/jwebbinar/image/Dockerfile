@@ -85,16 +85,15 @@ USER root
 # Install additional lab and notebook extensions
 USER ${NB_UID}
 
-COPY  --chown=${NB_UID}:${NB_GID} environments/setup-notebooks  /opt/environments
-RUN  /opt/environments/setup-notebooks
+# ----------------------------------------------------------------------
+COPY --chown=${NB_UID}:${NB_GID} environments/ /opt/environments
+
+# ========================= ^^^^^ Custom  ^^^^^ =========================
+# ========================= vvvvv Generic vvvvv  =========================
 
 # Fix JS encoding issue that prevents widgets from displaying properly in notebook mode
 # See https://github.com/jupyter/notebook/issues/6033 for details
 RUN sed -i 's/data-base-url="{{base_url | urlencode}}"/data-base-url="{{base_url}}"/g' `ls -1 ${CONDA_DIR}/lib/python*/site-packages/notebook/templates/notebook.html`
-
-
-# ========================= ^^^^^ Custom  ^^^^^ =========================
-# ========================= vvvvv Generic vvvvv  =========================
 
 # ----------------------------------------------------------------------
 USER $NB_UID
@@ -130,12 +129,12 @@ COPY --chown=${NB_UID}:${NB_GID} environments/test    /opt/environments/test
 # --     rm -rf /var/lib/apt/lists/*
 
 # For standalone operation outside JupyterHub,  note that  /etc also includes
-# common home directory files.
-
-RUN cp -r /etc/default-home-contents/* /home/jovyan && \
-    fix-permissions  /home/jovyan
+# common home directory files.   post-start-hook may not include everything required
+# for running on AWS,  just common functions needed for both AWS and standalone/CI.
 
 USER $NB_USER
 WORKDIR /home/$NB_USER
+
+RUN /opt/environments/post-start-hook
 
 CMD [ "start-notebook.sh" ]

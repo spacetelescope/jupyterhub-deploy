@@ -87,6 +87,10 @@ RUN chown -R ${NB_UID}:${NB_GID}  /home/${NB_USER}
 # ========================= ^^^^^ Custom  ^^^^^ =========================
 # ========================= vvvvv Generic vvvvv  =========================
 
+# Fix JS encoding issue that prevents widgets from displaying properly in notebook mode
+# See https://github.com/jupyter/notebook/issues/6033 for details
+RUN sed -i 's/data-base-url="{{base_url | urlencode}}"/data-base-url="{{base_url}}"/g' `ls -1 ${CONDA_DIR}/lib/python*/site-packages/notebook/templates/notebook.html`
+
 # ----------------------------------------------------------------------
 USER $NB_UID
 RUN /opt/common-scripts/kernel-setup   # set up Ipython / JupyterLab kernels
