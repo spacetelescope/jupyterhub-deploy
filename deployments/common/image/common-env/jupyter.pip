@@ -1,0 +1,15 @@
+jupyterlab==3.0.12
+git+https://github.com/mariobuikhuizen/ipysplitpanes.git
+git+https://github.com/mariobuikhuizen/ipygoldenlayout.git
+jupyter-client
+ipython-genutils
+jupyter-core
+jupyterlab-widgets
+jupyterlab-pygments
+jupyter-server
+
+jupyter-server-proxy
+jupyter_bokeh
+ipywidgets_bokeh
+glue-jupyter==0.2.2
+ipyevents

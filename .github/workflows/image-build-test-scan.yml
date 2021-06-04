@@ -37,7 +37,7 @@ jobs:
              sudo rm -rf /usr/share/dotnet # will release about 20GB if you don't need .NET
              sudo swapoff -a
              sudo rm -f /swapfile
-             sudo fallocate -l 20G /swapfile
+             sudo fallocate -l 24G /swapfile
              sudo chmod 0600 /swapfile
              sudo mkswap /swapfile
              sudo swapon /swapfile
@@ -54,24 +54,27 @@ jobs:
            source setup-env
            tools/image-build
            df -h
+           docker system df
+           docker system prune
            docker image ls
+           df -h
 
       - name: Git Diffs (Frozen Version Specs)
         run: git diff
 
-      - name: Anchore Image Scan
-        id: anchore_image_scan
-        uses: anchore/scan-action@v2
-        with:
-           image: standalone_jupyterlab/${{ matrix.DEPLOYMENT_NAME }}-user-image:latest
-           acs-report-enable: true
-           fail-build: false
-           severity-cutoff: high
+      # - name: Anchore Image Scan
+      #   id: anchore_image_scan
+      #   uses: anchore/scan-action@v2
+      #   with:
+      #      image: ${{ matrix.DEPLOYMENT_NAME }}-user-image:latest
+      #      acs-report-enable: true
+      #      fail-build: false
+      #      severity-cutoff: high
 
-      - name: Upload Anchore Scan SARIF Report
-        uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: ${{ steps.anchore_image_scan.outputs.sarif }}
+      # - name: Upload Anchore Scan SARIF Report
+      #   uses: github/codeql-action/upload-sarif@v1
+      #   with:
+      #     sarif_file: ${{ steps.anchore_image_scan.outputs.sarif }}
 
       # - name: Snyk Image Scan
       #   id: snyk_image_scan
@@ -83,7 +86,7 @@ jobs:
       #     # or you can signup for free at https://snyk.io/login
       #     SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       #   with:
-      #     image: standalone_jupyterlab/${{ matrix.DEPLOYMENT_NAME }}-user-image:latest
+      #     image: ${{ matrix.DEPLOYMENT_NAME }}-user-image:latest
       #     args: --file=deployments/${{ matrix.DEPLOYMENT_NAME }}/image/Dockerfile
 
       # - name: Upload Snyk Scan SARIF Report

@@ -1,0 +1,11 @@
+#! /bin/bash
+
+set -eu
+
+# Fix certs for all conda environments.
+
+for cert in `find /opt/conda -name '*.pem'`;
+do
+    echo "Replacing $cert"
+    ln -v -fs /etc/ssl/certs/stsci-tls-ca-bundle.pem  $cert
+done

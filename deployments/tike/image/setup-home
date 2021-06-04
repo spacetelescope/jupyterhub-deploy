@@ -1,5 +1,0 @@
-#!/bin/bash -e
-
-rsync -r /etc/default-home-contents/ /home/jovyan
-
-gitpuller https://github.com/spacetelescope/tike_content master /home/jovyan/tike_content
