@@ -21,7 +21,7 @@ dependencies:
   - websockify==0.9.0
   - pip
   - pip:
-    - jupyterlab==3.0.16
+    - jupyterlab==3.0.12
     - jupyter-server-proxy
     - nbgitpuller
     - ipyvuetify>=1.4.1

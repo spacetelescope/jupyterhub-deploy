@@ -58,15 +58,6 @@ USER ${NB_UID}
 COPY --chown=${NB_UID}:${NB_GID} environments/frozen /opt/environments/frozen
 
 # ----------------------------------------------------------------------
-# BUG: ds9 is installed in the jwebbinar kernel, but it's included also include in the
-#      common image in it's own kernel.  To avoid cluttering up the Launcher tab,
-#      remove the ds9 environment
-RUN conda env remove --name ds9
-
-#USER root
-#RUN chmod +x /opt/conda/envs/jwebbinar/bin/ds9
-
-# ----------------------------------------------------------------------
 # JWebbinar
 COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/ /opt/environments/jwebbinar
 RUN /opt/common-scripts/env-create jwebbinar /opt/environments/jwebbinar/jwebbinar.yml
@@ -89,13 +80,12 @@ RUN /opt/common-scripts/install-common jdaviz
 COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/ /opt/environments/jdaviz
 
 # ----------------------------------------------------------------------
+USER root
+
+# Install additional lab and notebook extensions
 USER ${NB_UID}
 
-COPY  --chown=${NB_UID}:${NB_GID} environments/setup-notebooks  /opt/environments
-RUN  /opt/environments/setup-notebooks
-
-# Fix JS encoding issue that prevents widgets from displaying properly in notebook mode
-# See https://github.com/jupyter/notebook/issues/6033 for details
-RUN sed -i 's/data-base-url="{{base_url | urlencode}}"/data-base-url="{{base_url}}"/g' ${CONDA_DIR}/lib/python3.9/site-packages/notebook/templates/notebook.html
+# ----------------------------------------------------------------------
+COPY --chown=${NB_UID}:${NB_GID} environments/ /opt/environments
 
 # ========================= ^^^^^ Custom  ^^^^^ =========================

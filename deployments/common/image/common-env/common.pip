@@ -3,3 +3,5 @@ nbconvert
 ipykernel
 boto3
 awscli
+pyds9
+pipdeptree

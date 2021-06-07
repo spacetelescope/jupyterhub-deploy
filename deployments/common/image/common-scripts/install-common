@@ -1,4 +1,4 @@
-#! /bin/bash -eux
+#! /bin/bash -eu
 # ----------------------------------------------------------------------
 
 # Install packages common to all conda environments (except base).
@@ -8,6 +8,8 @@
 
 env=$1
 
+source /opt/common-scripts/env-activate ${env}
+
 # *Update* from the conda specs defined by /opt/common-env/*.yml
 /opt/common-scripts/env-update $env `find /opt/common-env -name '*.yml' | sort`
 
@@ -16,3 +18,6 @@ env=$1
 
 #  Install pip packages defined in all of *.pip
 /opt/common-scripts/env-update $env `find /opt/common-env -name '*.pip' | sort`
+
+/opt/common-scripts/jupyter-lab-extension-setup
+

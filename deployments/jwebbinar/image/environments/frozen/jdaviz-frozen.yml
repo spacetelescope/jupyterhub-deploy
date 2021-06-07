@@ -13,6 +13,10 @@ dependencies:
   - bleach=3.3.0
   - blosc=1.21.0
   - bqplot=0.12.27
+<<<<<<< HEAD
+=======
+  - bqplot-image-gl=1.0.0
+>>>>>>> dd3b7f22a5161162aab3e897b131e1c0f14c2b0f
   - brotli=1.0.9
   - brotlipy=0.7.0
   - brunsli=0.1
@@ -141,6 +145,7 @@ dependencies:
     - astropy==4.2
     - astropy-sphinx-theme==1.1
     - attrs==20.3.0
+<<<<<<< HEAD
     - awscli==1.19.87
     - babel==2.9.1
     - black==21.5b2
@@ -148,6 +153,14 @@ dependencies:
     - botocore==1.20.87
     - bottleneck==1.3.2
     - bqplot-image-gl==1.4.1
+=======
+    - awscli==1.19.86
+    - babel==2.9.1
+    - black==21.5b2
+    - boto3==1.17.86
+    - botocore==1.20.86
+    - bottleneck==1.3.2
+>>>>>>> dd3b7f22a5161162aab3e897b131e1c0f14c2b0f
     - certifi==2020.12.5
     - ci-watson==0.5
     - click==7.1.2
@@ -182,9 +195,15 @@ dependencies:
     - jmespath==0.10.0
     - joblib==1.0.1
     - json5==0.9.5
+<<<<<<< HEAD
     - jupyter-packaging==0.10.2
     - jupyter-server==1.6.4
     - jupyterlab==3.0.16
+=======
+    - jupyter-packaging==0.7.12
+    - jupyter-server==1.6.1
+    - jupyterlab==3.0.11
+>>>>>>> dd3b7f22a5161162aab3e897b131e1c0f14c2b0f
     - jupyterlab-server==2.6.0
     - jwst==0.17.1
     - lxml==4.6.3
@@ -212,6 +231,7 @@ dependencies:
     - py==1.10.0
     - pyasn1==0.4.8
     - pycodestyle==2.7.0
+    - pyds9==1.8.1
     - pyerfa==1.7.2
     - pyflakes==2.3.1
     - pygments==2.8.1
@@ -237,7 +257,7 @@ dependencies:
     - spectral-cube==0.5.0
     - specutils==1.2
     - spherical-geometry==1.2.20
-    - sphinx==4.0.2
+    - sphinx==3.5.4
     - sphinx-asdf==0.1.1
     - sphinx-astropy==1.3
     - sphinx-automodapi==0.13

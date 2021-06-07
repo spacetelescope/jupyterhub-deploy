@@ -22,9 +22,9 @@ def test_notebooks(kernel, notebooks):
     errs = 0
     for notebook in notebooks:
         if notebook.startswith("#"):
-            print("=" * 10, "Skipping Notebook", notebook, "=" * 10)
+            print("=" * 10, "Skipping", notebook, "=" * 10)
             continue
-        print("=" * 10, "Testing Notebook", notebook, "=" * 10)
+        print("=" * 10, "Testing", notebook, "=" * 10)
         err = test_notebook(kernel, notebook)
         print("Tested notebook", notebook, "... ok" if not err else "... FAIL")
         errs += err
@@ -39,9 +39,13 @@ def test_notebook(kernel, notebook):
         test_dir = temp_dir + "/test"
         shutil.copytree(source_path, test_dir)
         os.chdir(test_dir)
-        err = subprocess.call(
-            f"papermill {os.path.basename(notebook)} test.ipynb -k {kernel}".split()
-        )  # maybe succeeds
+        if notebook.endswith(".ipynb"):
+            cmd = f"papermill --no-progress-bar {os.path.basename(notebook)} test.ipynb -k {kernel}"
+        elif notebook.endswith(".py"):
+            cmd = f"/opt/common-scripts/env-run  {kernel}  python {os.path.basename(notebook)}"
+        else:
+            raise ValueError("Unhandled test file extension for: " + notebook)
+        err = subprocess.call(cmd.split())  # maybe succeeds
     os.chdir(here)
     return int(err != 0)
 

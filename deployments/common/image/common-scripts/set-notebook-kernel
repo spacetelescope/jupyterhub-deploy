@@ -15,7 +15,7 @@ import argparse
 def set_kernel(kernel, display_name, notebook):
     with open(notebook) as nbf:
         loaded = json.loads(nbf.read())
-        spec = loaded["metadata"]["kernelspec"]
+        spec = loaded["metadata"].get("kernelspec", {})
         spec["display_name"] = display_name
         spec["language"] = "python"
         spec["name"] = kernel
