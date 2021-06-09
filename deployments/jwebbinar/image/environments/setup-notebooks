@@ -13,7 +13,9 @@ s is a standard entry-point used to set up notebooks for this
 
 # /opt/common-scripts/set-notebook-kernel jwebbinar JWebbinar jwebbinar_prep/imaging_mode/*.ipynb
 
-/opt/common-scripts/set-notebook-kernel jwebbinar JWebbinar jwebbinar_prep/ers/*.ipynb
+/opt/common-scripts/set-notebook-kernel jwebbinar JWebbinar jwebbinar_prep/spec_mode/*.ipynb
+/opt/common-scripts/set-notebook-kernel jwebbinar JWebbinar jwebbinar_prep/spec_mode/*/*/*.ipynb
 
 mkdir -p /opt/environments/jwebbinar/tests
-ls -1 /home/jovyan/jwebbinar_prep/ers/*.ipynb  | grep -v __ | grep -v _live  >/opt/environments/jwebbinar/tests/notebooks
+ls -1 /home/jovyan/jwebbinar_prep/spec_mode/*.ipynb  | grep -v __ | grep -v _live  >/opt/environments/jwebbinar/tests/notebooks
+ls -1 /home/jovyan/jwebbinar_prep/spec_mode/*/*/*.ipynb  | grep -v __ | grep -v _live  >>/opt/environments/jwebbinar/tests/notebooks

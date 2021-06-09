@@ -12,11 +12,6 @@ dependencies:
   - backports.functools_lru_cache=1.6.4
   - bleach=3.3.0
   - blosc=1.21.0
-  - bqplot=0.12.27
-<<<<<<< HEAD
-=======
-  - bqplot-image-gl=1.0.0
->>>>>>> dd3b7f22a5161162aab3e897b131e1c0f14c2b0f
   - brotli=1.0.9
   - brotlipy=0.7.0
   - brunsli=0.1
@@ -32,12 +27,12 @@ dependencies:
   - defusedxml=0.7.1
   - entrypoints=0.3
   - freetype=2.10.4
-  - fsspec=2021.5.0
+  - fsspec=2021.6.0
   - giflib=5.2.1
   - idna=2.10
   - imagecodecs=2021.3.31
   - imageio=2.9.0
-  - importlib-metadata=4.4.0
+  - importlib-metadata=4.5.0
   - ipydatawidgets=4.2.0
   - ipykernel=5.5.5
   - ipympl=0.7.0
@@ -136,6 +131,7 @@ dependencies:
   - zlib=1.2.11
   - zstd=1.5.0
   - pip:
+    - aiohttp==3.7.4.post0
     - alabaster==0.7.12
     - ansiwrap==0.8.4
     - anyio==2.2.0
@@ -144,23 +140,17 @@ dependencies:
     - asteval==0.9.23
     - astropy==4.2
     - astropy-sphinx-theme==1.1
+    - async-timeout==3.0.1
     - attrs==20.3.0
-<<<<<<< HEAD
-    - awscli==1.19.87
+    - awscli==1.19.89
     - babel==2.9.1
     - black==21.5b2
-    - boto3==1.17.87
-    - botocore==1.20.87
+    - bokeh==2.3.2
+    - boto3==1.17.89
+    - botocore==1.20.89
     - bottleneck==1.3.2
-    - bqplot-image-gl==1.4.1
-=======
-    - awscli==1.19.86
-    - babel==2.9.1
-    - black==21.5b2
-    - boto3==1.17.86
-    - botocore==1.20.86
-    - bottleneck==1.3.2
->>>>>>> dd3b7f22a5161162aab3e897b131e1c0f14c2b0f
+    - bqplot==0.12.27
+    - bqplot-image-gl==1.4.2
     - certifi==2020.12.5
     - ci-watson==0.5
     - click==7.1.2
@@ -171,7 +161,6 @@ dependencies:
     - cython==0.29.23
     - dask==2021.3.0
     - decorator==4.4.2
-    - deprecation==2.1.0
     - dill==0.3.3
     - docutils==0.15.2
     - drizzle==1.13.1
@@ -182,28 +171,26 @@ dependencies:
     - freetype-py==2.2.0
     - glue-astronomy==0.1
     - glue-core==1.0.1
-    - glue-jupyter==0.5
+    - glue-jupyter==0.2.2
     - glue-vispy-viewers==1.0.2
     - gwcs==0.16.1
     - h5py==3.2.1
     - imagesize==1.2.0
     - iniconfig==1.1.1
+    - ipyevents==0.8.2
     - ipygoldenlayout==0.4.0
     - ipysplitpanes==0.2.0
-    - jdaviz==1.2.dev218+g33015c5
+    - ipywidgets-bokeh==1.0.2
+    - jdaviz==1.1
     - jinja2==2.11.3
     - jmespath==0.10.0
     - joblib==1.0.1
     - json5==0.9.5
-<<<<<<< HEAD
-    - jupyter-packaging==0.10.2
-    - jupyter-server==1.6.4
-    - jupyterlab==3.0.16
-=======
+    - jupyter-bokeh==3.0.2
     - jupyter-packaging==0.7.12
     - jupyter-server==1.6.1
-    - jupyterlab==3.0.11
->>>>>>> dd3b7f22a5161162aab3e897b131e1c0f14c2b0f
+    - jupyter-server-proxy==3.0.2
+    - jupyterlab==3.0.12
     - jupyterlab-server==2.6.0
     - jwst==0.17.1
     - lxml==4.6.3
@@ -211,6 +198,7 @@ dependencies:
     - matplotlib==3.3.4
     - mccabe==0.6.1
     - mpl-scatter-density==0.7
+    - multidict==5.1.0
     - mypy-extensions==0.4.3
     - nbclassic==0.3.0
     - nbformat==5.1.2
@@ -225,6 +213,7 @@ dependencies:
     - pathspec==0.8.1
     - photutils==1.1.0
     - pillow==8.1.2
+    - pipdeptree==2.0.0
     - pluggy==0.13.1
     - prometheus-client==0.9.0
     - psutil==5.8.0
@@ -251,6 +240,7 @@ dependencies:
     - s3transfer==0.4.2
     - scipy==1.6.1
     - semantic-version==2.8.5
+    - simpervisor==0.4
     - six==1.15.0
     - sniffio==1.2.0
     - snowballstemmer==2.1.0
@@ -280,11 +270,12 @@ dependencies:
     - textwrap3==0.9.2
     - tifffile==2021.3.17
     - toml==0.10.2
-    - tomlkit==0.7.2
     - tqdm==4.61.0
     - tweakwcs==0.7.2
+    - typing-extensions==3.10.0.0
     - urllib3==1.26.4
     - vispy==0.6.6
     - voila==0.2.7
     - xlrd==2.0.1
+    - yarl==1.6.3
 prefix: /opt/conda/envs/jdaviz

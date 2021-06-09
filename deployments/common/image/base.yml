@@ -4,8 +4,8 @@ channels:
   - http://ssb.stsci.edu/astroconda
   - defaults
 dependencies:
-  - bqplot-image-gl
-  - bqplot
+  #- bqplot-image-gl==1.4.1
+  #- bqplot
   - jupyterlab_widgets
   - ipywidgets
   - ipydatawidgets
@@ -22,9 +22,12 @@ dependencies:
   - pip
   - pip:
     - jupyterlab==3.0.12
+    #- jupyterlab==3.0.11
     - jupyter-server-proxy
     - nbgitpuller
     - ipyvuetify>=1.4.1
     - git+https://github.com/yuvipanda/jupyter-desktop-server
-    - git+https://github.com/mariobuikhuizen/ipysplitpanes --trusted-host github.com
-    - git+https://github.com/mariobuikhuizen/ipygoldenlayout --trusted-host github.com
+     #- git+https://github.com/mariobuikhuizen/ipysplitpanes --trusted-host github.com
+     #- git+https://github.com/mariobuikhuizen/ipygoldenlayout --trusted-host github.com
+     #- ipysplitpanes==0.1.0
+     #- ipygoldenlayout==0.3.0
