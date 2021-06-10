@@ -88,6 +88,8 @@ RUN    apt-get update --yes && \
         libxt-dev \
         libbz2-dev \
         nvidia-cuda-toolkit \
+        autocutsel \
+        gedit \
         && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
