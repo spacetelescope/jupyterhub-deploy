@@ -32,6 +32,7 @@ ENV MKL_THREADING_LAYER="GNU"
 ENV CONDA_DIR=/opt/conda
 ENV SHELL=/bin/bash
 ENV PATH=${CONDA_DIR}/bin:${PATH}
+ENV CFLAGS="-fcommon"
 
 # ------------------------------------------------------------------------
 USER root
@@ -90,10 +91,17 @@ RUN    apt-get update --yes && \
         nvidia-cuda-toolkit \
         autocutsel \
         gedit \
+	saods9 \
+	net-tools \
         && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# ------------------------------------------------------------------------
+# This must be run after conda installs
+RUN /opt/common-scripts/fix-certs
+
+# ------------------------------------------------------------------------
 # Remove light-locker to prevent screen lock
 # BUG: get rid of --no-check-certificate
 RUN wget https://sourceforge.net/projects/turbovnc/files/2.2.6/turbovnc_2.2.6_amd64.deb --no-check-certificate && \
@@ -107,11 +115,6 @@ USER root
 # Load conda profile scripts by default, symlink target doesn't exist for a bit
 RUN ln -s ${CONDA_DIR}/etc/profile.d/conda.sh /etc/profile.d/conda.sh
 
-# This must be run after conda installs
-RUN npm config -g set cafile /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
-
-RUN git config --global http.sslCAinfo /etc/ssl/certs/ca-certificates.crt
-
 # ------------------------------------------------------------------------
 USER ${NB_UID}
 
@@ -121,27 +124,6 @@ RUN ${CONDA_VER} update --quiet --name base conda && \
     ${CONDA_VER} init --all     && \
     ${CONDA_VER} install --quiet conda-build && \
     ${CONDA_VER} build purge-all
-
-#RUN jupyter labextension install @jupyterlab/server-proxy && \
-RUN jupyter labextension install @jupyterlab/server-proxy @jupyter-widgets/jupyterlab-manager ipyevents jupyter-vuetify jupyter-golden-layout jupyter-splitpanes d3-selection-multi bqplot-image-gl && \
-    jupyter nbextension enable --py --sys-prefix ipyevents && \
-    jupyter nbextension install --py --sys-prefix widgetsnbextension && \
-    jupyter nbextension enable --py --sys-prefix widgetsnbextension && \
-    jupyter nbextension install --py --sys-prefix ipyevents && \
-    jupyter nbextension enable --py --sys-prefix ipyevents && \
-    jupyter nbextension install --py --sys-prefix ipyvuetify && \
-    jupyter nbextension enable --py --sys-prefix ipyvuetify && \
-    jupyter nbextension install --py --sys-prefix ipysplitpanes && \
-    jupyter nbextension enable --py --sys-prefix ipysplitpanes && \
-    jupyter nbextension install --py --sys-prefix bqplot && \
-    jupyter nbextension enable --py --sys-prefix bqplot && \
-    jupyter nbextension install --py --sys-prefix bqplot_image_gl && \
-    jupyter nbextension enable --py --sys-prefix bqplot_image_gl && \
-    jupyter lab build -y && \
-    jupyter lab clean -y && \
-    npm cache clean --force && \
-    rm -rf "/home/${NB_USER}/.cache/yarn" && \
-    rm -rf "/home/${NB_USER}/.node-gyp"
 
 # ------------------------------------------------------------------------
 USER root
@@ -153,17 +135,18 @@ COPY common-scripts/ /opt/common-scripts
 COPY common-env/ /opt/common-env
 RUN cat /opt/common-scripts/global_bashrc >> /etc/bash.bashrc
 
-USER ${NB_UID}
-COPY environments/ /opt/environments/
+# ----------------------------------------------------------------------
+# Common conda environments
+# USER ${NB_UID}
+# COPY environments/ /opt/environments/
 
 # ----------------------------------------------------------------------
-# Install additional environments common to all deployments
-# These dedicated environments are used when conflicts are unavoidable
-# but the s/w should still be universally available.
-#
-RUN /opt/common-scripts/env-create  ds9 /opt/environments/ds9/ds9.yml
-RUN /opt/common-scripts/install-common ds9
-
 # Set up astroquery and ds9 desktop short-cut, will be further
 # augmented by specific deployments
+USER ${NB_UID}
 COPY default-home-contents/   /etc/default-home-contents
+
+# ----------------------------------------------------------------------
+# Add jupyter-lab-extensions to base environment as well as standard packages
+
+RUN /opt/common-scripts/install-common  base

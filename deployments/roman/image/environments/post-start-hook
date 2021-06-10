@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# ------------------------------------------------------------------------------------
+#
+# This file is used to initialize aspects of JupyterHub which are common to both
+# cloud and standalone usage.  post start actions which are unique to the cloud
+# should be placed either in the config YAML or in another file so that they
+# don't break the standalone/CI use case.   Only this file should be called from
+# both the Dockerfile and the hub post start hook.
+#
+# This file implements:
+#
+# 1. Setup and update of the default-home-contents
+#
+# 2. Notebook setup for class and test notebooks.
+#
+# It should not implement e.g. CRDS symlink setup which is tied to EFS/cloud
+# and won't work standalone.
+#
+# It's a good idea to keep this relatively light weight / short running.
+#
+set -eu
+
+rsync -r  /etc/default-home-contents/ /home/jovyan
+
+# .............................................................................................
+
+git clone https://github.com/spacetelescope/romancal-notebooks.git
+
+ROMANCAL_ALL_NOTEBOOKS=`find /home/jovyan/romancal-notebooks -name '*.ipynb' | xargs ls -1`
+
+/opt/common-scripts/set-notebook-kernel romam-cal "`cat /opt/environments/roman-cal/kernel.name`"  ${ROMANCAL_ALL_NOTEBOOKS}
+
+# needs update from romancal_datamodels to new package arrangement
+# echo ${ROMANCAL_ALL_NOTEBOOKS} >/opt/environments/roman-cal/tests/notebooks

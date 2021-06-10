@@ -21,7 +21,7 @@ jupyterhub:
         c.KubeSpawner.lifecycle_hooks = {
             "postStart": {
                 "exec": {
-                    "command": ["/bin/sh", "-c", "rsync -r /etc/default-home-contents/ /home/jovyan; /opt/environments/setup-notebooks;  chmod +x /opt/conda/envs/jwebbinar/bin/ds9; rm -rf /home/jovyan/.local/share/jupyter/kernels/ds9; rm /home/jovyan/Desktop/DS9.desktop; chmod +x /home/jovyan/Desktop/*.desktop; rm -f /home/jovyan/.jdaviz-example-data; rm -f /home/jovyan/Desktop/build.out;  /opt/common-scripts/symlink-crds;"]
+                    "command": ["/bin/sh", "-c", "rsync -r /etc/default-home-contents/ /home/jovyan; /opt/environments/setup-notebooks;  chmod +x /home/jovyan/Desktop/*.desktop; rm -f /home/jovyan/.jdaviz-example-data; rm -f /home/jovyan/Desktop/build.out;  /opt/common-scripts/symlink-crds;"]
                 }
             }
         }

@@ -19,10 +19,10 @@ jupyterhub:
     memory:
       guarantee: 7G
       limit: 15G
-      # lifecycleHooks:
-      # postStart:
-      #  exec:
-      #    command: ["rsync", "-r", "/etc/default-home-contents/", "/home/jovyan"]
+    lifecycleHooks:
+      postStart:
+        exec:
+          command: ["/opt/environments/post-start-hook"]
     extraEnv:
         CRDS_PATH:  /home/jovyan/crds_cache
         CRDS_SERVER_URL: https://jwst-crds.stsci.edu

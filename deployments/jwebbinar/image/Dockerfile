@@ -58,15 +58,6 @@ USER ${NB_UID}
 COPY --chown=${NB_UID}:${NB_GID} environments/frozen /opt/environments/frozen
 
 # ----------------------------------------------------------------------
-# BUG: ds9 is installed in the jwebbinar kernel, but it's included also include in the
-#      common image in it's own kernel.  To avoid cluttering up the Launcher tab,
-#      remove the ds9 environment
-RUN conda env remove --name ds9
-
-#USER root
-#RUN chmod +x /opt/conda/envs/jwebbinar/bin/ds9
-
-# ----------------------------------------------------------------------
 # JWebbinar
 COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/ /opt/environments/jwebbinar
 RUN /opt/common-scripts/env-create jwebbinar /opt/environments/jwebbinar/jwebbinar.yml
@@ -94,35 +85,15 @@ USER root
 # Install additional lab and notebook extensions
 USER ${NB_UID}
 
-RUN jupyter labextension install @jupyterlab/server-proxy @jupyter-widgets/jupyterlab-manager ipyevents jupyter-vuetify jupyter-golden-layout jupyter-splitpanes d3-selection-multi bqplot-image-gl && \
-    jupyter nbextension enable --py --sys-prefix ipyevents && \
-    jupyter nbextension install --py --sys-prefix widgetsnbextension && \
-    jupyter nbextension enable --py --sys-prefix widgetsnbextension && \
-    jupyter nbextension install --py --sys-prefix ipyevents && \
-    jupyter nbextension enable --py --sys-prefix ipyevents && \
-    jupyter nbextension install --py --sys-prefix ipyvuetify && \
-    jupyter nbextension enable --py --sys-prefix ipyvuetify && \
-    jupyter nbextension install --py --sys-prefix ipysplitpanes && \
-    jupyter nbextension enable --py --sys-prefix ipysplitpanes && \
-    jupyter nbextension install --py --sys-prefix bqplot && \
-    jupyter nbextension enable --py --sys-prefix bqplot && \
-    jupyter nbextension install --py --sys-prefix bqplot_image_gl && \
-    jupyter nbextension enable --py --sys-prefix bqplot_image_gl && \
-    jupyter lab build -y && \
-    jupyter lab clean -y && \
-    npm cache clean --force && \
-    rm -rf "/home/${NB_USER}/.cache/yarn" && \
-    rm -rf "/home/${NB_USER}/.node-gyp"
-
-COPY  --chown=${NB_UID}:${NB_GID} environments/setup-notebooks  /opt/environments
-RUN  /opt/environments/setup-notebooks
-
-# Fix JS encoding issue that prevents widgets from displaying properly in notebook mode
-# See https://github.com/jupyter/notebook/issues/6033 for details
-RUN sed -i 's/data-base-url="{{base_url | urlencode}}"/data-base-url="{{base_url}}"/g' ${CONDA_DIR}/lib/python3.9/site-packages/notebook/templates/notebook.html
+# ----------------------------------------------------------------------
+COPY --chown=${NB_UID}:${NB_GID} environments/ /opt/environments
 
 # ========================= ^^^^^ Custom  ^^^^^ =========================
 # ========================= vvvvv Generic vvvvv  =========================
+
+# Fix JS encoding issue that prevents widgets from displaying properly in notebook mode
+# See https://github.com/jupyter/notebook/issues/6033 for details
+RUN sed -i 's/data-base-url="{{base_url | urlencode}}"/data-base-url="{{base_url}}"/g' `ls -1 ${CONDA_DIR}/lib/python*/site-packages/notebook/templates/notebook.html`
 
 # ----------------------------------------------------------------------
 USER $NB_UID
@@ -158,15 +129,12 @@ COPY --chown=${NB_UID}:${NB_GID} environments/test    /opt/environments/test
 # --     rm -rf /var/lib/apt/lists/*
 
 # For standalone operation outside JupyterHub,  note that  /etc also includes
-# common home directory files.
-
-RUN cp -r /etc/default-home-contents/* /home/jovyan && \
-    fix-permissions  /home/jovyan
+# common home directory files.   post-start-hook may not include everything required
+# for running on AWS,  just common functions needed for both AWS and standalone/CI.
 
 USER $NB_USER
 WORKDIR /home/$NB_USER
 
-#  &&\
-#    fix-permissions  /opt/environments     # Docker cache buster?
+RUN /opt/environments/post-start-hook
 
 CMD [ "start-notebook.sh" ]
