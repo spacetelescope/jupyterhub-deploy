@@ -32,7 +32,7 @@ def sha1sum(path):
     """
     ix = 0
     block_size = 2**20
-    h = hashlib.new('sha1')
+    h = hashlib.new('sha256')
     with open(path, "rb") as file:
         block = file.read(block_size)
         while block:
