@@ -1,9 +1,0 @@
-#! /bin/bash -eu
-
-# prune unused Docker containers and images
-
-echo "Pruning all containers and images..."
-
-docker container prune -f
-
-docker image prune -f
