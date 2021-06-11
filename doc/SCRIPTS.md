@@ -13,10 +13,11 @@ pip install --cert /etc/ssl/certs/ca-bundle.crt -r requirements.txt
 
 Scripts have been added to the *tools* directory to simplify image development:
 
-- image-all     -- build, test, and push the image.
+- image-all     -- build, test, push, scan the image.
 - image-build   -- build the Docker image defined by setup-env
 - image-base    -- build base images with SSL certs + jupyter docker-stack / scipy-notebook
 - image-update  -- as part of building, generate any required Dockerfiles, obtain current SSL certs, etc.
+- docker-history -- print out the docker history,  identify layer sizes and associated build commands.
 
 Automated testing:
 
