@@ -72,13 +72,6 @@ RUN    apt-get update --yes && \
         \
         dbus-x11 \
         firefox \
-        xfce4 \
-        xfce4-panel \
-        xfce4-session \
-        xfce4-settings \
-        xorg \
-        xubuntu-icon-theme \
-        \
         file \
         libcfitsio-bin \
         libcfitsio-dev \
@@ -88,9 +81,6 @@ RUN    apt-get update --yes && \
         libxpa-dev \
         libxt-dev \
         libbz2-dev \
-        nvidia-cuda-toolkit \
-        gedit \
-	saods9 \
 	net-tools \
         && \
     apt-get clean && \
@@ -103,10 +93,10 @@ RUN /opt/common-scripts/fix-certs
 # ------------------------------------------------------------------------
 # Remove light-locker to prevent screen lock
 # BUG: get rid of --no-check-certificate
-RUN wget https://sourceforge.net/projects/turbovnc/files/2.2.6/turbovnc_2.2.6_amd64.deb --no-check-certificate && \
-    dpkg -i turbovnc_2.2.6_amd64.deb && \
-    rm turbovnc_2.2.6_amd64.deb && \
-    apt-get remove -y -q light-locker
+#RUN wget https://sourceforge.net/projects/turbovnc/files/2.2.6/turbovnc_2.2.6_amd64.deb --no-check-certificate && \
+#    dpkg -i turbovnc_2.2.6_amd64.deb && \
+#    rm turbovnc_2.2.6_amd64.deb && \
+#    apt-get remove -y -q light-locker
 
 # ------------------------------------------------------------------------
 USER root
@@ -128,7 +118,7 @@ RUN ${CONDA_VER} update --quiet --name base conda && \
 USER root
 
 # Keep Xfce directories out of home and set up shortcuts for DS9.
-COPY user-dirs.defaults /etc/xdg/user-dirs.defaults
+#COPY user-dirs.defaults /etc/xdg/user-dirs.defaults
 
 COPY common-scripts/ /opt/common-scripts
 COPY common-env/ /opt/common-env

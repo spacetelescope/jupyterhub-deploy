@@ -18,15 +18,15 @@ dependencies:
   - ipykernel
   - ipyevents
   # For Jupyter Desktop Proxy
-  - websockify==0.9.0
+  #  - websockify==0.9.0
   - pip
   - pip:
     - jupyterlab==3.0.12
     #- jupyterlab==3.0.11
-    - jupyter-server-proxy
+    #- jupyter-server-proxy
     - nbgitpuller
     - ipyvuetify>=1.4.1
-    - git+https://github.com/yuvipanda/jupyter-desktop-server
+     #- git+https://github.com/yuvipanda/jupyter-desktop-server
      #- git+https://github.com/mariobuikhuizen/ipysplitpanes --trusted-host github.com
      #- git+https://github.com/mariobuikhuizen/ipygoldenlayout --trusted-host github.com
      #- ipysplitpanes==0.1.0
