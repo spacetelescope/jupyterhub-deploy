@@ -61,6 +61,8 @@ RUN cd /data && tar zxf qcptcokkbx7fgi3c00w2732yezkxzb99.gz && \
     rm qcptcokkbx7fgi3c00w2732yezkxzb99.gz && chmod -R a+r /data/webbpsf-data
 
 # Install sextractor under /usr/local
+# NOTE: using master because this fix is required:
+#       https://github.com/astromatic/sextractor/commit/46dd48faff6a7b59939096ba55e83e02e865ddfc
 RUN cd /tmp && \
     wget https://github.com/astromatic/sextractor/archive/master.zip && \
     unzip master.zip && \
