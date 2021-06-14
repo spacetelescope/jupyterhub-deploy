@@ -89,6 +89,7 @@ RUN    apt-get update --yes && \
         libxt-dev \
         libbz2-dev \
         nvidia-cuda-toolkit \
+        gedit \
 	saods9 \
 	net-tools \
         && \
