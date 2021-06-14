@@ -35,9 +35,12 @@ RUN mkdir /data && cd /data && \
     chmod -R a+r /data/webbpsf-data
 
 # Install sextractor under /usr/local
+# NOTE: using master because this fix is required:
+#       https://github.com/astromatic/sextractor/commit/46dd48faff6a7b59939096ba55e83e02e865ddfc
 RUN cd /tmp && \
-    curl -sSL https://github.com/astromatic/sextractor/archive/2.25.0.tar.gz | tar -xzf - && \
-    cd sextractor-2.25.0 && \
+    wget https://github.com/astromatic/sextractor/archive/master.zip && \
+    unzip master.zip && \
+    cd sextractor-master && \
     sh autogen.sh && \
     ./configure --prefix=/usr/local && \
     make && \
@@ -53,15 +56,6 @@ USER ${NB_UID}
 # clear the new specs, they should be committed to git prior to attempting a
 # new frozen build.
 COPY --chown=${NB_UID}:${NB_GID} environments/frozen /opt/environments/frozen
-
-# ----------------------------------------------------------------------
-# BUG: ds9 is installed in the jwebbinar kernel, but it's included also include in the
-#      common image in it's own kernel.  To avoid cluttering up the Launcher tab,
-#      remove the ds9 environment
-RUN conda env remove --name ds9
-
-#USER root
-#RUN chmod +x /opt/conda/envs/jwebbinar/bin/ds9
 
 # ----------------------------------------------------------------------
 # JWebbinar
@@ -90,26 +84,8 @@ USER root
 
 # Install additional lab and notebook extensions
 USER ${NB_UID}
-RUN jupyter nbextension install --py --sys-prefix widgetsnbextension && \
-    jupyter nbextension enable --py --sys-prefix widgetsnbextension && \
-    jupyter nbextension install --py --sys-prefix ipyevents && \
-    jupyter nbextension enable --py --sys-prefix ipyevents && \
-    jupyter nbextension install --py --sys-prefix ipyvuetify && \
-    jupyter nbextension enable --py --sys-prefix ipyvuetify && \
-    #jupyter labextension install @jupyterlab/server-proxy @jupyter-widgets/jupyterlab-manager ipyevents bqplot jupyter-vuetify jupyter-golden-layout jupyter-splitpanes d3-selection-multi bqplot-image-gl && \
-    jupyter labextension install @jupyterlab/server-proxy @jupyter-widgets/jupyterlab-manager ipyevents jupyter-vuetify jupyter-golden-layout jupyter-splitpanes d3-selection-multi bqplot-image-gl && \
-    jupyter labextension update --all && \
-    jupyter lab build -y && \
-    jupyter lab clean -y && \
-    npm cache clean --force && \
-    rm -rf "/home/${NB_USER}/.cache/yarn" && \
-    rm -rf "/home/${NB_USER}/.node-gyp"
 
-COPY  --chown=${NB_UID}:${NB_GID} environments/setup-notebooks  /opt/environments
-RUN  /opt/environments/setup-notebooks
-
-# Fix JS encoding issue that prevents widgets from displaying properly in notebook mode
-# See https://github.com/jupyter/notebook/issues/6033 for details
-RUN sed -i 's/data-base-url="{{base_url | urlencode}}"/data-base-url="{{base_url}}"/g' ${CONDA_DIR}/lib/python3.8/site-packages/notebook/templates/notebook.html
+# ----------------------------------------------------------------------
+COPY --chown=${NB_UID}:${NB_GID} environments/ /opt/environments
 
 # ========================= ^^^^^ Custom  ^^^^^ =========================

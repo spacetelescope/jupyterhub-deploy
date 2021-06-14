@@ -24,6 +24,9 @@ def main(*frozen_specs_to_scan):
 
 def scan_spec(spec):
     pkgs = get_pip_dependencies(spec)
+    if not pkgs:
+        print(f"==== No pip dependencies for {os.path.basename(spec)} ====")
+        return False
     requirements = "\n".join(pkgs)
     with tempfile.NamedTemporaryFile(mode="w+", delete=False) as file:
         file.write(requirements)

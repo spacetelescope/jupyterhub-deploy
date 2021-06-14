@@ -1,0 +1,18 @@
+six
+tensorflow~=2.4.1
+tensorflow-estimator
+tensorboard
+gast
+grpcio
+h5py
+keras
+torch
+jax
+jaxlib
+docutils
+packaging
+webencodings
+theano-pymc
+
+
+# theano

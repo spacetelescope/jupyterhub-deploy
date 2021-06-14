@@ -1,0 +1,41 @@
+#! /bin/bash
+
+set -ex
+
+function install_nbextensions() {
+    for ext in $*; do
+	jupyter nbextension install --py --sys-prefix ${ext}
+	jupyter nbextension enable --py --sys-prefix ${ext}
+    done
+}
+
+jupyter serverextension enable --sys-prefix jupyter_server_proxy
+
+jupyter labextension install \
+       @jupyterlab/server-proxy \
+       @jupyter-widgets/jupyterlab-manager \
+	ipyevents \
+	jupyter-vuetify \
+	d3-selection-multi \
+
+install_nbextensions \
+    widgetsnbextension \
+    ipyevents \
+    ipyvuetify \
+    ipysplitpanes \
+    bqplot \
+    bqplot_image_gl
+
+jupyter lab build -y
+
+npm install jupyter-splitpanes@0.1.0
+npm install jupyter-golden-layout@0.3.0
+npm install bqplot-image-gl@1.4.1
+npm install bqplot@0.5.29
+
+if [[ "${JH_DEVELOP}" == "" || "${JH_DEVELOP}" == "0" ]]; then
+    jupyter lab clean -y && \
+    npm cache clean --force && \
+    rm -rf "/home/${NB_USER}/.cache/yarn" && \
+    rm -rf "/home/${NB_USER}/.node-gyp"
+fi

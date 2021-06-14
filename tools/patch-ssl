@@ -1,0 +1,57 @@
+#! /bin/bash
+
+set -eu
+
+# This script is used to update the SSL certs of existing images using image-patch
+#
+
+if [ $# -lt 1 ]; then
+    echo "usage:  patch-ssl <admin-email>   [<description>]    [<cert-file>|'auto']    [<source-image-hash>]"
+    exit 2
+fi
+
+cd $JUPYTERHUB_DIR
+
+ADMIN_EMAIL=${1:-"dmd_octarine@stsci.edu"}
+DESCRIPTION=${2:-"SSL cert update."}
+CERT_FILE=${3:-"auto"}
+
+# By default,  use the hash of $IMAGE_ID as defined in setup-env for source image
+IMAGE_HASH=` docker image ls ${IMAGE_ID} | tail -1 | awk '{ print $3; }'`
+
+# Otherwise use the value of the 4th parameter as the hash of the source image
+SRC_HASH=${4:-${IMAGE_HASH}}
+
+# ---------------------------------------------------------------------------------
+# If CERT_FILE is "auto" then automatically update and use the cert from common/image
+
+if [[ ${CERT_FILE} == "auto" ]]; then
+   image-update
+   CERT_FILE=${COMMON_DIR}/tls-ca-bundle.pem
+fi
+
+# ---------------------------------------------------------------------------------
+# Construct "self-extracting" cert patch script with embedded cert
+
+cat >patch-cert  <<EOF
+cd /etc/ssl/certs
+cat >stsci-tls-ca-bundle.pem <<END_CERT
+EOF
+
+cat ${CERT_FILE} >>patch-cert
+
+cat >>patch-cert  <<EOF
+END_CERT
+
+/opt/common-scripts/fix-certs
+
+EOF
+
+chmod +x patch-cert
+
+# ---------------------------------------------------------------------------------
+# Run the cert patch script using patch-image
+
+patch-image   patch-cert    "${ADMIN_EMAIL}"    "${DESCRIPTION}"   "${SRC_HASH}"
+
+rm patch-cert

@@ -1,0 +1,21 @@
+#! /bin/bash
+
+# deletes ECR images simply
+
+set -eu
+
+IMAGES=$*
+
+if [[ "$#" == "0" ]]; then
+    echo "usage: image-delete  <tag-or-ecr-digest>..."
+fi
+
+for image in ${IMAGES}; do
+    if [[ `echo $image | cut -d':' -f1` == "sha256" ]]; then
+       QUALIFIER=imageDigest
+    else
+	QUALIFIER=imageTag
+    fi
+    awsudo ${ADMIN_ARN} aws ecr batch-delete-image --repository-name ${IMAGE_REPO} --image-ids ${QUALIFIER}=${image}
+done
+

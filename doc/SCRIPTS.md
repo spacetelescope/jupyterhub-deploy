@@ -14,16 +14,17 @@ pip install --cert /etc/ssl/certs/ca-bundle.crt -r requirements.txt
 Scripts have been added to the *tools* directory to simplify image development:
 
 - image-build   -- build the Docker image defined by setup-env
-- image-test    -- experimental,  run autmatic image tests.  requires added support in deployment
-- image-push    -- push the built + tested Docker image to ECR at the configured tag
+- image-test    -- run autmatic image tests on build image
+- image-push    -- push the built image to ECR at the configured tag
+- image-all     -- build, test, and push the image.
 - image-sh      -- start a container running an interactive bash shell for poking around
 - image-root-sh -- start a container running an interactive bash shell as root
 - image-exec    -- start a container and run an arbitrary command
-- image-all     -- build, test, and push the image.
 - image-login   -- log in to ECR
 - image-configure  -- set up for CI and/or local builds not pushed anywhere
 - image-freeze  -- dump out frozen environment specs from the current image into deployments tree.
 - image-update  -- as part of building, generate any required Dockerfiles, obtain current SSL certs, etc.
+- image-delete  -- delete the specified image tags or digests from ECR, e.g. to ditch vulnerable images
 
 Sourcing *setup-env* should add these scripts to your path, they generally require no parameters.
 
@@ -31,17 +32,17 @@ Using the scripts is simple, basically some iterative flow of:
 
 ```
 # Build the Docker image
-tools/image-build
+image-build
 
 # Run any self-tests defined for this deployment under deployments/<your-deployment>/image.
 # Fix problems and re-build until working
-tools/image-test
+image-test
 
 # Push the completed image to ECR for use on the hub,  proceed to Helm based JupyterHub deployment
-tools/image-push
+image-push
 
 # Check the ECR scan report and report status and/or vulnerabilities
-tools/image-scan
+image-scan
 ```
 
 #### Scripts to automate ECR scan results
@@ -98,15 +99,63 @@ sscan
 # Run Python's bandit package on any discoverable Python code
 sscan-bandit
 
-# Run Python's safety package to check dependencies of the conda environments
-# of the current image for vulnerabilities
+# Run Python's safety package to check dependencies specified in frozen specs
+# or requirements.txt for vulnerabilities
 sscan-safety
 ```
 
 
 #### Image Patching
 
-The `image-patch` script is used to create a new version of an image which
+Two initial high level scripts support image-patching:
+
+- patch-os    -  Runs an OS upgrade script using patch-image
+- patch-ssl   -  Updates the SSL cert using patch-image.
+
+Both `patch-os` and `patch-ssl` are wrappers around `patch-image` which
+performs the lower level aspects of the patch.
+
+- patch-image -  Executes an arbitrary patch script to generate a new image
+
+These scripts operate solely within the confines of Docker using the configured
+image tag,  nominally "latest".
+
+The scripts DO:
+
+- Run the local source image and apply a patch script.
+- Save metadata about the patch in the container's /opt/patches directory.
+- Save container changes resulting from the patch script as a new image layer.
+- Re-tag the patched image with the configured tag,  hi-jacking it.
+
+The scripts *DO NOT*:
+
+- Fetch the operational image from the repo to local Docker.  (see `image-pull`).
+- Back up the repo's operational image.
+- Test the patched image.   (see `image-test`)
+- Push the patched image back to the repo.   (see `image-push`)
+- Tag the source or patched image other than re-using the configured tag.
+- Store history of the patch in git and/or github.
+- Delete old untagged vulnerable images from the repo (see `image-delete`)
+
+The `patch-os` script applies an OS upgrade script and creates a new image
+from the result,  hijacking the configured tag.
+
+```
+patch-os   admin@your-org  [<description>]    [<source-image-hash>]
+```
+
+The `patch-ssl` script updates the SSL certs of the source image creating
+a new image from the result,  hijacking the configured tag.
+
+```
+patch-ssl  admin@your-org  [<description>]    [<source-image-hash]
+```
+
+*NOTE:* Running `patch-os` may break the SSL certs installed by our build
+process if e.g. Ubuntu updated certs.  In this case, or in the event of new
+certs, `patch-ssl` is used to do the fix.
+
+The `patch-image` script is used to create a new version of an image which
 results from executing a caller-supplied script.  It basically works as
 follows:
 
@@ -130,9 +179,10 @@ patch, leaving behind side effects in the current container's file system
 layer.  These side effects need to be limited to the primary file system of the
 container, i.e. no changes to extra volumes, etc. mounted inside the container.
 The patch script can be anything executable, e.g. a bash script performing an
-Ubuntu upgrde (`tools/apt-upgrade`), a script installing or removing a package,
-etc.  The log from the patch script is captured and copied into the patch.log
-file in the patch history directory inside the patch container.
+Ubuntu upgrde (`tools/apt-upgrade` used by `patch-os`), a script installing or
+removing a package, etc.  The log from the patch script is captured and copied
+into the patch.log file in the patch history directory inside the patch
+container.
 
 4. The patch container is used to generate a new version of the image using
 `docker commit`.  This image only exists locally but is ready to be pushed to
@@ -154,7 +204,7 @@ image-pull
 # Use and existing patch script (e.g. tools/apt-upgrade) or create a new one.
 
 # Apply the patch script creating new version of $IMAGE_ID
-image-patch   tools/apt-upgrade     jmiller@stsci.edu   "Apply Ubuntu security updates."
+patch-image   tools/apt-upgrade     admin@your-org   "Apply Ubuntu security updates."
 
 # Run CI tests on the patched image to make sure no disasters occurred
 image-test
@@ -188,7 +238,7 @@ cat metadata.yaml
 
 **Patching NOTES:**
 
-- `image-patch` should be used sparingly when the risk of accidentally breaking
+- `patch-image` should be used sparingly when the risk of accidentally breaking
 an operational image functionally by rebuilding normally is unacceptable.
 Example uses might be application of needed security updates or small
 corrections or additions to conda environments applied to formal releases.
@@ -200,5 +250,5 @@ image.  Once the new image is pushed, the source image effectively becomes
 anonymous unless tagged with a scheme outside this scope prior to patching and
 pushing.
 
-- Using `docker-wipe` will destroy all existing images and containers in the
-Docker environment in preparation for pulling down the operational image.
+- Using `docker-wipe` clears out Docker completely,  removing all images,
+containers, and the build cache.

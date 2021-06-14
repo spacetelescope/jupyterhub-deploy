@@ -21,7 +21,7 @@ jupyterhub:
         c.KubeSpawner.lifecycle_hooks = {
             "postStart": {
                 "exec": {
-                    "command": ["/bin/sh", "-c", "rsync -r /etc/default-home-contents/ /home/jovyan; /opt/environments/setup-notebooks;  chmod +x /opt/conda/envs/jwebbinar/bin/ds9; rm -rf /home/jovyan/.local/share/jupyter/kernels/ds9; rm /home/jovyan/Desktop/DS9.desktop; chmod +x /home/jovyan/Desktop/*.desktop; rm -f /home/jovyan/.jdaviz-example-data; rm -f /home/jovyan/Desktop/jdaviz-*.desktop; rm -f /home/jovyan/Desktop/build.out"]
+                    "command": ["/bin/sh", "-c", "rsync -r /etc/default-home-contents/ /home/jovyan; /opt/environments/setup-notebooks;  chmod +x /home/jovyan/Desktop/*.desktop; rm -f /home/jovyan/.jdaviz-example-data; rm -f /home/jovyan/Desktop/build.out;  /opt/common-scripts/symlink-crds;"]
                 }
             }
         }
@@ -47,13 +47,28 @@ jupyterhub:
     storage:
       dynamic:
         storageClass: "aws-efs"
+      extraVolumes:
+        - name:  preloaded-fits-volume
+          persistentVolumeClaim:
+            claimName: preloaded-fits
+        - name:  preloaded-crds-volume
+          persistentVolumeClaim:
+            claimName: preloaded-crds
+      extraVolumeMounts:
+        - name:  preloaded-fits-volume
+          mountPath: /home/shared/preloaded-fits
+          readOnly: true
+        - name:  preloaded-crds-volume
+          mountPath: /home/shared/preloaded-crds
+          readOnly: true
     extraEnv:
       CRDS_PATH:  /home/jovyan/crds_cache
       CRDS_SERVER_URL: https://jwst-crds.stsci.edu
+      CRDS_CONTEXT: jwst_0717.pmap
     defaultUrl: "/lab"
     memory:
-      guarantee: 7G
-      limit: 8G
+      guarantee: 14G
+      limit: 15G
   cull:
     enabled: true
     timeout: 1800

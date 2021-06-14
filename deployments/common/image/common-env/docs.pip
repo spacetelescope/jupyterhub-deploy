@@ -1,5 +1,5 @@
 matplotlib
-sphinx
+sphinx<4.0.0
 sphinx-automodapi
 sphinx-rtd-theme
 stsci-rtd-theme

@@ -1,0 +1,32 @@
+#! /bin/bash
+
+# This script installs a src tarball downloaded from a URL.   It is ideally
+# suited to installing source tarballs from PyPi as a way of building binaries
+# which are tailored to a particular JH environment and associated dependency
+# solution.
+
+set -eu
+
+if [ $# -lt 1 ]; then
+    echo "usage:  env-src-install  <environment>   <python-pkg-src-url>   [<alternate-unpack-dirname>]"
+    exit 2
+fi
+
+ENV=$1
+SRC_URL=$2
+PKG=`basename $SRC_URL`
+SRC_DIR=${3:-`echo $PKG | sed -e's/.tar.gz//g'`}
+
+source /opt/common-scripts/env-activate $ENV
+
+curl  $SRC_URL  -o $PKG
+
+tar zxf $PKG
+
+cd $SRC_DIR
+
+python setup.py install
+
+cd ..
+
+rm -rf  ${PKG}  ${SRC_DIR}

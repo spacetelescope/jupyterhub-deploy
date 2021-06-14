@@ -3,35 +3,57 @@
 # Build the combined deployment image,  including:
 # 1. Perform any required source code updates,  including updating SSL certs
 #    and regenerating any generated Dockerfiles from constituent parts.
-# 2. Build and tag the common image
-# 3. Build and tag the combined mission image.
-# 4. If operating with USE_FROZEN=0, re-export frozen conda environments
+# 2. Build the jupyterhub base image, e.g. scipy-notebook on Ubuntu,  including STScI cert
+# 3. Build and tag the common image
+# 4. Build and tag the combined mission image.
+# 5. If operating with USE_FROZEN=0, re-export frozen conda environments
 #    as fully versioned conda config files.  These may still need tweaking
 #    but form the basis for building frozen environments using USE_FROZEN=1.
 
-image-update   # Make automatic source adjustments
-
-image-base     # Build base image, e.g. our version of scipy-notebook including cert handling
-
-cd ${COMMON_DIR}
-
-# git rev-parse HEAD > common-image-git-hash
-echo "========================= Building Common Image ========================"
-
+# ..................................................................................
+#
+# docker buildx adds advanced capabilities but isn't enabled/installed by default
+#
 # DOCKER_BUILDKIT=1 mentioned here:
 # https://stackoverflow.com/questions/51115856/docker-failed-to-export-image-failed-to-create-image-failed-to-get-layer
 # as a solution to build fail like:
 # failed to export image: failed to create image: failed to get layer sha256:...: layer does not exist
 
-# common image doesn't currently exploit frozen
-time   DOCKER_BUILDKIT=1  docker build --tag ${COMMON_ID} --build-arg USE_FROZEN=${USE_FROZEN} .
+# LOG size settings are a solution to build failuyre with this error:
+#   [output clipped, log limit 1MiB reached]
 
+export DOCKER_BUILDKIT=1
+export BUILDKIT_STEP_LOG_MAX_SIZE=10000000
+export BUILDKIT_STEP_LOG_MAX_SPEED=10000000
+
+# ..................................................................................
+# Make automatic source adjustments including STScI cert update when on CI-nodes
+image-update
+
+
+# ..................................................................................
+# Build base image, e.g. our version of scipy-notebook including cert handling
+image-base 
+
+
+# ..................................................................................
+# Build STScI shared layer for all deployments
+cd ${COMMON_DIR}
+echo "========================= Building Common Image ========================"
+time docker build --tag ${COMMON_ID} --build-arg USE_FROZEN=${USE_FROZEN} .
+
+
+# ..................................................................................
+# Build custom layers for this deployment
 cd ${IMAGE_DIR}
-
-# git rev-parse HEAD > mission-image-git-hash
-
 echo "========================= Building $IMAGE_ID USE_FROZEN=${USE_FROZEN} =========================="
-time  DOCKER_BUILDKIT=1  docker build --tag ${IMAGE_ID} --build-arg USE_FROZEN=${USE_FROZEN} --build-arg BASE_IMAGE=${COMMON_ID} .
+time docker build --tag ${IMAGE_ID} --build-arg USE_FROZEN=${USE_FROZEN} --build-arg BASE_IMAGE=${COMMON_ID} .
+
+
+# ..................................................................................
+# Dump out environment/kernel specs which capture as much version
+# information as possible, not yet perfect/complete, may require
+# examination of diffs and manual updates to reject bad changes.
 
 if [[ "$USE_FROZEN" == "0" ]]; then
     echo "========================= Freezing Requirements =========================="
