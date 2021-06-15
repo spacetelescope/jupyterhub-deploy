@@ -20,9 +20,7 @@ Note: There is currently no formalized procedure for requesting these credential
 
 # AWS Control Tower accounts
 
-TODO:
-- https://st.awsapps.com/start
-- session manager basics, prereqs
+Login to the AWS Control Tower Console.  See ITSD for more details.
 
 # CI Node Setup
 
@@ -186,7 +184,7 @@ From the top directory of jupyterhub-deploy clone, run `deploy-all`. The final o
 
 **WARNING: This is a danger zone.  Mistakes here can take down live servers at the institute.
 
-Now we need to make an entry in AWS **Route53**.  To start, navigate to https://st.awsapps.com/start in your browser.  Use your AD credentials to login.  You will be prompted for a DUO code.  Either enter "push" or a code.
+Now we need to make an entry in AWS **Route53**.  To start, navigate to the AWS Control Tower Console in your browser.  Use your AD credentials to login.  You will be prompted for a DUO code.  Either enter "push" or a code.
 
 Click on "AWS Account", then select the "aws-stctnetwork".  The menu will expand and show a link for "Management console" for "Route53-User-science.stsci.edu".  Click on that link and go to the "Route 53" service.
 
