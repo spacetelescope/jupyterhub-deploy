@@ -14,7 +14,6 @@ def unset_set_kernel(notebook):
     kernelspec_found = False
     with open(notebook) as nb:
         loaded = json.loads(nb.read())
-        
         if loaded.get('metadata', {}):
             if loaded['metadata'].get('kernelspec', {}):
                 kernelspec_found = True
