@@ -1,4 +1,4 @@
-#! /bin/bash -eu
+#! /bin/bash -eux
 
 # Build the combined deployment image,  including:
 # 1. Perform any required source code updates,  including updating SSL certs

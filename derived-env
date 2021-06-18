@@ -5,10 +5,19 @@
 
 # Octarine AWS JupyterHub setup
 export ACCOUNT=${ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
+export ECR_ACCOUNT=${CENTRAL_ECR_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
+
+if $USE_CENTRAL_ECR
+then
+    export ECR_ACCOUNT_TO_USE=$ECR_ACCOUNT
+    export IMAGE_REPO=${DEPLOYMENT_NAME}
+else
+    export ECR_ACCOUNT_TO_USE=$ACCOUNT
+    export IMAGE_REPO=${DEPLOYMENT_NAME}-user-image
+fi
 
 export JUPYTERHUB_DIR=`pwd`
 
-export IMAGE_REPO=${DEPLOYMENT_NAME}-user-image
 export COMMON_REPO=${IMAGE_REPO}
 
 export ADMIN_ARN=arn:aws:iam::${ACCOUNT_ID}:role/${ADMIN_ROLENAME}
@@ -17,8 +26,8 @@ export COMMON_DIR=`pwd`/deployments/common/image
 export IMAGE_DIR=`pwd`/deployments/${DEPLOYMENT_NAME}/image
 
 if [[ "${PERSONAL_IMAGE}" == "0" ]]; then
-    export COMMON_ID=${ACCOUNT}/${COMMON_REPO}:${COMMON_TAG}
-    export IMAGE_ID=${ACCOUNT}/${IMAGE_REPO}:${IMAGE_TAG}
+    export COMMON_ID=${ECR_ACCOUNT_TO_USE}/${COMMON_REPO}:${COMMON_TAG}
+    export IMAGE_ID=${ECR_ACCOUNT_TO_USE}/${IMAGE_REPO}:${IMAGE_TAG}
 else
     export COMMON_ID=${COMMON_REPO}:${COMMON_TAG}
     export IMAGE_ID=${IMAGE_REPO}:${IMAGE_TAG}
