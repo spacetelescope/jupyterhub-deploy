@@ -2,4 +2,4 @@
 
 # Log into AWS ECR based on the current shell environment.
 
-awsudo ${ADMIN_ARN} aws ecr get-login-password --region=us-east-1 | docker login --username AWS --password-stdin ${ECR_ACCOUNT_TO_USE}.dkr.ecr.us-east-1.amazonaws.com
+awsudo ${ADMIN_ARN} aws ecr get-login-password --region=us-east-1 | docker login --username AWS --password-stdin ${ECR_ACCOUNT_TO_USE}
