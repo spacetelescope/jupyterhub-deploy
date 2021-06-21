@@ -1,4 +1,7 @@
 jupyterhub:
+  singleuser:
+    image:
+      tag: latest-dev
   prePuller:
     continuous:
       enabled: true 

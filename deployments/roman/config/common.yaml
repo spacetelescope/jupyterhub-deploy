@@ -14,7 +14,6 @@
 jupyterhub:
   singleuser:
     image:
-      tag: latest-dev
       pullPolicy: Always
     memory:
       guarantee: 7G
