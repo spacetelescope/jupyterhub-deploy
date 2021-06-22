@@ -6,10 +6,18 @@ USER root
 
 ARG TZ='America/New_York'
 ARG DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && \
-    apt-get install -y tzdata ca-certificates openssl wget vim npm nodejs && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+
+
+COPY common-scripts/apt-install  /opt/common-scripts/apt-install
+RUN /opt/common-scripts/apt-install \
+    tzdata \
+    ca-certificates \
+    openssl \
+    wget \
+    vim \
+    npm \
+    nodejs
 
 # ------------------------------------------------------------------------
 # SSL/TLS cert setup for STScI AWS firewalling

@@ -4,7 +4,8 @@ channels:
 dependencies:
   - _libgcc_mutex=0.1
   - _openmp_mutex=4.5
-  - alembic=1.6.4
+  - alembic=1.6.5
+  - altair=4.1.0
   - anyio=3.1.0
   - appdirs=1.4.4
   - argon2-cffi=20.1.0
@@ -29,10 +30,10 @@ dependencies:
   - brunsli=0.1
   - bzip2=1.0.8
   - c-ares=1.17.1
-  - ca-certificates=2020.12.5
+  - ca-certificates=2021.5.30
   - cached-property=1.5.2
   - cached_property=1.5.2
-  - certifi=2020.12.5
+  - certifi=2021.5.30
   - certipy=0.1.3
   - cffi=1.14.5
   - cfitsio=3.470
@@ -41,7 +42,7 @@ dependencies:
   - click=7.1.2
   - cloudpickle=1.6.0
   - conda-package-handling=1.7.3
-  - configurable-http-proxy=4.3.2
+  - configurable-http-proxy=4.4.0
   - cryptography=3.4.7
   - cycler=0.10.0
   - cython=0.29.23
@@ -50,7 +51,6 @@ dependencies:
   - dask-core=2021.4.1
   - decorator=4.4.2
   - defusedxml=0.7.1
-  - deprecation=2.1.0
   - dill=0.3.3
   - distributed=2021.4.1
   - entrypoints=0.3
@@ -62,19 +62,19 @@ dependencies:
   - gmp=6.2.1
   - gmpy2=2.1.0b1
   - greenlet=1.1.0
-  - h5py=3.1.0
+  - h5py=3.2.1
   - hdf5=1.10.6
   - heapdict=1.0.1
   - icu=68.1
   - idna=2.10
   - imagecodecs=2021.3.31
   - imageio=2.9.0
-  - importlib-metadata=4.0.1
+  - importlib-metadata=4.4.0
   - ipydatawidgets=4.2.0
   - ipyevents=0.8.2
   - ipykernel=5.5.5
   - ipympl=0.7.0
-  - ipython=7.23.1
+  - ipython=7.24.0
   - ipython_genutils=0.2.0
   - ipyvue=1.5.0
   - ipyvuetify=1.6.2
@@ -90,10 +90,10 @@ dependencies:
   - jupyter_core=4.7.1
   - jupyter_server=1.8.0
   - jupyter_telemetry=0.1.0
-  - jupyterhub=1.3.0
-  - jupyterhub-base=1.3.0
+  - jupyterhub=1.4.1
+  - jupyterhub-base=1.4.1
   - jupyterlab_pygments=0.1.2
-  - jupyterlab_server=2.5.2
+  - jupyterlab_server=2.6.0
   - jupyterlab_widgets=1.0.0
   - jxrlib=1.1
   - kiwisolver=1.3.1
@@ -105,7 +105,7 @@ dependencies:
   - libarchive=3.5.1
   - libblas=3.9.0
   - libcblas=3.9.0
-  - libcurl=7.76.1
+  - libcurl=7.77.0
   - libdeflate=1.7
   - libedit=3.1.20191231
   - libev=4.33
@@ -154,11 +154,11 @@ dependencies:
   - nest-asyncio=1.5.1
   - networkx=2.5.1
   - nodejs=15.14.0
-  - notebook=6.3.0
+  - notebook=6.4.0
   - numba=0.53.1
   - numexpr=2.7.3
   - numpy=1.20.3
-  - oauthlib=3.0.1
+  - oauthlib=3.1.1
   - olefile=0.46
   - openblas=0.3.15
   - openjpeg=2.4.0
@@ -166,7 +166,7 @@ dependencies:
   - packaging=20.9
   - pamela=1.0.0
   - pandas=1.2.4
-  - pandoc=2.13
+  - pandoc=2.14.0.1
   - pandocfilters=1.4.2
   - parso=0.8.2
   - partd=1.2.0
@@ -178,7 +178,7 @@ dependencies:
   - pip=21.1.2
   - pkginfo=1.7.0
   - pooch=1.3.0
-  - prometheus_client=0.10.1
+  - prometheus_client=0.11.0
   - prompt-toolkit=3.0.18
   - protobuf=3.15.8
   - psutil=5.8.0
@@ -194,22 +194,22 @@ dependencies:
   - pyrsistent=0.17.3
   - pysocks=1.7.1
   - pytables=3.6.1
-  - python=3.8.10
+  - python=3.9.4
   - python-dateutil=2.8.1
   - python-editor=1.0.4
   - python-json-logger=2.0.1
-  - python-libarchive-c=3.0
-  - python_abi=3.8
+  - python-libarchive-c=3.1
+  - python_abi=3.9
   - pytz=2021.1
   - pywavelets=1.1.1
   - pyyaml=5.4.1
-  - pyzmq=22.0.3
+  - pyzmq=22.1.0
   - readline=8.1
   - reproc=14.2.1
   - reproc-cpp=14.2.1
   - requests=2.25.1
   - ripgrep=12.1.1
-  - ruamel.yaml=0.17.4
+  - ruamel.yaml=0.17.7
   - ruamel.yaml.clib=0.2.2
   - ruamel_yaml=0.15.80
   - scikit-image=0.18.1
@@ -224,26 +224,24 @@ dependencies:
   - sniffio=1.2.0
   - sortedcontainers=2.4.0
   - soupsieve=2.0.1
-  - sqlalchemy=1.4.15
+  - sqlalchemy=1.4.17
   - sqlite=3.35.5
   - statsmodels=0.12.2
-  - sympy=1.7.1
+  - sympy=1.8
   - tblib=1.7.0
   - terminado=0.10.0
   - testpath=0.5.0
   - threadpoolctl=2.1.0
   - tifffile=2021.4.8
-  - tini=0.18.0
   - tk=8.6.10
-  - tomlkit=0.7.2
   - toolz=0.11.1
   - tornado=6.1
   - tqdm=4.61.0
   - traitlets=5.0.5
   - traittypes=0.2.1
   - typing_extensions=3.7.4.3
-  - urllib3=1.26.4
-  - vincent=0.4.4
+  - tzdata=2021a
+  - urllib3=1.26.5
   - wcwidth=0.2.5
   - webencodings=0.5.1
   - websocket-client=0.57.0
@@ -265,10 +263,10 @@ dependencies:
     - ansiwrap==0.8.4
     - astropy-sphinx-theme==1.1
     - async-timeout==3.0.1
-    - awscli==1.19.84
+    - awscli==1.19.86
     - black==21.5b2
-    - boto3==1.17.84
-    - botocore==1.20.84
+    - boto3==1.17.86
+    - botocore==1.20.86
     - ci-watson==0.5
     - codecov==2.1.11
     - colorama==0.4.3
@@ -295,10 +293,9 @@ dependencies:
     - py==1.10.0
     - pyasn1==0.4.8
     - pycodestyle==2.7.0
-    - pyds9==1.8.1
     - pyflakes==2.3.1
     - pytest==6.2.4
-    - pytest-cov==2.12.0
+    - pytest-cov==2.12.1
     - pytest-doctestplus==0.9.0
     - pytest-openfiles==0.5.0
     - regex==2021.4.4
@@ -307,7 +304,7 @@ dependencies:
     - s3transfer==0.4.2
     - simpervisor==0.4
     - snowballstemmer==2.1.0
-    - sphinx==3.5.4
+    - sphinx==4.0.2
     - sphinx-asdf==0.1.1
     - sphinx-astropy==1.3
     - sphinx-automodapi==0.13

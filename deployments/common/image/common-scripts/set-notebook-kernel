@@ -9,8 +9,6 @@ import sys
 import json
 import argparse
 
-# print(pprint.pprint(json.loads(open(notebooks[0]).read())))
-# exit()
 
 def set_kernel(kernel, display_name, notebook):
     with open(notebook) as nbf:
@@ -19,6 +17,8 @@ def set_kernel(kernel, display_name, notebook):
         spec["display_name"] = display_name
         spec["language"] = "python"
         spec["name"] = kernel
+        loaded["metadata"]["kernelspec"] = spec
+
     with open(notebook, "w+") as nbf:
         nbf.write(json.dumps(loaded, indent=1))
 

@@ -13,18 +13,38 @@ pip install --cert /etc/ssl/certs/ca-bundle.crt -r requirements.txt
 
 Scripts have been added to the *tools* directory to simplify image development:
 
+- image-all     -- build, test, push, scan the image.
 - image-build   -- build the Docker image defined by setup-env
-- image-test    -- run autmatic image tests on build image
+- image-base    -- build base images with SSL certs + jupyter docker-stack / scipy-notebook
+- image-update  -- as part of building, generate any required Dockerfiles, obtain current SSL certs, etc.
+- docker-history -- print out the docker history,  identify layer sizes and associated build commands.
+
+Automated testing:
+
+- image-test    -- run automatic image tests on build image
+- image-configure  -- generate setup-env for CI based on simple inputs
+- image-scan    -- after pushing,  run this to download and examine ECR scan results
+
+Interact with ECR to push images, pull images, and delete images:
+
 - image-push    -- push the built image to ECR at the configured tag
-- image-all     -- build, test, and push the image.
+- image-pull    -- pull the configured image tag from ECR to the local Docker
+- image-delete  -- delete the specified image tags or digests from ECR, e.g. to ditch vulnerable images
+- image-login   -- log in to ECR
+
+Run a JH image in local Docker for inspection, development, debug:
+
 - image-sh      -- start a container running an interactive bash shell for poking around
 - image-root-sh -- start a container running an interactive bash shell as root
 - image-exec    -- start a container and run an arbitrary command
-- image-login   -- log in to ECR
-- image-configure  -- set up for CI and/or local builds not pushed anywhere
-- image-freeze  -- dump out frozen environment specs from the current image into deployments tree.
-- image-update  -- as part of building, generate any required Dockerfiles, obtain current SSL certs, etc.
-- image-delete  -- delete the specified image tags or digests from ECR, e.g. to ditch vulnerable images
+- image-dev     -- start a container and map in Docker sources r/w for incremental install debug
+- run-lab       -- start a JH server in Docker using the current image
+
+Capture conda environment s/w versions (automatic w/ image-build):
+
+- image-freeze     -- dump out frozen environment specs from the current image into deployments tree.
+- image-env-list   -- run the image to list the names of conda environments
+- image-env-export -- run the image to export the specified conda environment s/w versions
 
 Sourcing *setup-env* should add these scripts to your path, they generally require no parameters.
 
@@ -196,7 +216,7 @@ A full patch workflow might look like:
 source setup-env
 
 # Clear out Docker so $IMAGE_ID is unequivocally coming from ECR
-docker-wipe
+docker system prune -a
 
 # Pull the operartional $IMAGE_ID image out of ECR for patching
 image-pull
@@ -224,7 +244,7 @@ is in order:
 source setup-env
 
 # Clear out Docker so $IMAGE_ID is unequivocally coming from ECR
-docker-wipe
+docker system prune -a
 
 # Pull the operartional $IMAGE_ID image out of ECR for inspection
 image-pull
@@ -250,7 +270,7 @@ image.  Once the new image is pushed, the source image effectively becomes
 anonymous unless tagged with a scheme outside this scope prior to patching and
 pushing.
 
-- Using `docker-wipe` clears out Docker completely,  removing all images,
+- Using `docker system prune -a` clears out Docker completely,  removing all images,
 containers, and the build cache.
 
 #### Prototype Image Squashing
@@ -299,3 +319,4 @@ re-importing.  An existing PyPi project I tried required 2 hours.
 
 Extra disk space for the archive file is required, further limiting squash
 for CI on GitHub.
+
