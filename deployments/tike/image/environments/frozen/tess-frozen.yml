@@ -40,12 +40,12 @@ dependencies:
   - xz=5.2.5
   - zlib=1.2.11
   - pip:
-    - absl-py==0.12.0
+    - absl-py==0.13.0
     - aiohttp==3.7.4.post0
     - alabaster==0.7.12
     - allesfitter==1.2.4
     - ansiwrap==0.8.4
-    - anyio==3.1.0
+    - anyio==3.2.0
     - appdirs==1.4.4
     - argon2-cffi==20.1.0
     - astor==0.8.1
@@ -59,20 +59,20 @@ dependencies:
     - async-timeout==3.0.1
     - attrs==21.2.0
     - autograd==1.3
-    - awscli==1.19.87
+    - awscli==1.19.97
     - babel==2.9.1
     - backcall==0.2.0
     - batman-package==2.4.8
     - beautifulsoup4==4.9.3
-    - black==21.5b2
+    - black==21.6b0
     - bleach==3.3.0
     - blessings==1.7
     - bokeh==2.3.2
-    - boto3==1.17.87
-    - botocore==1.20.87
+    - boto3==1.17.97
+    - botocore==1.20.97
     - bottleneck==1.3.2
-    - bqplot==0.12.28
-    - bqplot-image-gl==1.4.1
+    - bqplot==0.12.27
+    - bqplot-image-gl==1.4.2
     - cached-property==1.5.2
     - celerite==0.4.0
     - cffi==1.14.5
@@ -88,11 +88,11 @@ dependencies:
     - cycler==0.10.0
     - cython==0.29.23
     - czech-holidays==0.1.3
-    - dask==2021.5.1
+    - dask==2021.6.1
     - decorator==4.4.2
     - defusedxml==0.7.1
-    - dill==0.3.3
-    - distributed==2021.5.1
+    - dill==0.3.4
+    - distributed==2021.6.1
     - docutils==0.15.2
     - dynesty==1.1
     - echo==0.5
@@ -104,7 +104,7 @@ dependencies:
     - fbpca==1.0
     - flake8==3.9.2
     - freetype-py==2.2.0
-    - fsspec==2021.5.0
+    - fsspec==2021.6.0
     - future==0.18.2
     - gast==0.2.2
     - george==0.4.0
@@ -124,15 +124,15 @@ dependencies:
     - iniconfig==1.1.1
     - ipydatawidgets==4.2.0
     - ipyevents==0.8.2
-    - ipygoldenlayout==0.3.0
+    - ipygoldenlayout==0.4.0
     - ipykernel==5.5.5
     - ipympl==0.7.0
-    - ipysplitpanes==0.1.0a0
+    - ipysplitpanes==0.2.0
     - ipython==7.24.1
     - ipython-genutils==0.2.0
     - ipyvolume==0.5.2
     - ipyvue==1.5.0
-    - ipyvuetify==1.6.2
+    - ipyvuetify==1.7.0
     - ipywebrtc==0.6.0
     - ipywidgets==7.6.3
     - ipywidgets-bokeh==1.0.2
@@ -160,7 +160,7 @@ dependencies:
     - keras-preprocessing==1.1.2
     - keyring==23.0.1
     - kiwisolver==1.3.1
-    - lightkurve==2.0.9
+    - lightkurve==2.0.10
     - locket==0.2.1
     - lxml==4.6.3
     - markdown==3.3.4
@@ -204,8 +204,8 @@ dependencies:
     - pipdeptree==2.0.0
     - pluggy==0.13.1
     - prometheus-client==0.11.0
-    - prompt-toolkit==3.0.18
-    - protobuf==3.17.2
+    - prompt-toolkit==3.0.19
+    - protobuf==3.17.3
     - psutil==5.8.0
     - ptyprocess==0.7.0
     - py==1.10.0
@@ -231,7 +231,7 @@ dependencies:
     - python-slugify==5.0.2
     - pythreejs==2.3.0
     - pytz==2021.1
-    - pyviz-comms==2.0.1
+    - pyviz-comms==2.0.2
     - pyvo==1.1
     - pyvodb==1.0
     - pywavelets==1.1.1
@@ -270,7 +270,7 @@ dependencies:
     - sphinxcontrib-jsmath==1.0.1
     - sphinxcontrib-qthelp==1.0.3
     - sphinxcontrib-serializinghtml==1.1.5
-    - sqlalchemy==1.4.17
+    - sqlalchemy==1.4.18
     - stsci-rtd-theme==0.0.2
     - tblib==1.7.0
     - tenacity==7.0.0
@@ -278,18 +278,18 @@ dependencies:
     - tensorflow==1.15.5
     - tensorflow-estimator==1.15.1
     - termcolor==1.1.0
-    - terminado==0.10.0
+    - terminado==0.10.1
     - tess-point==0.6.1
     - testpath==0.5.0
     - text-unidecode==1.3
     - textwrap3==0.9.2
     - threadpoolctl==2.1.0
-    - tifffile==2021.4.8
+    - tifffile==2021.6.14
     - toml==0.10.2
     - toolz==0.11.1
-    - torch==1.8.1
+    - torch==1.9.0
     - tornado==6.1
-    - tqdm==4.61.0
+    - tqdm==4.61.1
     - traitlets==5.0.5
     - traittypes==0.2.1
     - typed-ast==1.4.3
@@ -300,7 +300,7 @@ dependencies:
     - vispy==0.6.6
     - wcwidth==0.2.5
     - webencodings==0.5.1
-    - websocket-client==1.0.1
+    - websocket-client==1.1.0
     - werkzeug==2.0.1
     - widgetsnbextension==3.5.1
     - wrapt==1.12.1
