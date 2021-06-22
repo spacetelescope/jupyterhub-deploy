@@ -37,10 +37,13 @@ ENV CFLAGS="-fcommon"
 # ------------------------------------------------------------------------
 USER root
 
-# Install apt packages, without any questions asked
+# Breaking into separate runs will build slower but also defines storage
+# consumption in docker history.
+#
+# COPY common-scripts/apt-install  /opt/common-scripts/apt-install
 
-RUN    apt-get update --yes && \
-       DEBIAN_FRONTEND=noninteractive apt-get install --yes \
+# Misc system tools
+RUN /opt/common-scripts/apt-install \
         tree \
         curl \
         wget \
@@ -50,8 +53,10 @@ RUN    apt-get update --yes && \
         ssh \
         htop \
         sysstat \
-        imagemagick \
-        \
+        net-tools
+
+# S/W Development Tools
+RUN /opt/common-scripts/apt-install \
         build-essential \
         gfortran \
         automake \
@@ -68,33 +73,40 @@ RUN    apt-get update --yes && \
         libxslt1-dev \
         python-libxml2 \
         python-dev \
-        python-setuptools \
-        \
+        python-setuptools
+
+# X11 and DS9
+RUN /opt/common-scripts/apt-install \
         dbus-x11 \
-        firefox \
         xfce4 \
         xfce4-panel \
         xfce4-session \
         xfce4-settings \
         xorg \
         xubuntu-icon-theme \
-        \
+        imagemagick \
+        gedit \
+        saods9
+
+# Firefox ???
+RUN /opt/common-scripts/apt-install \
+        firefox
+
+# Libraries for FITS, DS9, ML
+RUN /opt/common-scripts/apt-install \
         file \
         libcfitsio-bin \
         libcfitsio-dev \
         apt-file \
-        texlive-latex-recommended \
-        cm-super \
         libxpa-dev \
         libxt-dev \
         libbz2-dev \
-        nvidia-cuda-toolkit \
-        gedit \
-	saods9 \
-	net-tools \
-        && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+        nvidia-cuda-toolkit
+
+# Latex
+RUN /opt/common-scripts/apt-install \
+        texlive-latex-recommended \
+        cm-super
 
 # ------------------------------------------------------------------------
 # This must be run after conda installs
