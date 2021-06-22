@@ -25,7 +25,8 @@ rsync -r  /etc/default-home-contents/ /home/jovyan
 
 # .............................................................................................
 
-git clone https://github.com/spacetelescope/romancal-notebooks.git
+# this will fail if the clone already exists
+git clone https://github.com/spacetelescope/romancal-notebooks.git || true
 
 ROMANCAL_ALL_NOTEBOOKS=`find /home/jovyan/romancal-notebooks -name '*.ipynb' | xargs ls -1`
 
