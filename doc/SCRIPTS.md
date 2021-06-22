@@ -252,3 +252,50 @@ pushing.
 
 - Using `docker-wipe` clears out Docker completely,  removing all images,
 containers, and the build cache.
+
+#### Prototype Image Squashing
+
+There is a family of related scripts which implement a "lossless" compression
+strategy by eliminating duplicate copies of files and other similar issues:
+
+- squash              master script which will complete the entire process
+                        relative to the current mission image.
+- squash-crosslink    runs /opt/common/crosslink as a patch inside a container.
+- squash-export       exports the patched multilayer docker image to an external archive file.
+- squash-build-cmd    creates a docker import command which restores critical image
+                        metadata obtained by running docker inspect on the original image.
+- squash-import       runs the docker import command creating a new single layer image
+                        based on the file system export archive and inspected metadata.
+
+It works by:
+
+1. Detecting duplicate files via sha1sum using /opt/common-scripts/crosslink on /opt/conda.
+
+2. Replacing duplicate files with hard links to a master copy using /opt/common-scripts/crosslink.
+
+3. The combined multilayer image file system is exported to an archive file using `docker export.`
+
+4. Metadata from the original image is captured using `docker inspect.`
+
+5. The `docker import` command is built referring to the export file and defining metadata.
+
+6. The `docker import` command is run creating a new single layer image with restored metadata.
+
+The script `/opt/common-scripts/crosslink` runs inside a container as a
+patch script.  Paradoxically,  the new layer which hard links redundant files
+can only add to the overall image size.
+
+Once the image is crosslinked/patched, squashing all image layers into a single
+layer eliminates buried redundancies,  deleted files, etc. finally reducing
+overall size.
+
+*Performance*
+
+Crosslinking is surprisingly fast,  just a few minutes.
+
+Running everything on the Tike DEV CI-node reduced the 21.1G image down to
+15.8G in 15-20 min with the bulk of the time consumed by exporting and
+re-importing.  An existing PyPi project I tried required 2 hours.
+
+Extra disk space for the archive file is required, further limiting squash
+for CI on GitHub.
