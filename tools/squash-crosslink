@@ -1,0 +1,24 @@
+#! /bin/bash
+
+# This script executes the crosslink script as a patch which creates a new
+# image layer in which redundant conda files are replaced by hard links.
+# This overall image can then later be squashed to create a smaller net image
+# with one layer.
+
+set -eu
+
+IMG=${1:-${IMAGE_ID}}
+
+# -------------------------------------------------------------------------------
+# Write out a fully specified crosslink command as a parameterless patch script.
+
+cat >/tmp/squash.patch <<EOF
+/opt/common-scripts/crosslink --link /opt/conda
+EOF
+
+# -------------------------------------------------------------------------------
+# Execute the crosslink patch script to create a new image where redundant
+# files are hard # linked.  This image is nominally *larger* since the hard links
+# only exist in a # new image layer and all prior layers still exist.
+
+patch-image    /tmp/squash.patch  dmd_octarine@stsci.edu  "crosslink conda space reduction"  $IMG
