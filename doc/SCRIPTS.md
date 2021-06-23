@@ -25,12 +25,14 @@ Automated testing:
 - image-configure  -- generate setup-env for CI based on simple inputs
 - image-scan    -- after pushing,  run this to download and examine ECR scan results
 
-Interact with ECR to push images, pull images, and delete images:
+Interact with ECR to push images, pull images, delete images, and tag/untag images:
 
 - image-push    -- push the built image to ECR at the configured tag
 - image-pull    -- pull the configured image tag from ECR to the local Docker
 - image-delete  -- delete the specified image tags or digests from ECR, e.g. to ditch vulnerable images
 - image-login   -- log in to ECR
+- image-promote -- promote an image to the next tier (e.g. dev --> test); use with "awsudo $ADMIN_ARN"
+- image-remove-tag -- remove a tag from a specified image; use with "awsudo $ADMIN_ARN"
 
 Run a JH image in local Docker for inspection, development, debug:
 
@@ -272,6 +274,3 @@ pushing.
 
 - Using `docker system prune -a` clears out Docker completely,  removing all images,
 containers, and the build cache.
-
-
-

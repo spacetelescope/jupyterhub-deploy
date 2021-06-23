@@ -5,12 +5,17 @@ import sys
 import subprocess
 import boto3
 
+"""
+This script is primarily used for testing purposes.  It removes a specified
+tag from a specifified image.
+
+Usage:
+    image-remove-tag <tag> <image digest>
+"""
 
 env = os.environ.get('ENVIRONMENT', None)
 central_ecr_account_id = os.environ.get('CENTRAL_ECR_ACCOUNT_ID', None)
 deployment_name = os.environ.get('DEPLOYMENT_NAME', None)
-
-# TODO: make sure all these env vars are not None
 
 digest = sys.argv[1]
 tag = sys.argv[2]

@@ -30,7 +30,7 @@ dependencies:
   - python_abi=3.8
   - readline=8.1
   - setuptools=49.6.0
-  - sqlite=3.35.5
+  - sqlite=3.36.0
   - tk=8.6.10
   - unixodbc=2.3.9
   - wheel=0.36.2
@@ -40,11 +40,11 @@ dependencies:
     - aiohttp==3.7.4.post0
     - alabaster==0.7.12
     - ansiwrap==0.8.4
-    - anyio==3.1.0
+    - anyio==3.2.0
     - appdirs==1.4.4
     - argon2-cffi==20.1.0
     - asdf==2.8.1
-    - asteval==0.9.23
+    - asteval==0.9.25
     - astropy==4.2.1
     - astropy-sphinx-theme==1.1
     - astroquery==0.4.2
@@ -52,15 +52,15 @@ dependencies:
     - async-generator==1.10
     - async-timeout==3.0.1
     - attrs==21.2.0
-    - awscli==1.19.97
+    - awscli==1.19.98
     - babel==2.9.1
     - backcall==0.2.0
     - beautifulsoup4==4.9.3
     - black==21.6b0
     - bleach==3.3.0
     - bokeh==2.3.2
-    - boto3==1.17.97
-    - botocore==1.20.97
+    - boto3==1.17.98
+    - botocore==1.20.98
     - bottleneck==1.3.2
     - bqplot==0.12.27
     - bqplot-image-gl==1.4.2
@@ -95,8 +95,8 @@ dependencies:
     - glue-jupyter==0.2.2
     - glue-vispy-viewers==1.0.2
     - gwcs==0.16.1
-    - h5py==3.2.1
-    - healpy==1.14.0
+    - h5py==3.3.0
+    - healpy==1.15.0
     - html5lib==1.1
     - idna==2.10
     - imageio==2.9.0
@@ -124,7 +124,7 @@ dependencies:
     - jmespath==0.10.0
     - joblib==1.0.1
     - jplephem==2.15
-    - json5==0.9.5
+    - json5==0.9.6
     - jsonschema==3.2.0
     - jupyter-bokeh==3.0.2
     - jupyter-client==6.1.12
@@ -164,7 +164,7 @@ dependencies:
     - numpydoc==1.1.0
     - openpyxl==3.0.7
     - packaging==20.9
-    - pandas==1.2.4
+    - pandas==1.2.5
     - pandeia-engine==1.6
     - pandocfilters==1.4.3
     - pandokia==2.3.0
@@ -223,17 +223,17 @@ dependencies:
     - s3transfer==0.4.2
     - scikit-image==0.18.1
     - scikit-learn==0.24.2
-    - scipy==1.6.3
+    - scipy==1.7.0
     - secretstorage==3.3.1
     - semantic-version==2.8.5
-    - send2trash==1.5.0
+    - send2trash==1.7.1
     - simpervisor==0.4
     - six==1.16.0
     - sniffio==1.2.0
     - snowballstemmer==2.1.0
     - soupsieve==2.2.1
     - spectral-cube==0.4.3
-    - specutils==1.2
+    - specutils==1.3
     - specviz==0.7.0
     - spherical-geometry==1.2.20
     - sphinx==3.5.4
