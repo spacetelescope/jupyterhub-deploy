@@ -25,7 +25,7 @@ Automated testing:
 - image-configure  -- generate setup-env for CI based on simple inputs
 - image-scan    -- after pushing,  run this to download and examine ECR scan results
 
-Interact with ECR to push images, pull images, delete images, and tag/untag images:
+Interact with ECR to push, pull, delete, and tag images:
 
 - image-push    -- push the built image to ECR at the configured tag
 - image-pull    -- pull the configured image tag from ECR to the local Docker
