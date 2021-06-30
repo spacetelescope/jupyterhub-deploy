@@ -6,7 +6,7 @@ dependencies:
   - _openmp_mutex=4.5
   - alembic=1.6.5
   - altair=4.1.0
-  - anyio=3.2.0
+  - anyio=3.2.1
   - appdirs=1.4.4
   - argon2-cffi=20.1.0
   - async_generator=1.10
@@ -45,16 +45,16 @@ dependencies:
   - cycler=0.10.0
   - cython=0.29.23
   - cytoolz=0.11.0
-  - dask=2021.6.1
-  - dask-core=2021.6.1
+  - dask=2021.6.2
+  - dask-core=2021.6.2
   - decorator=4.4.2
   - defusedxml=0.7.1
   - dill=0.3.4
-  - distributed=2021.6.1
+  - distributed=2021.6.2
   - entrypoints=0.3
   - filelock=3.0.12
   - freetype=2.10.4
-  - fsspec=2021.6.0
+  - fsspec=2021.6.1
   - giflib=5.2.1
   - glob2=0.7
   - gmp=6.2.1
@@ -67,12 +67,12 @@ dependencies:
   - idna=2.10
   - imagecodecs=2021.6.8
   - imageio=2.9.0
-  - importlib-metadata=4.5.0
+  - importlib-metadata=4.6.0
   - ipydatawidgets=4.2.0
   - ipyevents=0.8.2
   - ipykernel=5.5.5
   - ipympl=0.7.0
-  - ipython=7.24.1
+  - ipython=7.25.0
   - ipython_genutils=0.2.0
   - ipyvue=1.5.0
   - ipyvuetify=1.7.0
@@ -86,7 +86,7 @@ dependencies:
   - jsonschema=3.2.0
   - jupyter_client=6.1.12
   - jupyter_core=4.7.1
-  - jupyter_server=1.8.0
+  - jupyter_server=1.9.0
   - jupyter_telemetry=0.1.0
   - jupyterhub=1.4.1
   - jupyterhub-base=1.4.1
@@ -97,7 +97,7 @@ dependencies:
   - kiwisolver=1.3.1
   - krb5=1.19.1
   - lcms2=2.12
-  - ld_impl_linux-64=2.35.1
+  - ld_impl_linux-64=2.36.1
   - lerc=2.2.1
   - libaec=1.0.5
   - libarchive=3.5.1
@@ -121,7 +121,7 @@ dependencies:
   - libpng=1.6.37
   - libprotobuf=3.17.2
   - libsodium=1.0.18
-  - libsolv=0.7.18
+  - libsolv=0.7.19
   - libssh2=1.9.0
   - libstdcxx-ng=9.3.0
   - libtiff=4.3.0
@@ -146,7 +146,7 @@ dependencies:
   - msgpack-python=1.0.2
   - nbclassic=0.3.1
   - nbclient=0.5.3
-  - nbconvert=6.0.7
+  - nbconvert=6.1.0
   - nbformat=5.1.3
   - ncurses=6.2
   - nest-asyncio=1.5.1
@@ -155,7 +155,7 @@ dependencies:
   - notebook=6.4.0
   - numba=0.53.1
   - numexpr=2.7.3
-  - numpy=1.20.3
+  - numpy=1.21.0
   - oauthlib=3.1.1
   - olefile=0.46
   - openblas=0.3.15
@@ -163,8 +163,8 @@ dependencies:
   - openssl=1.1.1k
   - packaging=20.9
   - pamela=1.0.0
-  - pandas=1.2.4
-  - pandoc=2.14.0.2
+  - pandas=1.2.5
+  - pandoc=2.14.0.3
   - pandocfilters=1.4.2
   - parso=0.8.2
   - partd=1.2.0
@@ -173,7 +173,7 @@ dependencies:
   - pexpect=4.8.0
   - pickleshare=0.7.5
   - pillow=8.2.0
-  - pip=21.1.2
+  - pip=21.1.3
   - pkginfo=1.7.0
   - pooch=1.4.0
   - prometheus_client=0.11.0
@@ -206,8 +206,9 @@ dependencies:
   - reproc=14.2.1
   - reproc-cpp=14.2.1
   - requests=2.25.1
+  - requests-unixsocket=0.2.0
   - ripgrep=13.0.0
-  - ruamel.yaml=0.17.9
+  - ruamel.yaml=0.17.10
   - ruamel.yaml.clib=0.2.2
   - ruamel_yaml=0.15.80
   - scikit-image=0.18.1
@@ -222,7 +223,7 @@ dependencies:
   - sniffio=1.2.0
   - sortedcontainers=2.4.0
   - soupsieve=2.0.1
-  - sqlalchemy=1.4.18
+  - sqlalchemy=1.4.20
   - sqlite=3.36.0
   - statsmodels=0.12.2
   - sympy=1.8
@@ -239,7 +240,7 @@ dependencies:
   - traittypes=0.2.1
   - typing_extensions=3.10.0.0
   - tzdata=2021a
-  - urllib3=1.26.5
+  - urllib3=1.26.6
   - wcwidth=0.2.5
   - webencodings=0.5.1
   - websocket-client=0.57.0
@@ -262,10 +263,10 @@ dependencies:
     - astropy==4.2.1
     - astropy-sphinx-theme==1.1
     - async-timeout==3.0.1
-    - awscli==1.19.98
+    - awscli==1.19.102
     - black==21.6b0
-    - boto3==1.17.98
-    - botocore==1.20.98
+    - boto3==1.17.102
+    - botocore==1.20.102
     - bqplot==0.12.27
     - bqplot-image-gl==1.4.2
     - ci-watson==0.5
@@ -297,7 +298,7 @@ dependencies:
     - mpl-scatter-density==0.7
     - multidict==5.1.0
     - mypy-extensions==0.4.3
-    - nbgitpuller==0.10.0
+    - nbgitpuller==0.10.1
     - numpydoc==1.1.0
     - papermill==2.3.3
     - pathspec==0.8.1
@@ -315,7 +316,7 @@ dependencies:
     - pytest-doctestplus==0.9.0
     - pytest-openfiles==0.5.0
     - pythreejs==2.3.0
-    - qtconsole==5.1.0
+    - qtconsole==5.1.1
     - qtpy==1.9.0
     - regex==2021.4.4
     - requests-mock==1.9.3
@@ -325,7 +326,7 @@ dependencies:
     - snowballstemmer==2.1.0
     - sphinx==3.5.4
     - sphinx-asdf==0.1.1
-    - sphinx-astropy==1.3
+    - sphinx-astropy==1.4
     - sphinx-automodapi==0.13
     - sphinx-bootstrap-theme==0.7.1
     - sphinx-gallery==0.9.0
