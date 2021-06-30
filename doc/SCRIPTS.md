@@ -32,7 +32,6 @@ Interact with ECR to push images, pull images, delete images, and tag/untag imag
 - image-delete  -- delete the specified image tags or digests from ECR, e.g. to ditch vulnerable images
 - image-login   -- log in to ECR
 - image-promote -- promote an image to the next tier (e.g. dev --> test); use with "awsudo $ADMIN_ARN"
-- image-remove-tag -- remove a tag from a specified image; use with "awsudo $ADMIN_ARN"
 
 Run a JH image in local Docker for inspection, development, debug:
 
