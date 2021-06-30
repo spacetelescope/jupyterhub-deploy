@@ -1,5 +1,6 @@
+#! /bin/bash
 
-#! /bin/bash -eu
+set -eu
 
 # This script is used to generate a new version of an existing image by running
 # a patch script inside a container created from the image.  The container is
@@ -33,7 +34,12 @@ INSTALLED_PATCH=${PATCH_DIR}/`basename $PATCH_FILE`
 
 PATCH_CONTAINER=image-patched
 
+REPO=`echo $IMAGE_ID | cut -d':' -f1`
+
 # -----------------------------------------------------------------------------------
+echo "Tagging ${IMAGE_ID} as ${REPO}:pre-patch..."
+docker image tag  ${IMAGE_ID}   ${REPO}:pre-patch
+
 docker container rm -f ${PATCH_CONTAINER}  >& /dev/null
 
 # Start a container to use as a target for cp and exec;  use sleep to keep it running.
