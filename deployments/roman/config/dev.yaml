@@ -1,4 +1,7 @@
 jupyterhub:
+  singleuser:
+    image:
+      tag: latest-dev
   prePuller:
     continuous:
       # Don't need continuous pre-puller on staging

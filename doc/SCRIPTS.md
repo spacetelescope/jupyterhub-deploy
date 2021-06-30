@@ -25,12 +25,13 @@ Automated testing:
 - image-configure  -- generate setup-env for CI based on simple inputs
 - image-scan    -- after pushing,  run this to download and examine ECR scan results
 
-Interact with ECR to push images, pull images, and delete images:
+Interact with ECR to push, pull, delete, and tag images:
 
 - image-push    -- push the built image to ECR at the configured tag
 - image-pull    -- pull the configured image tag from ECR to the local Docker
 - image-delete  -- delete the specified image tags or digests from ECR, e.g. to ditch vulnerable images
 - image-login   -- log in to ECR
+- image-promote -- promote an image to the next tier (e.g. dev --> test); use with "awsudo $ADMIN_ARN"
 
 Run a JH image in local Docker for inspection, development, debug:
 
@@ -319,4 +320,3 @@ re-importing.  An existing PyPi project I tried required 2 hours.
 
 Extra disk space for the archive file is required, further limiting squash
 for CI on GitHub.
-
