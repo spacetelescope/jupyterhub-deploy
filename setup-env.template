@@ -8,7 +8,7 @@
 
 export ACCOUNT_ID=12345678
 export CENTRAL_ECR_ACCOUNT_ID=12345678
-export USE_CENTERAL_ECR=<true | false>
+export USE_CENTERAL_ECR=false
 export ADMIN_ROLENAME=admin-role
 export DEPLOYMENT_NAME=cluster-name
 export IMAGE_TAG=latest

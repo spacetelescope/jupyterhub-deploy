@@ -11,5 +11,4 @@ perl -pi -e "s/USE_FROZEN=[\d]/USE_FROZEN=$USE_FROZEN/g" setup-env
 
 perl -pi -e "s/PERSONAL_IMAGE=[\d]/PERSONAL_IMAGE=1/g" setup-env
 
-
 cat  setup-env
