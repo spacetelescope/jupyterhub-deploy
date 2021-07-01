@@ -6,11 +6,11 @@
 
 # ----------------- basic inputs,  must set --------------
 
-export ACCOUNT_ID=12345678
-export CENTRAL_ECR_ACCOUNT_ID=12345678
-export USE_CENTERAL_ECR=<true | false>
-export ADMIN_ROLENAME=admin-role
-export DEPLOYMENT_NAME=cluster-name
+export ACCOUNT_ID=<12345678>
+export CENTRAL_ECR_ACCOUNT_ID=<12345678>
+export USE_CENTERAL_ECR=false
+export ADMIN_ROLENAME=jupyterhub-admin
+export DEPLOYMENT_NAME=<cluster-name>
 export IMAGE_TAG=latest
 export COMMON_TAG=common-latest
 
