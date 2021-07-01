@@ -9,7 +9,10 @@ perl -pi -e "s/DEPLOYMENT_NAME=cluster-name/DEPLOYMENT_NAME=$DEPLOYMENT_NAME/g" 
 USE_FROZEN=${2:-0}
 perl -pi -e "s/USE_FROZEN=[\d]/USE_FROZEN=$USE_FROZEN/g" setup-env
 
+USE_CENTRAL_ECR=${3:-false}
+
 perl -pi -e "s/PERSONAL_IMAGE=[\d]/PERSONAL_IMAGE=1/g" setup-env
 
+perl -pi -e "s/export USE_CENTERAL_ECR=\<true \| false\>/export USE_CENTERAL_ECR=${USE_CENTRAL_ECR}/g" setup-env
 
 cat  setup-env
