@@ -96,6 +96,7 @@ COPY --chown=${NB_UID}:${NB_GID} environments/ /opt/environments
 RUN sed -i 's/data-base-url="{{base_url | urlencode}}"/data-base-url="{{base_url}}"/g' `ls -1 ${CONDA_DIR}/lib/python*/site-packages/notebook/templates/notebook.html`
 
 # ----------------------------------------------------------------------
+
 USER $NB_UID
 RUN /opt/common-scripts/kernel-setup   # set up Ipython / JupyterLab kernels
 
@@ -108,10 +109,10 @@ USER root
 
 # remove this step once nbgitpuller enabled; these contents will be in the
 #  jupyterhub-user-content repo.   Install deployment-specific $HOME files.
-COPY default-home-contents/  /etc/default-home-contents
+COPY default-home-contents/ /etc/default-home-contents
 RUN  cp -r /home/jovyan/.local /etc/default-home-contents && \
      cp -r /home/jovyan/.jupyter /etc/default-home-contents
-COPY global_bashrc  /home/jovyan
+COPY global_bashrc /home/jovyan
 RUN  cat /home/jovyan/global_bashrc >> /etc/bash.bashrc  && \
      rm /home/jovyan/global_bashrc
 
