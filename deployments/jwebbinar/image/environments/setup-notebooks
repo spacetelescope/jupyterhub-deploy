@@ -1,4 +1,4 @@
-s is a standard entry-point used to set up notebooks for this
+# This is a standard entry-point used to set up notebooks for this
 # Docker image.   It is nominally used to pull notebook repos using
 # nbgitpuller and then update the default kernels specified in the
 # notebook files using set-notebook-kernels.
