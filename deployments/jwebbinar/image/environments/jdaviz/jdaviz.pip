@@ -1,5 +1,4 @@
-jdaviz==1.1
-#git+https://github.com/spacetelescope/jdaviz.git
+git+https://github.com/spacetelescope/jdaviz.git
 jwst==0.17.1
 anyio==2.2.0
 appnope==0.1.2
@@ -83,7 +82,7 @@ Send2Trash==1.5.0
 six==1.15.0
 sniffio==1.2.0
 spectral-cube>=0.5.0
-specutils==1.2
+specutils
 terminado==0.9.3
 testpath==0.4.4
 tifffile==2021.3.17

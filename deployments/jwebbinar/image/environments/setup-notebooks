@@ -1,21 +1,16 @@
-s is a standard entry-point used to set up notebooks for this
+# This is a standard entry-point used to set up notebooks for this
 # Docker image.   It is nominally used to pull notebook repos using
 # nbgitpuller and then update the default kernels specified in the
 # notebook files using set-notebook-kernels.
 
 /opt/common-scripts/git-sync https://github.com/spacetelescope/jwebbinar_prep current_webbinar /home/jovyan/jwebbinar_prep
 
-#/opt/common-scripts/set-notebook-kernel jdaviz jdaviz jwebbinar_prep/test_environment/JWebbinar_viztool_tests.ipynb
-
-#/opt/common-scripts/set-notebook-kernel jwebbinar JWebbinar jwebbinar_prep/test_environment/pipeline_testenv_nirissdata.ipynb
-
-#/opt/common-scripts/set-notebook-kernel jwebbinar JWebbinar jwebbinar_prep/pipeline_products_session/*.ipynb
-
-# /opt/common-scripts/set-notebook-kernel jwebbinar JWebbinar jwebbinar_prep/imaging_mode/*.ipynb
-
-/opt/common-scripts/set-notebook-kernel jwebbinar JWebbinar jwebbinar_prep/spec_mode/*.ipynb
-/opt/common-scripts/set-notebook-kernel jwebbinar JWebbinar jwebbinar_prep/spec_mode/*/*/*.ipynb
+/opt/common-scripts/set-notebook-kernel jwebbinar JWebbinar jwebbinar_prep/ifu_session/MRS_Notebook2.ipynb
+/opt/common-scripts/set-notebook-kernel jwebbinar JWebbinar jwebbinar_prep/ifu_session/jwebbinar5_nirspecifu.ipynb
+/opt/common-scripts/set-notebook-kernel jdaviz Jdaviz jwebbinar_prep/ifu_session/Cube_Analysis_Webbinar_solutions.ipynb
 
 mkdir -p /opt/environments/jwebbinar/tests
-ls -1 /home/jovyan/jwebbinar_prep/spec_mode/*.ipynb  | grep -v __ | grep -v _live  >/opt/environments/jwebbinar/tests/notebooks
-ls -1 /home/jovyan/jwebbinar_prep/spec_mode/*/*/*.ipynb  | grep -v __ | grep -v _live  >>/opt/environments/jwebbinar/tests/notebooks
+mkdir -p /opt/environments/jdaviz/tests
+ls -1 /home/jovyan/jwebbinar_prep/ifu_session/MRS_Notebook2.ipynb  | grep -v __ | grep -v _live  >/opt/environments/jwebbinar/tests/notebooks
+ls -1 /home/jovyan/jwebbinar_prep/ifu_session/jwebbinar5_nirspecifu.ipynb  | grep -v __ | grep -v _live  >/opt/environments/jwebbinar/tests/notebooks
+ls -1 /home/jovyan/jwebbinar_prep/ifu_session/Cube_Analysis_Webbinar_solutions.ipynb  | grep -v __ | grep -v _live  >/opt/environments/jdaviz/tests/notebooks
