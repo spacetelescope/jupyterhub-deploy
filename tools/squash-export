@@ -1,0 +1,17 @@
+#! /bin/bash
+
+# This script uses "docker export" to dump the contents of an image
+# to an export file.
+
+set -eu
+
+IMG=${1:-${IMAGE_ID}}
+EXPORT_FILE=${2:-${IMG}.export}
+
+export IMAGE_RUN_PARS="${IMAGE_RUN_PARS} -d -t -u 0 --rm"
+
+CONTAINER=`docker run $IMAGE_RUN_PARS $IMG  /bin/sleep 28800`
+
+docker export $CONTAINER  > ${EXPORT_FILE}
+
+docker stop ${CONTAINER}

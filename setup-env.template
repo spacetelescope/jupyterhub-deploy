@@ -7,7 +7,9 @@
 # ----------------- basic inputs,  must set --------------
 
 export ACCOUNT_ID=12345678
-export ADMIN_ROLENAME=admin-role
+export CENTRAL_ECR_ACCOUNT_ID=12345678
+export USE_CENTERAL_ECR=false
+export ADMIN_ROLENAME=aws-admin-role
 export DEPLOYMENT_NAME=cluster-name
 export IMAGE_TAG=latest
 export COMMON_TAG=common-latest

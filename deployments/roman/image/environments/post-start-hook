@@ -25,7 +25,7 @@ rsync -r  /etc/default-home-contents/ /home/jovyan
 
 # .............................................................................................
 
-git clone https://github.com/spacetelescope/romancal-notebooks.git
+/opt/common-scripts/git-sync https://github.com/spacetelescope/romancal-notebooks  main  /home/jovyan/romancal-notebooks
 
 ROMANCAL_ALL_NOTEBOOKS=`find /home/jovyan/romancal-notebooks -name '*.ipynb' | xargs ls -1`
 
