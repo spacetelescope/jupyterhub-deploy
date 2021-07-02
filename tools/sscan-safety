@@ -1,12 +1,26 @@
 #! /usr/bin/env bash
 
+# This script runs the "safety" Python dependency checker on each frozen
+# environment spec of the configured deployment
+#
+# Usage:  sscan-safety  @safety.ignore
+#            ignore vulnerabilities listed in ignore-file
+#         sscan-safety  none
+#            show all vulnerabilties regardless of ignore-file
+#         sscan-safety  safety-id1,safety-id2,...
+#            ignore the vulnerabilities listed on the command line
+#
+# See sscan-run-safety for more info on the format of safety.ignore.
+#
 cd $JUPYTERHUB_DIR
+
+IGNORE_IDS=${1:-@${IMAGE_DIR}/environments/frozen/safety.ignore}
 
 # Run safety on jupyterhub-deploy requirements.txt and deployment
 # frozen specs to check package dependencies for security issues.
 
 pip list --format=freeze >/tmp/requirements.txt
 
-sscan-run-safety /tmp/requirements.txt
+sscan-run-safety  none   /tmp/requirements.txt
 
-sscan-run-safety  `sscan-find-frozen-specs`
+sscan-run-safety  ${IGNORE_IDS} `sscan-find-frozen-specs`

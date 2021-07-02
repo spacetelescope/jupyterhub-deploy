@@ -1,0 +1,8 @@
+# Format this file using vulnerability lines grepped out of "safety" output.
+# Blank lines or lines beginnning with # are ignored.
+
+# | tensorflow                 | 1.15.5    | <2.1.4                   | 40675    |
+# | tensorflow                 | 1.15.5    | <2.1.4                   | 40676    |
+# | tensorflow                 | 1.15.5    | <2.1.4                   | 40673    |
+# | tensorflow                 | 1.15.5    | <2.4.0                   | 40795    |
+# | tensorflow                 | 1.15.5    | <2.4.0                   | 40794    |
