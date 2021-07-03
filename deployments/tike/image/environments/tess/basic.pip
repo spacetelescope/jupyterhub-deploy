@@ -8,8 +8,7 @@ bokeh
 panel
 ipywidgets
 
-numpy>=1.16.0,<1.19.0
-tensorflow>=1.15.4,<2.0.0
+numpy~=1.19.0
 scipy
 matplotlib
 scikit-learn
@@ -29,9 +28,11 @@ corner
 
 awscli
 boto3
+s3fs
 requests
 dask[distributed]
 future
 threadpoolctl
 joblib
 memoization
+h5py

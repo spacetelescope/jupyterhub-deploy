@@ -23,7 +23,6 @@ jupyterhub:
       enabled: true
   singleuser:
     image:
-      tag: latest
       pullPolicy: Always
     profileList:
       - display_name: "TIKE Science Platform"

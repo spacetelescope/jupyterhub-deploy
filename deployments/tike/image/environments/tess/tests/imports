@@ -1,6 +1,4 @@
 lightkurve
-eleanor
-tess_stars2px
 astropy
 astroquery
 dask
@@ -14,6 +12,7 @@ sklearn
 bokeh
 requests
 
+exoplanet
 pyvo
 george
 celerite
@@ -24,12 +23,22 @@ reproject
 tqdm
 astroML
 tensorflow
+keras
+seaborn
 
 juliet
 batman
 radvel
 
-#Pyriod
-#allesfitter
-#tvguide
-#astrobase
+tess_stars2px  #tess-point
+transitleastsquares
+wotan
+EDIunplugged
+pyLIMA
+aas_timeseries
+s3fs
+
+#Pyriod-is-notebook-only-has-widgets
+allesfitter
+tvguide
+astrobase

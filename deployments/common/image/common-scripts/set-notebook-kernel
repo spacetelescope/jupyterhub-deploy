@@ -36,8 +36,14 @@ def parse_args():
 def main():
     args = parse_args()
     for notebook in args.notebooks:
-        set_kernel(args.kernel, args.kernel_display_name, notebook)
-
+        if not notebook.startswith("#") and notebook.endswith(".ipynb"):
+            print(f"Setting kernel={args.kernel}  display_name={args.kernel_display_name}  notebook={notebook}")
+            sys.stdout.flush()
+            if notebook.startswith("!"):
+                notebook = notebook[1:]
+            set_kernel(args.kernel, args.kernel_display_name, notebook)
+        else:
+            print("Skipping set kernel for", notebook)
 
 if __name__ == "__main__":
     main()

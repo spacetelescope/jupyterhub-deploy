@@ -36,43 +36,37 @@ RUN /opt/common-scripts/env-create  tess /opt/environments/tess/tess.yml
 
 RUN /opt/common-scripts/install-common tess
 
+# ---------- supplies key build tools (cython, etc) which should potentially be common
 COPY --chown=${NB_UID}:${NB_GID} environments/tess/basic.pip  /opt/environments/tess/basic.pip
 RUN /opt/common-scripts/env-update  tess /opt/environments/tess/basic.pip
+
+# ----------
+# Due to numpy binary API incompatibilities and available compiled pip package versions
+# Re-building from source ensures compatability with the installed numpy
+# Install these BEFORE the packages which depend on them or you may get incompatible versions from PyPi
+
+# batman-package
+RUN  /opt/common-scripts/env-src-install  tess  https://files.pythonhosted.org/packages/f3/33/3eda063897edb8bd267347da08a9874ddf77eea8244e91daa37411f8bc56/batman-package-2.4.8.tar.gz
+
+# radvel
+RUN  /opt/common-scripts/env-src-install  tess  https://files.pythonhosted.org/packages/ae/df/956dfd5f990869818dc98e7077e570e977380ee2e5e54dbf6ec456dfb6d0/radvel-1.4.6.tar.gz
+
+# juliet
+RUN  /opt/common-scripts/env-src-install  tess  https://files.pythonhosted.org/packages/95/5c/2a97a352d0c4ba59a0decf06964f5660a13ac57004014a62fe4a9e2a891a/juliet-2.1.2.tar.gz
+
+# transitleastsquares
+# RUN  /opt/common-scripts/env-src-install  tess https://files.pythonhosted.org/packages/76/e6/371cff7a236330c5893486ac7a208e55c52ba1463bfb9ecc96676b03b36f/transitleastsquares-1.0.28.tar.gz
+
+# ----------
 
 COPY --chown=${NB_UID}:${NB_GID} environments/tess/tess.pip  /opt/environments/tess/tess.pip
 RUN /opt/common-scripts/env-update  tess /opt/environments/tess/tess.pip
 
-# ----------
-# juliet requires batman-package and radvel but as supplied by PyPi they are currently built with
-# a version of numpy which is too agressive for the current exoplanet overall dependency solution.
-# eventually these source installs should be reverted to standard pip installs as part of the juliet.pip
-# package bundle.
+COPY --chown=${NB_UID}:${NB_GID} environments/tess/ml.pip  /opt/environments/tess/ml.pip
+RUN /opt/common-scripts/env-update  tess /opt/environments/tess/ml.pip
 
-RUN  /opt/common-scripts/env-src-install  tess  https://files.pythonhosted.org/packages/f3/33/3eda063897edb8bd267347da08a9874ddf77eea8244e91daa37411f8bc56/batman-package-2.4.8.tar.gz
-
-RUN  /opt/common-scripts/env-src-install  tess  https://files.pythonhosted.org/packages/ae/df/956dfd5f990869818dc98e7077e570e977380ee2e5e54dbf6ec456dfb6d0/radvel-1.4.6.tar.gz
-
-COPY --chown=${NB_UID}:${NB_GID} environments/tess/juliet.pip  /opt/environments/tess/juliet.pip
-RUN /opt/common-scripts/env-update  tess /opt/environments/tess/juliet.pip
-
-# COPY --chown=${NB_UID}:${NB_GID} environments/tess/ml.pip  /opt/environments/tess/ml.pip
-# RUN /opt/common-scripts/env-update  tess /opt/environments/tess/ml.pip
-
-# --------------------------- EXOPLANET -------------------------------------
-
-COPY --chown=${NB_UID}:${NB_GID} environments/exoplanet/exoplanet.yml /opt/environments/exoplanet/exoplanet.yml
-RUN /opt/common-scripts/env-create  exoplanet /opt/environments/exoplanet/exoplanet.yml
-
-RUN /opt/common-scripts/install-common exoplanet
-
-COPY --chown=${NB_UID}:${NB_GID} environments/exoplanet/basic.pip  /opt/environments/exoplanet/basic.pip
-RUN /opt/common-scripts/env-update  exoplanet /opt/environments/exoplanet/basic.pip
-
-COPY --chown=${NB_UID}:${NB_GID} environments/exoplanet/exoplanet.pip  /opt/environments/exoplanet/exoplanet.pip
-RUN /opt/common-scripts/env-update  exoplanet /opt/environments/exoplanet/exoplanet.pip
-
-COPY --chown=${NB_UID}:${NB_GID} environments/exoplanet/ml.pip  /opt/environments/exoplanet/ml.pip
-RUN /opt/common-scripts/env-update  exoplanet /opt/environments/exoplanet/ml.pip
+COPY --chown=${NB_UID}:${NB_GID} environments/tess/exoplanet.pip  /opt/environments/tess/exoplanet.pip
+RUN /opt/common-scripts/env-update  tess /opt/environments/tess/exoplanet.pip
 
 # ----------------------------------------------------------------------
 COPY --chown=${NB_UID}:${NB_GID} environments/ /opt/environments

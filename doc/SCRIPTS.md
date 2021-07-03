@@ -32,6 +32,7 @@ Interact with ECR to push, pull, delete, and tag images:
 - image-delete  -- delete the specified image tags or digests from ECR, e.g. to ditch vulnerable images
 - image-login   -- log in to ECR
 - image-promote -- promote an image to the next tier (e.g. dev --> test); use with "awsudo $ADMIN_ARN"
+- ecr-cleanup   -- delete images in ECR by digest or based on prompting and 'y' or 'n' answers.
 
 Run a JH image in local Docker for inspection, development, debug:
 
@@ -164,6 +165,10 @@ from the result,  hijacking the configured tag.
 ```
 patch-os   admin@your-org  [<description>]    [<source-image-hash>]
 ```
+
+*NOTE:* Since patch-os does a very general OS update, in production it may be
+better to edit apt-install to select specific packages to update to reduce
+overall changes to the image.
 
 The `patch-ssl` script updates the SSL certs of the source image creating
 a new image from the result,  hijacking the configured tag.
