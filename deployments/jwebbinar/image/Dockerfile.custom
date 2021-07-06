@@ -64,18 +64,15 @@ RUN /opt/common-scripts/env-create jwebbinar /opt/environments/jwebbinar/jwebbin
 RUN /opt/common-scripts/install-common jwebbinar
 RUN /opt/common-scripts/env-update jwebbinar /opt/environments/jwebbinar/jwebbinar.pip
 
-RUN /opt/common-scripts/install-common jwebbinar
-
 COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/ /opt/environments/jwebbinar
 
 # ----------------------------------------------------------------------
 # Jdaviz
 COPY environments/jdaviz/jdaviz.yml /opt/environments/jdaviz/jdaviz.yml
 RUN /opt/common-scripts/env-create jdaviz /opt/environments/jdaviz/jdaviz.yml
+RUN /opt/common-scripts/install-common jdaviz
 COPY environments/jdaviz/jdaviz.pip /opt/environments/jdaviz/jdaviz.pip
 RUN /opt/common-scripts/env-update jdaviz /opt/environments/jdaviz/jdaviz.pip
-
-RUN /opt/common-scripts/install-common jdaviz
 
 COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/ /opt/environments/jdaviz
 
