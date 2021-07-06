@@ -62,7 +62,7 @@ class GitSync(object):
 
         modified = []
         for f in files:
-            retcode = os.system('git diff --exit-code {}'.format(f))
+            retcode = os.system('git diff -w --exit-code {}'.format(f))
             if retcode != 0:
                 modified.append(f)
 
