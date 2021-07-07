@@ -1,0 +1,49 @@
+#!/usr/bin/env python
+
+import os
+import subprocess
+import boto3
+
+"""
+The script is used to promote a docker image from either
+    dev --> test
+    test --> prod
+
+To promote an image, we find an image in the central ECR that has a tag
+of the pattern "latest-<dev | test>".  So, if $ENVIRONMENT=dev, we look for
+"latest-dev", and then add a tag of "latest-test".  Doing so makes the image
+available to the test cluster.
+"""
+
+env = os.environ.get('ENVIRONMENT', None)
+central_ecr_account_id = os.environ.get('CENTRAL_ECR_ACCOUNT_ID', None)
+deployment_name = os.environ.get('DEPLOYMENT_NAME', None)
+
+promotions = {
+   'dev': 'test',
+   'test': 'prod'
+}
+
+ecr = boto3.client('ecr')
+
+response = ecr.batch_get_image(
+    repositoryName=deployment_name,
+    registryId=central_ecr_account_id,
+    imageIds=[
+        {
+            'imageTag': f'latest-{env}'
+        },
+    ],
+    acceptedMediaTypes=[
+        'string',
+    ]
+)
+
+manifest = response['images'][0]['imageManifest']
+
+ecr.put_image(
+    repositoryName=deployment_name,
+    registryId=central_ecr_account_id,
+    imageManifest=manifest,
+    imageTag=f'latest-{promotions[env]}'
+)

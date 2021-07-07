@@ -1,7 +1,0 @@
-#! /bin/sh -eu
-
-# list the directories at $root_dir defaulting to .
-
-root_dir=${1:-.}
-
-find $root_dir -maxdepth 1 -type d| grep '/' | cut -d '/' -f2
