@@ -45,12 +45,18 @@ class GitSync(object):
                 logging.info('Moved {} to {} to avoid conflict with upstream'.format(f, new_file_name))
 
     def find_untracked_local_files(self):
+        ignore = ['.gitignore', 'README.md']
+        
         proc = subprocess.Popen(
-            ['git ls-files --others --exclude-standard'],
+            ['git ls-files'],
             stdout=subprocess.PIPE, shell=True
         )
         (output, err) = proc.communicate()
-        return [f for f in output.decode('utf-8').split('\n') if len(f) > 0]
+        untracked = [f for f in output.decode('utf-8').split('\n') if len(f) > 0 and f not in ignore]
+        for f in untracked:
+            logging.debug('Found untracked local file: {}'.format(f))
+        
+        return untracked
 
     def find_modified_local_files(self):
         proc = subprocess.Popen(
@@ -68,48 +74,45 @@ class GitSync(object):
 
         return modified
 
-    def find_upstream_updates(self, mode):
-        logging.info('Get list of files that have been added or modified upstream...')
+    def find_upstream_updates(self):
+        logging.info('Get list of files that have been modified or added upstream...')
 
-        def check_upstream(m):
-            output = subprocess.check_output([
-                'git', 'log', '..origin/{}'.format(self.branch_name),
-                '--oneline', '--name-status'
-            ], cwd=self.repo_dir).decode()
-            files = []
-            for line in output.split('\n'):
+        modes = ['A', 'M']
+        output = subprocess.check_output([
+            'git', 'log', '..origin/{}'.format(self.branch_name),
+            '--oneline', '--name-status'
+        ], cwd=self.repo_dir).decode()
+        files = []
+        for line in output.split('\n'):
+            for m in modes:
                 if line.startswith(m):
                     f = os.path.relpath(line.split('\t', 1)[1], self.repo_dir)
-                    logging.debug('New or modified upstream file: [{}] {}'.format(m, f))
+                    logging.debug('Upstream file [{}]: {}'.format(m, f))
                     files.append(f)
 
-            return files
-
-        if mode in ['A', 'M']:
-            return check_upstream(mode)
-        else:
-            raise Exception('mode must be either A or M')
+        return files
 
     def merge(self):
         logging.info('Merging {} into local clone...'.format(self.branch_name))
         user_email = 'archive@stsci.edu'
         user_name = 'git-sync'
-        # BUG: is the commit part working?
         os.system('git -c user.email={} -c user.name={} merge -Xours --no-edit origin/{}'.format(
             user_email, user_name, self.branch_name
         ))
 
     def prepare_clone(self):
-        new_upstream_files = self.find_upstream_updates('A')
-        modified_upstream_files = self.find_upstream_updates('M')
+        modified_upstream_files = self.find_upstream_updates()
+        modified_local_files = self.find_modified_local_files()
         untracked_local_files = self.find_untracked_local_files()
 
         # move certain files to avoid conflicts with upstream
         # - tracked local files that have been modified
-        # - untracked local files that have been created,
-        #   and upstream files of the same names have also been created
-        files_to_move = self.find_modified_local_files()
-        files_to_move.extend([f for f in untracked_local_files if f in new_upstream_files])
+        # - untracked local files that have been created, where upstream
+        #   files of the same names have also been created or modified
+        files_to_move = modified_local_files + modified_upstream_files
+        files_to_move.extend([f for f in untracked_local_files if modified_upstream_files])
+
+        # BUG/TODO: if a local file has been removed via "git rm", check it out before moving files
         self.move_files(files_to_move)
 
         # if local files have been removed, but still exist upstream, restore them
