@@ -7,7 +7,7 @@
 export ACCOUNT=${ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
 export ECR_ACCOUNT=${CENTRAL_ECR_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
 
-if $USE_CENTRAL_ECR
+if [ "$USE_CENTRAL_ECR" = true ]
 then
     export ECR_ACCOUNT_TO_USE=$ECR_ACCOUNT
     export IMAGE_REPO=${DEPLOYMENT_NAME}

@@ -9,5 +9,9 @@ image-login
 UNSCANNED_ID=`echo $IMAGE_ID | perl -pi -e "s/:latest/:unscanned-latest-${ENVIRONMENT}/g"`
 
 echo "================================== Pushing ${IMAGE_ID} as ${UNSCANNED_ID} =============================="
-docker image tag $IMAGE_ID $UNSCANNED_ID
-docker push ${UNSCANNED_ID}
+#docker image tag $IMAGE_ID $UNSCANNED_ID
+#docker push ${UNSCANNED_ID}
+
+# UNDO
+docker image tag $IMAGE_ID $IMAGE_ID
+docker push ${IMAGE_ID}

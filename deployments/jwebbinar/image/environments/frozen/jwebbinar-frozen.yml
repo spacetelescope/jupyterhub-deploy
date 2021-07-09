@@ -46,7 +46,7 @@ dependencies:
     - asdf==2.8.1
     - astropy==4.2.1
     - astropy-sphinx-theme==1.1
-    - astroquery==0.4.3.dev6893
+    - astroquery==0.4.3.dev6900
     - astroscrappy==1.0.8
     - async-generator==1.10
     - async-timeout==3.0.1
@@ -175,7 +175,7 @@ dependencies:
     - pexpect==4.8.0
     - photutils==1.1.0
     - pickleshare==0.7.5
-    - pillow==8.3.0
+    - pillow==8.3.1
     - pipdeptree==2.0.0
     - pluggy==0.13.1
     - poppy==0.9.2

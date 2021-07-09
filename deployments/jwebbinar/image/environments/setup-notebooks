@@ -5,10 +5,10 @@
 
 /opt/common-scripts/git-sync https://github.com/spacetelescope/jwebbinar_prep current_webbinar /home/jovyan/jwebbinar_prep
 
-/opt/common-scripts/set-notebook-kernel jwebbinar JWebbinar jwebbinar_prep/pointsource_imaging/MIRI_Aperture_Photometry.ipynb
-/opt/common-scripts/set-notebook-kernel jwebbinar JWebbinar jwebbinar_prep/pointsource_imaging/NIRCam_Basic_PSF_Photometry_v2.ipynb
+/opt/common-scripts/set-notebook-kernel jwebbinar JWebbinar jwebbinar_prep/pointsource_imaging/MIRI_Aperture_Photometry_*.ipynb
+/opt/common-scripts/set-notebook-kernel jwebbinar JWebbinar jwebbinar_prep/pointsource_imaging/NIRCam_Basic_PSF_Photometry_*.ipynb
 
 mkdir -p /opt/environments/jwebbinar/tests
 mkdir -p /opt/environments/jdaviz/tests
-ls -1 /home/jovyan/jwebbinar_prep/pointsource_imaging/MIRI_Aperture_Photometry.ipynb | grep -v __ | grep -v _live  >/opt/environments/jwebbinar/tests/notebooks
-ls -1 /home/jovyan/jwebbinar_prep/pointsource_imaging/NIRCam_Basic_PSF_Photometry_v2.ipynb | grep -v __ | grep -v _live  >/opt/environments/jwebbinar/tests/notebooks
+ls -1 /home/jovyan/jwebbinar_prep/pointsource_imaging/MIRI_Aperture_Photometry_*.ipynb | grep -v __ | grep -v _live  >/opt/environments/jwebbinar/tests/notebooks
+ls -1 /home/jovyan/jwebbinar_prep/pointsource_imaging/NIRCam_Basic_PSF_Photometry_*.ipynb | grep -v __ | grep -v _live  >/opt/environments/jwebbinar/tests/notebooks
