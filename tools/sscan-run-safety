@@ -4,6 +4,43 @@
 """This script uses the pip 'safety' package to do vulnerability checking for
 the pip dependencies found in a conda environment spec, e.g. a jupyterhub-deploy
 frozen spec.
+
+Usage:
+
+$ sscan-run-safety  <ignore-ids>   <frozen-specs...>
+
+where:
+
+   ignore-ids is one of:
+      "none"
+      safety-id1,safety-id2,...
+      @ignore-file
+
+   frozen-specs are filepaths to conda environment specs or equivalent
+
+or literally like:
+
+   sscan-run-safety   none    deployments/tike/image/environments/frozen/tess-frozen.yml
+
+        to print all vulnerabilities
+
+   sscan-run-safety   40794,40795   deployments/tike/image/environments/frozen/tess-frozen.yml
+
+        to ignore safety IDs 40794 and 40795
+
+   sscan-run-safety   @${IMAGE_DIR}/environments/frozen/safety.ignore    deployments/tike/image/environments/frozen/tess-frozen.yml
+
+        to ignore ids in the file safety.ignore which has a format like:
+           # starts comment line
+           <blank lines are skipped>
+           "| tensorflow                 | 1.15.5    | <2.1.4                   | 40673    |"
+
+       The intent for @-files is that many IDs can be grepped from the output
+       of a run where ignore="none" and those ID lines maintain some record of
+       what they're about.  As seen above, regardless of issues exposed by
+       ID=40673, the root cause is that tensorflow needs to be >= 2.1.4 but is
+       not.  That same issue was reflected in 4-5 other IDs with varying descriptions,
+       hence the "grep safety output" approach for rapidly updating the .ignore file.
 """
 
 import os
@@ -13,30 +50,63 @@ import tempfile
 import subprocess
 
 
-def main(*frozen_specs_to_scan):
+def banner(title, char="=", spacer=" "):
+    print(f"{spacer}{title}{spacer}".center(80, char))
+    sys.stdout.flush()
+
+
+def main(ignore, *frozen_specs_to_scan):
     errs = False
     for spec in frozen_specs_to_scan:
-        print(f"==== Safety scanning spec {os.path.basename(spec)} ====")
-        errs = errs or scan_spec(spec)
-        print(f"==== End {os.path.basename(spec)} ====")
+        banner(f"Safety scanning {os.path.basename(spec)}")
+        errs = errs or scan_spec(ignore, spec)
+        banner(f"End {os.path.basename(spec)}")
     return errs
 
 
-def scan_spec(spec):
+def scan_spec(ignore, spec):
     pkgs = get_pip_dependencies(spec)
     if not pkgs:
-        print(f"==== No pip dependencies for {os.path.basename(spec)} ====")
+        banner(f"No pip dependencies for {os.path.basename(spec)}")
         return False
     requirements = "\n".join(pkgs)
     with tempfile.NamedTemporaryFile(mode="w+", delete=False) as file:
         file.write(requirements)
         file.close()
         print(open(file.name).read())
-        print("-------------")
         sys.stdout.flush()
-        completion = subprocess.run(("safety", "check", "--full-report", "--file", file.name))
+        completion = subprocess.run(("safety", "check", "--full-report", "--file", file.name,) + get_ignore_switches(ignore))
         sys.stdout.flush()
         return completion.returncode != 0
+
+
+def get_ignore_switches(ignore):
+    if ignore.lower() == "none":
+        return ()
+    elif ignore.startswith("@"):  # file input
+        input_text = open(ignore[1:]).read()
+        banner(f"Ignoring IDs in {os.path.basename(ignore)}:")
+        print(input_text.strip())
+        sids = []
+        for line in input_text.splitlines():
+            line = line.strip()
+            if line.startswith("#"):   # comment lines
+                continue
+            elif not line:     # blank lines
+                continue
+            elif line.startswith("|"): # safety output, e.g. "| tensorflow                 | 1.15.5    | <2.1.4                   | 40675    |"
+                sid = line.split("|")[4].strip()
+            else:
+                raise ValueError("Bad safety ignore format: " + repr(line))
+            sids.append(sid)
+    else:  # ids separated by commas,  no spaces
+        sids = ignore.split(",")
+        banner("Ignoring IDs:")
+        print("\n".join(sids))
+    ignore_switches = []
+    for sid in sids:
+        ignore_switches += ["--ignore", sid]
+    return tuple(ignore_switches)
 
 
 def get_pip_dependencies(spec):
@@ -54,4 +124,4 @@ def get_pip_dependencies(spec):
 
 
 if __name__ == "__main__":
-    sys.exit(int(main(*sys.argv[1:])))
+    sys.exit(int(main(sys.argv[1], *sys.argv[2:])))

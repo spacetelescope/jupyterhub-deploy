@@ -146,6 +146,12 @@ COPY common-scripts/ /opt/common-scripts
 COPY common-env/ /opt/common-env
 RUN cat /opt/common-scripts/global_bashrc >> /etc/bash.bashrc
 
+# ------------------------------------------------------------------------
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip && \
+    ./aws/install && \
+    rm -rf awscliv2
+
 # ----------------------------------------------------------------------
 # Common conda environments
 # USER ${NB_UID}
