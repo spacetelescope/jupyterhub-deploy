@@ -41,7 +41,7 @@ dependencies:
   - idna=2.10
   - imagecodecs=2021.6.8
   - imageio=2.9.0
-  - importlib-metadata=4.6.0
+  - importlib-metadata=4.6.1
   - ipydatawidgets=4.2.0
   - ipykernel=6.0.1
   - ipympl=0.7.0
@@ -102,7 +102,6 @@ dependencies:
   - olefile=0.46
   - openjpeg=2.4.0
   - openssl=1.1.1k
-  - packaging=20.9
   - pandoc=2.14.0.3
   - partd=1.2.0
   - pexpect=4.8.0
@@ -117,7 +116,7 @@ dependencies:
   - pyparsing=2.4.7
   - pyrsistent=0.17.3
   - pysocks=1.7.1
-  - python=3.9.5
+  - python=3.9.6
   - python-dateutil=2.8.1
   - python_abi=3.9
   - pythreejs=2.3.0
@@ -146,7 +145,7 @@ dependencies:
   - yaml=0.2.5
   - zeromq=4.3.4
   - zfp=0.5.5
-  - zipp=3.4.1
+  - zipp=3.5.0
   - zlib=1.2.11
   - zstd=1.5.0
   - pip:
@@ -184,7 +183,7 @@ dependencies:
     - filelock==3.0.12
     - flake8==3.9.2
     - freetype-py==2.2.0
-    - glue-astronomy==0.1
+    - glue-astronomy==0.2
     - glue-core==1.0.1
     - glue-jupyter==0.7
     - glue-vispy-viewers==1.0.2
@@ -205,7 +204,7 @@ dependencies:
     - jupyter-bokeh==3.0.2
     - jupyter-packaging==0.7.12
     - jupyter-server==1.6.1
-    - jupyter-server-proxy==3.0.2
+    - jupyter-server-proxy==3.1.0
     - jupyterlab==3.0.12
     - jupyterlab-server==2.6.0
     - jwst==0.17.1
@@ -222,6 +221,7 @@ dependencies:
     - notebook==6.3.0
     - numpy==1.20.1
     - numpydoc==1.1.0
+    - packaging==20.9
     - pandas==1.2.3
     - pandocfilters==1.4.3
     - papermill==2.3.3
@@ -249,7 +249,7 @@ dependencies:
     - qtconsole==5.0.3
     - qtpy==1.9.0
     - radio-beam==0.3.3
-    - regex==2021.7.1
+    - regex==2021.7.6
     - regions==0.4
     - requests-mock==1.9.3
     - requests-unixsocket==0.2.0

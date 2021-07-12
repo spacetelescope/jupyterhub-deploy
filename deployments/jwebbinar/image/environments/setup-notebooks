@@ -5,12 +5,10 @@
 
 /opt/common-scripts/git-sync https://github.com/spacetelescope/jwebbinar_prep current_webbinar /home/jovyan/jwebbinar_prep
 
-/opt/common-scripts/set-notebook-kernel jwebbinar JWebbinar jwebbinar_prep/ifu_session/MRS_Notebook2.ipynb
-/opt/common-scripts/set-notebook-kernel jwebbinar JWebbinar jwebbinar_prep/ifu_session/jwebbinar5_nirspecifu.ipynb
-/opt/common-scripts/set-notebook-kernel jdaviz Jdaviz jwebbinar_prep/ifu_session/Cube_Analysis_Webbinar_solutions.ipynb
+/opt/common-scripts/set-notebook-kernel jwebbinar JWebbinar jwebbinar_prep/pointsource_imaging/MIRI_Aperture_Photometry_*.ipynb
+/opt/common-scripts/set-notebook-kernel jwebbinar JWebbinar jwebbinar_prep/pointsource_imaging/NIRCam_Basic_PSF_Photometry_*.ipynb
 
 mkdir -p /opt/environments/jwebbinar/tests
 mkdir -p /opt/environments/jdaviz/tests
-ls -1 /home/jovyan/jwebbinar_prep/ifu_session/MRS_Notebook2.ipynb  | grep -v __ | grep -v _live  >/opt/environments/jwebbinar/tests/notebooks
-ls -1 /home/jovyan/jwebbinar_prep/ifu_session/jwebbinar5_nirspecifu.ipynb  | grep -v __ | grep -v _live  >/opt/environments/jwebbinar/tests/notebooks
-ls -1 /home/jovyan/jwebbinar_prep/ifu_session/Cube_Analysis_Webbinar_solutions.ipynb  | grep -v __ | grep -v _live  >/opt/environments/jdaviz/tests/notebooks
+ls -1 /home/jovyan/jwebbinar_prep/pointsource_imaging/MIRI_Aperture_Photometry_*.ipynb | grep -v __ | grep -v _live  >/opt/environments/jwebbinar/tests/notebooks
+ls -1 /home/jovyan/jwebbinar_prep/pointsource_imaging/NIRCam_Basic_PSF_Photometry_*.ipynb | grep -v __ | grep -v _live  >/opt/environments/jwebbinar/tests/notebooks

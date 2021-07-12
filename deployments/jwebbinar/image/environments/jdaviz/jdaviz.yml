@@ -1,19 +1,19 @@
 name: jdaviz
 channels:
-        - conda-forge
-        - https://ssb.stsci.edu/astroconda
-        - defaults
+    - conda-forge
+    - https://ssb.stsci.edu/astroconda
+    - defaults
 dependencies:
-        - pip
-        - bqplot-image-gl
-        - bqplot
-        - jupyterlab_widgets
-        - ipydatawidgets
-        - ipykernel
-        - ipympl
-        - ipython
-        - ipyvolume
-        - ipyvue
-        - ipyvuetify
-        - ipywebrtc
-        - ipywidgets
+    - pip
+    - bqplot-image-gl
+    - bqplot
+    - jupyterlab_widgets
+    - ipydatawidgets
+    - ipykernel
+    - ipympl
+    - ipython
+    - ipyvolume
+    - ipyvue
+    - ipyvuetify
+    - ipywebrtc
+    - ipywidgets
