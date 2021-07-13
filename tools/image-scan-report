@@ -4,7 +4,7 @@
 """This tool pulls down Docker image scan reports from ECR based on
 the current environment which is used to identify the image.
 
-image-scan-report   <Ubuntu version substring, e.g. Focal>   <min severity level, e.g. medium>
+image-scan-report <Ubuntu version substring, e.g. Focal> <min severity level, e.g. medium>
 
 The result of the report is a YAML file limited to CVE's which are
 at the minimum severity level or greater.
@@ -20,6 +20,7 @@ import subprocess
 import json
 import yaml
 import copy
+import argparse
 
 import requests
 import bs4
@@ -29,15 +30,19 @@ admin_arn=os.environ["ADMIN_ARN"]
 image_repo=os.environ["IMAGE_REPO"]
 image_tag=os.environ["IMAGE_TAG"]
 
-def get_scan_results():
+def get_scan_results(image_digest):
     """Issue an AWS command to dump the ECR scan results as JSON, load the
     JSON,  and return the resulting dict.
     """
+    image_id_arg = f"imageTag={image_tag}"
+    if image_digest:
+        image_id_arg = f"imageDigest={image_digest}"
+
     scan_results = subprocess.check_output((
         f"awsudo -d 3600 {admin_arn}  aws ecr describe-image-scan-findings "
         f"--no-paginate "
         f"--repository-name {image_repo} "
-        f"--image-id imageTag={image_tag}").split())
+        f"--image-id {image_id_arg}").split())
     return json.loads(scan_results)
 
 def limit_levels(version, levels, full_results):
@@ -78,14 +83,14 @@ FAIL_LEVELS = [
     "CRITCAL", "HIGH"
 ]
 
-def get_report_dict(version, levels):
+def get_report_dict(version, levels, image_digest):
     """Get the overall scan report dict which includes both ECR findings which
     have severities in `levels` and the Ubuntu status string for the CVE for
     Ubuntu `version`.
     """
     print("Fetching ECR vulnerability scan",file=sys.stderr)
     sys.stderr.flush()
-    vulnerabilities = get_scan_results()
+    vulnerabilities = get_scan_results(image_digest)
     while vulnerabilities["imageScanStatus"]["status"] != "COMPLETE":
         print("Waiting for ECR scan,  prior status:",
               vulnerabilities["imageScanStatus"]["status"], file=sys.stderr)
@@ -112,14 +117,27 @@ def fetch_ubuntu_uri_status(uri, version_name):
     return  "unknown"
 
 def main():
-    if len(sys.argv) != 3:
-        print("usage:", os.path.basename(sys.argv[0]),
-              "<Ubuntu version name, e.g. Focal>  <minimum severity level from", list(KEEP_LEVELS.keys()), ">")
-        print("example:", os.path.basename(sys.argv[0]), "Focal  medium")
-        sys.exit(1)
-    version = sys.argv[1]
-    levels = KEEP_LEVELS[sys.argv[2].upper()]
-    reduced = get_report_dict(version, levels)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('version', help='Ubuntu version substring, e.g. Focal')
+    parser.add_argument('levels', help='Minimum severity level, e.g. MEDIUM')
+    parser.add_argument('--image-digest', dest='image_digest', help='Digest of image to scan, e.g. sha256:*')
+    args = parser.parse_args()
+
+    #if len(sys.argv) != 3:
+    #    print("usage:", os.path.basename(sys.argv[0]),
+    #          "<Ubuntu version name, e.g. Focal>  <minimum severity level from", list(KEEP_LEVELS.keys()), ">")
+    #    print("example:", os.path.basename(sys.argv[0]), "Focal  medium")
+    #    sys.exit(1)
+    #version = sys.argv[1]
+
+    print()
+    print(args.version)
+    print(args.levels)
+    print(args.image_digest)
+    print()
+
+    levels = KEEP_LEVELS[args.levels.upper()]
+    reduced = get_report_dict(args.version, levels, args.image_digest)
     print(yaml.dump(reduced))
     if reduced["overall_status"] == "FAILED":
         return 1
