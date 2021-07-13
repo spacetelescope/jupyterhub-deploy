@@ -54,7 +54,7 @@ def limit_levels(version, levels, full_results):
     reduced_results = copy.deepcopy(full_results)
     findings  = reduced_results["imageScanFindings"]["findings"]
     reduced_results["imageScanFindings"]["findings"] = []
-    reduced_results["overall_status"] = "FAILED"
+    reduced_results["overall_status"] = "OK"
     for finding in findings:
         if finding["severity"] in levels or "ALL" in levels:
             reduced_results["imageScanFindings"]["findings"].append(finding)
