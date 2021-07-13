@@ -4,7 +4,7 @@
 """This tool pulls down Docker image scan reports from ECR based on
 the current environment which is used to identify the image.
 
-image-scan-report <Ubuntu version substring, e.g. Focal> <min severity level, e.g. medium>
+Run "image-scan-report --help" for usage information.
 
 The result of the report is a YAML file limited to CVE's which are
 at the minimum severity level or greater.
@@ -21,19 +21,33 @@ import json
 import yaml
 import copy
 import argparse
-
 import requests
 import bs4
 import time
 
-admin_arn=os.environ["ADMIN_ARN"]
-image_repo=os.environ["IMAGE_REPO"]
-image_tag=os.environ["IMAGE_TAG"]
+
+KEEP_LEVELS = {
+    "CRITICAL" : ["CRITICAL"],
+    "HIGH": ["CRITICAL", "HIGH"],
+    "MEDIUM" : ["CRITICAL", "HIGH", "MEDIUM"],
+    "LOW" : ["CRITICAL", "HIGH", "MEDIUM", "LOW"],
+    "INFORMATIONAL" : ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFORMATIONAL"],
+    "ALL" : ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFORMATIONAL"],
+}
+
+FAIL_LEVELS = [
+    "CRITCAL", "HIGH"
+]
+
 
 def get_scan_results(image_digest):
     """Issue an AWS command to dump the ECR scan results as JSON, load the
     JSON,  and return the resulting dict.
     """
+    admin_arn=os.environ["ADMIN_ARN"]
+    image_repo=os.environ["IMAGE_REPO"]
+    image_tag=os.environ["IMAGE_TAG"]
+
     image_id_arg = f"imageTag={image_tag}"
     if image_digest:
         image_id_arg = f"imageDigest={image_digest}"
@@ -70,19 +84,6 @@ def limit_levels(version, levels, full_results):
             reduced_results["overall_status"] = "FAILED"
     return reduced_results
 
-KEEP_LEVELS = {
-    "CRITICAL" : ["CRITICAL"],
-    "HIGH": ["CRITICAL", "HIGH"],
-    "MEDIUM" : ["CRITICAL", "HIGH", "MEDIUM"],
-    "LOW" : ["CRITICAL", "HIGH", "MEDIUM", "LOW"],
-    "INFORMATIONAL" : ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFORMATIONAL"],
-    "ALL" : ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFORMATIONAL"],
-}
-
-FAIL_LEVELS = [
-    "CRITCAL", "HIGH"
-]
-
 def get_report_dict(version, levels, image_digest):
     """Get the overall scan report dict which includes both ECR findings which
     have severities in `levels` and the Ubuntu status string for the CVE for
@@ -96,7 +97,7 @@ def get_report_dict(version, levels, image_digest):
               vulnerabilities["imageScanStatus"]["status"], file=sys.stderr)
         sys.stderr.flush()
         time.sleep(10)
-        vulnerabilities = get_scan_results()
+        vulnerabilities = get_scan_results(image_digest)
     reduced = limit_levels(version, levels, vulnerabilities)
     return reduced
 
