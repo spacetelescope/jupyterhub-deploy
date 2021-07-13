@@ -10,21 +10,19 @@ admin_arn = os.environ.get('ADMIN_ARN')
 ecr_account_to_use = os.environ.get('ECR_ACCOUNT_TO_USE')
 image_repo = os.environ.get('IMAGE_REPO')
 
-
 candidates_for_deletion = []
 
-# TODO: add proper logging with levels
 
 class Image(object):
 
     def __init__(self, digest):
         self.digest = digest
         self.insecure = False
-        self.delete = False
+        self.to_delete = False
 
-    def scan(self):
+    def scan(self, os_version, min_severity):
         try:
-            subprocess.check_output(f'image-scan-report Focal HIGH --image-digest {self.digest}'.split())
+            subprocess.check_output(f'image-scan-report {os_version} {min_severity} --image-digest {self.digest}'.split())
         except subprocess.CalledProcessError:
             self.insecure = True
             print(f'Insecure image detected: {self.digest}')
@@ -32,8 +30,13 @@ class Image(object):
             raise e
 
     def delete(self):
-        pass
-
+        subprocess.check_output(f"""
+            awsudo -d 3600 {admin_arn} aws ecr batch-delete-image
+            --registry-id {ecr_account_to_use}
+            --repository-name {image_repo}
+            --image-ids imageDigest={self.digest}""".split()
+        )
+        print(f'Deleted image with digest: {self.digest}')
 
 def prompt_for_deletion(img):
     valid_inputs = {'y': True,'n': False}
@@ -43,7 +46,7 @@ def prompt_for_deletion(img):
         sys.stdout.write(prompt)
         response = input().lower()
         if response in valid_inputs:
-            img.delete = valid_inputs[response]
+            img.to_delete = valid_inputs[response]
             break
         else:
             continue
@@ -60,16 +63,22 @@ def get_image_digests():
     return [i['imageDigest'] for i in digests]
 
 
-
-
 if __name__ == '__main__':
-    # TODO: make Focal and HIGH optional args with defaults
     parser = argparse.ArgumentParser(
         description='Find and delete images in ECR that are failing security scans and are untagged'
     )
     parser.add_argument(
         '--all', dest='delete_all', action='store_true', default=False,
-        help='don\'t prompt whether to delete each image, just delete all eligible')
+        help='don\'t prompt whether to delete each image, just delete all untagged insecure images'
+    )
+    parser.add_argument(
+        '--os-version', dest='os_version', action='store', default='Focal',
+        help='Ubuntu version substring (default is "Focal")'
+    )
+    parser.add_argument(
+        '--min-severity-level', dest='min_severity', action='store', default='HIGH',
+        help='minimum severity level of vulnerabilities (default is "HIGH")'
+    )
     args = parser.parse_args()
 
     # find candidates for deletion (all untagged images in a repo)
@@ -78,43 +87,16 @@ if __name__ == '__main__':
 
     # scan each image for vulnerabilities
     for img in candidates_for_deletion:
-        img.scan()
+        img.scan(args.os_version, args.min_severity)
 
     for img in candidates_for_deletion:
         if args.delete_all:
             for img in candidates_for_deletion:
-                img.delete = True
-            #img.delete()
-            print('skipping "delete_all" for now...')
+                img.to_delete = True
         else:
             prompt_for_deletion(img)
 
+    # delete images
     for img in candidates_for_deletion:
-        print(img.digest)
-        print(img.insecure)
-        print(img.delete)
-        print()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        if img.to_delete:
+            img.delete()
