@@ -6,6 +6,18 @@ import subprocess
 import argparse
 import json
 
+"""
+This tool scans an ECR repository to find images with vulnerabilities.
+Images that are tagged are ignored.  All untagged images that are found to have
+vulnerabilities are considered to be candidates for deletion.
+
+Interactive and automated actions are both supported.  By default, this tool
+will ask you to confirm deletion of each image that has been found to be
+insecure.
+
+Run "clean-ecr --help" for usage information.
+"""
+
 admin_arn = os.environ.get('ADMIN_ARN')
 ecr_account_to_use = os.environ.get('ECR_ACCOUNT_TO_USE')
 image_repo = os.environ.get('IMAGE_REPO')
@@ -38,9 +50,10 @@ class Image(object):
         )
         print(f'Deleted image with digest: {self.digest}')
 
+
 def prompt_for_deletion(img):
     valid_inputs = {'y': True,'n': False}
-    prompt = f'Delete vulnerable image with digest {img.digest}? [y/N]'
+    prompt = f'Delete vulnerable image with digest {img.digest}? [y/n]'
 
     while True:
         sys.stdout.write(prompt)
@@ -50,7 +63,6 @@ def prompt_for_deletion(img):
             break
         else:
             continue
-
 
 def get_image_digests():
     untagged_images = subprocess.check_output(f"""
@@ -89,6 +101,7 @@ if __name__ == '__main__':
     for img in candidates_for_deletion:
         img.scan(args.os_version, args.min_severity)
 
+    # determine which images should be deleted
     for img in candidates_for_deletion:
         if args.delete_all:
             for img in candidates_for_deletion:
