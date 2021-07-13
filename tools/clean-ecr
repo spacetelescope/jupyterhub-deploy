@@ -1,16 +1,52 @@
 #! /usr/bin/env python
 
 import os
+import sys
 import subprocess
 import argparse
 import json
 
-
 admin_arn = os.environ.get('ADMIN_ARN')
-#env = os.environ.get('ENVIRONMENT')
 ecr_account_to_use = os.environ.get('ECR_ACCOUNT_TO_USE')
 image_repo = os.environ.get('IMAGE_REPO')
-#deployment_name = os.environ.get('DEPLOYMENT_NAME')
+
+
+candidates_for_deletion = []
+
+# TODO: add proper logging with levels
+
+class Image(object):
+
+    def __init__(self, digest):
+        self.digest = digest
+        self.insecure = False
+        self.delete = False
+
+    def scan(self):
+        try:
+            subprocess.check_output(f'image-scan-report Focal HIGH --image-digest {self.digest}'.split())
+        except subprocess.CalledProcessError:
+            self.insecure = True
+            print(f'Insecure image detected: {self.digest}')
+        except Exception as e:
+            raise e
+
+    def delete(self):
+        pass
+
+
+def prompt_for_deletion(img):
+    valid_inputs = {'y': True,'n': False}
+    prompt = f'Delete vulnerable image with digest {img.digest}? [y/N]'
+
+    while True:
+        sys.stdout.write(prompt)
+        response = input().lower()
+        if response in valid_inputs:
+            img.delete = valid_inputs[response]
+            break
+        else:
+            continue
 
 
 def get_image_digests():
@@ -24,16 +60,10 @@ def get_image_digests():
     return [i['imageDigest'] for i in digests]
 
 
-def main(delete_all):
-    digests = get_image_digests()
-    print(digests)
-
-
-
-
 
 
 if __name__ == '__main__':
+    # TODO: make Focal and HIGH optional args with defaults
     parser = argparse.ArgumentParser(
         description='Find and delete images in ECR that are failing security scans and are untagged'
     )
@@ -42,4 +72,49 @@ if __name__ == '__main__':
         help='don\'t prompt whether to delete each image, just delete all eligible')
     args = parser.parse_args()
 
-    main(args.delete_all)
+    # find candidates for deletion (all untagged images in a repo)
+    for d in get_image_digests():
+        candidates_for_deletion.append(Image(d))
+
+    # scan each image for vulnerabilities
+    for img in candidates_for_deletion:
+        img.scan()
+
+    for img in candidates_for_deletion:
+        if args.delete_all:
+            for img in candidates_for_deletion:
+                img.delete = True
+            #img.delete()
+            print('skipping "delete_all" for now...')
+        else:
+            prompt_for_deletion(img)
+
+    for img in candidates_for_deletion:
+        print(img.digest)
+        print(img.insecure)
+        print(img.delete)
+        print()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
