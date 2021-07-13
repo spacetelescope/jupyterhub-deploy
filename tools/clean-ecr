@@ -52,7 +52,7 @@ class Image(object):
 
 
 def prompt_for_deletion(img):
-    valid_inputs = {'y': True,'n': False}
+    valid_inputs = {'y': True, 'n': False}
     prompt = f'Delete vulnerable image with digest {img.digest}? [y/n]'
 
     while True:
