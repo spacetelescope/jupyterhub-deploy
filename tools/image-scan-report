@@ -123,22 +123,10 @@ def main():
     parser.add_argument('--image-digest', dest='image_digest', help='Digest of image to scan, e.g. sha256:*')
     args = parser.parse_args()
 
-    #if len(sys.argv) != 3:
-    #    print("usage:", os.path.basename(sys.argv[0]),
-    #          "<Ubuntu version name, e.g. Focal>  <minimum severity level from", list(KEEP_LEVELS.keys()), ">")
-    #    print("example:", os.path.basename(sys.argv[0]), "Focal  medium")
-    #    sys.exit(1)
-    #version = sys.argv[1]
-
-    print()
-    print(args.version)
-    print(args.levels)
-    print(args.image_digest)
-    print()
-
     levels = KEEP_LEVELS[args.levels.upper()]
     reduced = get_report_dict(args.version, levels, args.image_digest)
     print(yaml.dump(reduced))
+    
     if reduced["overall_status"] == "FAILED":
         return 1
     return 0
