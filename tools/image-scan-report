@@ -128,8 +128,8 @@ def main():
     print(yaml.dump(reduced))
     
     if reduced["overall_status"] == "FAILED":
-        return 1
-    return 0
+        sys.exit(1)
+    sys.exit(0)
 
 if __name__ == "__main__":
     main()
