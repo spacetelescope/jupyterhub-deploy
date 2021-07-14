@@ -47,6 +47,7 @@ def get_scan_results(image_digest):
     admin_arn=os.environ["ADMIN_ARN"]
     image_repo=os.environ["IMAGE_REPO"]
     image_tag=os.environ["IMAGE_TAG"]
+    ecr_account_to_use=os.environ["ECR_ACCOUNT_TO_USE"]
 
     image_id_arg = f"imageTag={image_tag}"
     if image_digest:
@@ -56,6 +57,7 @@ def get_scan_results(image_digest):
         f"awsudo -d 3600 {admin_arn}  aws ecr describe-image-scan-findings "
         f"--no-paginate "
         f"--repository-name {image_repo} "
+        f"--registry-id {ecr_account_to_use} "
         f"--image-id {image_id_arg}").split())
     return json.loads(scan_results)
 

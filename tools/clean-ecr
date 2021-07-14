@@ -25,52 +25,28 @@ IMAGE_UBUNTU_NAME = os.environ.get('IMAGE_UBUNTU_NAME')
 
 CANDIDATES_FOR_DELETION = []
 
-DELETE_LEVELS = {
-    "CRITICAL" : ["CRITICAL"],
-    "HIGH": ["CRITICAL", "HIGH"],
-    "MEDIUM" : ["CRITICAL", "HIGH", "MEDIUM"],
-    "LOW" : ["CRITICAL", "HIGH", "MEDIUM", "LOW"],
-    "INFORMATIONAL" : ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFORMATIONAL"],
-    "ALL" : ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFORMATIONAL"],
-}
-
 
 class Image(object):
 
     def __init__(self, digest):
         self.digest = digest
         self.insecure = True
-        self.can_delete = False
         self.to_delete = False
 
     def scan(self, os_version, min_severity):
-        scan_output = None
         try:
             proc = subprocess.Popen(
                 f'image-scan-report {os_version} {min_severity} --image-digest {self.digest}'.split(),
                 stdout=subprocess.PIPE, stderr=subprocess.PIPE
             )
             scan_output, err = proc.communicate()
-            if proc.returncode == 0:
+            if 'overall_status: OK' in str(scan_output):
                 self.insecure = False
+                print(f'[OK] {self.digest}')
+            else:
+                print(f'Insecure image detected: {self.digest}')
         except Exception as e:
             raise e
-
-        if self.insecure:
-            print()
-            # THIS IS EMPTY
-            print(scan_output)
-            print()
-
-            fail_levels = DELETE_LEVELS[min_severity]
-            for l in fail_levels:
-                if l in str(scan_output):
-                    self.can_delete = True
-                    print(f'Insecure image detected: {self.digest}')
-
-
-
-
 
     def delete(self):
         subprocess.check_output(f"""
@@ -115,7 +91,7 @@ def main(args):
         img.scan(args.os_version, args.min_severity)
 
     # determine which images should be deleted
-    for img in [i for i in CANDIDATES_FOR_DELETION if i.can_delete]:
+    for img in [i for i in CANDIDATES_FOR_DELETION if i.insecure]:
         if args.delete_all:
             for img in CANDIDATES_FOR_DELETION:
                 img.to_delete = True
