@@ -119,7 +119,7 @@ def fetch_ubuntu_uri_status(uri, version_name):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('version', help='Ubuntu version substring, e.g. Focal')
+    parser.add_argument('version', help='Ubuntu version substring, e.g. Groovy')
     parser.add_argument('levels', help='Minimum severity level, e.g. MEDIUM')
     parser.add_argument('--image-digest', dest='image_digest', help='Digest of image to scan, e.g. sha256:*')
     args = parser.parse_args()
