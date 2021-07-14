@@ -75,7 +75,7 @@ def get_image_digests():
     digests = json.loads(untagged_images)['imageIds']
     return [i['imageDigest'] for i in digests]
 
-def main(delete_all, os_version, min_severity):
+def main(args):
     # find candidates for deletion (all untagged images in a repo)
     for d in get_image_digests():
         candidates_for_deletion.append(Image(d))
@@ -116,4 +116,4 @@ if __name__ == '__main__':
     )
     args = parser.parse_args()
 
-    main(delete_all, os_version, min_severity)
+    main(args)
