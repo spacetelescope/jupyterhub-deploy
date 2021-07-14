@@ -23,7 +23,16 @@ ECR_ACCOUNT_TO_USE = os.environ.get('ECR_ACCOUNT_TO_USE')
 IMAGE_REPO = os.environ.get('IMAGE_REPO')
 IMAGE_UBUNTU_NAME = os.environ.get('IMAGE_UBUNTU_NAME')
 
-candidates_for_deletion = []
+CANDIDATES_FOR_DELETION = []
+
+DELETE_LEVELS = {
+    "CRITICAL" : ["CRITICAL"],
+    "HIGH": ["CRITICAL", "HIGH"],
+    "MEDIUM" : ["CRITICAL", "HIGH", "MEDIUM"],
+    "LOW" : ["CRITICAL", "HIGH", "MEDIUM", "LOW"],
+    "INFORMATIONAL" : ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFORMATIONAL"],
+    "ALL" : ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFORMATIONAL"],
+}
 
 
 class Image(object):
@@ -32,6 +41,7 @@ class Image(object):
         self.digest = digest
         self.insecure = False
         self.to_delete = False
+        self.highest_severity = None
 
     def scan(self, os_version, min_severity):
         try:
@@ -78,22 +88,23 @@ def get_image_digests():
 def main(args):
     # find candidates for deletion (all untagged images in a repo)
     for d in get_image_digests():
-        candidates_for_deletion.append(Image(d))
+        CANDIDATES_FOR_DELETION.append(Image(d))
 
     # scan each image for vulnerabilities
-    for img in candidates_for_deletion:
+    for img in CANDIDATES_FOR_DELETION:
         img.scan(args.os_version, args.min_severity)
 
     # determine which images should be deleted
-    for img in candidates_for_deletion:
+    fail_levels = DELETE_LEVELS[min_severity]
+    for img in CANDIDATES_FOR_DELETION if img.highest_severity in fail_levels:
         if args.delete_all:
-            for img in candidates_for_deletion:
+            for img in CANDIDATES_FOR_DELETION:
                 img.to_delete = True
         else:
             prompt_for_deletion(img)
 
     # delete images
-    for img in candidates_for_deletion:
+    for img in CANDIDATES_FOR_DELETION:
         if img.to_delete:
             img.delete()
 
