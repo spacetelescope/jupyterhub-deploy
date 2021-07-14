@@ -101,8 +101,7 @@ def main(args):
     # delete images
     for img in CANDIDATES_FOR_DELETION:
         if img.to_delete:
-            pass
-            #img.delete()
+            img.delete()
 
 
 if __name__ == '__main__':
