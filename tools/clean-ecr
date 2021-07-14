@@ -37,35 +37,40 @@ DELETE_LEVELS = {
 
 class Image(object):
 
-    def __init__(self, digest, min_severity):
+    def __init__(self, digest):
         self.digest = digest
-        self.min_severity = min_severity
-        self.insecure = False
+        self.insecure = True
         self.can_delete = False
         self.to_delete = False
-        self.highest_severity_found = None
 
     def scan(self, os_version, min_severity):
-        scan_output = '/tmp/scan-report.out'
+        scan_output = None
         try:
-            scan_output = subprocess.check_output(f'image-scan-report {os_version} {min_severity} --image-digest {self.digest} > {scan_output}'.split())
-        except subprocess.CalledProcessError:
-            self.insecure = True
-            print(f'Insecure image detected: {self.digest}')
+            proc = subprocess.Popen(
+                f'image-scan-report {os_version} {min_severity} --image-digest {self.digest}'.split(),
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            )
+            scan_output, err = proc.communicate()
+            if proc.returncode == 0:
+                self.insecure = False
         except Exception as e:
             raise e
 
         if self.insecure:
-            scan_results = None
-            with open(scan_output) as f:
-                scan_results = f.read()
-            os.remove(scan_output)
-            print(scan_results)
+            print()
+            # THIS IS EMPTY
+            print(scan_output)
+            print()
 
-            fail_levels = DELETE_LEVELS[self.min_severity]
+            fail_levels = DELETE_LEVELS[min_severity]
             for l in fail_levels:
-                if l in scan_results:
-                    selt.can_delete = True
+                if l in str(scan_output):
+                    self.can_delete = True
+                    print(f'Insecure image detected: {self.digest}')
+
+
+
+
 
     def delete(self):
         subprocess.check_output(f"""
@@ -103,7 +108,7 @@ def get_image_digests():
 def main(args):
     # find candidates for deletion (all untagged images in a repo)
     for d in get_image_digests():
-        CANDIDATES_FOR_DELETION.append(Image(d, min_severity))
+        CANDIDATES_FOR_DELETION.append(Image(d))
 
     # scan each image for vulnerabilities
     for img in CANDIDATES_FOR_DELETION:
@@ -120,7 +125,8 @@ def main(args):
     # delete images
     for img in CANDIDATES_FOR_DELETION:
         if img.to_delete:
-            img.delete()
+            pass
+            #img.delete()
 
 
 if __name__ == '__main__':
