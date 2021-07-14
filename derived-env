@@ -4,16 +4,18 @@
 # automatically sourced into setup-env
 
 # Octarine AWS JupyterHub setup
-export ACCOUNT=${ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
-export ECR_ACCOUNT=${CENTRAL_ECR_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
+#export ACCOUNT=${ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
+#export ECR_ACCOUNT=${CENTRAL_ECR_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
 
-if [ "$USE_CENTRAL_ECR" = true ]
+if [ "$USE_CENTRAL_ECR" == "true" ]
 then
-    export ECR_ACCOUNT_TO_USE=$ECR_ACCOUNT
+    export ECR_REGISTRY=${CENTRAL_ECR_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
     export IMAGE_REPO=${DEPLOYMENT_NAME}
+    export ECR_ACCOUNT_TO_USE=${CENTRAL_ECR_ACCOUNT_ID}
 else
-    export ECR_ACCOUNT_TO_USE=$ACCOUNT
+    export ECR_REGISTRY=${ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
     export IMAGE_REPO=${DEPLOYMENT_NAME}-user-image
+    export ECR_ACCOUNT_TO_USE=${ACCOUNT_ID}
 fi
 
 export JUPYTERHUB_DIR=`pwd`
@@ -26,8 +28,8 @@ export COMMON_DIR=`pwd`/deployments/common/image
 export IMAGE_DIR=`pwd`/deployments/${DEPLOYMENT_NAME}/image
 
 if [[ "${PERSONAL_IMAGE}" == "0" ]]; then
-    export COMMON_ID=${ECR_ACCOUNT_TO_USE}/${COMMON_REPO}:${COMMON_TAG}
-    export IMAGE_ID=${ECR_ACCOUNT_TO_USE}/${IMAGE_REPO}:${IMAGE_TAG}
+    export COMMON_ID=${ECR_REGISTRY}/${COMMON_REPO}:${COMMON_TAG}
+    export IMAGE_ID=${ECR_REGISTRY}/${IMAGE_REPO}:${IMAGE_TAG}
 else
     export COMMON_ID=${COMMON_REPO}:${COMMON_TAG}
     export IMAGE_ID=${IMAGE_REPO}:${IMAGE_TAG}
