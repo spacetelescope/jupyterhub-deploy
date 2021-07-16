@@ -25,6 +25,15 @@ IMAGE_UBUNTU_NAME = os.environ.get('IMAGE_UBUNTU_NAME')
 
 CANDIDATES_FOR_DELETION = []
 
+CVE_LEVELS = {
+    'CRITICAL': ['CRITICAL'],
+    'HIGH': ['CRITICAL', 'HIGH'],
+    'MEDIUM': ['CRITICAL', 'HIGH', 'MEDIUM'],
+    'LOW': ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW'],
+    'INFORMATIONAL': ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'INFORMATIONAL'],
+    'ALL': ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'INFORMATIONAL'],
+}
+
 
 class Image(object):
 
@@ -32,21 +41,47 @@ class Image(object):
         self.digest = digest
         self.insecure = True
         self.to_delete = False
+        self.msg_secure = f'[OK] {self.digest}'
+        self.msg_insecure = f'Insecure image detected: {self.digest}'
 
-    def scan(self, os_version, min_severity):
-        try:
-            proc = subprocess.Popen(
-                f'image-scan-report {os_version} {min_severity} --image-digest {self.digest}'.split(),
-                stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    def scan_ecr(self, min_severity):
+        def do_scan():
+            results = subprocess.check_output((f"""
+                awsudo {ADMIN_ARN} aws ecr describe-image-scan-findings
+                --no-paginate
+                --repository-name {IMAGE_REPO}
+                --registry-id {ECR_ACCOUNT_TO_USE}
+                --image-id imageDigest={self.digest}""").split()
             )
-            scan_output, err = proc.communicate()
-            if 'overall_status: OK' in str(scan_output):
-                self.insecure = False
-                print(f'[OK] {self.digest}')
-            else:
-                print(f'Insecure image detected: {self.digest}')
-        except Exception as e:
-            raise e
+            return json.loads(results)
+
+        vulnerabilities = do_scan()
+        while vulnerabilities['imageScanStatus']['status'] != 'COMPLETE':
+            time.sleep(1)
+            sys.stderr.flush()
+            vulnerabilities = do_scan()
+
+        findings = set(list(vulnerabilities['imageScanFindings']['findingSeverityCounts'].keys()))
+        levels = set(CVE_LEVELS[min_severity])
+        common_levels = findings.intersection(levels)
+        if len(common_levels) == 0:
+            self.insecure = False
+            print(self.msg_secure)
+        else:
+            print(self.msg_insecure)
+
+    def scan_ubuntu(self, os_version, min_severity):
+        proc = subprocess.Popen(
+            f'image-scan-report {os_version} {min_severity} --image-digest {self.digest}'.split(),
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        )
+        scan_output, err = proc.communicate()
+
+        if 'overall_status: OK' in str(scan_output):
+            self.insecure = False
+            print(self.msg_secure)
+        else:
+            print(self.msg_insecure)
 
     def delete(self):
         subprocess.check_output(f"""
@@ -88,7 +123,10 @@ def main(args):
 
     # scan each image for vulnerabilities
     for img in CANDIDATES_FOR_DELETION:
-        img.scan(args.os_version, args.min_severity)
+        if args.use_ubuntu_scan:
+            img.scan_ubuntu(args.os_version, args.min_severity.upper())
+        else:
+            img.scan_ecr(args.min_severity.upper())
 
     # determine which images should be deleted
     for img in [i for i in CANDIDATES_FOR_DELETION if i.insecure]:
@@ -119,6 +157,10 @@ if __name__ == '__main__':
     parser.add_argument(
         '--min-severity-level', dest='min_severity', action='store', default='HIGH',
         help='minimum severity level of vulnerabilities (default is "HIGH")'
+    )
+    parser.add_argument(
+        '--use_ubuntu_scan', dest='use_ubuntu_scan', action='store_true', default=False,
+        help='use Ubuntu\'s assessment of whether a vulerability requires attention'
     )
     args = parser.parse_args()
 
