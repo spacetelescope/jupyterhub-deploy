@@ -1,7 +1,7 @@
 #! /bin/bash -eu
-echo "============================== ECR Docker Image Vulnerability Scan ============================="
+echo "=========== ECR Docker Image Vulnerability Scan for $IMAGE_ID"
 cd  $JUPYTERHUB_DIR
 image-scan-report "$IMAGE_UBUNTU_NAME" $IMAGE_VULNERABILITY_LEVEL >ecr-scan-report.yaml
 
-echo "============================== ECR Scan Summary ================================"
+echo "=========== ECR Scan Summary ================================"
 image-scan-summary ecr-scan-report.yaml

@@ -1,0 +1,11 @@
+#! /bin/bash
+
+set -eu
+
+# Run /opt/common-scripts/dump-versions inside a running image/container
+
+export IMAGE_RUN_PARS="-e DEPLOYMENT_NAME=${DEPLOYMENT_NAME}  ${IMAGE_RUN_PARS}"
+
+image-exec /opt/common-scripts/dump-versions
+
+

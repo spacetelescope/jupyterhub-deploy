@@ -53,11 +53,13 @@ def get_scan_results(image_digest):
     if image_digest:
         image_id_arg = f"imageDigest={image_digest}"
 
+    print(f"Fetching ECR vulnerability scan for registry={ecr_account_to_use} repo={image_repo} tag={image_tag}",file=sys.stderr)
+
     scan_results = subprocess.check_output((
         f"awsudo -d 3600 {admin_arn}  aws ecr describe-image-scan-findings "
         f"--no-paginate "
-        f"--repository-name {image_repo} "
         f"--registry-id {ecr_account_to_use} "
+        f"--repository-name {image_repo} "
         f"--image-id {image_id_arg}").split())
     return json.loads(scan_results)
 
@@ -91,7 +93,6 @@ def get_report_dict(version, levels, image_digest):
     have severities in `levels` and the Ubuntu status string for the CVE for
     Ubuntu `version`.
     """
-    print("Fetching ECR vulnerability scan",file=sys.stderr)
     sys.stderr.flush()
     vulnerabilities = get_scan_results(image_digest)
     while vulnerabilities["imageScanStatus"]["status"] != "COMPLETE":

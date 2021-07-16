@@ -11,11 +11,13 @@ export CENTRAL_ECR_ACCOUNT_ID=12345678
 export USE_CENTRAL_ECR=false
 export ADMIN_ROLENAME=aws-admin-role
 export DEPLOYMENT_NAME=cluster-name
-export IMAGE_TAG=latest
-export COMMON_TAG=common-latest
+export ENVIRONMENT=sandbox  # sandbox, dev, test, or prod
 
-# sandbox, dev, test, or prod
-export ENVIRONMENT=sandbox
+# Note that unscanned- tags are pushed, pulled, and scanned but
+# the unscanned- is dropped from images permitted on the hub by
+# virtue of passing ECR scanning.
+export IMAGE_TAG=unscanned-latest-${ENVIRONMENT}
+export COMMON_TAG=unscanned-common-latest-${ENVIRONMENT}
 
 # ----------------- vvvv less frequently changed vvvv -------------------------------
 

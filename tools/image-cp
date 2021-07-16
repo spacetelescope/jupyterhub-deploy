@@ -1,0 +1,13 @@
+#! /bin/bash
+
+set -eu
+
+#     usage:  image-cp   <path-inside-container>   [<path-on-host> or PWD]
+#
+#     Copy the specified filepath out of the currently configured image
+#     to the specified location on the host or the PWD.
+
+PATH_TO_EXPORT=$1
+WHERE_TO_PUT_IT=${2:-`pwd`}
+
+docker run --rm -it -v ${WHERE_TO_PUT_IT}:/opt/mount ${IMAGE_ID}  bash -c "cp -ar ${PATH_TO_EXPORT} /opt/mount/`basename ${PATH_TO_EXPORT}`"
