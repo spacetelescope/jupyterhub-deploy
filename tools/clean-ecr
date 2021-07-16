@@ -25,13 +25,13 @@ IMAGE_UBUNTU_NAME = os.environ.get('IMAGE_UBUNTU_NAME')
 
 CANDIDATES_FOR_DELETION = []
 
-KEEP_LEVELS = {
-    "CRITICAL" : ["CRITICAL"],
-    "HIGH": ["CRITICAL", "HIGH"],
-    "MEDIUM" : ["CRITICAL", "HIGH", "MEDIUM"],
-    "LOW" : ["CRITICAL", "HIGH", "MEDIUM", "LOW"],
-    "INFORMATIONAL" : ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFORMATIONAL"],
-    "ALL" : ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFORMATIONAL"],
+CVE_LEVELS = {
+    'CRITICAL': ['CRITICAL'],
+    'HIGH': ['CRITICAL', 'HIGH'],
+    'MEDIUM': ['CRITICAL', 'HIGH', 'MEDIUM'],
+    'LOW': ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW'],
+    'INFORMATIONAL': ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'INFORMATIONAL'],
+    'ALL': ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'INFORMATIONAL'],
 }
 
 
@@ -51,7 +51,8 @@ class Image(object):
                 --no-paginate
                 --repository-name {IMAGE_REPO}
                 --registry-id {ECR_ACCOUNT_TO_USE}
-                --image-id imageDigest={self.digest}""").split())
+                --image-id imageDigest={self.digest}""").split()
+            )
             return json.loads(results)
 
         vulnerabilities = do_scan()
@@ -61,7 +62,7 @@ class Image(object):
             vulnerabilities = do_scan()
 
         findings = set(list(vulnerabilities['imageScanFindings']['findingSeverityCounts'].keys()))
-        levels = set(KEEP_LEVELS[min_severity])
+        levels = set(CVE_LEVELS[min_severity])
         common_levels = findings.intersection(levels)
         if len(common_levels) == 0:
             self.insecure = False
