@@ -1,0 +1,167 @@
+#! /usr/bin/env python
+
+import os
+import sys
+import subprocess
+import argparse
+import json
+
+"""
+This tool scans an ECR repository to find images with vulnerabilities.
+Images that are tagged are ignored.  All untagged images that are found to have
+vulnerabilities are considered to be candidates for deletion.
+
+Interactive and automated actions are both supported.  By default, this tool
+will ask you to confirm deletion of each image that has been found to be
+insecure.
+
+Run "clean-ecr --help" for usage information.
+"""
+
+ADMIN_ARN = os.environ.get('ADMIN_ARN')
+ECR_ACCOUNT_TO_USE = os.environ.get('ECR_ACCOUNT_TO_USE')
+IMAGE_REPO = os.environ.get('IMAGE_REPO')
+IMAGE_UBUNTU_NAME = os.environ.get('IMAGE_UBUNTU_NAME')
+
+CANDIDATES_FOR_DELETION = []
+
+CVE_LEVELS = {
+    'CRITICAL': ['CRITICAL'],
+    'HIGH': ['CRITICAL', 'HIGH'],
+    'MEDIUM': ['CRITICAL', 'HIGH', 'MEDIUM'],
+    'LOW': ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW'],
+    'INFORMATIONAL': ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'INFORMATIONAL'],
+    'ALL': ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'INFORMATIONAL'],
+}
+
+
+class Image(object):
+
+    def __init__(self, digest):
+        self.digest = digest
+        self.insecure = True
+        self.to_delete = False
+        self.msg_secure = f'[OK] {self.digest}'
+        self.msg_insecure = f'Insecure image detected: {self.digest}'
+
+    def scan_ecr(self, min_severity):
+        def do_scan():
+            results = subprocess.check_output((f"""
+                awsudo {ADMIN_ARN} aws ecr describe-image-scan-findings
+                --no-paginate
+                --repository-name {IMAGE_REPO}
+                --registry-id {ECR_ACCOUNT_TO_USE}
+                --image-id imageDigest={self.digest}""").split()
+            )
+            return json.loads(results)
+
+        vulnerabilities = do_scan()
+        while vulnerabilities['imageScanStatus']['status'] != 'COMPLETE':
+            time.sleep(1)
+            sys.stderr.flush()
+            vulnerabilities = do_scan()
+
+        findings = set(list(vulnerabilities['imageScanFindings']['findingSeverityCounts'].keys()))
+        levels = set(CVE_LEVELS[min_severity])
+        common_levels = findings.intersection(levels)
+        if len(common_levels) == 0:
+            self.insecure = False
+            print(self.msg_secure)
+        else:
+            print(self.msg_insecure)
+
+    def scan_ubuntu(self, os_version, min_severity):
+        proc = subprocess.Popen(
+            f'image-scan-report {os_version} {min_severity} --image-digest {self.digest}'.split(),
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        )
+        scan_output, err = proc.communicate()
+
+        if 'overall_status: OK' in str(scan_output):
+            self.insecure = False
+            print(self.msg_secure)
+        else:
+            print(self.msg_insecure)
+
+    def delete(self):
+        subprocess.check_output(f"""
+            awsudo -d 3600 {ADMIN_ARN} aws ecr batch-delete-image
+            --registry-id {ECR_ACCOUNT_TO_USE}
+            --repository-name {IMAGE_REPO}
+            --image-ids imageDigest={self.digest}""".split()
+        )
+        print(f'Deleted image with digest: {self.digest}')
+
+
+def prompt_for_deletion(img):
+    valid_inputs = {'y': True, 'n': False}
+    prompt = f'Delete vulnerable image with digest {img.digest}? [y/n]'
+
+    while True:
+        sys.stdout.write(prompt)
+        response = input().lower()
+        if response in valid_inputs:
+            img.to_delete = valid_inputs[response]
+            break
+        else:
+            continue
+
+def get_image_digests():
+    untagged_images = subprocess.check_output(f"""
+        awsudo -d 3600 {ADMIN_ARN} aws ecr list-images
+        --registry-id {ECR_ACCOUNT_TO_USE}
+        --repository-name {IMAGE_REPO}
+        --filter tagStatus=UNTAGGED""".split()
+    )
+    digests = json.loads(untagged_images)['imageIds']
+    return [i['imageDigest'] for i in digests]
+
+def main(args):
+    # find candidates for deletion (all untagged images in a repo)
+    for d in get_image_digests():
+        CANDIDATES_FOR_DELETION.append(Image(d))
+
+    # scan each image for vulnerabilities
+    for img in CANDIDATES_FOR_DELETION:
+        if args.use_ubuntu_scan:
+            img.scan_ubuntu(args.os_version, args.min_severity.upper())
+        else:
+            img.scan_ecr(args.min_severity.upper())
+
+    # determine which images should be deleted
+    for img in [i for i in CANDIDATES_FOR_DELETION if i.insecure]:
+        if args.delete_all:
+            for img in CANDIDATES_FOR_DELETION:
+                img.to_delete = True
+        else:
+            prompt_for_deletion(img)
+
+    # delete images
+    for img in CANDIDATES_FOR_DELETION:
+        if img.to_delete:
+            img.delete()
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        description='Find and delete images in ECR that are failing security scans and are untagged'
+    )
+    parser.add_argument(
+        '--all', dest='delete_all', action='store_true', default=False,
+        help='don\'t prompt whether to delete each image, just delete all untagged insecure images'
+    )
+    parser.add_argument(
+        '--os-version', dest='os_version', action='store', default=IMAGE_UBUNTU_NAME,
+        help='Ubuntu version substring (e.g. "Groovy")'
+    )
+    parser.add_argument(
+        '--min-severity-level', dest='min_severity', action='store', default='HIGH',
+        help='minimum severity level of vulnerabilities (default is "HIGH")'
+    )
+    parser.add_argument(
+        '--use_ubuntu_scan', dest='use_ubuntu_scan', action='store_true', default=False,
+        help='use Ubuntu\'s assessment of whether a vulerability requires attention'
+    )
+    args = parser.parse_args()
+
+    main(args)
