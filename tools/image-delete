@@ -16,6 +16,6 @@ for image in ${IMAGES}; do
     else
 	QUALIFIER=imageTag
     fi
-    awsudo ${ADMIN_ARN} aws ecr batch-delete-image --repository-name ${ECR_ACCOUNT_TO_USE} --image-ids ${QUALIFIER}=${image}
+    awsudo ${ADMIN_ARN} aws ecr batch-delete-image --repository-name ${IMAGE_REPO} --image-ids ${QUALIFIER}=${image}
 done
 
