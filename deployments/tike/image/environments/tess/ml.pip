@@ -1,5 +1,5 @@
 six
-tensorflow~=2.4.1
+tensorflow-cpu~=2.4.1   #for-keras
 tensorflow-estimator
 tensorboard
 gast
@@ -13,6 +13,4 @@ docutils
 packaging
 webencodings
 theano-pymc
-
-
-# theano
+#theano

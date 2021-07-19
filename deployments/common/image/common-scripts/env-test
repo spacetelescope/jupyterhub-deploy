@@ -4,6 +4,9 @@
 # Run tests for kernel $1 defined in the environment's "tests" subdirectory
 
 kernel=$1
+
+jobs=${NOTEBOOK_JOBS:-4}
+
 kernel_test_dir="/opt/environments/${kernel}/tests"
 
 echo "========================= Testing Environment ${kernel} =========================="
@@ -15,16 +18,18 @@ if [[ -d ${kernel_test_dir} ]]; then
 
     # Import every Python package listted in the "imports" file
     if [[ -f ${kernel_test_dir}/imports ]]; then
+        echo "------------------------- Testing ${kernel} Imports --------------------------"
         /opt/common-scripts/test-imports `cat ${kernel_test_dir}/imports`
     fi
 
     # Run every notebook path listed in "notebooks",  one per line
     if [[ -f ${kernel_test_dir}/notebooks ]]; then
-        /opt/common-scripts/test-notebooks  $kernel  `cat  ${kernel_test_dir}/notebooks`
+        echo "------------------------- Testing ${kernel} Notebooks --------------------------"
+        /opt/common-scripts/test-notebooks  --jobs ${jobs}  $kernel  `cat  ${kernel_test_dir}/notebooks`
     fi
 
     # Run every notebook (*.ipynb) in the environment tests directory
-    /opt/common-scripts/test-notebooks  $kernel  `find ${kernel_test_dir} -name '*.ipynb'`
+    /opt/common-scripts/test-notebooks  --jobs ${jobs}  $kernel  `find ${kernel_test_dir} -name '*.ipynb'`
 
     source /opt/common-scripts/env-deactivate ${kernel}
 

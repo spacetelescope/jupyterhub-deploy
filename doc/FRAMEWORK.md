@@ -112,19 +112,36 @@ performing auxilliary tasks like setting up conda channels.
 
 #### Test Definitions
 
-Standard test setup for each environment/kernel can include:
+Standard test setup for each environment/<kernel>/tests can include:
 
 1. An `imports` file which lists packages for which Python-importability should be
 verified one per line.
 
 2. A `notebooks` file which lists paths to test notebooks which should execute without
-errors in a fully standalone way
+errors when run headless.
 
-3. Individual .ipynb notebook files which should execute without errors in a standalone
-way.
+3. Individual .ipynb notebook files which should execute without errors when
+run headless.
 
-Additional files or subdirectories which will be installed alone with the rest of the
-environment/kernel files under `/opt/environments/<environment>`.
+Additional files or subdirectories which will be installed along with the rest of the
+environment/`kernel` files under `/opt/environments/<kernel>`.
+
+By convention `imports` tests are defined statically as part of defining
+required packages for each environment.  Failing imports imply the environment
+is broken.
+
+In contrast, the `notebooks` file is currently defined on the fly by the
+`post-start-hook` script where the appropriate notebook kernel for each
+notebook is also defined by running `set-notebook-kernels`.  Partly this is
+because notebooks are defined independently of JupyterHub and are not intrinsic
+to the kernel definitions,  partly it is because actual notebooks are not
+available until `git-sync` is run to clone them by the `post-start-hook`.
+
+Where defined, `notebooks-failing`, `long-notebooks`, and
+`long-notebooks-failing` define notebook lists which are not executed by
+default by CI (`image-test`).  These define notebooks with excessive runtime
+and notebooks or persistent failures which haven't been addressed.  Like
+`notebooks` all are created by the `post-start-hook` script.
 
 ### Running Tests
 
@@ -135,11 +152,41 @@ script launches a container from the local Docker build and then executes the
 There are additional common entry points which can be executed independently
 for focusing on specific problems:
 
+- `/opt/common-scripts/test-environments`
+
+- `/opt/common-scripts/env-test <kernel>`
+
 - `/opt/common-scripts/test-notebooks   <kernel>   <notebook .ipynb files...>`
 
 - `/opt/common-scripts/test-imports  <kernel>  <pkgs to test imports for...>`
 
-- `/opt/common-scripts/test-environments`
+### Using image-dev to Debug
+
+If you find yourself hating life because you're waiting an hour for a Docker
+build after changing two lines of source, over-and-over, give image-dev a try.
+
+The image-dev script runs an interactive bash shell inside a JH container to
+let you debug environments, scripts, and tests.  The key behavior is that
+image-dev mounts:
+
+   common/image/common-scripts -->  /opt/common-scripts
+
+   common/image/common-env     -->  /opt/common-env
+
+   <mission>/image/environments --> /opt/environments
+
+all as r/w inside the container.  This lets you edit files inside or outside
+the container and immediately see the results in both contexts.  It enables you
+make source changes and evaluate the effects in a high fidelity environment
+without doing full Docker builds.
+
+Because the sources are mounted r/w, when you are done editing and testing and
+exit the container, changes are waiting for you ready to add and commit.
+
+Note that if you modify test definitions by editing
+/opt/environments/post-start-hook, you need to re-run it to regenerated
+`notebooks` files.  Similarly, changing package definitions you need to
+re-install those package lists prior to seeing the effects.
 
 ### Defining and Updating Frozen Images
 
