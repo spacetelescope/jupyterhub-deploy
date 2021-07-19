@@ -36,7 +36,7 @@ SN=/home/jovyan/spacetelescope-notebooks
 mkdir -p /opt/environments/tess/tests
 
 cat <<EOF >/opt/environments/tess/tests/notebooks
-    #${TC}/code/test_notebooks/packages_priority1.ipynb
+    ${TC}/code/test_notebooks/packages_priority1.ipynb
     ${TC}/code/test_notebooks/packages_priority2.ipynb
     ${TC}/code/test_notebooks/packages_priority3.ipynb
     ${TC}/code/test-cloud-lightkurve.py
