@@ -22,7 +22,7 @@ export COMMON_TAG=unscanned-common-latest-${ENVIRONMENT}
 # ----------------- vvvv less frequently changed vvvv -------------------------------
 
 # use 0 for loosely pinned package versions,  1 production build from fixed versions.
-export USE_FROZEN=1
+export USE_FROZEN=0
 
 # Set to 1 for e.g. personal laptop build
 export PERSONAL_IMAGE=0
