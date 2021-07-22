@@ -171,6 +171,13 @@ Now we need to create a *environment.yaml* file.  During JupyterHub deployment, 
 - Fill in the areas that say "[REDACTED]" with the appropriate values, then save and exit the editor.
 - `git add $ENVIRONMENT.yaml .sops.yaml`
 
+To support pushing secrets back to codecommit you need to set up a credentials helper with:
+
+``` 
+git config --global credential.helper '!aws codecommit credential-helper $@' 
+git config --global credential.UseHttpPath true
+```
+
 Finally, commit and push the changes to the repository:
 
 - `git commit -m "adding secrets"`

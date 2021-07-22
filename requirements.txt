@@ -5,3 +5,6 @@ lxml
 pyyaml
 safety
 bandit
+boto3
+flake8
+black

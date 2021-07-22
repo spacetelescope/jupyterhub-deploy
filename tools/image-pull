@@ -5,5 +5,6 @@ cd $IMAGE_DIR
 image-login
 
 echo "================================== Pulling ${IMAGE_ID} =============================="
+echo "WARNING:  this is pulling the *unscanned* tag"
 docker image rm $IMAGE_ID
 docker pull $IMAGE_ID

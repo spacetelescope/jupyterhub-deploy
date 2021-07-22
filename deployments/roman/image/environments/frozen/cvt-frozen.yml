@@ -18,7 +18,7 @@ dependencies:
   - beautifulsoup4=4.9.3
   - blas=2.109
   - blas-devel=3.9.0
-  - bleach=3.3.0
+  - bleach=3.3.1
   - blinker=1.4
   - blosc=1.21.0
   - bokeh=2.3.3
@@ -39,12 +39,13 @@ dependencies:
   - cfitsio=3.470
   - chardet=4.0.0
   - charls=2.2.0
+  - charset-normalizer=2.0.0
   - click=8.0.1
   - cloudpickle=1.6.0
   - conda=4.10.3
   - conda-package-handling=1.7.3
   - conda-tree=0.1.1
-  - configurable-http-proxy=4.4.0
+  - configurable-http-proxy=4.5.0
   - cryptography=3.4.7
   - cycler=0.10.0
   - cython=0.29.24
@@ -69,13 +70,13 @@ dependencies:
   - hdf5=1.10.6
   - heapdict=1.0.1
   - icu=68.1
-  - idna=2.10
+  - idna=3.1
   - imagecodecs=2021.6.8
   - imageio=2.9.0
   - importlib-metadata=4.6.1
   - ipydatawidgets=4.2.0
-  - ipyevents=0.8.2
-  - ipykernel=6.0.1
+  - ipyevents=2.0.1
+  - ipykernel=6.0.3
   - ipympl=0.7.0
   - ipython=7.25.0
   - ipython_genutils=0.2.0
@@ -163,7 +164,7 @@ dependencies:
   - notebook=6.4.0
   - numba=0.53.1
   - numexpr=2.7.3
-  - numpy=1.21.0
+  - numpy=1.21.1
   - oauthlib=3.1.1
   - olefile=0.46
   - openblas=0.3.15
@@ -201,7 +202,7 @@ dependencies:
   - pysocks=1.7.1
   - pytables=3.6.1
   - python=3.9.5
-  - python-dateutil=2.8.1
+  - python-dateutil=2.8.2
   - python-editor=1.0.4
   - python-json-logger=2.0.1
   - python-libarchive-c=3.1
@@ -213,7 +214,7 @@ dependencies:
   - readline=8.1
   - reproc=14.2.1
   - reproc-cpp=14.2.1
-  - requests=2.25.1
+  - requests=2.26.0
   - requests-unixsocket=0.2.0
   - ripgrep=13.0.0
   - ruamel.yaml=0.17.10
@@ -231,7 +232,7 @@ dependencies:
   - sniffio=1.2.0
   - sortedcontainers=2.4.0
   - soupsieve=2.0.1
-  - sqlalchemy=1.4.20
+  - sqlalchemy=1.4.21
   - sqlite=3.36.0
   - statsmodels=0.12.2
   - sympy=1.8
@@ -271,9 +272,9 @@ dependencies:
     - astropy==4.2.1
     - astropy-sphinx-theme==1.1
     - async-timeout==3.0.1
-    - black==21.6b0
-    - boto3==1.17.111
-    - botocore==1.20.111
+    - black==21.7b0
+    - boto3==1.18.2
+    - botocore==1.21.2
     - bqplot==0.12.27
     - ci-watson==0.5
     - codecov==2.1.11
@@ -307,7 +308,7 @@ dependencies:
     - nbgitpuller==0.10.1
     - numpydoc==1.1.0
     - papermill==2.3.3
-    - pathspec==0.8.1
+    - pathspec==0.9.0
     - pipdeptree==2.0.0
     - pluggy==0.13.1
     - py==1.10.0
@@ -325,7 +326,7 @@ dependencies:
     - qtpy==1.9.0
     - regex==2021.7.6
     - requests-mock==1.9.3
-    - s3transfer==0.4.2
+    - s3transfer==0.5.0
     - simpervisor==0.4
     - snowballstemmer==2.1.0
     - sphinx==3.5.4
@@ -345,6 +346,7 @@ dependencies:
     - tenacity==8.0.1
     - textwrap3==0.9.2
     - toml==0.10.2
-    - vispy==0.7.1
+    - tomli==1.0.4
+    - vispy==0.7.2
     - yarl==1.6.3
 prefix: /opt/conda/envs/cvt

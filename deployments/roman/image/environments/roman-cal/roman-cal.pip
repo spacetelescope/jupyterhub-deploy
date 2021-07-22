@@ -1,2 +1,2 @@
-jwst==1.1.0
-romancal==0.2.0
+jwst~=1.2.3
+romancal~=0.3.1
