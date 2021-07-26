@@ -2,4 +2,4 @@
 
 # promote Docker image from test to ops.
 
-image-promote-alt $CENTRAL_ECR_ACCOUNT_ID $IMAGE_REPO latest-dev latest-test
+image-promote $CENTRAL_ECR_ACCOUNT_ID $IMAGE_REPO latest-dev latest-test
