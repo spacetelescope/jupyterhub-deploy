@@ -28,10 +28,15 @@ install_nbextensions \
 
 jupyter lab build -y
 
-npm install jupyter-splitpanes@0.1.0
-npm install jupyter-golden-layout@0.3.0
-npm install bqplot-image-gl@1.4.1
-npm install bqplot@0.5.29
+#npm install jupyter-splitpanes@0.1.0
+#npm install jupyter-golden-layout@0.3.0
+#npm install bqplot-image-gl@1.4.1
+#npm install bqplot@0.5.29
+
+npm install jupyter-splitpanes
+npm install jupyter-golden-layout
+npm install bqplot-image-gl
+npm install bqplot
 
 if [[ "${JH_DEVELOP}" == "" || "${JH_DEVELOP}" == "0" ]]; then
     jupyter lab clean -y && \
