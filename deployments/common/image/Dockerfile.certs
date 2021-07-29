@@ -7,8 +7,6 @@ USER root
 ARG TZ='America/New_York'
 ARG DEBIAN_FRONTEND=noninteractive
 
-ENV PIP_DEFAULT_TIMEOUT=100
-
 COPY common-scripts/apt-install  /opt/common-scripts/apt-install
 RUN /opt/common-scripts/apt-install \
     apt-utils \
