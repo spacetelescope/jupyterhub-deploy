@@ -18,13 +18,6 @@ LABEL maintainer="Science Platforms <dmd_octarine@stsci.edu>"
 # --- ENV NB_UID=$NB_UID
 # --- ENV NB_GID=$NB_UID
 
-ARG USE_FROZEN=1
-ENV USE_FROZEN=$USE_FROZEN
-
-# Enable easy swap of conda with e.g. mamba
-ARG CONDA_VER=conda
-ENV CONDA_VER=${CONDA_VER}
-
 # Environment variables
 ENV MKL_THREADING_LAYER="GNU"
 
@@ -119,6 +112,18 @@ RUN wget https://sourceforge.net/projects/turbovnc/files/2.2.6/turbovnc_2.2.6_am
     dpkg -i turbovnc_2.2.6_amd64.deb && \
     rm turbovnc_2.2.6_amd64.deb && \
     apt-get remove -y -q light-locker
+
+# ==================== Begin pip & conda installs =======================
+
+ARG USE_FROZEN=1
+ENV USE_FROZEN=$USE_FROZEN
+
+ARG PIP_SWITCHES="--no-cache-dir"
+ENV PIP_SWITCHES=$PIP_SWITCHES
+
+# Enable easy swap of conda with e.g. mamba
+ARG CONDA_VER=conda
+ENV CONDA_VER=${CONDA_VER}
 
 # ------------------------------------------------------------------------
 USER root

@@ -4,7 +4,8 @@ channels:
   - manics
   - defaults
 dependencies:
-  - python~=3.8.0
+  - python>=3.8.0,<3.9
+  - pip<21.2
   - freetds
   - fftw
   - pyfftw

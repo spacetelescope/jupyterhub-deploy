@@ -3,12 +3,13 @@ lxml
 
 cython
 pybind11
-jinja2~=2.11
+# jinja2<=2.11.0,<2.12
+# jinja
 bokeh
 panel
 ipywidgets
 
-numpy~=1.19.0
+# numpy>=1.19.0,<1.20
 scipy
 matplotlib
 scikit-learn

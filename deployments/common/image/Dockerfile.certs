@@ -11,6 +11,7 @@ ENV PIP_DEFAULT_TIMEOUT=100
 
 COPY common-scripts/apt-install  /opt/common-scripts/apt-install
 RUN /opt/common-scripts/apt-install \
+    apt-utils \
     tzdata \
     ca-certificates \
     openssl \
