@@ -17,6 +17,7 @@ jupyter labextension install \
 	ipyevents \
 	jupyter-vuetify \
 	d3-selection-multi \
+	bqplot@0.5.31
 
 install_nbextensions \
     widgetsnbextension \
@@ -28,15 +29,10 @@ install_nbextensions \
 
 jupyter lab build -y
 
-#npm install jupyter-splitpanes@0.1.0
-#npm install jupyter-golden-layout@0.3.0
-#npm install bqplot-image-gl@1.4.1
-#npm install bqplot@0.5.29
-
-npm install jupyter-splitpanes
-npm install jupyter-golden-layout
-npm install bqplot-image-gl
-npm install bqplot
+npm install jupyter-splitpanes@0.1.0
+npm install jupyter-golden-layout@0.3.0
+npm install bqplot-image-gl@1.4.1
+#npm install bqplot@0.5.31
 
 if [[ "${JH_DEVELOP}" == "" || "${JH_DEVELOP}" == "0" ]]; then
     jupyter lab clean -y && \

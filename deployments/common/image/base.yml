@@ -4,8 +4,6 @@ channels:
   - http://ssb.stsci.edu/astroconda
   - defaults
 dependencies:
-  - bqplot-image-gl
-  - bqplot
   - jupyterlab_widgets
   - ipywidgets
   - ipydatawidgets
