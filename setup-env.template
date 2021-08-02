@@ -27,6 +27,10 @@ export USE_FROZEN=0
 # Set to 1 for e.g. personal laptop build
 export PERSONAL_IMAGE=0
 
+# These switches will be used by install scripts, initially for debug purposes.
+export PIP_SWITCHES="--no-cache-dir --no-color"
+# export PIP_SWITCHES="${PIP_SWITCHES} -vv"
+
 # Select "conda" tool used to install conda package and environments: conda or mamba
 #   mamba is largely a drop-in replacement for mamba with improved dependency resolution,
 #   parallel downloads, and C++ implementation.

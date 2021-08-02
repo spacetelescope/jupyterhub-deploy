@@ -7,10 +7,9 @@ USER root
 ARG TZ='America/New_York'
 ARG DEBIAN_FRONTEND=noninteractive
 
-
-
 COPY common-scripts/apt-install  /opt/common-scripts/apt-install
 RUN /opt/common-scripts/apt-install \
+    apt-utils \
     tzdata \
     ca-certificates \
     openssl \

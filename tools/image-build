@@ -19,7 +19,7 @@
 # as a solution to build fail like:
 # failed to export image: failed to create image: failed to get layer sha256:...: layer does not exist
 
-# LOG size settings are a solution to build failuyre with this error:
+# LOG size settings are a solution to build failure with this error:
 #   [output clipped, log limit 1MiB reached]
 
 export DOCKER_BUILDKIT=1
@@ -33,22 +33,27 @@ image-update
 
 # ..................................................................................
 # Build base image, e.g. our version of scipy-notebook including cert handling
-image-base 
+image-base
 
 
 # ..................................................................................
 # Build STScI shared layer for all deployments
 cd ${COMMON_DIR}
 echo "========================= Building Common Image ========================"
-time docker build --tag ${COMMON_ID} --build-arg USE_FROZEN=${USE_FROZEN} .
-
+time docker build --progress plain --tag ${COMMON_ID} \
+       --build-arg USE_FROZEN=${USE_FROZEN} \
+       --build-arg PIP_SWITCHES="${PIP_SWITCHES}" \
+       .
 
 # ..................................................................................
 # Build custom layers for this deployment
 cd ${IMAGE_DIR}
 echo "========================= Building $IMAGE_ID USE_FROZEN=${USE_FROZEN} =========================="
-time docker build --tag ${IMAGE_ID} --build-arg USE_FROZEN=${USE_FROZEN} --build-arg BASE_IMAGE=${COMMON_ID} .
-
+time docker build --progress plain --tag ${IMAGE_ID} \
+       --build-arg USE_FROZEN=${USE_FROZEN} \
+       --build-arg PIP_SWITCHES="${PIP_SWITCHES}" \
+       --build-arg BASE_IMAGE=${COMMON_ID} \
+       .
 
 # ..................................................................................
 # Dump out environment/kernel specs which capture as much version

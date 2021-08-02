@@ -3,9 +3,6 @@
 ARG BASE_IMAGE
 FROM $BASE_IMAGE AS build
 
-ARG USE_FROZEN=1
-ENV USE_FROZEN=$USE_FROZEN
-
 # ---------------------------------------------------------------
 # VARTOOLS Light Curve Analysis Program
 USER root
@@ -34,11 +31,11 @@ COPY --chown=${NB_UID}:${NB_GID}  environments/frozen/  /opt/environments/frozen
 COPY --chown=${NB_UID}:${NB_GID} environments/tess/tess.yml /opt/environments/tess/tess.yml
 RUN /opt/common-scripts/env-create  tess /opt/environments/tess/tess.yml
 
-RUN /opt/common-scripts/install-common tess
-
 # ---------- supplies key build tools (cython, etc) which should potentially be common
 COPY --chown=${NB_UID}:${NB_GID} environments/tess/basic.pip  /opt/environments/tess/basic.pip
 RUN /opt/common-scripts/env-update  tess /opt/environments/tess/basic.pip
+
+RUN /opt/common-scripts/install-common tess
 
 # ----------
 # Due to numpy binary API incompatibilities and available compiled pip package versions

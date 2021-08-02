@@ -42,7 +42,7 @@ for filepath in $*; do
             ;;
         pip)
             echo "Installing pip pkgs into env ${env} from: ${filepath}"
-            pip install --no-cache-dir -r ${filepath}
+            pip install ${PIP_SWITCHES} -r ${filepath}
             ;;
         *)
             echo "Invalid package spec file: ${filepath}"
