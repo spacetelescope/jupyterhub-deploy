@@ -7,6 +7,29 @@ USER root
 ARG TZ='America/New_York'
 ARG DEBIAN_FRONTEND=noninteractive
 
+ARG USE_FROZEN=1
+ENV USE_FROZEN=$USE_FROZEN
+
+ARG PIP_SWITCHES="--no-cache-dir"
+ENV PIP_SWITCHES=$PIP_SWITCHES
+
+# Enable easy swap of conda with e.g. mamba
+ARG CONDA_VER=conda
+ENV CONDA_VER=${CONDA_VER}
+
+ARG USE_BUILDKIT_CACHING="0"
+ENV USE_BUILDKIT_CACHING=${USE_BUILDKIT_CACHING}
+
+ARG JH_DEVELOP=0
+ENV JH_DEVELOP=$JH_DEVELOP
+
+# ------------------------------------------------------------------------
+
+# When buildkit caching is enabled,  map package dirs for apt, pip, etc.
+#   onto the buildkit cache directories for them.
+COPY common-scripts/buildkit-cache-setup  /opt/common-scripts/buildkit-cache-setup
+RUN /opt/common-scripts/buildkit-cache-setup
+
 COPY common-scripts/apt-install  /opt/common-scripts/apt-install
 RUN /opt/common-scripts/apt-install \
     apt-utils \
@@ -30,7 +53,7 @@ COPY tls-ca-bundle.pem /etc/ssl/certs/stsci-tls-ca-bundle.pem
 ENV REQUESTS_CA_BUNDLE=/etc/ssl/certs/stsci-tls-ca-bundle.pem
 ENV CURL_CA_BUNDLE=/etc/ssl/certs/stsci-tls-ca-bundle.pem
 
-RUN mkdir /home/jovyan &&\
+RUN mkdir -p /home/jovyan &&\
     echo "export REQUESTS_CA_BUNDLE=/etc/ssl/certs/stsci-tls-ca-bundle.pem" >> ~/.bashrc &&\
     echo "export REQUESTS_CA_BUNDLE=/etc/ssl/certs/stsci-tls-ca-bundle.pem" >> /home/jovyan/.bashrc &&\
     echo "export CURL_CA_BUNDLE=/etc/ssl/certs/stsci-tls-ca-bundle.pem" >> ~/.bashrc &&\

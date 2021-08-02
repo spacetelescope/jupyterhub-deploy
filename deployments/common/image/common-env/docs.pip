@@ -5,3 +5,4 @@ sphinx-rtd-theme
 stsci-rtd-theme
 sphinx-astropy
 sphinx-asdf
+nbsphinx

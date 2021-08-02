@@ -1,9 +1,20 @@
-#! /bin/bash -eu
+#! /bin/bash
+
+set -eu
 
 echo "========================= Building Base Image ========================"
 
+# These build-args are added to the image environment and will be available in
+#   all subsequent builds based on this image.
+
 cd ${JUPYTERHUB_DIR}/deployments/common/image
-docker build --tag ubuntu-certs --file Dockerfile.certs .
+docker build --progress plain --tag ubuntu-certs --file Dockerfile.certs.x \
+       --build-arg USE_FROZEN=${USE_FROZEN} \
+       --build-arg PIP_SWITCHES="${PIP_SWITCHES}" \
+       --build-arg USE_BUILDKIT_CACHING="${USE_BUILDKIT_CACHING}" \
+       --build-arg JH_DEVELOP=${JH_DEVELOP} \
+       --build-arg CONDA_VER=${CONDA_VER} \
+       .
 
 cd ~
 if [[ ! -d docker-stacks ]]; then

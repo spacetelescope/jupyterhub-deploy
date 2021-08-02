@@ -1,0 +1,53 @@
+#! /bin/bash -eu
+
+if [ $# -eq 0 ]; then
+    cat <<EOF
+usage:  env-conda  <env>
+
+Step 1 of pip-tools workflow: Create the baseline conda environment into which
+pip packages will added later;  include as few pip packages as possible.
+
+If USE_FROZEN==0:          # compile weak constraints <env>.yml to requirements.yml
+
+If USE_FROZEN == 0 or 1:   # install from requirements.yml
+
+Nominal pip-tools workflow:
+
+    1. /opt/common-scripts/env-conda  <env>     # Create minimal conda environment.
+    2. /opt/common-scripts/env-compile <env>    # Resolve pip dependencies to requirements.txt
+    3. /opt/common-scripts/env-sync  <env>      # Download and install requirements.txt
+    4+ /opt/common-scripts/env-src-install  ... # Build packages with missing binaries from source.
+    ...
+EOF
+    exit 2
+fi
+
+env=$1
+
+env_yml=/opt/environments/${env}/${env}.yml
+env_frozen_yml=/opt/environments/${env}/requirements.yml
+
+. /etc/profile.d/conda.sh
+
+echo "-------------------------------------------------------------------------------"
+if [[ "$USE_FROZEN" == "0" ]]; then
+    echo "===== Creating conda environment ${env} from weak constraints ${env_yml}"
+    ${CONDA_VER} env create --quiet --name ${env} --file ${env_yml}
+    echo "===== Saving frozen conda constraints for environment ${env} to ${env_frozen_yml}"
+    ${CONDA_VER} env export -n ${env} > ${env_frozen_yml}  # must be saved after build outside Docker
+    cat ${env_frozen_yml}
+    echo "===== Removing conda env and re-installing from ${env_frozen_yml}"
+    conda env remove -n ${env}
+fi
+
+echo "===== Creating conda environment ${env} from frozen constraints ${env_frozen_yml}"
+${CONDA_VER} env create --quiet --name ${env} --file ${env_frozen_yml}
+
+source /opt/common-scripts/env-activate ${env}
+
+# These are "unsafe" for pip-tools and if not installed early result in e.g. wrong python used
+pip install ${PIP_SWITCHES} pip-tools pip setuptools
+
+/opt/common-scripts/fix-conda-certs   # new env may install new certs
+
+/opt/common-scripts/env-clean

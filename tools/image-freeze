@@ -1,4 +1,6 @@
-#! /bin/bash -eu
+#! /bin/bash
+
+set -eu
 
 # Export the intended (vs. as-built) conda environments as fully versioned
 # (frozen) environment specifications.  These specs often require tweaking
@@ -9,12 +11,12 @@
 
 env_list_dirs() {
     # list the directories at $root_dir defaulting to .
-    
+
     root_dir=${1:-.}
 
     find $root_dir -maxdepth 1 -type d| grep '/' | cut -d '/' -f2
 }
- 
+
 freeze_deployment() {
     cd $1
 
@@ -22,7 +24,16 @@ freeze_deployment() {
 
     for env in `env_list_dirs environments | grep -v base | grep -v frozen`; do
         if [[ ! -z "$env" ]]; then
-            echo "Dumping frozen versions for ${env}"
+
+	    if [ -f environments/${env}/requirements.yml ]; then
+		echo "Dumping pip-tools requirements.txt and requirements.yml for ${env}"
+		pushd environments/${env}  >/dev/null
+		image-cp  /opt/environments/${env}/requirements.yml
+		image-cp  /opt/environments/${env}/requirements.txt
+		popd >/dev/null
+	    fi
+	    
+	    echo "Dumping conda export versions for ${env}"
             image-env-export $env  > environments/frozen/${env}-frozen.yml
         fi
     done

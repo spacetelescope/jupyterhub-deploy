@@ -5,8 +5,8 @@
 
 /opt/common-scripts/git-sync https://github.com/spacetelescope/jwebbinar_prep current_webbinar /home/jovyan/jwebbinar_prep
 
-/opt/common-scripts/set-notebook-kernel jwebbinar JWebbinar jwebbinar_prep/mos_session/jwebbinar7_nirspecmos.ipynb
-/opt/common-scripts/set-notebook-kernel jdaviz Jdaviz jwebbinar_prep/mos_session/Mosviz_solutions.ipynb
+# /opt/common-scripts/set-notebook-kernel jwebbinar JWebbinar jwebbinar_prep/mos_session/jwebbinar7_nirspecmos.ipynb
+# /opt/common-scripts/set-notebook-kernel jdaviz Jdaviz jwebbinar_prep/mos_session/Mosviz_solutions.ipynb
 
 # --- mkdir -p /opt/environments/jwebbinar/tests
 # --- mkdir -p /opt/environments/jdaviz/tests

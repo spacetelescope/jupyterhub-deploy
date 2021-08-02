@@ -3,9 +3,6 @@
 ARG BASE_IMAGE
 FROM $BASE_IMAGE AS build
 
-ARG USE_FROZEN=1
-ENV USE_FROZEN=$USE_FROZEN
-
 # ----------------------------------------------------------------------
 
 # All data is arranged on /data opening up options for sharing a file system
@@ -76,15 +73,6 @@ RUN /opt/common-scripts/env-update jdaviz /opt/environments/jdaviz/jdaviz.pip
 
 COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/ /opt/environments/jdaviz
 
-# ----------------------------------------------------------------------
-USER root
-
-# Install additional lab and notebook extensions
-USER ${NB_UID}
-
-# ----------------------------------------------------------------------
-COPY --chown=${NB_UID}:${NB_GID} environments/ /opt/environments
-
 # ========================= ^^^^^ Custom  ^^^^^ =========================
 # ========================= vvvvv Generic vvvvv  =========================
 
@@ -97,12 +85,13 @@ RUN sed -i 's/data-base-url="{{base_url | urlencode}}"/data-base-url="{{base_url
 USER $NB_UID
 RUN /opt/common-scripts/kernel-setup   # set up Ipython / JupyterLab kernels
 
+# ----------------------------------------------------------------------
 # As part of Dockerfile.trailer,  these statements are executed from the
 # perspective of the deployment image directory,  not common.
 
 USER root
 
-# ----------------------------------------------------------------------
+RUN chown -R ${NB_UID}:${NB_GID}  /home/${NB_USER}
 
 # remove this step once nbgitpuller enabled; these contents will be in the
 #  jupyterhub-user-content repo.   Install deployment-specific $HOME files.
@@ -116,15 +105,8 @@ RUN  cat /home/jovyan/global_bashrc >> /etc/bash.bashrc  && \
 # Fix certs in conda for application level SSL, e.g. pass image-test running on CI-node
 RUN /opt/common-scripts/fix-certs
 
-# This top level command runs unit tests for the image,  nominally import tests
-# and notebook runs but it's an arbitrary bash script.
-COPY --chown=${NB_UID}:${NB_GID} environments/test    /opt/environments/test
-
-# Install security patches now that build is complete;  potentially this could be done sooner
-# -- RUN apt-get update && \
-# --     apt-get dist-upgrade --yes && \
-# --     apt-get clean && \
-# --     rm -rf /var/lib/apt/lists/*
+# Copy any remaining environments files not caught by more precise as-needed build copies
+COPY --chown=${NB_UID}:${NB_GID} environments/    /opt/environments/
 
 # For standalone operation outside JupyterHub,  note that  /etc also includes
 # common home directory files.   post-start-hook may not include everything required

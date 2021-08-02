@@ -4,12 +4,11 @@ channels:
 - http://ssb.stsci.edu/astroconda
 - defaults
 dependencies:
-- python<3.9.0a0
+- python~=3.8.0
 - pip
 - freetds
 - fftw
 - pyfftw
-- pip:
 
 # - jwst-visit-parser
 # - jwst_gtvt

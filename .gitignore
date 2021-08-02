@@ -1,4 +1,10 @@
 # Byte-compiled / optimized / DLL files
+
+# our buildx Dockerfile.x files
+*.x
+secrets/
+*~
+
 __pycache__/
 *.py[cod]
 *$py.class

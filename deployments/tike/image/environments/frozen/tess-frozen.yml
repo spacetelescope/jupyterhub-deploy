@@ -4,66 +4,42 @@ channels:
 dependencies:
   - _libgcc_mutex=0.1
   - _openmp_mutex=4.5
-  - brotlipy=0.7.0
   - ca-certificates=2021.5.30
   - certifi=2021.5.30
-  - cffi=1.14.6
-  - chardet=4.0.0
-  - conda=4.10.3
-  - conda-package-handling=1.7.3
-  - conda-tree=0.1.1
-  - cryptography=3.4.7
-  - decorator=5.0.9
   - fftw=3.3.9
   - freetds=1.1.15
   - ld_impl_linux-64=2.36.1
-  - libblas=3.9.0
-  - libcblas=3.9.0
   - libedit=3.1.20191231
   - libffi=3.3
   - libgcc-ng=11.1.0
-  - libgfortran-ng=9.3.0
-  - libgfortran5=9.3.0
+  - libgfortran-ng=11.1.0
+  - libgfortran5=11.1.0
+  - libgomp=11.1.0
   - libiconv=1.16
-  - liblapack=3.9.0
-  - libopenblas=0.3.17
   - libstdcxx-ng=11.1.0
-  - llvm-openmp=12.0.1
-  - mkl=2020.4
-  - mkl-service=2.3.0
-  - mkl_fft=1.3.0
   - ncurses=6.2
-  - networkx=2.3
   - openssl=1.1.1k
-  - pip=21.1.3
-  - pycosat=0.6.3
-  - pycparser=2.20
-  - pyfftw=0.12.0
-  - pyopenssl=20.0.1
-  - pysocks=1.7.1
+  - pip=21.2.4
   - python=3.8.10
   - python_abi=3.8
   - readline=8.1
-  - requests=2.26.0
-  - ruamel_yaml=0.15.80
   - setuptools=49.6.0
   - sqlite=3.36.0
   - tk=8.6.10
-  - tqdm=4.61.2
   - unixodbc=2.3.9
-  - urllib3=1.26.6
-  - wheel=0.36.2
+  - wheel=0.37.0
   - xz=5.2.5
-  - yaml=0.2.5
   - zlib=1.2.11
   - pip:
     - aas-timeseries==0.1b4
     - absl-py==0.13.0
+    - aesara==2.1.3
     - aesara-theano-fallback==0.0.4
+    - aiobotocore==1.3.3
     - aiohttp==3.7.4.post0
+    - aioitertools==0.8.0
     - alabaster==0.7.12
     - allesfitter==1.2.4
-    - altair==4.1.0
     - ansiwrap==0.8.4
     - anyio==3.3.0
     - appdirs==1.4.4
@@ -71,9 +47,9 @@ dependencies:
     - argparse==1.4.0
     - arviz==0.11.2
     - astrobase==0.5.3
-    - astrocut==0.8
+    - astrocut==0.9
     - astroml==1.0a1
-    - astropy==4.3.post1
+    - astropy==4.3.1
     - astropy-healpix==0.6
     - astropy-sphinx-theme==1.1
     - astroquery==0.4.3
@@ -82,48 +58,47 @@ dependencies:
     - async-timeout==3.0.1
     - attrs==21.2.0
     - autograd==1.3
-    - awscli==1.20.10
     - babel==2.9.1
     - backcall==0.2.0
     - batman-package==2.4.8
     - bcrypt==3.2.0
     - beautifulsoup4==4.9.3
     - black==21.7b0
-    - bleach==3.3.1
-    - blessings==1.7
+    - bleach==4.0.0
     - bokeh==2.3.3
-    - boto3==1.18.10
-    - botocore==1.21.10
+    - boto3==1.17.106
+    - botocore==1.20.106
     - bottleneck==1.3.2
-    - bqplot==0.12.27
-    - bqplot-image-gl==1.4.3
+    - bqplot==0.12.30
+    - bqplot-image-gl==1.4.4
     - cachetools==4.2.2
     - celerite==0.4.0
+    - cffi==1.14.6
     - cftime==1.5.0
-    - charset-normalizer==2.0.3
+    - chardet==4.0.0
+    - charset-normalizer==2.0.4
     - ci-watson==0.5
     - click==8.0.1
     - cloudpickle==1.6.0
-    - codecov==2.1.11
-    - colorama==0.4.3
     - colour==0.1.5
     - configparser==5.0.2
     - corner==2.2.1
-    - coverage==5.5
+    - cryptography==3.4.7
     - cycler==0.10.0
     - cython==0.29.24
-    - czech-holidays==0.1.3
-    - dask==2021.7.1
+    - dask==2021.7.2
     - debugpy==1.4.1
+    - decorator==5.0.9
     - defusedxml==0.7.1
     - dill==0.3.4
-    - distributed==2021.7.1
-    - docutils==0.15.2
+    - distributed==2021.7.2
+    - docutils==0.16
+    - dpcpp-cpp-rt==2021.3.0
     - dynesty==1.1
     - echo==0.5
     - ediunplugged==0.1.3
     - ellc==1.8.5
-    - emcee==3.0rc1
+    - emcee==3.1.0
     - entrypoints==0.3
     - et-xmlfile==1.1.0
     - everest-pipeline==2.0.12
@@ -142,52 +117,44 @@ dependencies:
     - geojson==2.5.0
     - george==0.4.0
     - glue-core==1.1.0
-    - glue-jupyter==0.7
+    - glue-jupyter==0.6.1
     - glue-vispy-viewers==1.0.3
-    - google-api-core==1.31.1
-    - google-api-python-client==2.15.0
     - google-auth==1.34.0
-    - google-auth-httplib2==0.1.0
     - google-auth-oauthlib==0.4.5
-    - google-cloud-core==1.7.2
-    - google-cloud-pubsub==2.7.0
-    - google-cloud-storage==1.41.1
-    - google-crc32c==1.1.2
     - google-pasta==0.2.0
-    - google-resumable-media==1.3.2
-    - googleapis-common-protos==1.53.0
-    - greenlet==1.1.0
-    - grpc-google-iam-v1==0.12.3
     - grpcio==1.32.0
     - h5py==2.10.0
     - heapdict==1.0.1
     - hsluv==5.0.2
     - html5lib==1.1
-    - httplib2==0.19.1
     - idna==3.2
     - imageio==2.9.0
     - imagesize==1.2.0
-    - importlib-metadata==4.6.1
+    - importlib-metadata==4.6.4
     - iniconfig==1.1.1
+    - intel-cmplr-lib-rt==2021.3.0
+    - intel-cmplr-lic-rt==2021.3.0
+    - intel-opencl-rt==2021.3.0
+    - intel-openmp==2021.3.0
     - ipydatawidgets==4.2.0
     - ipyevents==2.0.1
     - ipygoldenlayout==0.4.0
-    - ipykernel==6.0.3
+    - ipykernel==6.1.0
     - ipympl==0.7.0
     - ipysplitpanes==0.2.0
-    - ipython==7.25.0
+    - ipython==7.26.0
     - ipython-genutils==0.2.0
     - ipyvolume==0.5.2
     - ipyvue==1.5.0
-    - ipyvuetify==1.8.0
+    - ipyvuetify==1.8.1
     - ipywebrtc==0.6.0
     - ipywidgets==7.6.3
     - ipywidgets-bokeh==1.0.2
-    - jax==0.2.18
-    - jaxlib==0.1.69
+    - jax==0.2.19
+    - jaxlib==0.1.70
     - jedi==0.18.0
     - jeepney==0.7.1
-    - jinja2==3.0.1
+    - jinja2==2.11.3
     - jmespath==0.10.0
     - joblib==1.0.1
     - jplephem==2.16
@@ -198,12 +165,11 @@ dependencies:
     - jupyter-bokeh==3.0.2
     - jupyter-client==6.1.12
     - jupyter-core==4.7.1
-    - jupyter-packaging==0.7.12
-    - jupyter-server==1.10.1
+    - jupyter-server==1.10.2
     - jupyter-server-proxy==3.1.0
-    - jupyterlab==3.0.12
+    - jupyterlab==3.1.6
     - jupyterlab-pygments==0.1.2
-    - jupyterlab-server==2.6.1
+    - jupyterlab-server==2.7.0
     - jupyterlab-widgets==1.0.0
     - k2flix==2.4.0
     - k2plr==0.2.9
@@ -211,19 +177,21 @@ dependencies:
     - keras-preprocessing==1.1.2
     - keyring==23.0.1
     - kiwisolver==1.3.1
-    - libcst==0.3.19
     - lightkurve==2.0.10
     - llvmlite==0.36.0
     - locket==0.2.1
     - lxml==4.6.3
     - markdown==3.3.4
     - markupsafe==2.0.1
-    - matplotlib==3.4.2
+    - matplotlib==3.4.3
     - matplotlib-inline==0.1.2
     - mccabe==0.6.1
-    - memoization==0.3.2
+    - memoization==0.4.0
     - mimeparse==0.1.3
     - mistune==0.8.4
+    - mkl==2021.3.0
+    - mkl-fft==1.3.0
+    - mkl-service==2.4.0
     - mpl-scatter-density==0.7
     - msgpack==1.0.2
     - multidict==5.1.0
@@ -232,10 +200,11 @@ dependencies:
     - nbclient==0.5.3
     - nbconvert==6.1.0
     - nbformat==5.1.3
-    - nbsphinx==0.8.6
+    - nbsphinx==0.8.7
     - nest-asyncio==1.5.1
     - netcdf4==1.5.7
-    - notebook==6.4.0
+    - networkx==2.6.2
+    - notebook==6.4.3
     - numba==0.53.1
     - numpy==1.19.5
     - numpydoc==1.1.0
@@ -247,7 +216,7 @@ dependencies:
     - palettable==3.3.0
     - pandas==1.3.1
     - pandocfilters==1.4.3
-    - panel==0.12.0
+    - panel==0.12.1
     - papermill==2.3.3
     - param==1.11.1
     - paramiko==2.7.2
@@ -255,15 +224,16 @@ dependencies:
     - partd==1.2.0
     - pathspec==0.9.0
     - patsy==0.5.1
+    - pep517==0.11.0
     - pexpect==4.8.0
     - pickleshare==0.7.5
     - pillow==8.3.1
-    - pipdeptree==2.0.0
+    - pip-tools==6.2.0
+    - pipdeptree==2.1.0
     - pixiedust==1.1.19
     - pluggy==0.13.1
     - prometheus-client==0.11.0
     - prompt-toolkit==3.0.19
-    - proto-plus==1.19.0
     - protobuf==3.17.3
     - psutil==5.8.0
     - psycopg2-binary==2.9.1
@@ -272,9 +242,11 @@ dependencies:
     - pyasn1==0.4.8
     - pyasn1-modules==0.2.8
     - pyastronomy==0.16.0
-    - pybind11==2.7.0
+    - pybind11==2.7.1
     - pycodestyle==2.7.0
+    - pycparser==2.20
     - pyct==0.4.8
+    - pydeps==1.9.14
     - pyds9==1.8.1
     - pyeebls==0.1.6
     - pyerfa==2.0.0
@@ -290,37 +262,37 @@ dependencies:
     - pyrsistent==0.18.0
     - pysyzygy==0.0.2
     - pytest==6.2.4
-    - pytest-cov==2.12.1
     - pytest-doctestplus==0.10.1
     - pytest-openfiles==0.5.0
     - python-dateutil==2.8.2
-    - python-slugify==5.0.2
+    - python-graphviz==0.17
     - pythreejs==2.3.0
     - pytz==2021.1
     - pyviz-comms==2.1.0
     - pyvo==1.1
-    - pyvodb==1.0
     - pywavelets==1.1.1
     - pyyaml==5.4.1
-    - pyzmq==22.1.0
+    - pyzmq==22.2.1
     - qtconsole==5.1.1
     - qtpy==1.9.0
-    - radvel==1.4.6
-    - regex==2021.7.6
-    - reproject==0.7.1
+    - radvel==1.4.7
+    - rebound==3.17.4
+    - regex==2021.8.3
+    - reproject==0.8
+    - requests==2.26.0
     - requests-mock==1.9.3
     - requests-oauthlib==1.3.0
     - requests-unixsocket==0.2.0
     - rsa==4.7.2
-    - s3fs==0.4.2
-    - s3transfer==0.5.0
+    - s3fs==2021.7.0
+    - s3transfer==0.4.2
     - scikit-image==0.18.2
     - scikit-learn==0.24.2
-    - scipy==1.7.0
+    - scipy==1.7.1
     - seaborn==0.11.1
     - secretstorage==3.3.1
     - semver==2.13.0
-    - send2trash==1.7.1
+    - send2trash==1.8.0
     - setuptools-scm==6.0.1
     - simpervisor==0.4
     - six==1.15.0
@@ -341,45 +313,44 @@ dependencies:
     - sphinxcontrib-jsmath==1.0.1
     - sphinxcontrib-qthelp==1.0.3
     - sphinxcontrib-serializinghtml==1.1.5
-    - sqlalchemy==1.4.22
     - starry==1.1.2
     - statsmodels==0.12.2
+    - stdlib-list==0.8.0
     - stsci-rtd-theme==0.0.2
+    - tbb==2021.3.0
     - tblib==1.7.0
     - tenacity==8.0.1
-    - tensorboard==2.5.0
-    - tensorboard-data-server==0.6.1
+    - tensorboard==2.4.1
     - tensorboard-plugin-wit==1.8.0
-    - tensorflow-cpu==2.4.2
+    - tensorflow==2.4.3
     - tensorflow-estimator==2.4.0
     - termcolor==1.1.0
-    - terminado==0.10.1
+    - terminado==0.11.0
     - tess-point==0.6.1
     - testpath==0.5.0
-    - text-unidecode==1.3
     - textwrap3==0.9.2
     - theano-pymc==1.1.2
     - threadpoolctl==2.2.0
-    - tifffile==2021.7.2
+    - tifffile==2021.8.8
     - toml==0.10.2
-    - tomli==1.1.0
+    - tomli==1.2.1
     - toolz==0.11.1
     - torch==1.9.0
     - tornado==6.1
+    - tqdm==4.62.0
     - traitlets==5.0.5
     - traittypes==0.2.1
     - transitleastsquares==1.0.28
     - tvguide==1.0.3
     - typing-extensions==3.7.4.3
-    - typing-inspect==0.7.1
     - ultranest==3.3.0
     - uncertainties==3.1.6
-    - uritemplate==3.0.1
+    - urllib3==1.26.6
     - vbbinarylensing==3.2.0
     - vispy==0.7.3
     - wcwidth==0.2.5
     - webencodings==0.5.1
-    - websocket-client==1.1.0
+    - websocket-client==1.2.1
     - werkzeug==2.0.1
     - widgetsnbextension==3.5.1
     - wotan==1.9

@@ -4,4 +4,6 @@ ipykernel
 boto3
 pyds9
 pipdeptree
-altair
+pip-tools
+pydeps
+graphviz

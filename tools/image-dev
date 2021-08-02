@@ -35,7 +35,7 @@ set -eu
 # To work relative to an alternate image, pass in the name/tag or
 # hash on the command line,  e.g. $COMMON_ID.
 
-STARTING_IMAGE=${1:-$IMAGE_ID}
+STARTING_IMAGE=${1:-`docker image ls -q | head -1`}
 
 cd ${JUPYTERHUB_DIR}
 
@@ -48,4 +48,3 @@ MISSION_MOUNTS="-v ${JUPYTERHUB_DIR}/deployments/${DEPLOYMENT_NAME}/image/enviro
 IMAGE_RUN_PARS="-it ${COMMON_MOUNTS} ${MISSION_MOUNTS} -e JH_DEVELOP=1 -e PATH=/opt/TurboVNC/bin:/opt/conda/bin:/opt/conda/condabin:/opt/conda/bin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/common-scripts"
 
 docker run ${IMAGE_RUN_PARS} ${STARTING_IMAGE} /bin/bash
-
