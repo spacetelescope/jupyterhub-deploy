@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+ 
+secret=$(aws secretsmanager get-secret-value --secret-id DdApiKeySecret-Pl0FvcUJ31q0 --region us-east-1 | grep 'SecretString' | awk -F: '{print $2}' | xargs | sed 's|["'\'']||g' | sed '
+ s/,$//')
+
+printf '{"api_key": {"value": "'
+printf "${secret}"
+printf '", "error": "" }}\n'

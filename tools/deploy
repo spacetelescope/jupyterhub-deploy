@@ -10,8 +10,13 @@ environment=$4
 
 # clear out and update the helm charts
 rm -r hub/charts/*
+helm repo add datadog https://helm.datadoghq.com
+helm repo update
 helm dependency update hub
 
+#helm install datadog datadog/datadog -f hub/datadog.yaml --create-namespace -n datadog
+
+# TODO: make this conditional on existance of file
 kubectl apply -f hub/custom-ui-templates-${environment}-${deployment_name}.yaml
 
 tmp_decrypted=~/env.yaml.decrypted
