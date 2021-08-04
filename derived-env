@@ -42,3 +42,11 @@ export PATH="`pwd`/tools":${PATH}
 export TMOUT=7200
 export TF_LOG=TRACE
 export TF_LOG_PATH=terraform.log
+
+alias awsu="awsudo -d 3600 $ADMIN_ARN"
+alias terraform-init="awsu terraform init -backend-config=./backend.conf -backend-config=./backend.conf"
+alias terraform-apply="awsu terraform apply --var-file=${DEPLOYMENT_NAME}.tfvars"
+alias terraform-destroy="awsu terraform destroy -var-file=${DEPLOYMENT_NAME}.tfvars"
+alias helm-destroy="awsu helm uninstall ${DEPLOYMENT_NAME}-${ENVIRONMENT}"
+alias where="echo ${DEPLOYMENT_NAME}-${ENVIRONMENT}"
+
