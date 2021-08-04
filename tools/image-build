@@ -38,7 +38,7 @@ image-base
 
 # ..................................................................................
 # Build STScI shared layer for all deployments
-cd ${COMMON_DIR}
+cd ${COMMON_IMAGE_DIR}
 echo "========================= Building Common Image ========================"
 time docker build --progress plain --tag ${COMMON_ID} \
        --build-arg USE_FROZEN=${USE_FROZEN} \
