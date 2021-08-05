@@ -1,6 +1,6 @@
-jupyterlab>=3.0.12
-ipysplitpanes
-ipygoldenlayout
+jupyterlab==3.0.12
+ipysplitpanes==0.2.0
+ipygoldenlayout==0.4.0
 jupyter-client
 ipython-genutils
 jupyter-core
@@ -8,7 +8,7 @@ jupyterlab-widgets
 jupyterlab-pygments
 jupyter-server
 bqplot-image-gl
-bqplot==0.12.27
+bqplot==0.12.29
 
 jupyter-server-proxy
 jupyter_bokeh
