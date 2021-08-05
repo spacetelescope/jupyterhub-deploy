@@ -1,0 +1,56 @@
+# Inspired by https://gitmemory.com/issue/jupyterhub/zero-to-jupyterhub-k8s/1266/632726020
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hub-templates
+data:
+  spawn.html: |
+    {% extends "page.html" %}
+    {% if announcement_spawn %}
+      {% set announcement = announcement_spawn %}
+    {% endif %}
+
+    {% block main %}
+
+    <div class="container">
+      {% block heading %}
+       <div class="row">
+
+          <center><h2>Welcome to the Roman HLPP</h2></center><br/>
+
+          The Roman HLPP is a JupyterHub instance provided by the Space Telescope Science Institute (STScI) 
+	  and its main goals are to provide a higher level processing environment for Roman science data in 
+          close network proximity to cloud data storage and to increase the accessibility of Roman scientific 
+	  data and software.  STScI's JupyterHub platforms achieve this by providing users with a pre-defined 
+	  Linux computing environment hosted by AWS.
+
+          <b>Useful information</b>&#58;<br/><br/>
+
+            <ul>
+            <li>This site is currently <i><b>under active development</b></i> and as such, you should have no expectations regarding service uptime, data preservation, etc. We anticipate greater reliability as we approach a wider community release.  At this time, <u>no data</u> you upload or create within TIKE is guaranteed to remain for any duration.</li>
+            <li>This service offers no reasonable expectation of privacy. Usage is monitored, and access will be restricted as needed in order to provide an acceptable level of service to all users.</li>
+            </ul><br/>
+            At this time, we cannot guarantee prompt responses to any support requests.
+
+        <br/><br/><br/>
+       </div>
+      {% endblock %}
+      <div class="row col-sm-offset-2 col-sm-8">
+        {% if for_user and user.name != for_user.name -%}
+          <p>Spawning server for {{ for_user.name }}</p>
+        {% endif -%}
+        {% if error_message -%}
+          <p class="spawn-error-msg text-danger">
+            Error: {{error_message}}
+          </p>
+        {% endif %}
+        <form enctype="multipart/form-data" id="spawn_form" action="{{url}}" method="post" role="form">
+          {{spawner_options_form | safe}}
+          <br>
+          <input type="submit" value="Start server" class="btn btn-jupyter form-control">
+        </form>
+      </div>
+    </div>
+
+    {% endblock %}

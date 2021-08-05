@@ -24,8 +24,12 @@ export COMMON_REPO=${IMAGE_REPO}
 
 export ADMIN_ARN=arn:aws:iam::${ACCOUNT_ID}:role/${ADMIN_ROLENAME}
 
-export COMMON_DIR=`pwd`/deployments/common/image
 export IMAGE_DIR=`pwd`/deployments/${DEPLOYMENT_NAME}/image
+export CONFIG_DIR=`pwd`/deployments/${DEPLOYMENT_NAME}/config
+
+export COMMON_IMAGE_DIR=`pwd`/deployments/common/image
+export COMMON_CONFIG_DIR=`pwd`/deployments/common/config
+
 
 if [[ "${PERSONAL_IMAGE}" == "0" ]]; then
     export COMMON_ID=${ECR_REGISTRY}/${COMMON_REPO}:${COMMON_TAG}
@@ -49,4 +53,6 @@ alias terraform-apply="awsu terraform apply --var-file=${DEPLOYMENT_NAME}.tfvars
 alias terraform-destroy="awsu terraform destroy -var-file=${DEPLOYMENT_NAME}.tfvars"
 alias helm-destroy="awsu helm uninstall ${DEPLOYMENT_NAME}-${ENVIRONMENT}"
 alias where="echo ${DEPLOYMENT_NAME}-${ENVIRONMENT}"
+alias update-kubeconfig="awsu aws eks update-kubeconfig --name $DEPLOYMENT_NAME"
+alias pods="kubectl get pods -A"
 

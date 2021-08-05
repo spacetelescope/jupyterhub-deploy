@@ -27,7 +27,7 @@ SRC_HASH=${4:-${IMAGE_HASH}}
 
 if [[ ${CERT_FILE} == "auto" ]]; then
    image-update
-   CERT_FILE=${COMMON_DIR}/tls-ca-bundle.pem
+   CERT_FILE=${COMMON_IMAGE_DIR}/tls-ca-bundle.pem
 fi
 
 # ---------------------------------------------------------------------------------
