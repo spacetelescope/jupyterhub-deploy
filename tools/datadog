@@ -5,7 +5,9 @@ cd ${JUPYTERHUB_DIR}/datadog
 echo "========================= Building DataDog Image ========================"
 docker build --progress plain --tag dmd-datadog .
 
+# TODO: push to ECR repo
+
 echo "========================= Deploying DataDog ========================"
-helm install datadog datadog/datadog -f templates/datadog.yaml \
+helm install datadog datadog/datadog -f datadog.yaml \
     --set registry=${ECR_REGISTRY}/datadog \
     --create-namespace -n datadog
