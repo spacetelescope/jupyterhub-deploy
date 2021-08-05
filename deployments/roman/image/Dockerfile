@@ -129,7 +129,7 @@ RUN  cat /home/jovyan/global_bashrc >> /etc/bash.bashrc  && \
 # Fix certs in conda for application level SSL, e.g. pass image-test running on CI-node
 RUN /opt/common-scripts/fix-certs
 
-# TODO: add comment
+# TODO: move to datadog pod?  node?
 RUN cp /opt/common-scripts/datadog-api-key /etc/datadog-agent
 
 # This top level command runs unit tests for the image,  nominally import tests

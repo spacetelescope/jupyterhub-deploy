@@ -29,7 +29,7 @@ RUN  cat /home/jovyan/global_bashrc >> /etc/bash.bashrc  && \
 RUN /opt/common-scripts/fix-certs
 
 # TODO: move to datadog pod?  node?
-RUN cp /opt/common-scripts/datadog-api-key /etc/datadog-agent
+#RUN cp /opt/common-scripts/datadog-api-key /etc/datadog-agent
 
 # This top level command runs unit tests for the image,  nominally import tests
 # and notebook runs but it's an arbitrary bash script.

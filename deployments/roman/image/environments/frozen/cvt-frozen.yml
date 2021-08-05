@@ -18,7 +18,7 @@ dependencies:
   - beautifulsoup4=4.9.3
   - blas=2.110
   - blas-devel=3.9.0
-  - bleach=3.3.1
+  - bleach=4.0.0
   - blinker=1.4
   - blosc=1.21.0
   - bokeh=2.3.3
@@ -210,7 +210,7 @@ dependencies:
   - pytz=2021.1
   - pywavelets=1.1.1
   - pyyaml=5.4.1
-  - pyzmq=22.1.0
+  - pyzmq=22.2.0
   - readline=8.1
   - reproc=14.2.1
   - reproc-cpp=14.2.1
@@ -273,12 +273,10 @@ dependencies:
     - astropy-sphinx-theme==1.1
     - async-timeout==3.0.1
     - black==21.7b0
-    - boto3==1.18.13
-    - botocore==1.21.13
+    - boto3==1.18.14
+    - botocore==1.21.14
     - bqplot==0.12.27
     - ci-watson==0.5
-    - codecov==2.1.12
-    - coverage==5.5
     - docutils==0.16
     - echo==0.5
     - et-xmlfile==1.1.0
@@ -299,9 +297,8 @@ dependencies:
     - jmespath==0.10.0
     - jupyter-bokeh==3.0.2
     - jupyter-desktop-server==0.1.3
-    - jupyter-packaging==0.7.12
     - jupyter-server-proxy==3.1.0
-    - jupyterlab==3.0.12
+    - jupyterlab==3.1.2
     - mccabe==0.6.1
     - mpl-scatter-density==0.7
     - multidict==5.1.0
@@ -320,7 +317,6 @@ dependencies:
     - pyflakes==2.3.1
     - pyopengl==3.1.5
     - pytest==6.2.4
-    - pytest-cov==2.12.1
     - pytest-doctestplus==0.10.1
     - pytest-openfiles==0.5.0
     - pythreejs==2.3.0

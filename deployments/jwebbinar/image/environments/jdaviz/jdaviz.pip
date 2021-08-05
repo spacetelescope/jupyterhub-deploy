@@ -108,4 +108,4 @@ xlrd==2.0.1
 ###jupyterlab-widgets
 ###jupyterlab-pygments
 ###jupyter-server
-jupyterlab==3.0.12
+jupyterlab>=3.0.12
