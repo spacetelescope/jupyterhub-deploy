@@ -6,7 +6,7 @@ channels:
 dependencies:
     - pip
     - bqplot-image-gl
-    - bqplot
+    - bqplot==0.12.29
     - jupyterlab_widgets
     - ipydatawidgets
     - ipykernel

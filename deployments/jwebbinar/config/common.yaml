@@ -39,7 +39,7 @@ jupyterhub:
       enabled: true
   singleuser:
     image:
-      tag: latest
+      tag: latest-dev
       pullPolicy: Always
     profileList:
       - display_name: "JWebbinar Science Platform"
