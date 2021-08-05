@@ -1,0 +1,11 @@
+#! /bin/bash -e
+
+cd ${JUPYTERHUB_DIR}/datadog
+
+echo "========================= Building DataDog Image ========================"
+docker build --progress plain --tag dmd-datadog .
+
+echo "========================= Deploying DataDog ========================"
+helm install datadog datadog/datadog -f templates/datadog.yaml \
+    --set registry=${ECR_REGISTRY}/datadog \
+    --create-namespace -n datadog
