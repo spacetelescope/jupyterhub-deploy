@@ -12,6 +12,7 @@ export USE_CENTRAL_ECR=false
 export ADMIN_ROLENAME=aws-admin-role
 export DEPLOYMENT_NAME=cluster-name
 export ENVIRONMENT=sandbox  # sandbox, dev, test, or prod
+export DD_API_KEY_SECRET=look-in-aws-ssm
 
 # Note that unscanned- tags are pushed, pulled, and scanned but
 # the unscanned- is dropped from images permitted on the hub by

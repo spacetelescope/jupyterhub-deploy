@@ -481,7 +481,7 @@ clusterAgent:
     repository:
 
     # clusterAgent.image.pullPolicy -- Cluster Agent image pullPolicy
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
 
     # clusterAgent.image.pullSecrets -- Cluster Agent repository pullSecret (ex: specify docker registry credentials)
     ## See https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
@@ -1068,7 +1068,7 @@ clusterChecksRunner:
     repository:
 
     # clusterChecksRunner.image.pullPolicy -- Datadog Agent image pull policy
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
 
     # clusterChecksRunner.image.pullSecrets -- Datadog Agent repository pullSecret (ex: specify docker registry credentials)
     ## See https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
@@ -1243,13 +1243,13 @@ kube-state-metrics:
     kubernetes.io/os: linux
 
   # # kube-state-metrics.image -- Override default image information for the kube-state-metrics container.
-  # image:
+  image:
   #  # kube-state-metrics.repository -- Override default image registry for the kube-state-metrics container.
   #  repository: k8s.gcr.io/kube-state-metrics/kube-state-metrics
   #  # kube-state-metrics.tag -- Override default image tag for the kube-state-metrics container.
   #  tag: v1.9.8
   #  # kube-state-metrics.pullPolicy -- Override default image pullPolicy for the kube-state-metrics container.
-  #  pullPolicy: IfNotPresent
+    pullPolicy: Always
 
 providers:
   gke:

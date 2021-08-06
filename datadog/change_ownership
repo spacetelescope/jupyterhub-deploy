@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+chmod 700 /etc/datadog-agent/get-api-key
+chown dd-agent /etc/datadog-agent/get-api-key

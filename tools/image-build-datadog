@@ -5,12 +5,7 @@ cd ${JUPYTERHUB_DIR}/datadog
 echo "========================= Building DataDog Image ========================"
 image-login
 
-# build docker image from public registry
 docker pull datadog/agent
 
-# ...
-docker build --progress plain --tag ${ECR_REGISTRY}/datadog:unscanned-latest-${ENVIRONMENT} .
-
-
-
-
+docker build --tag ${ECR_REGISTRY}/datadog:unscanned-latest-${ENVIRONMENT} \
+       --build-arg DD_API_KEY_SECRET=${DD_API_KEY_SECRET} .
