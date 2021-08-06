@@ -12,7 +12,7 @@ targetSystem: "linux"
 ## GCR - use gcr.io/datadoghq (default)
 ## DockerHub - use docker.io/datadog
 ## AWS - use public.ecr.aws/datadog
-registry:
+registry: public.ecr.aws/datadog
 
 datadog:
   secret_backend_command: "/etc/datadog-agent/get-api-key"
@@ -472,10 +472,11 @@ clusterAgent:
   ## Define the Datadog Cluster-Agent image to work with
   image:
     # clusterAgent.image.name -- Cluster Agent image name to use (relative to `registry`)
-    name: dmd-datadog
+    #name: dmd-datadog
+    name:
 
     # clusterAgent.image.tag -- Cluster Agent image tag to use
-    tag: latest
+    tag:
 
     # clusterAgent.image.repository -- Override default registry + image.name for Cluster Agent
     repository:
