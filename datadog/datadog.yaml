@@ -472,11 +472,10 @@ clusterAgent:
   ## Define the Datadog Cluster-Agent image to work with
   image:
     # clusterAgent.image.name -- Cluster Agent image name to use (relative to `registry`)
-    #name: dmd-datadog
     name:
 
     # clusterAgent.image.tag -- Cluster Agent image tag to use
-    tag:
+    tag: 
 
     # clusterAgent.image.repository -- Override default registry + image.name for Cluster Agent
     repository:
