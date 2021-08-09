@@ -108,4 +108,4 @@ ipygoldenlayout==0.4.0
 ###jupyterlab-widgets
 ###jupyterlab-pygments
 ###jupyter-server
-jupyterlab>=3.0.12
+jupyterlab==3.1.0
