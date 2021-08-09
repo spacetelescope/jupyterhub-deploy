@@ -56,9 +56,6 @@ def banner(title, char="=", spacer=" "):
 
 
 def main(ignore, *frozen_specs_to_scan):
-    print()
-    print('frozen_specs_to_scan: ' + str(frozen_specs_to_scan))
-    print()
     errs = False
     for spec in frozen_specs_to_scan:
         banner(f"Safety scanning {os.path.basename(spec)}")
@@ -114,14 +111,8 @@ def get_ignore_switches(ignore):
 
 def get_pip_dependencies(spec):
     with open(spec) as file:
-        print()
-        print('OPENING: ' + spec)
-        print()
         if spec.endswith((".yml",".yaml")):
             loaded = yaml.safe_load(file)
-            print()
-            print(loaded)
-            print()
             conda_deps = loaded["dependencies"]
             for dep in conda_deps:
                 if isinstance(dep, dict):
