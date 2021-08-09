@@ -1,7 +1,0 @@
-#! /bin/bash -e
-
-cd ${JUPYTERHUB_DIR}/datadog
-
-echo "================================== ${ECR_REGISTRY}/datadog:unscanned-latest  =============================="
-image-login
-docker image push $ECR_REGISTRY/datadog:unscanned-latest-${ENVIRONMENT}

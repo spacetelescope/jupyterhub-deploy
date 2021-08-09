@@ -3,8 +3,9 @@
 cd ${JUPYTERHUB_DIR}/datadog
 
 echo "========================= Deploying DataDog ========================"
+helm repo add datadog https://helm.datadoghq.com
+helm repo update
+
 helm install datadog datadog/datadog -f datadog.yaml \
-    --set registry=${ECR_REGISTRY} \
-    --set clusterAgent.image.tag=latest-${ENVIRONMENT} \
-    --set clusterAgent.image.name=datadog \
+    --set datadog.apiKey='$(get-datadog-api-key)' \
     --create-namespace -n datadog

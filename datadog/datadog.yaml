@@ -1,3 +1,7 @@
+## Default values for Datadog Agent
+## See Datadog helm documentation to learn more:
+## https://docs.datadoghq.com/agent/kubernetes/helm/
+
 # nameOverride -- Override name of app
 nameOverride:  # ""
 
@@ -12,18 +16,16 @@ targetSystem: "linux"
 ## GCR - use gcr.io/datadoghq (default)
 ## DockerHub - use docker.io/datadog
 ## AWS - use public.ecr.aws/datadog
-registry: public.ecr.aws/datadog
+registry: gcr.io/datadoghq
 
 datadog:
-  secret_backend_command: "/etc/datadog-agent/get-api-key"
-
   # datadog.apiKey -- Your Datadog API key
   # ref: https://app.datadoghq.com/account/settings#agent/kubernetes
-  apiKey: ""
+  apiKey: <DATADOG_API_KEY>
 
   # datadog.apiKeyExistingSecret -- Use existing Secret which stores API key instead of creating a new one
   ## If set, this parameter takes precedence over "apiKey".
-  #apiKeyExistingSecret:  # <DATADOG_API_KEY_SECRET>
+  apiKeyExistingSecret:  # <DATADOG_API_KEY_SECRET>
 
   # datadog.appKey -- Datadog APP key required to use metricsProvider
   ## If you are using clusterAgent.metricsProvider.enabled = true, you must set
@@ -472,16 +474,16 @@ clusterAgent:
   ## Define the Datadog Cluster-Agent image to work with
   image:
     # clusterAgent.image.name -- Cluster Agent image name to use (relative to `registry`)
-    name:
+    name: cluster-agent
 
     # clusterAgent.image.tag -- Cluster Agent image tag to use
-    tag: 
+    tag: 1.13.1
 
     # clusterAgent.image.repository -- Override default registry + image.name for Cluster Agent
     repository:
 
     # clusterAgent.image.pullPolicy -- Cluster Agent image pullPolicy
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
 
     # clusterAgent.image.pullSecrets -- Cluster Agent repository pullSecret (ex: specify docker registry credentials)
     ## See https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
@@ -959,9 +961,9 @@ agents:
 
   # agents.volumes -- Specify additional volumes to mount in the dd-agent container
   volumes: []
-  #  - hostPath:
-  #      path: ""
-  #    name: ""
+  #   - hostPath:
+  #       path: <HOST_PATH>
+  #     name: <VOLUME_NAME>
 
   # agents.volumeMounts -- Specify additional volumes to mount in all containers of the agent pod
   volumeMounts: []
@@ -1068,7 +1070,7 @@ clusterChecksRunner:
     repository:
 
     # clusterChecksRunner.image.pullPolicy -- Datadog Agent image pull policy
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
 
     # clusterChecksRunner.image.pullSecrets -- Datadog Agent repository pullSecret (ex: specify docker registry credentials)
     ## See https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
@@ -1243,15 +1245,16 @@ kube-state-metrics:
     kubernetes.io/os: linux
 
   # # kube-state-metrics.image -- Override default image information for the kube-state-metrics container.
-  image:
+  # image:
   #  # kube-state-metrics.repository -- Override default image registry for the kube-state-metrics container.
   #  repository: k8s.gcr.io/kube-state-metrics/kube-state-metrics
   #  # kube-state-metrics.tag -- Override default image tag for the kube-state-metrics container.
   #  tag: v1.9.8
   #  # kube-state-metrics.pullPolicy -- Override default image pullPolicy for the kube-state-metrics container.
-    pullPolicy: Always
+  #  pullPolicy: IfNotPresent
 
 providers:
   gke:
     # providers.gke.autopilot -- Enables Datadog Agent deployment on GKE Autopilot
     autopilot: false
+

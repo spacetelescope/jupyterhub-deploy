@@ -1,0 +1,6 @@
+#!/usr/bin/bash
+ 
+secret=$(awsudo $ADMIN_ARN aws secretsmanager get-secret-value --secret-id ${DD_API_KEY_ID} --region us-east-1 | grep 'SecretString' | awk -F: '{print $2}' | xargs | sed 's|["'\'']||g' | sed '
+ s/,$//')
+
+echo ${secret}
