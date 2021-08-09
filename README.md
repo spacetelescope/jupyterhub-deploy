@@ -6,7 +6,7 @@ The Space Telescope Science Institute ([STScI](https://www.stsci.edu/)) provides
 
 The code in this repository does not include an installable package, but rather a collection of tools, Docker image configurations, Helm charts, and tests.
 
-Much of the content here is derived from the [Zero-to-JupyterHub](https://zero-to-jupyterhub.readthedocs.io/en/latest) project.  The JupyterHub software is installed in a Kubernetes cluster on Amazon Web Services (AWS).  Terraform is used for cluster deployments - our Terraform configurations can be found [here](https://github.com/spacetelescope/terraform-deploy).
+Much of the content here is derived from the [Zero-to-JupyterHub](https://zero-to-jupyterhub.readthedocs.io/en/latest) project.  The JupyterHub software is installed in a Kubernetes cluster on Amazon Web Services (AWS).  Terraform is used for cluster deployments - configurations can be found [here](https://github.com/spacetelescope/terraform-deploy).
 
 ### Usage
 
