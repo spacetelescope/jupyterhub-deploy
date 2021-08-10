@@ -20,10 +20,10 @@ data:
           <center><h2>Welcome to the Roman HLPP</h2></center><br/>
 
           The Roman HLPP is a JupyterHub instance provided by the Space Telescope Science Institute (STScI) 
-	  and its main goals are to provide a higher level processing environment for Roman science data in 
-          close network proximity to cloud data storage and to increase the accessibility of Roman scientific 
-	  data and software.  STScI's JupyterHub platforms achieve this by providing users with a pre-defined 
-	  Linux computing environment hosted by AWS.
+          and its main goals are to provide a higher level processing environment for Roman science data in 
+          close network proximity to cloud data storage and to increase the accessibility of Roman scientific
+          data and software.  STScI's JupyterHub platforms achieve this by providing users with a pre-defined 
+          Linux computing environment hosted by AWS.
 
           <b>Useful information</b>&#58;<br/><br/>
 
