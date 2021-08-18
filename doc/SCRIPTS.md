@@ -36,11 +36,13 @@ Interact with ECR to push, pull, delete, and tag images:
 
 Run a JH image in local Docker for inspection, development, debug:
 
-- image-sh      -- start a container running an interactive bash shell for poking around
-- image-root-sh -- start a container running an interactive bash shell as root
-- image-exec    -- start a container and run an arbitrary command
-- image-dev     -- start a container and map in Docker sources r/w for incremental install debug
-- run-lab       -- start a JH server in Docker using the current image
+- image-sh          -- start a container running an interactive bash shell for poking around
+- image-root-sh     -- start a container running an interactive bash shell as root
+- image-exec        -- start a container and run an arbitrary command
+- image-dev         -- start a container and map in Docker sources r/w for incremental install debug
+- run-lab           -- start a JH server in Docker using the current image
+- image-graph-env   -- use pipdeptree and graphviz to produce version dependency graphs for an environment
+- image-build-all   -- use buildkit to build (all missions) x (frozen, not frozen) in parallel to update frozen requirements and test framework, memory intensive (32G?)
 
 Capture conda environment s/w versions (automatic w/ image-build):
 

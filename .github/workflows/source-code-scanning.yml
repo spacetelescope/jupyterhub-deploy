@@ -5,6 +5,7 @@ on:
    push:
       branches:
         - main
+        - test
    pull_request:
       branches:
         - main
@@ -31,6 +32,7 @@ jobs:
           python-version: 3.8
 
       - name: Set Up Environment
+        shell: bash
         run: |
            tools/image-configure ${{ matrix.DEPLOYMENT_NAME }}  ${{ matrix.USE_FROZEN }}
            df -h
@@ -45,6 +47,7 @@ jobs:
       #      args: --severity-threshold=high
 
       - name: Bandit Scan
+        shell: bash
         continue-on-error: false
         run: |
            source setup-env
@@ -53,6 +56,7 @@ jobs:
 
       - name: Safety Dependencies Scan
         continue-on-error: false
+        shell: bash
         run: |
            source setup-env
            pip install safety

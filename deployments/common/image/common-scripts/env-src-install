@@ -1,14 +1,26 @@
 #! /bin/bash
 
-# This script installs a src tarball downloaded from a URL.   It is ideally
-# suited to installing source tarballs from PyPi as a way of building binaries
-# which are tailored to a particular JH environment and associated dependency
-# solution.
-
 set -eu
 
-if [ $# -lt 1 ]; then
-    echo "usage:  env-src-install  <environment>   <python-pkg-src-url>   [<alternate-unpack-dirname>]"
+if [ $# -eq 0 ]; then
+    cat <<EOF
+usage:  env-src-install  <environment>   <python-pkg-src-url>   [<alternate-unpack-dirname>]
+
+This script installs a src tarball downloaded from a URL.  It is ideally suited
+to installing source tarballs from PyPi as a way of building binaries which are
+tailored to a particular JH environment and associated dependency solution.
+
+Step 4+ of pip-tools workflow: When forced by incompatible PyPi binaries, build
+compatible binaries from source and install into <env>.
+
+Nominal pip-tools workflow:
+
+    1. /opt/common-scripts/env-conda  <env>     # Create minimal conda environment.
+    2. /opt/common-scripts/env-compile <env>    # Resolve pip dependencies to requirements.txt
+    3. /opt/common-scripts/env-sync  <env>      # Download and install requirements.txt
+    4+ /opt/common-scripts/env-src-install  ... # Build packages with missing binaries from source.
+    ...
+EOF
     exit 2
 fi
 
@@ -25,7 +37,14 @@ tar zxf $PKG
 
 cd $SRC_DIR
 
-python setup.py install
+
+PIP_CONSTRAINTS=""
+REQ_FILE="/opt/environments/${ENV}/requirements.txt"
+if [ -f ${REQ_FILE} ]; then
+    PIP_CONSTRAINTS="-r ${REQ_FILE}"
+fi
+
+pip install --verbose --no-deps --no-build-isolation ${PIP_CONSTRAINTS} .
 
 cd ..
 

@@ -4,11 +4,15 @@ channels:
   - manics
   - defaults
 dependencies:
-  - python>=3.8.0,<3.9
-  - pip<21.2
+  - python~=3.8.0
+  - pip
   - freetds
   - fftw
-  - pyfftw
-  - mkl_fft
-  - mkl
-  - mkl-service
+  - pip:
+    - numpy~=1.19.0
+    - pyfftw
+    - cython
+
+#  - mkl_fft
+#  - mkl
+#  - mkl-service

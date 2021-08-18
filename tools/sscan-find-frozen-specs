@@ -4,4 +4,5 @@
 
 cd $JUPYTERHUB_DIR
 
-find `pwd`/deployments -type f | grep -E "${DEPLOYMENT_NAME}/image|common/image" | grep environments/frozen | grep '\-frozen.yml'
+find `pwd`/deployments/${DEPLOYMENT_NAME}/image/environments -name '*-frozen.yml'
+find `pwd`/deployments/${DEPLOYMENT_NAME}/image/environments -name 'requirements*'

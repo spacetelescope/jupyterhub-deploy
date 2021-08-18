@@ -18,13 +18,13 @@ if [[ -d ${kernel_test_dir} ]]; then
 
     # Import every Python package listted in the "imports" file
     if [[ -f ${kernel_test_dir}/imports ]]; then
-        echo "------------------------- Testing ${kernel} Imports --------------------------"
+        echo "------------------------- Testing Imports ${kernel} --------------------------"
         /opt/common-scripts/test-imports `cat ${kernel_test_dir}/imports`
     fi
 
     # Run every notebook path listed in "notebooks",  one per line
     if [[ -f ${kernel_test_dir}/notebooks ]]; then
-        echo "------------------------- Testing ${kernel} Notebooks --------------------------"
+        echo "------------------------- Testing Notebooks ${kernel} --------------------------"
         /opt/common-scripts/test-notebooks  --jobs ${jobs}  $kernel  `cat  ${kernel_test_dir}/notebooks`
     fi
 

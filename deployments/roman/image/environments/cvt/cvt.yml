@@ -5,4 +5,4 @@ channels:
   - http://ssb.stsci.edu/astroconda
   - defaults
 dependencies:
-  - python
+  - python~=3.8.0

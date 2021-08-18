@@ -8,6 +8,10 @@ reproject
 astroML>=1.0a1
 
 allesfitter
+dynesty
+rebound
+ultranest
+
 ellc
 statsmodels
 
@@ -23,7 +27,15 @@ aas-timeseries
 
 tvguide
 
-astrobase[all]
+# List add-on packages explicitly to remove google related packages from [all] install
+astrobase
+psycopg2-binary
+#emcee==3.0rc1
+h5py
+batman-package
+corner
+transitleastsquares>=1.0
+paramiko
 
 #batman-package-installed-from-source
 #radvel-installed-from-source

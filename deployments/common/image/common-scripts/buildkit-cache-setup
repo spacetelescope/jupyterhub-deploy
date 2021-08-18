@@ -1,0 +1,19 @@
+#! /bin/bash
+
+set -eu
+
+# Skip this setup if buildkit caching is *not* being used.
+if [[ "${USE_BUILDKIT_CACHING}" == "0" ]]; then
+   exit 0
+fi
+
+mkdir -p /opt
+chown -R 1000:100 /opt
+
+mkdir -p /home/jovyan/.cache
+chown -R 1000:100 /home/jovyan
+
+mkdir -p /opt-conda-cache
+chown 1000:100 -R /opt-conda-cache
+
+echo "pkg_dirs: [ /opt-conda-cache ]" >/home/jovyan/.condarc

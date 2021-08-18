@@ -4,9 +4,6 @@
 ARG BASE_IMAGE
 FROM $BASE_IMAGE AS build
 
-ARG USE_FROZEN=1
-ENV USE_FROZEN=$USE_FROZEN
-
 # ----------------------------------------------------------------------
 
 # All data is arranged  on /data opening up options for sharing a file system
@@ -65,38 +62,31 @@ COPY --chown=${NB_UID}:${NB_GID} environments/frozen/  /opt/environments/frozen
 
 # ------------------------------------------------------------------------------
 # CVT
-RUN /opt/common-scripts/env-clone  base   cvt
 
-COPY --chown=${NB_UID}:${NB_GID} environments/cvt/cvt.yml /opt/environments/cvt.yml
-RUN /opt/common-scripts/env-create  cvt /opt/environments/cvt/cvt.yml
+COPY --chown=${NB_UID}:${NB_GID} environments/cvt/*.yml  /opt/environments/cvt/
+RUN /opt/common-scripts/env-conda cvt
 
-RUN /opt/common-scripts/install-common cvt
+COPY --chown=${NB_UID}:${NB_GID} environments/cvt/*.pip  /opt/environments/cvt/
+COPY --chown=${NB_UID}:${NB_GID} environments/cvt/requirements.txt  /opt/environments/cvt/
+RUN /opt/common-scripts/env-compile cvt
+
+RUN /opt/common-scripts/env-sync cvt
+
+COPY --chown=${NB_UID}:${NB_GID} environments/cvt/ /opt/environments/cvt/
 
 # ----------------------------------------------------------------------
 # Roman CAL
-# RUN /opt/common-scripts/env-clone base roman-cal   # too many conflicts
 
-COPY --chown=${NB_UID}:${NB_GID} environments/roman-cal/roman-cal.yml /opt/environments/roman-cal/roman-cal.yml
-RUN /opt/common-scripts/env-create  roman-cal /opt/environments/roman-cal/roman-cal.yml
+COPY --chown=${NB_UID}:${NB_GID} environments/roman-cal/*.yml  /opt/environments/roman-cal/
+RUN /opt/common-scripts/env-conda roman-cal
 
-COPY --chown=${NB_UID}:${NB_GID} environments/roman-cal/roman-cal.pip /opt/environments/roman-cal/roman-cal.pip
-RUN /opt/common-scripts/env-update  roman-cal /opt/environments/roman-cal/roman-cal.pip
+COPY --chown=${NB_UID}:${NB_GID} environments/roman-cal/*.pip  /opt/environments/roman-cal/
+COPY --chown=${NB_UID}:${NB_GID} environments/roman-cal/requirements.txt  /opt/environments/roman-cal/
+RUN /opt/common-scripts/env-compile roman-cal
 
-COPY --chown=${NB_UID}:${NB_GID} environments/roman-cal/octarine.pip /opt/environments/roman-cal/octarine.pip
-RUN /opt/common-scripts/env-update  roman-cal /opt/environments/roman-cal/octarine.pip
+RUN /opt/common-scripts/env-sync roman-cal
 
-RUN /opt/common-scripts/install-common roman-cal
-
-# ------------------------------------------------------------------------------
-# All environments files,  including test files
-COPY --chown=${NB_UID}:${NB_GID} environments/  /opt/environments
-
-# ----------------------------------------------------------------------
-# Run the hook script for updates which are common to both the standalone
-# image and to hub cloud operation.
-#
-USER root
-RUN chown -R ${NB_UID}:${NB_GID}  /home/${NB_USER}
+COPY --chown=${NB_UID}:${NB_GID} environments/roman-cal/ /opt/environments/
 
 # ========================= ^^^^^ Custom  ^^^^^ =========================
 # ========================= vvvvv Generic vvvvv  =========================
@@ -110,12 +100,13 @@ RUN sed -i 's/data-base-url="{{base_url | urlencode}}"/data-base-url="{{base_url
 USER $NB_UID
 RUN /opt/common-scripts/kernel-setup   # set up Ipython / JupyterLab kernels
 
+# ----------------------------------------------------------------------
 # As part of Dockerfile.trailer,  these statements are executed from the
 # perspective of the deployment image directory,  not common.
 
 USER root
 
-# ----------------------------------------------------------------------
+RUN chown -R ${NB_UID}:${NB_GID}  /home/${NB_USER}
 
 # remove this step once nbgitpuller enabled; these contents will be in the
 #  jupyterhub-user-content repo.   Install deployment-specific $HOME files.
@@ -129,15 +120,8 @@ RUN  cat /home/jovyan/global_bashrc >> /etc/bash.bashrc  && \
 # Fix certs in conda for application level SSL, e.g. pass image-test running on CI-node
 RUN /opt/common-scripts/fix-certs
 
-# This top level command runs unit tests for the image,  nominally import tests
-# and notebook runs but it's an arbitrary bash script.
-COPY --chown=${NB_UID}:${NB_GID} environments/test    /opt/environments/test
-
-# Install security patches now that build is complete;  potentially this could be done sooner
-# -- RUN apt-get update && \
-# --     apt-get dist-upgrade --yes && \
-# --     apt-get clean && \
-# --     rm -rf /var/lib/apt/lists/*
+# Copy any remaining environments files not caught by more precise as-needed build copies
+COPY --chown=${NB_UID}:${NB_GID} environments/    /opt/environments/
 
 # For standalone operation outside JupyterHub,  note that  /etc also includes
 # common home directory files.   post-start-hook may not include everything required

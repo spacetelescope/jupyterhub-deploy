@@ -3,9 +3,6 @@
 ARG BASE_IMAGE
 FROM $BASE_IMAGE AS build
 
-ARG USE_FROZEN=1
-ENV USE_FROZEN=$USE_FROZEN
-
 # ----------------------------------------------------------------------
 
 # All data is arranged on /data opening up options for sharing a file system
@@ -75,14 +72,5 @@ COPY environments/jdaviz/jdaviz.pip /opt/environments/jdaviz/jdaviz.pip
 RUN /opt/common-scripts/env-update jdaviz /opt/environments/jdaviz/jdaviz.pip
 
 COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/ /opt/environments/jdaviz
-
-# ----------------------------------------------------------------------
-USER root
-
-# Install additional lab and notebook extensions
-USER ${NB_UID}
-
-# ----------------------------------------------------------------------
-COPY --chown=${NB_UID}:${NB_GID} environments/ /opt/environments
 
 # ========================= ^^^^^ Custom  ^^^^^ =========================
