@@ -1,31 +1,31 @@
 #!/usr/bin/env python3
 from argparse import ArgumentParser
 import subprocess
+import os
 
 def parse_args():
     parser = ArgumentParser("image-publish", description="tag (git and ECR)")
-    parser.add_argument("--registry", default="328656936502", help="ECR registry number")
-    parser.add_argument("--repository", default="roman-user-image", help="Docker image repo, usually mission name")
-    parser.add_argument("--old-tag", default="latest-sandbox", help="existing tag in ECR to modify")
+    parser.add_argument("--registry", default=os.environ.get('ECR_ACCOUNT_TO_USE'), help="ECR registry number")
+    parser.add_argument("--repo", default=os.environ.get('IMAGE_REPO'), help="Docker image repository, usually mission name")
+    parser.add_argument("--old_tag", default=os.environ.get('IMAGE_TAG'), help="existing tag in ECR to modify")
     parser.add_argument("tag", help="desired tag to apply to both git and ECR")
     parser.add_argument("--git", action="store_true", help="apply tag to git as well as ECR")
     return parser.parse_args()
+
 
 def main():
     args = parse_args()
 
     branch_name = subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"]).decode("utf-8").strip()
-
-    assert branch_name == "JUSI-760_release_tagging", "cannot publish and tag non-main git branch"
+    assert branch_name == "main", "cannot publish and tag non-main git branch"
 
     # Confirm that local and remote are at the same revision
     subprocess.check_call(["git", "fetch"])
     our_hash = subprocess.check_output(["git", "rev-parse", "HEAD"])
     upstream_hash = subprocess.check_output(["git", "rev-parse", "@{u}"])
-    assert our_hash == upstream_hash, "local and/or remote are missing commits"
-
-    subprocess.check_call(["./image-promote", args.registry, args.repository, args.old_tag, args.tag], shell=True)
-
+    
+    # assert our_hash == upstream_hash, "local and/or remote are missing commits"
+    subprocess.run(["image-promote", args.registry, args.repo, args.old_tag, args.tag], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=True)
     subprocess.check_call(["git", "tag", "-a", args.tag, "-m", "auto tag version"])
     subprocess.check_call(["git", "push", "--tags"])
 
