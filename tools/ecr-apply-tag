@@ -1,0 +1,4 @@
+set -e
+manifest=$(aws ecr batch-get-image --registry-id $registry --repository-name $repo --image-ids imageTag="$old_tag" --query 'images[].imageManifest' --output text)
+aws ecr put-image --registry-id $registry --repository-name $repo --image-tag "$new_tag" --image-manifest "$manifest"
+
