@@ -5,7 +5,6 @@ dependencies:
   - _libgcc_mutex=0.1
   - _openmp_mutex=4.5
   - ca-certificates=2021.5.30
-  - certifi=2021.5.30
   - fftw=3.3.9
   - freetds=1.1.15
   - ld_impl_linux-64=2.36.1
@@ -23,9 +22,9 @@ dependencies:
   - python=3.8.10
   - python_abi=3.8
   - readline=8.1
-  - setuptools=49.6.0
+  - setuptools=57.4.0
   - sqlite=3.36.0
-  - tk=8.6.10
+  - tk=8.6.11
   - unixodbc=2.3.9
   - wheel=0.37.0
   - xz=5.2.5
@@ -73,6 +72,7 @@ dependencies:
     - bqplot-image-gl==1.4.4
     - cachetools==4.2.2
     - celerite==0.4.0
+    - certifi==2021.5.30
     - cffi==1.14.6
     - cftime==1.5.0
     - chardet==4.0.0

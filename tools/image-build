@@ -43,3 +43,8 @@ if [[ "$USE_FROZEN" == "0" ]]; then
     echo "========================= Freezing Requirements =========================="
     time image-freeze
 fi
+
+# Remove buildkit caching "enhanced" Dockerfile.x's.
+cd ${JUPYTERHUB_DIR}
+docker_dirs="deployments/common  deployments/${DEPLOYMENT_NAME}"
+find ${docker_dirs} -name 'Dockerfile*.x' | xargs rm -f

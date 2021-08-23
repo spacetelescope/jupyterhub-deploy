@@ -11,8 +11,7 @@ cd ${JUPYTERHUB_DIR}/deployments/common/image
 docker build --progress plain --tag ubuntu-certs --file Dockerfile.certs.x \
        --build-arg USE_FROZEN=${USE_FROZEN} \
        --build-arg PIP_SWITCHES="${PIP_SWITCHES}" \
-       --build-arg USE_BUILDKIT_CACHING="${USE_BUILDKIT_CACHING}" \
-       --build-arg JH_DEVELOP=${JH_DEVELOP} \
+       --build-arg CLEAR_PKG_CACHES="${CLEAR_PKG_CACHES}" \
        --build-arg CONDA_VER=${CONDA_VER} \
        .
 
