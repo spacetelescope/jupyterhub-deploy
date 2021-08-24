@@ -3,6 +3,10 @@ from argparse import ArgumentParser
 import subprocess
 import os
 
+# Tags an image in git and ECR. `image-release 0.0.1`
+# Will use params first or default to environment vars. 
+# `image-release --registry 1234567, repo --myrepo, old-tag 0.0.0, 0.0.1`
+
 def parse_args():
     parser = ArgumentParser("image-release", description="tag an existing image simultaneously in git and ECR")
     parser.add_argument("--registry", default=os.environ.get('ECR_ACCOUNT_TO_USE'), help="ECR registry number")

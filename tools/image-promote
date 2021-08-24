@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Tags an image in ECR by updating the manifest.
+# image-promote latest-test
+# allows you to use args for flexibility which is recommended
+# image-promote --registry 1234567 --repo myrepo --old-tag latest-dev latest-test
+
 set -ex 
 
 registry=$ECR_ACCOUNT_TO_USE
