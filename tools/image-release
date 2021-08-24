@@ -13,22 +13,26 @@ def parse_args():
 
 
 def main():
-    args = parse_args()
+    try :
+        args = parse_args()
 
-    branch_name = subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"]).decode("utf-8").strip()
+        branch_name = subprocess.run(["git", "rev-parse", "--abbrev-ref", "HEAD"], check=True, stdout=subprocess.PIPE).stdout.decode("utf-8").strip()
+        assert branch_name == "JUSI-760_release_tagging", "cannot publish and tag non-main git branch"
 
-    # assert branch_name == "JUSI-760_release_tagging", "cannot publish and tag non-main git branch"
+        # Confirm that local and remote are at the same revision
+        subprocess.run(["git", "fetch"], check=True)
+        our_hash = subprocess.run(["git", "rev-parse", "HEAD"], check=True, capture_output=True).stdout
+        upstream_hash = subprocess.run(["git", "rev-parse", "@{u}"], check=True, capture_output=True).stdout
+        assert our_hash == upstream_hash, "local and/or remote are missing commits"
 
-    # Confirm that local and remote are at the same revision
-    subprocess.check_call(["git", "fetch"])
-    our_hash = subprocess.check_output(["git", "rev-parse", "HEAD"])
-    upstream_hash = subprocess.check_output(["git", "rev-parse", "@{u}"])
-    # assert our_hash == upstream_hash, "local and/or remote are missing commits"
+        print(subprocess.run(["image-promote", "--registry", args.registry, "--repo", args.repo, "--old-tag", args.old_tag, args.tag], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, check=True).stdout)
 
-    subprocess.run(["image-promote", "--registry", args.registry, "--repo", args.repo, "--old-tag", args.old_tag, args.tag], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=True)
-
-    subprocess.check_call(["git", "tag", "-a", args.tag, "-m", "auto tag version"])
-    subprocess.check_call(["git", "push", "--tags"])
-
+        subprocess.run(["git", "tag", "-a", args.tag, "-m", "auto tag version"], check=True, capture_output=True)
+        subprocess.run(["git", "push", "--tags"], check=True)
+    
+    except subprocess.CalledProcessError as e:
+        print(e.stdout) 
+        raise e
+        
 if __name__ == "__main__":
     main()
