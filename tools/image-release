@@ -21,7 +21,7 @@ def main():
         args = parse_args()
 
         branch_name = subprocess.run(["git", "rev-parse", "--abbrev-ref", "HEAD"], check=True, stdout=subprocess.PIPE).stdout.decode("utf-8").strip()
-        assert branch_name == "JUSI-760_release_tagging", "cannot publish and tag non-main git branch"
+        assert branch_name == "main", "cannot publish and tag non-main git branch"
 
         # Confirm that local and remote are at the same revision
         subprocess.run(["git", "fetch"], check=True)
