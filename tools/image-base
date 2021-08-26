@@ -19,8 +19,12 @@ docker build --progress plain --tag ubuntu-certs --file Dockerfile.certs.x \
 cd ~
 if [[ ! -d docker-stacks ]]; then
    git clone https://github.com/jupyter/docker-stacks.git
+   cd docker-stacks
+else
+    cd docker-stacks
+    git fetch origin
+    git rebase origin/master
 fi
-cd docker-stacks
 
 DARGS="--build-arg ROOT_CONTAINER=ubuntu-certs:latest" make build/base-notebook
 
