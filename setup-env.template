@@ -4,15 +4,14 @@
 # NOTE:  must be sourced from jupyterhub-deploy root directory
 #
 
-# ----------------- basic inputs,  must set --------------
+# ----------------- basic inputs,  must set for deployment --------------
 
 export DEPLOYMENT_NAME=cluster-name  # roman, jwebbinar, tike
 export ENVIRONMENT=sandbox           # sandbox, dev, test, or prod
 export USE_FROZEN=0                  # use 0 for loosely pinned package versions, 1 for tagged production build
 
 export ACCOUNT_ID=12345678
-export CENTRAL_ECR_ACCOUNT_ID=12345678
-export USE_CENTRAL_ECR=false
+export ECR_ACCOUNT_ID=12345678       # Set to ACCOUNT_ID for local ECR,  or central account ID for central ECR.
 export ADMIN_ROLENAME=aws-admin-role
 export DATADOG_API_KEY_ID=look-in-aws-sm
 
@@ -24,69 +23,4 @@ export COMMON_TAG=unscanned-common-latest-${ENVIRONMENT}
 
 # ----------------- vvvv less frequently changed vvvv -------------------------------
 
-# Select "conda" tool used to install conda package and environments: conda or mamba
-#   mamba is largely a drop-in replacement for mamba with improved dependency resolution,
-#   parallel downloads, and C++ implementation.
-export CONDA_VER=conda
-
-# Additional parameters for image-exec Docker run command, e.g. add mounts here
-export IMAGE_RUN_PARS="--rm -e JUPYTER_ENABLE_LAB=yes"
-
-# Image scanning,  report Ubuntu status for this version of Ubuntu
-export IMAGE_UBUNTU_NAME="Groovy"
-
-# Image scanning,  report CVE's at this severity level and  higher
-export IMAGE_VULNERABILITY_LEVEL="medium"
-
-# -------------------------------------------------------------------
-# Docker Buildkit has two killer features:
-#   1. It can set up caches for package download directories which
-#        persist between builds if they're not cleared.
-#   2. It can set up multiple builders enabling parallel builds of
-#        different missions and build parameters.  See image-build-all.
-#
-
-# Docker requires DOCKER_BUILDKT=1 to enable buildkit for older Docker
-# distributions.   This enables buildkit in general.
-
-export DOCKER_BUILDKIT=1
-
-# Stop/improve buildkit log truncation.
-export BUILDKIT_STEP_LOG_MAX_SIZE=10000000   # bytes
-export BUILDKIT_STEP_LOG_MAX_SPEED=10000000
-
-# Set USE_BUILDKIT_CACHING=1 to avoid repeat package downloads, particularly
-# useful during iterative dependency debug builds where pip environments are
-# being rebuilt repeatedly.
-
-export USE_BUILDKIT_CACHING=0
-
-# ----------------------------------------------------------------------------
-
-# Set CLEAR_PKG_CACHES to 0 to turn off *our* package cache clearing code
-# during image builds so that they persist in Docker caches outside the image
-# to avoid repeat downloads.  (apt, conda, pip, npm)
-
-# Note that jupyter/docker-stacks doesn't honor CLEAR_PKG_CACHES so cache
-# persistence is generally negated for that and prior images.
-
-# Set CLEAR_PKG_CACHES=0 when USE_BUILDKIT_CACHING=1 or when the package caches
-# may be needed for debug with e.g. pipdeptree or conda-tree dependency tools.
-
-# Set CLEAR_PKG_CACHES=1 to prevent growth in image size due to package
-# downloads.  This is classic behavior.
-
-export CLEAR_PKG_CACHES=1
-
-# ----------------------------------------------------------------------------
-# PIP_SWITCHES are passed through to pip by Docker and the pip install scripts
-# env-update and env-compile/sync.
-
-export PIP_SWITCHES="--no-color --default-timeout 100"
-if [[ "${CLEAR_PKG_CACHES}" == "1" ]]; then
-    export PIP_SWITCHES="${PIP_SWITCHES} --no-cache-dir"
-fi
-
-# ----------------- values derived from basic inputs ---------------------
-
-source derived-env
+source infrequent-env   # for hub and image development

@@ -1,0 +1,107 @@
+#! /bin/bash -eu
+
+export PATH="`pwd`/tools":${PATH}
+
+# ----------------- vvvv less frequently changed inputs vvvv -------------------------------
+
+# Select "conda" tool used to install conda package and environments: conda or mamba
+#   mamba is largely a drop-in replacement for mamba with improved dependency resolution,
+#   parallel downloads, and C++ implementation.
+export CONDA_VER=conda
+
+# Additional parameters for image-exec Docker run command, e.g. add mounts here
+export IMAGE_RUN_PARS="--rm -e JUPYTER_ENABLE_LAB=yes"
+
+# Image scanning,  report Ubuntu status for this version of Ubuntu
+export IMAGE_UBUNTU_NAME="Groovy"
+
+# Image scanning,  report CVE's at this severity level and  higher
+export IMAGE_VULNERABILITY_LEVEL="medium"
+
+# -------------------------------------------------------------------
+# Docker Buildkit has two killer features:
+#   1. It can set up caches for package download directories which
+#        persist between builds if they're not cleared.
+#   2. It can set up multiple builders enabling parallel builds of
+#        different missions and build parameters.  See image-build-all.
+#
+
+# Docker requires DOCKER_BUILDKT=1 to enable buildkit for older Docker
+# distributions.   This enables buildkit in general.
+
+export DOCKER_BUILDKIT=1
+
+# Stop/improve buildkit log truncation.
+export BUILDKIT_STEP_LOG_MAX_SIZE=10000000   # bytes
+export BUILDKIT_STEP_LOG_MAX_SPEED=10000000
+
+# Set USE_BUILDKIT_CACHING=1 to avoid repeat package downloads, particularly
+# useful during iterative dependency debug builds where pip environments are
+# being rebuilt repeatedly.
+
+export USE_BUILDKIT_CACHING=0
+
+# ----------------------------------------------------------------------------
+
+# Set CLEAR_PKG_CACHES to 0 to turn off *our* package cache clearing code
+# during image builds so that they persist in Docker caches outside the image
+# to avoid repeat downloads.  (apt, conda, pip, npm)
+
+# Note that jupyter/docker-stacks doesn't honor CLEAR_PKG_CACHES so cache
+# persistence is generally negated for that and prior images.
+
+# Set CLEAR_PKG_CACHES=0 when USE_BUILDKIT_CACHING=1 or when the package caches
+# may be needed for debug with e.g. pipdeptree or conda-tree dependency tools.
+
+# Set CLEAR_PKG_CACHES=1 to prevent growth in image size due to package
+# downloads.  This is classic behavior.
+
+export CLEAR_PKG_CACHES=1
+
+# ----------------------------------------------------------------------------
+# PIP_SWITCHES are passed through to pip by Docker and the pip install scripts
+# env-update and env-compile/sync.
+
+export PIP_SWITCHES="--no-color --default-timeout 100"
+if [[ "${CLEAR_PKG_CACHES}" == "1" ]]; then
+    export PIP_SWITCHES="${PIP_SWITCHES} --no-cache-dir"
+fi
+
+# ----------------- vvvvvv derived inputs, nominally don't change vvvvvv --------------
+# automatically sourced into setup-env
+
+# Octarine AWS JupyterHub setup
+
+export ECR_REGISTRY=${ECR_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
+export IMAGE_REPO=${DEPLOYMENT_NAME}
+export COMMON_REPO=${IMAGE_REPO}
+
+export ADMIN_ARN=arn:aws:iam::${ACCOUNT_ID}:role/${ADMIN_ROLENAME}
+
+export JUPYTERHUB_DIR=`pwd`
+
+export IMAGE_DIR=`pwd`/deployments/${DEPLOYMENT_NAME}/image
+export CONFIG_DIR=`pwd`/deployments/${DEPLOYMENT_NAME}/config
+
+export COMMON_IMAGE_DIR=`pwd`/deployments/common/image
+export COMMON_CONFIG_DIR=`pwd`/deployments/common/config
+
+export COMMON_ID=${ECR_REGISTRY}/${COMMON_REPO}:${COMMON_TAG}
+export IMAGE_ID=${ECR_REGISTRY}/${IMAGE_REPO}:${IMAGE_TAG}
+
+# --------------- vvvvv misc env settings vvvvv ---------------------------------
+
+export TMOUT=7200
+export TF_LOG=TRACE
+export TF_LOG_PATH=terraform.log
+
+alias awsu="awsudo -d 3600 $ADMIN_ARN"
+alias terraform-init="awsu terraform init -backend-config=./backend.conf -backend-config=./backend.conf"
+alias terraform-apply="awsu terraform apply --var-file=${DEPLOYMENT_NAME}.tfvars"
+alias terraform-destroy="awsu terraform destroy -var-file=${DEPLOYMENT_NAME}.tfvars"
+alias helm-destroy="awsu helm uninstall ${DEPLOYMENT_NAME}-${ENVIRONMENT}"
+alias where="echo ${DEPLOYMENT_NAME}-${ENVIRONMENT}-${USE_FROZEN}-${USE_BUILDKIT_CACHING}-${CLEAR_PKG_CACHES}"
+alias update-kubeconfig="awsu aws eks update-kubeconfig --name $DEPLOYMENT_NAME"
+alias pods="kubectl get pods -A"
+
+# where,  failing for GitHub Actions even with bash shell
