@@ -20,13 +20,7 @@ jobs:
       fail-fast: false
       matrix:
         DEPLOYMENT_NAME: [ jwebbinar, roman, tike]
-        USE_FROZEN: [ 0 ]
-        include:
-          - DEPLOYMENT_NAME: tike
-            USE_FROZEN: 1
-          - DEPLOYMENT_NAME: roman
-            USE_FROZEN: 1
-
+        USE_FROZEN: [ 0, 1 ]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2

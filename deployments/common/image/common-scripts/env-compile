@@ -60,6 +60,6 @@ if [[ "$USE_FROZEN" != "1" ]]; then
         echo ${pip}   # show one per line.
     done
     rm -f /opt/environments/${env}/requirements.txt
-    pip-compile  -v --pip-args "${PIP_SWITCHES}"  -o /opt/environments/${env}/requirements.txt ${all_constraints}
+    pip-compile  -v  --output-file /opt/environments/${env}/requirements.txt  --pip-args "${PIP_SWITCHES}"  ${all_constraints}
     /opt/common-scripts/env-clean
 fi

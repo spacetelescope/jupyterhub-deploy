@@ -4,16 +4,8 @@ channels:
     - https://ssb.stsci.edu/astroconda
     - defaults
 dependencies:
+    - freetds
+    - fftw
+    - openblas
+    - python~=3.8.0
     - pip
-    - bqplot-image-gl
-    - bqplot==0.12.29
-    - jupyterlab_widgets
-    - ipydatawidgets
-    - ipykernel
-    - ipympl
-    - ipython
-    - ipyvolume
-    - ipyvue
-    - ipyvuetify
-    - ipywebrtc
-    - ipywidgets

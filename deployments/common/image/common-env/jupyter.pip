@@ -1,6 +1,6 @@
 jupyterlab~=3.1.0
 bqplot~=0.12.29
-glue-jupyter~=0.6.1
+glue-jupyter
 ipysplitpanes~=0.2.0
 ipygoldenlayout~=0.4.0
 jupyter-client
@@ -14,3 +14,7 @@ jupyter-server-proxy
 jupyter_bokeh
 ipywidgets_bokeh
 ipyevents
+ipympl
+ipyvolume
+ipyvuetify
+ipywebrtc

@@ -1,12 +1,11 @@
 name: jwebbinar
 channels:
     - conda-forge
-    - manics
     - https://ssb.stsci.edu/astroconda
     - defaults
 dependencies:
-    - pip
     - freetds
     - fftw
-    - pyfftw
-    - python==3.8
+    - openblas
+    - python~=3.8.0
+    - pip
