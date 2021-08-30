@@ -31,7 +31,8 @@ Interact with ECR to push, pull, delete, and tag images:
 - image-pull    -- pull the configured image tag from ECR to the local Docker
 - image-delete  -- delete the specified image tags or digests from ECR, e.g. to ditch vulnerable images
 - image-login   -- log in to ECR
-- image-promote -- promote an image to the next tier (e.g. dev --> test); use with "awsudo $ADMIN_ARN"
+- image-promote -- re-tag an image in ECR. Accepts optional args for flexibility `image-promote latest-test`
+- image-release -- tag current git commit and ECR with a version. Accepts optional args for flexibility. `image-release 0.0.1`
 - ecr-cleanup   -- delete images in ECR by digest or based on prompting and 'y' or 'n' answers.
 
 Run a JH image in local Docker for inspection, development, debug:

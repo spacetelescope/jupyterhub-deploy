@@ -1,5 +1,0 @@
-#! /usr/bin/bash
-
-# promote Docker image from test to ops.
-
-image-promote $CENTRAL_ECR_ACCOUNT_ID $IMAGE_REPO latest-test latest-prod

@@ -1,36 +1,42 @@
-#!/usr/bin/env python
+#!/bin/bash
 
-import os
-import sys
-import subprocess
-import json
+# Tags an image in ECR by updating the manifest.
+# image-promote latest-test
+# allows you to use args for flexibility which is recommended
+# image-promote --registry 1234567 --repo myrepo --old-tag latest-dev latest-test
 
-"""
-The script is used to promote a docker image from either
-    dev --> test
-    test --> prod
+set -ex 
 
-To promote an image, we find an image in the central ECR that has a tag
-of the pattern "latest-<dev | test>".  So, if $ENVIRONMENT=dev, we look for
-"latest-dev", and then add a tag of "latest-test".  Doing so makes the image
-available to the test cluster.
-"""
+registry=$ECR_ACCOUNT_TO_USE
+repo=$IMAGE_REPO
+old_tag=$IMAGE_TAG
 
-print(str(sys.argv))
+while [ "$1" != "" ]; do
+    case $1 in
+        -r | --registry )
+            shift
+            registry=$1
+            ;;
+        -i | --repo )
+            shift
+            repo=$1
+            ;;
+        -t | --old-tag )
+            shift
+            old_tag=$1
+            ;;
+        -h | --help )
+            usage
+            exit
+	    ;;
+	* )
+	    break  # Default case: no more options so break out and leave remaining args unshifted 
+    esac
+    shift
+done
 
-registry = str(sys.argv[1])
-repo_name = str(sys.argv[2])
-old_tag = str(sys.argv[3])
-new_tag = str(sys.argv[4])
+# This greatly saddens me but this subprogram is the only way to get this working because of two reasons
+# awsudo seems to have a bug where it will unquote a quoted variable when it translates the command
+# the ecr tag updating process is so finnicky that trying to modify it in any way breaks it
+registry=$registry repo=$repo old_tag=$old_tag new_tag=$1 awsudo $ADMIN_ARN ecr-apply-tag
 
-
-with open('./manifest.json', 'w') as json_file:
-    stream = os.popen(f"awsudo $ADMIN_ARN aws ecr batch-get-image --registry-id {registry} --repository-name {repo_name} --image-ids imageTag={old_tag} --accepted-media-types string --output json --query 'images[0].imageManifest'")
-    output = stream.read().replace("\\n","").replace("\\","").strip().strip("\"")
-    manifest = json.loads(output)
-    json.dump(manifest, json_file, indent=2)
-
-cmd = f"awsudo $ADMIN_ARN aws ecr put-image --repository-name {repo_name} --image-manifest file://manifest.json --image-tag {new_tag} --registry-id {registry}"
-stream = os.popen(cmd)
-output = stream.read()
-print(output)
