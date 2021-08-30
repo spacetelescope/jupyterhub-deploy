@@ -14,12 +14,12 @@ set -eu
 
 PACKAGES=$*
 
-apt-get update --yes
+apt-get update --yes --fix-missing
 
-DEBIAN_FRONTEND=noninteractive apt-get install --yes ${PACKAGES}
+DEBIAN_FRONTEND=noninteractive apt-get install -f --yes ${PACKAGES}
 
 # Only clear the cache if buildkit caching and dev mode are not being used.
-if [[ "${USE_BUILDKIT_CACHING}" == "0" && "${JH_DEVELOP}" != "1" ]]; then
+if [[ "${CLEAR_PKG_CACHES}" == "1" ]]; then
     apt-get clean
 fi
 

@@ -19,7 +19,7 @@ Run "clean-ecr --help" for usage information.
 """
 
 ADMIN_ARN = os.environ.get('ADMIN_ARN')
-ECR_ACCOUNT_TO_USE = os.environ.get('ECR_ACCOUNT_TO_USE')
+ECR_ACCOUNT_ID = os.environ.get('ECR_ACCOUNT_ID')
 IMAGE_REPO = os.environ.get('IMAGE_REPO')
 IMAGE_UBUNTU_NAME = os.environ.get('IMAGE_UBUNTU_NAME')
 
@@ -50,7 +50,7 @@ class Image(object):
                 awsudo {ADMIN_ARN} aws ecr describe-image-scan-findings
                 --no-paginate
                 --repository-name {IMAGE_REPO}
-                --registry-id {ECR_ACCOUNT_TO_USE}
+                --registry-id {ECR_ACCOUNT_ID}
                 --image-id imageDigest={self.digest}""").split()
             )
             return json.loads(results)
@@ -86,7 +86,7 @@ class Image(object):
     def delete(self):
         subprocess.check_output(f"""
             awsudo -d 3600 {ADMIN_ARN} aws ecr batch-delete-image
-            --registry-id {ECR_ACCOUNT_TO_USE}
+            --registry-id {ECR_ACCOUNT_ID}
             --repository-name {IMAGE_REPO}
             --image-ids imageDigest={self.digest}""".split()
         )
@@ -109,7 +109,7 @@ def prompt_for_deletion(img):
 def get_image_digests():
     untagged_images = subprocess.check_output(f"""
         awsudo -d 3600 {ADMIN_ARN} aws ecr list-images
-        --registry-id {ECR_ACCOUNT_TO_USE}
+        --registry-id {ECR_ACCOUNT_ID}
         --repository-name {IMAGE_REPO}
         --filter tagStatus=UNTAGGED""".split()
     )

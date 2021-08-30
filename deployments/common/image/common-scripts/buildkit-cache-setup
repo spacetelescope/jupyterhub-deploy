@@ -3,17 +3,13 @@
 set -eu
 
 # Skip this setup if buildkit caching is *not* being used.
-if [[ "${USE_BUILDKIT_CACHING}" == "0" ]]; then
-   exit 0
-fi
-
 mkdir -p /opt
-chown -R 1000:100 /opt
+chown -R $NB_UID:$NB_GID /opt
 
 mkdir -p /home/jovyan/.cache
-chown -R 1000:100 /home/jovyan
+chown -R $NB_UID:$NB_GID /home/jovyan/.cache
 
 mkdir -p /opt-conda-cache
-chown 1000:100 -R /opt-conda-cache
+chown $NB_UID:$NB_GID -R /opt-conda-cache
 
-echo "pkg_dirs: [ /opt-conda-cache ]" >/home/jovyan/.condarc
+echo 'pkg_dirs: [ /opt-conda-cache ]' >/home/jovyan/.condarc

@@ -47,7 +47,7 @@ def run(cmd, cwd="."):
         stderr=subprocess.STDOUT,
         text=True,
         check=True,
-	cwd=cwd,
+        cwd=cwd,
     )  # maybe succeeds
     return result.stdout
 
@@ -58,7 +58,8 @@ def _get_scan_results(image_digest, image_tag):
     """
     admin_arn=os.environ["ADMIN_ARN"]
     image_repo=os.environ["IMAGE_REPO"]
-    ecr_account_to_use=os.environ["ECR_ACCOUNT_TO_USE"]
+    image_tag=os.environ["IMAGE_TAG"]
+    ecr_account_to_use=os.environ["ECR_ACCOUNT_ID"]
 
     image_id_arg = f"imageTag={image_tag}"
     if image_digest:
@@ -152,7 +153,7 @@ def main():
     levels = KEEP_LEVELS[args.levels.upper()]
     reduced = get_report_dict(args.version, levels, args.image_digest)
     print(yaml.dump(reduced))
-    
+
     if reduced["overall_status"] == "FAILED":
         sys.exit(1)
     sys.exit(0)

@@ -34,8 +34,10 @@ npm install jupyter-golden-layout@0.3.0
 npm install bqplot-image-gl@1.4.1
 #npm install bqplot@0.5.31
 
+# npm audit fix --force
+
 # Skip cache clearing if buildkit caching is enabled or dev-mode is enabled.
-if [[ "${USE_BUILDKIT_CACHING}" == "0" && "${JH_DEVELOP}" != "1" ]]; then
+if [[ "${CLEAR_PKG_CACHES}" == "1" ]]; then
     # Clear the lab and npm caches
     echo "-------------------------------------------------------------------------------"
     echo "===== Clearing jupyterlab and npm caches"
