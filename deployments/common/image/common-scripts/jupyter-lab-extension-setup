@@ -9,7 +9,7 @@ function install_nbextensions() {
     done
 }
 
-jupyter serverextension enable --sys-prefix jupyter-server-proxy
+jupyter serverextension enable --sys-prefix jupyter_server_proxy
 
 jupyter labextension install \
        @jupyterlab/server-proxy \

@@ -1,8 +1,0 @@
-#! /usr/bin/env bash
-
-# print the paths of all frozen specs for this deployment
-
-cd $JUPYTERHUB_DIR
-
-find `pwd`/deployments/${DEPLOYMENT_NAME}/image/environments -name '*-frozen.yml'
-find `pwd`/deployments/${DEPLOYMENT_NAME}/image/environments -name 'requirements*'

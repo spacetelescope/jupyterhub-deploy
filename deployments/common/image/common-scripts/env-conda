@@ -25,7 +25,7 @@ fi
 env=$1
 
 env_yml=/opt/environments/${env}/${env}.yml
-env_frozen_yml=/opt/environments/${env}/requirements.yml
+env_frozen_yml=/opt/env-frozen/${env}/requirements.yml
 
 . /etc/profile.d/conda.sh
 
@@ -33,6 +33,8 @@ echo "--------------------------------------------------------------------------
 if [[ "$USE_FROZEN" == "0" ]]; then
     echo "===== Creating conda environment ${env} from weak constraints ${env_yml}"
     ${CONDA_VER} env create --quiet --name ${env} --file ${env_yml}
+    echo "===== Adding common conda packages to ${env}:"
+    /opt/common-scripts/env-update ${env}  `find /opt/common-env -name '*.conda' | sort`
     echo "===== Saving frozen conda constraints for environment ${env} to ${env_frozen_yml}"
     ${CONDA_VER} env export -n ${env} > ${env_frozen_yml}  # must be saved after build outside Docker
     cat ${env_frozen_yml}
@@ -44,9 +46,6 @@ echo "===== Creating conda environment ${env} from frozen constraints ${env_froz
 ${CONDA_VER} env create --quiet --name ${env} --file ${env_frozen_yml}
 
 source /opt/common-scripts/env-activate ${env}
-
-# These are "unsafe" for pip-tools and if not installed early result in e.g. wrong python used
-pip install ${PIP_SWITCHES} pip-tools pip setuptools
 
 /opt/common-scripts/fix-conda-certs   # new env may install new certs
 

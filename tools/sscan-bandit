@@ -7,4 +7,6 @@ run_bandit() {
     bandit -v -ll -ii --format txt  $*
 }
 
+cd $JUPYTERHUB_DIR
+
 run_bandit `sscan-find-python-files`

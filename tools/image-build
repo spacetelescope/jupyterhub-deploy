@@ -26,7 +26,7 @@ image-base
 # Build STScI shared layer for all deployments
 cd ${COMMON_IMAGE_DIR}
 echo "========================= Building Common Image ========================"
-time docker build --progress plain --tag ${COMMON_ID} .  --file Dockerfile.x
+time docker build --progress plain --tag ${COMMON_ID} --build-arg BASE_IMAGE=stsci-jh/scipy-notebook .  --file Dockerfile.x
 
 # ..................................................................................
 # Build custom layers for this deployment
@@ -45,6 +45,6 @@ if [[ "$USE_FROZEN" == "0" ]]; then
 fi
 
 # Remove buildkit caching "enhanced" Dockerfile.x's.
-cd ${JUPYTERHUB_DIR}
-docker_dirs="deployments/common  deployments/${DEPLOYMENT_NAME}"
-find ${docker_dirs} -name 'Dockerfile*.x' | xargs rm -f
+# cd ${JUPYTERHUB_DIR}
+# docker_dirs="deployments/common  deployments/${DEPLOYMENT_NAME}"
+# find ${docker_dirs} -name 'Dockerfile*.x' | xargs rm -f

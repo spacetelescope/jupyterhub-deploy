@@ -48,11 +48,7 @@ RUN cd /tmp && \
 
 USER ${NB_UID}
 
-# This is a cache buster when environment freezing creates new specs, so Docker
-# build will back up to this point.  Consequently, image build uses git to
-# clear the new specs, they should be committed to git prior to attempting a
-# new frozen build.
-COPY --chown=${NB_UID}:${NB_GID} environments/frozen /opt/environments/frozen
+COPY --chown=${NB_UID}:${NB_GID} env-frozen/ /opt/env-frozen/
 
 # --------------------------- Jwebbinar -------------------------------------
 
@@ -62,7 +58,6 @@ RUN /opt/common-scripts/env-conda jwebbinar
 
 # COMPILE ALL
 COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/*.pip /opt/environments/jwebbinar/
-COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/requirements.txt /opt/environments/jwebbinar/
 RUN /opt/common-scripts/env-compile jwebbinar
 
 # SYNC ALL
@@ -79,7 +74,6 @@ RUN /opt/common-scripts/env-conda jdaviz
 
 # COMPILE ALL
 COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/*.pip /opt/environments/jdaviz/
-COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/requirements.txt /opt/environments/jdaviz/
 RUN /opt/common-scripts/env-compile jdaviz
 
 # SYNC ALL
@@ -87,7 +81,6 @@ RUN /opt/common-scripts/env-sync  jdaviz
 
 # REMAINING ENV
 COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/ /opt/environments/jdaviz/
-
 # ========================= vvvvv Generic vvvvv  =========================
 
 # Fix JS encoding issue that prevents widgets from displaying properly in notebook mode
@@ -105,7 +98,7 @@ RUN /opt/common-scripts/kernel-setup   # set up Ipython / JupyterLab kernels
 
 USER root
 
-RUN chown -R ${NB_UID}:${NB_GID}  /home/${NB_USER}
+RUN find /home/${NB_USER} ! -uid ${NB_UID} | xargs chown ${NB_UID}:${NB_GID}
 
 # remove this step once nbgitpuller enabled; these contents will be in the
 #  jupyterhub-user-content repo.   Install deployment-specific $HOME files.
