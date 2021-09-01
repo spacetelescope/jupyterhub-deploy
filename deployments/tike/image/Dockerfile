@@ -21,8 +21,7 @@ RUN curl --silent --show-error https://www.astro.princeton.edu/~jhartman/vartool
 
 USER ${NB_UID}
 
-# XXXXXX potentially remove later as freeze process evolves
-COPY --chown=${NB_UID}:${NB_GID} environments/frozen/ /opt/environments/frozen
+COPY --chown=${NB_UID}:${NB_GID} env-frozen/ /opt/env-frozen/
 
 # --------------------------- TESS -------------------------------------
 
@@ -30,7 +29,6 @@ COPY --chown=${NB_UID}:${NB_GID} environments/tess/*.yml /opt/environments/tess/
 RUN /opt/common-scripts/env-conda tess
 
 COPY --chown=${NB_UID}:${NB_GID} environments/tess/*.pip /opt/environments/tess/
-COPY --chown=${NB_UID}:${NB_GID} environments/tess/requirements.txt /opt/environments/tess/
 RUN /opt/common-scripts/env-compile tess
 
 RUN /opt/common-scripts/env-sync  tess
@@ -72,7 +70,7 @@ RUN /opt/common-scripts/kernel-setup   # set up Ipython / JupyterLab kernels
 
 USER root
 
-RUN chown -R ${NB_UID}:${NB_GID}  /home/${NB_USER}
+RUN find /home/${NB_USER} ! -uid ${NB_UID} | xargs chown ${NB_UID}:${NB_GID}
 
 # remove this step once nbgitpuller enabled; these contents will be in the
 #  jupyterhub-user-content repo.   Install deployment-specific $HOME files.

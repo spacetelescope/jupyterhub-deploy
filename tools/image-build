@@ -45,6 +45,6 @@ if [[ "$USE_FROZEN" == "0" ]]; then
 fi
 
 # Remove buildkit caching "enhanced" Dockerfile.x's.
-cd ${JUPYTERHUB_DIR}
-docker_dirs="deployments/common  deployments/${DEPLOYMENT_NAME}"
-find ${docker_dirs} -name 'Dockerfile*.x' | xargs rm -f
+# cd ${JUPYTERHUB_DIR}
+# docker_dirs="deployments/common  deployments/${DEPLOYMENT_NAME}"
+# find ${docker_dirs} -name 'Dockerfile*.x' | xargs rm -f

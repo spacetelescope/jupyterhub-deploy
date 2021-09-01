@@ -25,7 +25,7 @@ source /opt/common-scripts/env-activate ${env}
 
 echo "===== Installing required pip packages for environment ${env}..."
 
-pip-sync --python-executable `which python`   /opt/environments/${env}/requirements.txt
+pip-sync --python-executable `which python`   /opt/env-frozen/${env}/requirements.txt
 
 /opt/common-scripts/fix-conda-certs   # new env may install new certs
 

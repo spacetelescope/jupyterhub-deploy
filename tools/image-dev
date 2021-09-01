@@ -39,10 +39,11 @@ STARTING_IMAGE=${1:-`docker image ls -q | head -1`}
 
 cd ${JUPYTERHUB_DIR}
 
-COMMON_MOUNTS="-v ${JUPYTERHUB_DIR}/deployments/common/image/common-scripts:/opt/common-scripts:rw"
-COMMON_MOUNTS="${COMMON_MOUNTS} -v ${JUPYTERHUB_DIR}/deployments/common/image/common-env:/opt/common-env:rw"
+COMMON_MOUNTS="-v ${COMMON_IMAGE_DIR}/common-scripts:/opt/common-scripts:rw"
+COMMON_MOUNTS="${COMMON_MOUNTS} -v ${COMMON_IMAGE_DIR}/common-env:/opt/common-env:rw"
 
-MISSION_MOUNTS="-v ${JUPYTERHUB_DIR}/deployments/${DEPLOYMENT_NAME}/image/environments:/opt/environments:rw"
+MISSION_MOUNTS="-v ${IMAGE_DIR}/environments:/opt/environments:rw"
+MISSION_MOUNTS="${MISSION_MOUNTS} -v ${IMAGE_DIR}/env-frozen:/opt/env-frozen:rw"
 
 # skip automatic --rm so files can be recovered from stopped container if needed
 IMAGE_RUN_PARS="-it ${COMMON_MOUNTS} ${MISSION_MOUNTS} -e CLEAR_PKG_CACHES=0 -e PATH=/opt/TurboVNC/bin:/opt/conda/bin:/opt/conda/condabin:/opt/conda/bin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/common-scripts"

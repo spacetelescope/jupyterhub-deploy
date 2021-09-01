@@ -2,8 +2,7 @@
 # -*- python -*-
 
 """This script uses the pip 'safety' package to do vulnerability checking for
-the pip dependencies found in a conda environment spec, e.g. a jupyterhub-deploy
-frozen spec.
+the pip dependencies found in pip requirements files.
 
 Usage:
 
@@ -20,15 +19,15 @@ where:
 
 or literally like:
 
-   sscan-run-safety   none    deployments/tike/image/environments/frozen/tess-frozen.yml
+   sscan-run-safety   none    ${IMAGE_DIR}/env-frozen/tess/requirements.txt
 
         to print all vulnerabilities
 
-   sscan-run-safety   40794,40795   deployments/tike/image/environments/frozen/tess-frozen.yml
+   sscan-run-safety   40794,40795   ${IMAGE_DIR}/env-frozen/tess/requirements.txt
 
         to ignore safety IDs 40794 and 40795
 
-   sscan-run-safety   @${IMAGE_DIR}/environments/frozen/safety.ignore    deployments/tike/image/environments/frozen/tess-frozen.yml
+   sscan-run-safety   @${IMAGE_DIR}/environments/tess/safety.ignore    ${IMAGE_DIR}/env-frozen/tess/requirements.txt
 
         to ignore ids in the file safety.ignore which has a format like:
            # starts comment line

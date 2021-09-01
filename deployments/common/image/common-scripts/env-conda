@@ -25,7 +25,7 @@ fi
 env=$1
 
 env_yml=/opt/environments/${env}/${env}.yml
-env_frozen_yml=/opt/environments/${env}/requirements.yml
+env_frozen_yml=/opt/env-frozen/${env}/requirements.yml
 
 . /etc/profile.d/conda.sh
 

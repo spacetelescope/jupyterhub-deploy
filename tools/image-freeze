@@ -2,43 +2,32 @@
 
 set -eu
 
-# Export the intended (vs. as-built) conda environments as fully versioned
-# (frozen) environment specifications.  These specs often require tweaking
-# despite their origin from successfully built systems.  These specs originate
-# inside a fully built container but become specs for frozen environments in
-# the Docker source tree.  Nominally this is run when USE_FROZEN=0 and an
-# environment is being resolved from loosely specified version requirements.
+# Export the fully specified versions of packages from the as-built
+# image for use with USE_FROZEN=1.  Exported files are either
+# copied/generated from a running container and then added to git
+# sources for future builds.
 
-env_list_dirs() {
+list_dirs() {
     # list the directories at $root_dir defaulting to .
 
     root_dir=${1:-.}
 
-    find $root_dir -maxdepth 1 -type d| grep '/' | cut -d '/' -f2
+    find $root_dir -maxdepth 1 -type d | grep '/' | cut -d '/' -f2
 }
 
-freeze_deployment() {
-    cd $1
+cd $IMAGE_DIR
 
-    mkdir -p environments/frozen
+# pip-tools frozen requirements are stored at /opt/envs-frozen
+# copy /opt/envs-frozen  to env-frozen in the Docker sources mission dir.
+# rm -rf env-frozen
+image-cp /opt/env-frozen
 
-    for env in `env_list_dirs environments | grep -v base | grep -v frozen`; do
-        if [[ ! -z "$env" ]]; then
+# mkdir -p environments/frozen
 
-	    if [ -f environments/${env}/requirements.yml ]; then
-		echo "Dumping pip-tools requirements.txt and requirements.yml for ${env}"
-		pushd environments/${env}  >/dev/null
-		image-cp  /opt/environments/${env}/requirements.yml
-		image-cp  /opt/environments/${env}/requirements.txt
-		popd >/dev/null
-	    fi
-	    
-	    echo "Dumping conda export versions for ${env}"
-            image-env-export $env  > environments/frozen/${env}-frozen.yml
-        fi
-    done
-}
-
-freeze_deployment $IMAGE_DIR
-
-freeze_deployment $IMAGE_DIR/../../common/image
+# # original frozen requirements are dumped dynamically for each env
+# for env in `list_dirs environments | grep -v frozen`; do
+#     if [[ ! -z "$env" ]]; then
+#         echo "Dumping conda export versions for ${env}"
+#         image-env-export $env  > environments/frozen/${env}-frozen.yml
+#     fi
+# done

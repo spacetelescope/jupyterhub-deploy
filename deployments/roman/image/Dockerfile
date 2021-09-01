@@ -48,7 +48,7 @@ RUN cd /tmp && \
 # All specs for frozen builds need to be available before their normal installs
 USER ${NB_UID}
 
-COPY --chown=${NB_UID}:${NB_GID} environments/frozen/  /opt/environments/frozen
+COPY --chown=${NB_UID}:${NB_GID} env-frozen/  /opt/env-frozen/
 
 # --- # ------------------------------------------------------------------------------
 # --- # MIRAGE
@@ -67,7 +67,6 @@ COPY --chown=${NB_UID}:${NB_GID} environments/cvt/*.yml  /opt/environments/cvt/
 RUN /opt/common-scripts/env-conda cvt
 
 COPY --chown=${NB_UID}:${NB_GID} environments/cvt/*.pip  /opt/environments/cvt/
-COPY --chown=${NB_UID}:${NB_GID} environments/cvt/requirements.txt  /opt/environments/cvt/
 RUN /opt/common-scripts/env-compile cvt
 
 RUN /opt/common-scripts/env-sync cvt
@@ -81,7 +80,6 @@ COPY --chown=${NB_UID}:${NB_GID} environments/roman-cal/*.yml  /opt/environments
 RUN /opt/common-scripts/env-conda roman-cal
 
 COPY --chown=${NB_UID}:${NB_GID} environments/roman-cal/*.pip  /opt/environments/roman-cal/
-COPY --chown=${NB_UID}:${NB_GID} environments/roman-cal/requirements.txt  /opt/environments/roman-cal/
 RUN /opt/common-scripts/env-compile roman-cal
 
 RUN /opt/common-scripts/env-sync roman-cal
@@ -106,7 +104,7 @@ RUN /opt/common-scripts/kernel-setup   # set up Ipython / JupyterLab kernels
 
 USER root
 
-RUN chown -R ${NB_UID}:${NB_GID}  /home/${NB_USER}
+RUN find /home/${NB_USER} ! -uid ${NB_UID} | xargs chown ${NB_UID}:${NB_GID}
 
 # remove this step once nbgitpuller enabled; these contents will be in the
 #  jupyterhub-user-content repo.   Install deployment-specific $HOME files.
