@@ -115,12 +115,15 @@ def main():
     serial_notebooks =  [notebook[1:] for notebook in args.notebooks if notebook.startswith("!")]
     serial_errs = test_notebooks(args.kernel, serial_notebooks, 1) if serial_notebooks else 0
 
-    errs = parallel_errs + serial_errs
-    if errs:
-        print(divider(f"Test Notebooks Errors={errs}"))
+    if parallel_notebooks or serial_notebooks:
+        errs = parallel_errs + serial_errs
+        if errs:
+            print(divider(f"Test Notebooks Errors={errs}"))
+        else:
+            print(divider("Test Notebooks OK"))
+        return errs
     else:
-        print(divider("Test Notebooks OK"))
-    return errs
+        return 0
 
 if __name__ == "__main__":
     sys.exit(main())

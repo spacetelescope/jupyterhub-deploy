@@ -8,7 +8,7 @@
 
 export DEPLOYMENT_NAME=cluster-name  # roman, jwebbinar, tike
 export ENVIRONMENT=sandbox           # sandbox, dev, test, or prod
-export USE_FROZEN=0                  # use 0 for loosely pinned package versions, 1 for tagged production build
+export USE_FROZEN=1                  # use 0 for loosely pinned package versions, 1 for tagged production build
 
 export ACCOUNT_ID=12345678
 export ECR_ACCOUNT_ID=12345678       # Set to ACCOUNT_ID for local ECR,  or central account ID for central ECR.
