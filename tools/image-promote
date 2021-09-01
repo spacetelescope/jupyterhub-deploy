@@ -7,9 +7,9 @@
 
 set -ex 
 
-registry=$ECR_ACCOUNT_TO_USE
+registry=$ECR_ACCOUNT_ID
 repo=$IMAGE_REPO
-old_tag=$IMAGE_TAG
+old_tag=`echo $IMAGE_TAG | sed -e 's/unscanned-//g'`
 
 while [ "$1" != "" ]; do
     case $1 in

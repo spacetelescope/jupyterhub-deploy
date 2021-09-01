@@ -3,16 +3,16 @@ from argparse import ArgumentParser
 import subprocess
 import os
 
-# Tags an image in git and ECR. `image-release 0.0.1`
+# Tags an image in git and ECR. `image-release tike-v0.0.1`
 # Will use params first or default to environment vars. 
-# `image-release --registry 1234567, repo --myrepo, old-tag 0.0.0, 0.0.1`
+# `image-release --registry 1234567 --repo myrepo  --old-tag tike-v0.0.0 tike-0.0.1`
 
 def parse_args():
     parser = ArgumentParser("image-release", description="tag an existing image simultaneously in git and ECR")
-    parser.add_argument("--registry", default=os.environ.get('ECR_ACCOUNT_TO_USE'), help="ECR registry number")
+    parser.add_argument("--registry", default=os.environ.get('ECR_ACCOUNT_ID'), help="ECR registry number")
     parser.add_argument("--repo", default=os.environ.get('IMAGE_REPO'), help="Docker image repository, usually mission name")
-    parser.add_argument("--old-tag", default=os.environ.get('IMAGE_TAG'), help="existing tag in ECR to modify")
-    parser.add_argument("tag", help="desired tag to apply to both git and ECR")
+    parser.add_argument("--old-tag", default=os.environ.get('IMAGE_TAG').replace("unscanned-", ""), help="existing tag in ECR to modify, e.g. tike-v0.0.0")
+    parser.add_argument("tag", help="desired tag to apply to both git and ECR, e.g. tike-v0.0.1")
     return parser.parse_args()
 
 
