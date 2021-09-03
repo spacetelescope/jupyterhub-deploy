@@ -72,8 +72,6 @@ RUN /opt/common-scripts/env-compile cvt
 
 RUN /opt/common-scripts/env-sync cvt
 
-COPY --chown=${NB_UID}:${NB_GID} environments/cvt/ /opt/environments/cvt/
-
 # ----------------------------------------------------------------------
 # Roman CAL
 
@@ -85,7 +83,5 @@ COPY --chown=${NB_UID}:${NB_GID} environments/roman-cal/requirements.txt  /opt/e
 RUN /opt/common-scripts/env-compile roman-cal
 
 RUN /opt/common-scripts/env-sync roman-cal
-
-COPY --chown=${NB_UID}:${NB_GID} environments/roman-cal/ /opt/environments/
 
 # ========================= ^^^^^ Custom  ^^^^^ =========================

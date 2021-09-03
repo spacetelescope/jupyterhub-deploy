@@ -20,11 +20,11 @@ where:
 
 or literally like:
 
-   sscan-run-safety   none    deployments/tike/image/environments/frozen/tess-frozen.yml
+   sscan-run-safety   none    deployments/tike/image/environments/tess/requirements.txt
 
         to print all vulnerabilities
 
-   sscan-run-safety   40794,40795   deployments/tike/image/environments/frozen/tess-frozen.yml
+   sscan-run-safety   40794,40795   deployments/tike/image/environments/tess/requirements.txt
 
         to ignore safety IDs 40794 and 40795
 
@@ -58,9 +58,9 @@ def banner(title, char="=", spacer=" "):
 def main(ignore, *frozen_specs_to_scan):
     errs = False
     for spec in frozen_specs_to_scan:
-        banner(f"Safety scanning {os.path.basename(spec)}")
+        banner(f"Safety scanning {spec}")
         errs = errs or scan_spec(ignore, spec)
-        banner(f"End {os.path.basename(spec)}")
+        banner(f"End {spec}")
     return errs
 
 

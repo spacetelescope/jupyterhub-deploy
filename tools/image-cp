@@ -11,5 +11,8 @@ set -eu
 PATH_TO_EXPORT=$1
 WHERE_TO_PUT_IT=${2:-`pwd`}
 
-# docker run --rm -v ${WHERE_TO_PUT_IT}:/opt/mount ${IMAGE_ID}  bash -c "cp -ar ${PATH_TO_EXPORT} /opt/mount/`basename ${PATH_TO_EXPORT}`"
-docker run --rm  ${IMAGE_ID}  bash -c "cat ${PATH_TO_EXPORT}" > ${WHERE_TO_PUT_IT}/`basename ${PATH_TO_EXPORT}`
+CONTAINER=$(docker run --rm -d ${IMAGE_ID} /bin/sleep 14400)
+
+docker cp ${CONTAINER}:${PATH_TO_EXPORT}  ${WHERE_TO_PUT_IT}
+
+docker container stop ${CONTAINER}  >& /dev/null

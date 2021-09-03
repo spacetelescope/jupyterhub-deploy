@@ -1,4 +1,4 @@
-name: jwebbinar
+name: jdaviz
 channels:
   - conda-forge
 dependencies:
@@ -8,31 +8,27 @@ dependencies:
   - fftw=3.3.9=nompi_h74d3f13_101
   - freetds=1.1.15=h94af77a_0
   - ld_impl_linux-64=2.36.1=hea4e1c9_2
-  - libblas=3.9.0=11_linux64_openblas
-  - libcblas=3.9.0=11_linux64_openblas
   - libedit=3.1.20191231=he28a2e2_2
-  - libffi=3.2.1=he1b5a44_1007
+  - libffi=3.3=h58526e2_2
   - libgcc-ng=11.1.0=hc902ee8_8
   - libgfortran-ng=11.1.0=h69a702a_8
   - libgfortran5=11.1.0=h6c583b3_8
   - libgomp=11.1.0=hc902ee8_8
   - libiconv=1.16=h516909a_0
-  - liblapack=3.9.0=11_linux64_openblas
   - libopenblas=0.3.17=pthreads_h8fe5266_1
   - libstdcxx-ng=11.1.0=h56837e0_8
   - ncurses=6.2=h58526e2_4
-  - numpy=1.21.2=py38he2449b9_0
-  - openssl=1.1.1k=h7f98852_1
+  - openblas=0.3.17=pthreads_h4748800_1
+  - openssl=1.1.1l=h7f98852_0
   - pip=21.2.4=pyhd8ed1ab_0
-  - pyfftw=0.12.0=py38h9e8fb0f_2
-  - python=3.8.0=h357f687_5
+  - python=3.8.10=h49503c6_1_cpython
   - python_abi=3.8=2_cp38
   - readline=8.1=h46c0cb4_0
   - setuptools=57.4.0=py38h578d9bd_0
   - sqlite=3.36.0=h9cd32fc_0
-  - tk=8.6.11=h21135ba_0
+  - tk=8.6.11=h27826a3_1
   - unixodbc=2.3.9=hb166930_0
   - wheel=0.37.0=pyhd8ed1ab_1
   - xz=5.2.5=h516909a_1
   - zlib=1.2.11=h516909a_1010
-prefix: /opt/conda/envs/jwebbinar
+prefix: /opt/conda/envs/jdaviz

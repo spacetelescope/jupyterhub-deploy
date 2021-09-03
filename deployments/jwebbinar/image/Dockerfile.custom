@@ -68,9 +68,6 @@ RUN /opt/common-scripts/env-compile jwebbinar
 # SYNC ALL
 RUN /opt/common-scripts/env-sync  jwebbinar
 
-# REMAINING ENV
-COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/ /opt/environments/jwebbinar/
-
 # --------------------------- Jdaviz -------------------------------------
 
 # BASE
@@ -84,7 +81,3 @@ RUN /opt/common-scripts/env-compile jdaviz
 
 # SYNC ALL
 RUN /opt/common-scripts/env-sync  jdaviz
-
-# REMAINING ENV
-COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/ /opt/environments/jdaviz/
-

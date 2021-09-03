@@ -72,8 +72,6 @@ RUN /opt/common-scripts/env-compile cvt
 
 RUN /opt/common-scripts/env-sync cvt
 
-COPY --chown=${NB_UID}:${NB_GID} environments/cvt/ /opt/environments/cvt/
-
 # ----------------------------------------------------------------------
 # Roman CAL
 
@@ -85,8 +83,6 @@ COPY --chown=${NB_UID}:${NB_GID} environments/roman-cal/requirements.txt  /opt/e
 RUN /opt/common-scripts/env-compile roman-cal
 
 RUN /opt/common-scripts/env-sync roman-cal
-
-COPY --chown=${NB_UID}:${NB_GID} environments/roman-cal/ /opt/environments/
 
 # ========================= ^^^^^ Custom  ^^^^^ =========================
 # ========================= vvvvv Generic vvvvv  =========================
@@ -106,7 +102,7 @@ RUN /opt/common-scripts/kernel-setup   # set up Ipython / JupyterLab kernels
 
 USER root
 
-RUN chown -R ${NB_UID}:${NB_GID}  /home/${NB_USER}
+RUN find /home/${NB_USER} ! -uid ${NB_UID} | xargs chown ${NB_UID}:${NB_GID}
 
 # remove this step once nbgitpuller enabled; these contents will be in the
 #  jupyterhub-user-content repo.   Install deployment-specific $HOME files.
@@ -120,8 +116,23 @@ RUN  cat /home/jovyan/global_bashrc >> /etc/bash.bashrc  && \
 # Fix certs in conda for application level SSL, e.g. pass image-test running on CI-node
 RUN /opt/common-scripts/fix-certs
 
+# ------------------------------------------------------------------------------
+# Handle copying all of environments to /opt/environments,  particularly root level
+# files like *test* and *post-startup-hook*.   Preserve any requirements files generated
+# by conda and pip-tools.
+
+# First save any /opt/environments files which have been updated,  particularly requirements
+RUN  cd /opt/environments && tar cf /opt/env-requirements.tar .
+
 # Copy any remaining environments files not caught by more precise as-needed build copies
+# which avoid cache busting.  If ANYTHING in environments changes Docker will roll back
+# at least this far.  Hence this COPY is not done earlier and just handles cleanup.
 COPY --chown=${NB_UID}:${NB_GID} environments/    /opt/environments/
+
+# Restore files which the build generated or modified,  wiped out by the COPY above.
+RUN  cd /opt/environments && tar xf /opt/env-requirements.tar  &&  rm /opt/env-requirements.tar
+
+# -----------------------------------------------------------------------------
 
 # For standalone operation outside JupyterHub,  note that  /etc also includes
 # common home directory files.   post-start-hook may not include everything required

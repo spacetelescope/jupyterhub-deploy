@@ -35,8 +35,6 @@ RUN /opt/common-scripts/env-compile tess
 
 RUN /opt/common-scripts/env-sync  tess
 
-COPY --chown=${NB_UID}:${NB_GID} environments/tess/ /opt/environments/tess/
-
 # ----------
 # Due to numpy binary API incompatibilities and available compiled pip package versions
 # Re-building from source ensures compatability with the installed numpy
