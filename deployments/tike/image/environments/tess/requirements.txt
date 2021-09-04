@@ -180,6 +180,8 @@ charset-normalizer==2.0.4
     # via requests
 ci-watson==0.5
     # via -r /opt/common-env/testing.pip
+clang==5.0
+    # via tensorflow
 click==8.0.1
     # via
     #   black
@@ -211,7 +213,7 @@ cython==0.29.24
     #   -r /opt/environments/tess/basic.pip
     #   pylima
     #   ultranest
-dask[distributed]==2021.08.1
+dask[distributed]==2021.09.0
     # via
     #   -r /opt/environments/tess/basic.pip
     #   distributed
@@ -225,7 +227,7 @@ dill==0.3.4
     # via
     #   glue-core
     #   pymc3
-distributed==2021.08.1
+distributed==2021.09.0
     # via dask
 docutils==0.16
     # via
@@ -292,7 +294,7 @@ future==0.18.2
     #   -r /opt/environments/tess/basic.pip
     #   autograd
     #   uncertainties
-gast==0.3.3
+gast==0.4.0
     # via
     #   -r /opt/environments/tess/ml.pip
     #   tensorflow
@@ -322,18 +324,17 @@ graphviz==0.17
     # via -r /opt/common-env/common.pip
 greenlet==1.1.1
     # via sqlalchemy
-grpcio==1.32.0
+grpcio==1.39.0
     # via
     #   -r /opt/environments/tess/ml.pip
     #   tensorboard
     #   tensorflow
-h5py==2.10.0
+h5py==3.1.0
     # via
     #   -r /opt/environments/tess/basic.pip
     #   -r /opt/environments/tess/ml.pip
     #   -r /opt/environments/tess/tess.pip
     #   glue-core
-    #   keras
     #   tensorflow
 heapdict==1.0.1
     # via zict
@@ -535,8 +536,10 @@ k2flix==2.4.0
     # via -r /opt/environments/tess/tess.pip
 k2plr==0.2.9
     # via everest-pipeline
-keras==2.4.3
-    # via -r /opt/environments/tess/ml.pip
+keras==2.6.0
+    # via
+    #   -r /opt/environments/tess/ml.pip
+    #   tensorflow
 keras-preprocessing==1.1.2
     # via tensorflow
 keyring==23.1.0
@@ -698,7 +701,6 @@ numpy==1.19.5
     #   jaxlib
     #   jplephem
     #   k2flix
-    #   keras
     #   keras-preprocessing
     #   lightkurve
     #   matplotlib
@@ -956,7 +958,6 @@ pyyaml==5.4.1
     #   bokeh
     #   dask
     #   distributed
-    #   keras
     #   papermill
     #   sphinx-asdf
 pyzmq==22.2.1
@@ -967,7 +968,7 @@ pyzmq==22.2.1
     #   qtconsole
 qtconsole==5.1.1
     # via glue-core
-qtpy==1.10.0
+qtpy==1.11.0
     # via
     #   echo
     #   glue-core
@@ -1037,7 +1038,6 @@ scipy==1.7.1
     #   glue-vispy-viewers
     #   jax
     #   jaxlib
-    #   keras
     #   lightkurve
     #   oktopus
     #   pylima
@@ -1079,7 +1079,6 @@ six==1.15.0
     #   google-auth
     #   google-pasta
     #   grpcio
-    #   h5py
     #   html5lib
     #   ipydatawidgets
     #   jsonschema
@@ -1094,7 +1093,6 @@ six==1.15.0
     #   pyopenssl
     #   python-dateutil
     #   requests-mock
-    #   tensorboard
     #   tensorflow
 sniffio==1.2.0
     # via anyio
@@ -1161,15 +1159,17 @@ tblib==1.7.0
     # via distributed
 tenacity==8.0.1
     # via papermill
-tensorboard==2.4.1
+tensorboard==2.6.0
     # via
     #   -r /opt/environments/tess/ml.pip
     #   tensorflow
+tensorboard-data-server==0.6.1
+    # via tensorboard
 tensorboard-plugin-wit==1.8.0
     # via tensorboard
-tensorflow==2.4.3
+tensorflow==2.6.0
     # via -r /opt/environments/tess/ml.pip
-tensorflow-estimator==2.4.0
+tensorflow-estimator==2.6.0
     # via
     #   -r /opt/environments/tess/ml.pip
     #   tensorflow
