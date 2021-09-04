@@ -5,7 +5,7 @@
 DIRS=${1:-"deployments hub tools"}
 
 # Find Python she-bang scripts w/o .py extension
-find ${DIRS}  -type f | xargs grep -l -E '#!\s*/usr/bin/env\s+python'
+find ${DIRS}  -type f | xargs grep -l -E '#!\s*/usr/bin/env\s+python' | xargs abspath
 
 # Find standard Python source code files
-find ${DIRS}  -name '*.py'
+find ${DIRS}  -name '*.py' | xargs abspath
