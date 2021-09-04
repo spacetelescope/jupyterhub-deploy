@@ -2,7 +2,9 @@
 
 # If the image (jupyter/scipy-notebook) exists locally it will be used,
 # otherwise the latest from https://hub.docker.com/_/buildpack-deps will be used
-FROM jupyter/scipy-notebook
+
+ARG BASE_IMAGE
+FROM $BASE_IMAGE AS build
 
 # ------------------------------------------------------------------------
 

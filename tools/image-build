@@ -26,7 +26,7 @@ image-base
 # Build STScI shared layer for all deployments
 cd ${COMMON_IMAGE_DIR}
 echo "========================= Building Common Image ========================"
-time docker build --progress plain --tag ${COMMON_ID} .  --file Dockerfile.x
+time docker build --progress plain --build-arg BASE_IMAGE=stsci-jh/scipy-notebook  --tag ${COMMON_ID} .  --file Dockerfile.x
 
 # ..................................................................................
 # Build custom layers for this deployment

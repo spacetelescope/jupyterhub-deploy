@@ -8,7 +8,7 @@ echo "========================= Building Base Image ========================"
 #   all subsequent builds based on this image.
 
 cd ${JUPYTERHUB_DIR}/deployments/common/image
-docker build --progress plain --tag ubuntu-certs --file Dockerfile.certs.x \
+docker build --progress plain --tag stsci-jh/ubuntu-certs --file Dockerfile.certs.x \
        --build-arg USE_FROZEN=${USE_FROZEN} \
        --build-arg PIP_SWITCHES="${PIP_SWITCHES}" \
        --build-arg CLEAR_PKG_CACHES="${CLEAR_PKG_CACHES}" \
@@ -21,8 +21,8 @@ if [[ ! -d docker-stacks ]]; then
 fi
 cd docker-stacks
 
-DARGS="--build-arg ROOT_CONTAINER=ubuntu-certs:latest" make build/base-notebook
+DARGS="--build-arg ROOT_CONTAINER=stsci-jh/ubuntu-certs:latest" OWNER=stsci-jh make build/base-notebook
 
-DARGS="--build-arg BASE_CONTAINER=jupyter/base-notebook:latest" make build/minimal-notebook
+DARGS="--build-arg BASE_CONTAINER=stsci-jh/base-notebook:latest" OWNER=stsci-jh make build/minimal-notebook
 
-DARGS="--build-arg BASE_CONTAINER=jupyter/minimal-notebook:latest" make build/scipy-notebook
+DARGS="--build-arg BASE_CONTAINER=stsci-jh/minimal-notebook:latest" OWNER=stsci-jh make build/scipy-notebook
