@@ -12,7 +12,7 @@ alembic==1.7.1
     # via jupyterhub
 ansiwrap==0.8.4
     # via papermill
-anyio==3.3.0
+anyio==3.3.1
     # via jupyter-server
 appdirs==1.4.4
     # via black
@@ -101,9 +101,9 @@ bokeh==2.3.3
     #   -r /opt/environments/roman-cal/octarine.pip
     #   ipywidgets-bokeh
     #   jupyter-bokeh
-boto3==1.18.37
+boto3==1.18.38
     # via -r /opt/common-env/common.pip
-botocore==1.21.37
+botocore==1.21.38
     # via
     #   boto3
     #   s3transfer
@@ -242,7 +242,7 @@ ipyevents==2.0.1
     # via -r /opt/common-env/jupyter.pip
 ipygoldenlayout==0.4.0
     # via -r /opt/common-env/jupyter.pip
-ipykernel==6.3.1
+ipykernel==6.4.0
     # via
     #   -r /opt/common-env/common.pip
     #   glue-core
@@ -365,7 +365,7 @@ jupyter-core==4.7.1
     #   nbformat
     #   notebook
     #   qtconsole
-jupyter-server==1.10.2
+jupyter-server==1.11.0
     # via
     #   -r /opt/common-env/jupyter.pip
     #   jupyter-server-proxy
