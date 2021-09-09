@@ -10,10 +10,12 @@ import argparse
 import datetime
 
 def run(cmd, check=True):
-    return subprocess.run(tuple(cmd.split()), check=check).returncode
+    cmd = cmd.split() if isinstance(cmd, str) else cmd
+    return subprocess.run(tuple(cmd), check=check).returncode
 
-def out(cmd, cwd=None):
-    return subprocess.run(tuple(cmd.split()), capture_output=True, text=True, check=True, cwd=cwd).stdout
+def out(cmd, cwd=None, check=True):
+    cmd = cmd.split() if isinstance(cmd, str) else cmd
+    return subprocess.run(tuple(cmd), capture_output=True, text=True, check=check, cwd=cwd).stdout
 
 class GitSync(object):
 
@@ -33,7 +35,7 @@ class GitSync(object):
         files = out('git ls-files --deleted -z', cwd=self.repo_dir).split('\0')
         for f in files:
             if f: # why is this here? there was a reason...
-                run(f'git checkout origin/{self.branch_name} -- {f}')
+                run(f'git checkout origin/{self.branch_name} --'.split() + [f])
                 logging.info(f'Restored {f}')
 
     def move_files(self, files):
@@ -61,7 +63,7 @@ class GitSync(object):
 
         modified = []
         for f in files:
-            retcode = run(f'git diff -w --exit-code {f}', check=False)
+            retcode = run(f'git diff -w --exit-code'.split() + [f], check=False)
             if retcode != 0:
                 modified.append(f)
 
@@ -72,7 +74,7 @@ class GitSync(object):
 
         modes = ['A', 'M']
         files = []
-        for line in out('git log ..origin/{self.branch_name} --one-line --name-status',
+        for line in out(f'git log ..origin/{self.branch_name} --oneline --name-status',
                         cwd=self.repo_dir).split('\n'):
             for m in modes:
                 if line.startswith(m):
