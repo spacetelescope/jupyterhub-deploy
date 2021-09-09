@@ -49,6 +49,7 @@ shift;
 extra_pkgs=${*:-/opt/common-env/*.pip}
 env_yml="/opt/environments/${env}/${env}.yml"
 env_pip="/opt/environments/${env}/*.pip"
+env_reqs="/opt/env-frozen/${env}/requirements.txt"
 
 echo "-------------------------------------------------------------------------------"
 source /opt/common-scripts/env-activate ${env}
@@ -59,7 +60,11 @@ if [[ "$USE_FROZEN" != "1" ]]; then
     for pip in ${all_constraints}; do
         echo ${pip}   # show one per line.
     done
-    rm -f /opt/environments/${env}/requirements.txt
-    pip-compile  -v  --output-file /opt/environments/${env}/requirements.txt  --pip-args "${PIP_SWITCHES}"  ${all_constraints}
+
+    # If pip-compile finds an existing requirements.txt file that fulfils the
+    # dependencies then no changes will be made, even if updates are available.
+    rm -f ${env_reqs}  # ... hence this delete is REQUIRED
+
+    pip-compile  -v  --output-file ${env_reqs} --pip-args "${PIP_SWITCHES}"  ${all_constraints}
     /opt/common-scripts/env-clean
 fi

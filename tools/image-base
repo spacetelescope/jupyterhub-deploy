@@ -7,8 +7,10 @@ echo "========================= Building Base Image ========================"
 # These build-args are added to the image environment and will be available in
 #   all subsequent builds based on this image.
 
+OWNER=stsci-jh
+
 cd ${JUPYTERHUB_DIR}/deployments/common/image
-docker build --progress plain --tag ubuntu-certs --file Dockerfile.certs.x \
+docker build --progress plain --tag ${OWNER}/ubuntu-certs --file Dockerfile.certs.x \
        --build-arg USE_FROZEN=${USE_FROZEN} \
        --build-arg PIP_SWITCHES="${PIP_SWITCHES}" \
        --build-arg CLEAR_PKG_CACHES="${CLEAR_PKG_CACHES}" \
@@ -25,8 +27,14 @@ else
     git rebase origin/master
 fi
 
-DARGS="--build-arg ROOT_CONTAINER=ubuntu-certs:latest" make build/base-notebook
+# Taken from the docker-stacks Makefile to enable adding --build-arg's again
+build_jh() {
+    STACK=$1;  shift
+    docker build --rm --force-rm -t ${OWNER}/${STACK}:latest ./${STACK} --build-arg OWNER=${OWNER} --progress plain $*
+}
 
-DARGS="--build-arg BASE_CONTAINER=jupyter/base-notebook:latest" make build/minimal-notebook
+build_jh  base-notebook     --build-arg ROOT_CONTAINER=${OWNER}/ubuntu-certs:latest
 
-DARGS="--build-arg BASE_CONTAINER=jupyter/minimal-notebook:latest" make build/scipy-notebook
+build_jh  minimal-notebook  --build-arg BASE_CONTAINER=${OWNER}/base-notebook:latest
+
+build_jh  scipy-notebook    --build-arg BASE_CONTAINER=${OWNER}/minimal-notebook:latest

@@ -14,7 +14,7 @@
 #
 cd $JUPYTERHUB_DIR
 
-IGNORE_IDS=${1:-@${IMAGE_DIR}/environments/frozen/safety.ignore}
+IGNORE_IDS=${1:-@${IMAGE_DIR}/environments/safety.ignore}
 
 # Run safety on jupyterhub-deploy requirements.txt and deployment
 # frozen specs to check package dependencies for security issues.
@@ -23,4 +23,4 @@ pip list --format=freeze >/tmp/requirements.txt
 
 sscan-run-safety  none   /tmp/requirements.txt
 
-sscan-run-safety  ${IGNORE_IDS} `sscan-find-frozen-specs`
+sscan-run-safety  ${IGNORE_IDS} `find $IMAGE_DIR/env-frozen -name '*requirements.txt'`

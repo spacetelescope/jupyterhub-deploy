@@ -58,6 +58,9 @@ export USE_BUILDKIT_CACHING=0
 
 export CLEAR_PKG_CACHES=1
 
+if [[ "${USE_BUILDKIT_CACHING}" == 1 && "${CLEAR_PKG_CACHES}" == 1 ]]; then
+    echo "WARNING: Effective buildkit caching requires turning off package clearing."
+fi
 # ----------------------------------------------------------------------------
 # PIP_SWITCHES are passed through to pip by Docker and the pip install scripts
 # env-update and env-compile/sync.
@@ -95,12 +98,31 @@ export TMOUT=7200
 export TF_LOG=TRACE
 export TF_LOG_PATH=terraform.log
 
+function where () {
+    info="${DEPLOYMENT_NAME}-${ENVIRONMENT}"
+    if [[ "${USE_FROZEN}" == "1" ]]; then
+        info="${info}-frozen"
+    else
+        info="${info}-floating"
+    fi
+    if [[ "${USE_BUILDKIT_CACHING}" == "1" ]]; then
+        info="${info}-bkcache"
+    else
+        info="${info}-nocache"
+    fi
+    if [[ "${CLEAR_PKG_CACHES}" == "1" ]]; then
+        info="${info}-clearpkgs"
+    else
+        info="${info}-keeppkgs"
+    fi
+    echo $info
+}
+
 alias awsu="awsudo -d 3600 $ADMIN_ARN"
 alias terraform-init="awsu terraform init -backend-config=./backend.conf -backend-config=./backend.conf"
 alias terraform-apply="awsu terraform apply --var-file=${DEPLOYMENT_NAME}.tfvars"
 alias terraform-destroy="awsu terraform destroy -var-file=${DEPLOYMENT_NAME}.tfvars"
 alias helm-destroy="awsu helm uninstall ${DEPLOYMENT_NAME}-${ENVIRONMENT}"
-alias where="echo ${DEPLOYMENT_NAME}-${ENVIRONMENT}-${USE_FROZEN}-${USE_BUILDKIT_CACHING}-${CLEAR_PKG_CACHES}"
 alias update-kubeconfig="awsu aws eks update-kubeconfig --name $DEPLOYMENT_NAME"
 alias pods="kubectl get pods -A"
 

@@ -21,8 +21,7 @@ RUN curl --silent --show-error https://www.astro.princeton.edu/~jhartman/vartool
 
 USER ${NB_UID}
 
-# XXXXXX potentially remove later as freeze process evolves
-COPY --chown=${NB_UID}:${NB_GID} environments/frozen/ /opt/environments/frozen
+COPY --chown=${NB_UID}:${NB_GID} env-frozen/ /opt/env-frozen/
 
 # --------------------------- TESS -------------------------------------
 
@@ -30,7 +29,6 @@ COPY --chown=${NB_UID}:${NB_GID} environments/tess/*.yml /opt/environments/tess/
 RUN /opt/common-scripts/env-conda tess
 
 COPY --chown=${NB_UID}:${NB_GID} environments/tess/*.pip /opt/environments/tess/
-COPY --chown=${NB_UID}:${NB_GID} environments/tess/requirements.txt /opt/environments/tess/
 RUN /opt/common-scripts/env-compile tess
 
 RUN /opt/common-scripts/env-sync  tess

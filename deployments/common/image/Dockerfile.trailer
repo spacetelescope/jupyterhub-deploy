@@ -15,7 +15,7 @@ RUN /opt/common-scripts/kernel-setup   # set up Ipython / JupyterLab kernels
 
 USER root
 
-RUN chown -R ${NB_UID}:${NB_GID}  /home/${NB_USER}
+RUN find /home/${NB_USER} ! -uid ${NB_UID} | xargs chown ${NB_UID}:${NB_GID}
 
 # remove this step once nbgitpuller enabled; these contents will be in the
 #  jupyterhub-user-content repo.   Install deployment-specific $HOME files.

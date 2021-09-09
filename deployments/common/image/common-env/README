@@ -6,3 +6,12 @@ likelihood of dependency conflicts increases as more files are added and may
 affect any of the other deployments.  Conflicts can be sidestepped either by
 dropping new conflicting files or inlining variations of install-common in
 the problem deployment.
+
+
+For common.conda:  env-update can't handle these comments:
+
+#
+# These pacakges are "unsafe" for pip-tools and if not installed early result in
+# e.g. wrong python used.
+#
+#  setuptools~=57.0 pinned due to use_2to3 removal in 58.x setuptools.
