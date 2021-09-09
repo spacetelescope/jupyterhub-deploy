@@ -37,7 +37,7 @@ allesfitter==1.2.4
     # via -r /opt/environments/tess/tess.pip
 ansiwrap==0.8.4
     # via papermill
-anyio==3.3.0
+anyio==3.3.1
     # via jupyter-server
 appdirs==1.4.4
     # via black
@@ -377,7 +377,7 @@ ipyevents==2.0.1
     # via -r /opt/common-env/jupyter.pip
 ipygoldenlayout==0.4.0
     # via -r /opt/common-env/jupyter.pip
-ipykernel==6.3.1
+ipykernel==6.4.0
     # via
     #   -r /opt/common-env/common.pip
     #   glue-core
@@ -507,7 +507,7 @@ jupyter-core==4.7.1
     #   nbformat
     #   notebook
     #   qtconsole
-jupyter-server==1.10.2
+jupyter-server==1.11.0
     # via
     #   -r /opt/common-env/jupyter.pip
     #   jupyter-server-proxy
