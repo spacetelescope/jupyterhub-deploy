@@ -9,11 +9,11 @@ import logging
 import argparse
 import datetime
 
-def run(cmd, check=True):
+def run(cmd, check=False):
     cmd = cmd.split() if isinstance(cmd, str) else cmd
     return subprocess.run(tuple(cmd), check=check).returncode
 
-def out(cmd, cwd=None, check=True):
+def out(cmd, cwd=None, check=False):
     cmd = cmd.split() if isinstance(cmd, str) else cmd
     return subprocess.run(tuple(cmd), capture_output=True, text=True, check=check, cwd=cwd).stdout
 
@@ -32,10 +32,10 @@ class GitSync(object):
         self.sync()
 
     def restore_deleted_files(self):
-        files = out('git ls-files --deleted -z', cwd=self.repo_dir).split('\0')
+        files = out('git ls-files --deleted -z', cwd=self.repo_dir, check=True).split('\0')
         for f in files:
             if f: # why is this here? there was a reason...
-                run(f'git checkout origin/{self.branch_name} --'.split() + [f], check=False)
+                run(f'git checkout origin/{self.branch_name} --'.split() + [f])
                 logging.info(f'Restored {f}')
 
     def move_files(self, files):
@@ -63,7 +63,7 @@ class GitSync(object):
 
         modified = []
         for f in files:
-            retcode = run(f'git diff -w --exit-code'.split() + [f], check=False)
+            retcode = run(f'git diff -w --exit-code'.split() + [f])
             if retcode != 0:
                 modified.append(f)
 
