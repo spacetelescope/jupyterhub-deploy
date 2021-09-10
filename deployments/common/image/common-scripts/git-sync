@@ -35,7 +35,7 @@ class GitSync(object):
         files = out('git ls-files --deleted -z', cwd=self.repo_dir).split('\0')
         for f in files:
             if f: # why is this here? there was a reason...
-                run(f'git checkout origin/{self.branch_name} --'.split() + [f])
+                run(f'git checkout origin/{self.branch_name} --'.split() + [f], check=False)
                 logging.info(f'Restored {f}')
 
     def move_files(self, files):
