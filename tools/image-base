@@ -32,7 +32,7 @@ fi
 env_frozen_dir="${IMAGE_DIR}/env-frozen"
 mkdir -p $env_frozen_dir
 frozen_hash_spec="$env_frozen_dir/docker-stacks.hash"
-if [[ USE_FROZEN -eq 1 ]]; then
+if [[ "$USE_FROZEN" == "1" ]]; then
     git checkout `cat $frozen_hash_spec`
 else
     echo `git rev-parse HEAD` > $frozen_hash_spec

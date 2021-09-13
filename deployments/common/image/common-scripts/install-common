@@ -1,23 +1,28 @@
 #! /bin/bash -eu
 # ----------------------------------------------------------------------
 
-# Install packages common to all conda environments (except base).
+# Install common packages into the base (scipy-notebook) environment.
 #
-# Actual package lists need to be kept light/spare to avoid conflicts with the
-# core packages of the environment.
+# If USE_FROZEN is 1,  update and augment base package versions from
+# the frozen conda environment spec for base.   This does bloat the image
+# somewhat,  effectively duplicating the installed base environment in
+# Docker despite installing identical or nearly identical files.
 
 env=$1
 
 source /opt/common-scripts/env-activate ${env}
 
-# *Update* from the conda specs defined by /opt/common-env/*.yml
-/opt/common-scripts/env-update $env `find /opt/common-env -name '*.yml' | sort`
+if [[ "$USE_FROZEN" == "0" ]]; then
+    #  Install pip packages defined by /opt/common/*.conda
+    /opt/common-scripts/env-update $env `find /opt/common-env -name '*.conda' | sort`
+    #  Install pip packages defined in all of *.pip
+    /opt/common-scripts/env-update $env `find /opt/common-env -name '*.pip' | sort`
 
-#  Install pip packages defined by /opt/common/*.conda
-/opt/common-scripts/env-update $env `find /opt/common-env -name '*.conda' | sort`
-
-#  Install pip packages defined in all of *.pip
-/opt/common-scripts/env-update $env `find /opt/common-env -name '*.pip' | sort`
+    # Save fully pinned requirements for base,  copy out of image to git later.
+    conda env export -n base >/opt/env-frozen/base/requirements.yml
+else
+    # This should override existing packages already installed in base
+    /opt/common-scripts/env-update  $env  /opt/env-frozen/base/requirements.yml
+fi
 
 /opt/common-scripts/jupyter-lab-extension-setup
-

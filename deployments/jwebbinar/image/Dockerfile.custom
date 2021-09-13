@@ -50,6 +50,12 @@ USER ${NB_UID}
 
 COPY --chown=${NB_UID}:${NB_GID} env-frozen/ /opt/env-frozen/
 
+# ----------------------------------------------------------------------
+# Add jupyter-lab-extensions to base environment as well as standard packages.
+# Performing common update here enables mission specific frozen spec.
+
+RUN   /opt/common-scripts/install-common  base
+
 # --------------------------- Jwebbinar -------------------------------------
 
 # BASE

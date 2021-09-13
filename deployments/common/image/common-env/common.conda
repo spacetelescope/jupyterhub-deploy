@@ -1,4 +1,7 @@
 pip
 pip-tools
 setuptools~=57.0
+conda-build
 conda-tree
+nodejs
+websockify

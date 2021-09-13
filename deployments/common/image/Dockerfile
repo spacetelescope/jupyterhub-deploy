@@ -106,22 +106,18 @@ RUN wget https://sourceforge.net/projects/turbovnc/files/2.2.6/turbovnc_2.2.6_am
     rm turbovnc_2.2.6_amd64.deb && \
     apt-get remove -y -q light-locker
 
+# ------------------------------------------------------------------------
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip && \
+    ./aws/install && \
+    rm -rf awscliv2.zip aws
+
 # ==================== Begin pip & conda installs =======================
 
 USER root
 
 # Load conda profile scripts by default, symlink target doesn't exist for a bit
 RUN ln -s ${CONDA_DIR}/etc/profile.d/conda.sh /etc/profile.d/conda.sh
-
-# ------------------------------------------------------------------------
-USER ${NB_UID}
-
-COPY base.yml /tmp/base.yml
-RUN ${CONDA_VER} update --quiet --name base conda && \
-    ${CONDA_VER} env update --name base -f /tmp/base.yml && \
-    ${CONDA_VER} init --all     && \
-    ${CONDA_VER} install --quiet conda-build && \
-    ${CONDA_VER} build purge-all
 
 # ------------------------------------------------------------------------
 USER root
@@ -133,12 +129,6 @@ COPY common-scripts/ /opt/common-scripts
 COPY common-env/ /opt/common-env
 RUN cat /opt/common-scripts/global_bashrc >> /etc/bash.bashrc
 
-# ------------------------------------------------------------------------
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
-    unzip awscliv2.zip && \
-    ./aws/install && \
-    rm -rf awscliv2.zip aws
-
 # ----------------------------------------------------------------------
 # Common conda environments
 # USER ${NB_UID}
@@ -149,8 +139,3 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
 # augmented by specific deployments
 USER ${NB_UID}
 COPY default-home-contents/   /etc/default-home-contents
-
-# ----------------------------------------------------------------------
-# Add jupyter-lab-extensions to base environment as well as standard packages
-
-RUN   USE_FROZEN=0  /opt/common-scripts/install-common  base
