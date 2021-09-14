@@ -1,13 +1,15 @@
+jwst
+pyfftw
 urllib3
-bokeh
 pandas
 python-daemon
 scikit-image
 scikit-learn
 webbpsf
-git+https://github.com/astropy/astroquery.git
+astroquery
 jwst-backgrounds
 pandeia-engine
+webbpsf
 git+https://github.com/spacetelescope/pandeia-coronagraphy.git
 astroscrappy
 dust_extinction
@@ -22,9 +24,9 @@ poppy
 pysiaf
 pysynphot
 stsci.tools
-vispy>=0.6.5
-ipyvue>=1.3.4
+vispy
 h5py
+<<<<<<< HEAD
 asdf>=2.7.3
 astropy>=4.2
 gwcs>=0.16.1
@@ -143,3 +145,10 @@ ipygoldenlayout==0.4.0
 ###jupyterlab-pygments
 ###jupyter-server
 jupyterlab==3.0.12
+=======
+asdf
+astropy
+gwcs
+crds
+
+>>>>>>> cf130fa6e9afa56d154deb30b9a740b098372716

@@ -8,3 +8,5 @@ set +u    # due to missing PS1,  etc.  turn off undefined var trapping
 source /etc/profile.d/conda.sh
 conda activate $env
 set -u
+# conda env list
+

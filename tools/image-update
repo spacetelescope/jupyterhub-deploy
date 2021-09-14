@@ -21,6 +21,43 @@ if [ -f "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem" ]; then
 fi
 
 # -------------------------------------------------------------------------
+# Substitute RUN commands in Dockerfiles with RUN ${BUILDKIT} to enable package
+#   caching to reduce network package downloads.
+#
+# In a perfect world we'd just write this in Dockerfiles:
+#
+# RUN  ${BUILDKIT}  <command>
+#
+# but unfortunately Docker treats ${BUILDKIT} literally rather than expanding
+# it as a modifier to the RUN statement.
+#
+# Consequently, in our framework Dockerfiles are first pre-processed into .x
+# versions which either include or omit the buildkit switches defined below in
+# the image-update script.  While not saved, the .x file is what is actually
+# passed to docker build.  In theory, these caching options are a performance
+# optimzation only.  If in doubt, set USE_BUILDKIT_CACHING=0.
+#
+if [[ "${USE_BUILDKIT_CACHING}" == "1" ]]; then
+    export BUILDKIT="--mount=type=cache,sharing=private,target=/home/jovyan/.cache,uid=1000,gid=100"
+    export BUILDKIT="${BUILDKIT} --mount=type=cache,sharing=private,target=/opt/conda-cache,uid=1000,gid=100"
+    export BUILDKIT="${BUILDKIT} --mount=type=cache,sharing=private,target=/var/cache/apt,uid=1000,gid=100"
+else
+    export BUILDKIT=""
+fi
+
+cd ${JUPYTERHUB_DIR}
+docker_dirs="deployments/common  deployments/${DEPLOYMENT_NAME}"
+find ${docker_dirs} -name 'Dockerfile*.x' | xargs rm -f
+
+for dockerfile in `find ${docker_dirs} -name 'Dockerfile*'`; do
+    if [[ "${USE_BUILDKIT_CACHING}" == "1" ]]; then
+        sed -e"s%RUN %RUN ${BUILDKIT} %g" <$dockerfile >$dockerfile.x
+    else
+        cp $dockerfile $dockerfile.x
+    fi
+done
+
+# -------------------------------------------------------------------------
 # Ideally mission images are defined by a Dockerfile created from two parts
 # which are concatenated:
 #
@@ -33,9 +70,13 @@ fi
 # Dockerfile alone.
 #
 #
+cd $IMAGE_DIR
+
 if [[ -f Dockerfile.custom ]]; then
    # Combine Dockerfile.custom with the common "trailer" to create Dockerfile
+   # .x versions include buildkit substitutions
    cat Dockerfile.custom ../../common/image/Dockerfile.trailer >Dockerfile
+   cat Dockerfile.custom.x ../../common/image/Dockerfile.trailer.x >Dockerfile.x
 fi
 
 # -------------------------------------------------------------------------
@@ -45,9 +86,10 @@ fi
 # the xxx-frozen.yml files prior to starting any un-frozen build;  they'll
 # be automatically recreated anyway and don't contribute until USE_FROZEN=1.
 
+cd $IMAGE_DIR
+
 if [[ $USE_FROZEN == "0" ]]; then
   # echo "Clearing frozen image specs to avoid Docker cache busting."
   # echo "Add or commit them to git prior to unfrozen builds to avoid this clear."
-  git checkout -- environments/frozen
-  # git checkout -- ../../common/image/environments/frozen
+  git checkout -- env-frozen
 fi

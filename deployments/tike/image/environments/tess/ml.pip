@@ -1,16 +1,18 @@
 six
-tensorflow-cpu~=2.4.1   #for-keras
-tensorflow-estimator
-tensorboard
+numpy  # ~=1.19.0       #for-tensorflow~2.4.0
+tensorflow  #~=2.4.0   #for-keras,  2.4.2 causes problems with grpcio
+tensorflow-estimator  # ~=2.4.0
+tensorboard   # ~=2.4.0
 gast
 grpcio
 h5py
-keras
+keras #==2.4.3
 torch
 jax
 jaxlib
 docutils
 packaging
 webencodings
-theano-pymc
+Theano-PyMC
+aesara
 #theano

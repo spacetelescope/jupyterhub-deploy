@@ -1,31 +1,32 @@
-name:  Image Build, Test, Scan
+name:  Image Build, Test
 on:
    schedule:  # weekly
      - cron: '0 0 * * 0'
    push:
       branches:
         - main
+        - test
    pull_request:
       branches:
         - main
 
 jobs:
   docker:
-    name: "${{ matrix.DEPLOYMENT_NAME }}  -- Image Build, Test, Scan"
+    name: "${{ matrix.DEPLOYMENT_NAME }}  USE_FROZEN=${{ matrix.USE_FROZEN }} -- Image Build, Test"
     runs-on: ubuntu-18.04
 
     strategy:
-      max-parallel: 5
+      max-parallel: 3
       fail-fast: false
       matrix:
         DEPLOYMENT_NAME: [ jwebbinar, roman, tike]
-        USE_FROZEN: [ 0 ]
-
+        USE_FROZEN: [ 0, 1 ]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
 
       - name: Free Disk Space,  Enlarge Swapfile
+        shell: bash
         run: |
              df -h
              sudo apt clean
@@ -45,11 +46,13 @@ jobs:
              df -h
 
       - name: Set Up Environment
+        shell: bash
         run: |
            tools/image-configure ${{ matrix.DEPLOYMENT_NAME }}  ${{ matrix.USE_FROZEN }}
            df -h
 
       - name: Image Build
+        shell: bash
         run: |
            source setup-env
            tools/image-build
@@ -60,6 +63,7 @@ jobs:
            df -h
 
       - name: Git Diffs (Frozen Version Specs)
+        shell: bash
         run: git diff
 
       # - name: Anchore Image Scan
@@ -97,6 +101,7 @@ jobs:
       #       sarif_file: snyk.sarif
 
       - name: Image Functional Tests
+        shell: bash
         run: |
            df -h
            source setup-env

@@ -1,13 +1,12 @@
 name: jwebbinar
 channels:
     - conda-forge
-    - manics
     - https://ssb.stsci.edu/astroconda
     - defaults
 dependencies:
-    - pip
     - freetds
     - fftw
+<<<<<<< HEAD
     - pyfftw
     - python==3.8
     - bqplot-image-gl
@@ -22,3 +21,8 @@ dependencies:
     - ipyvuetify
     - ipywebrtc
     - ipywidgets
+=======
+    - openblas
+    - python~=3.8.0
+    - pip
+>>>>>>> cf130fa6e9afa56d154deb30b9a740b098372716

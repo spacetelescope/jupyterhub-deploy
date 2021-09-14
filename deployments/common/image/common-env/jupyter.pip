@@ -1,6 +1,9 @@
-jupyterlab==3.0.12
-ipysplitpanes==0.2.0
-ipygoldenlayout==0.4.0
+jupyterhub==1.3.0
+jupyterlab~=3.1.0
+bqplot~=0.12.29
+glue-jupyter
+ipysplitpanes~=0.2.0
+ipygoldenlayout~=0.4.0
 jupyter-client
 ipython-genutils
 jupyter-core
@@ -8,10 +11,11 @@ jupyterlab-widgets
 jupyterlab-pygments
 jupyter-server
 bqplot-image-gl
-bqplot==0.12.29
-
 jupyter-server-proxy
 jupyter_bokeh
 ipywidgets_bokeh
-glue-jupyter>=0.6.1
 ipyevents
+ipympl
+ipyvolume
+ipyvuetify
+ipywebrtc

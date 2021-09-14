@@ -63,7 +63,12 @@ which is ultimately installed at `/opt/test`.  Generally it will include a
 command to execute tests for each environment in the standard way:
 `/opt/common-scripts/test-environments`.
 
-#### Conda Environment Definitions
+#### Conda Environment Definitions 1
+
+*IMPORTANT:* This section documents our original conda environment build
+process but is being supplanted by a newer process defined in the next section.
+The frozen "dependency solutions" produced by this process are frequently not
+reproducible.
 
 Conda environments are also installed as jupyter kernels.  Seperate conda
 environments support installation of s/w with conflicting dependencies and
@@ -88,13 +93,14 @@ back in.
 
 The `install-common` script installs generic packages defined by the common image into
 all environments.  This may include several groups of packages which are installed from
-independent spec files using nested  `env-update`'s.
+independent spec files using nested  `env-update`'s.  The specs are nominally found
+in deployments/common/image/common-env or /opt/common-env inside the image.
 
 The fundamental calibration software for Roman is installed into `roman-cal`
 using `env-update` and the `roman-cal.pip` list of pip packages.
 
-Additional software not directly required by calibration is added as pip packages using
-`env-update` and `octarine.pip`.
+Additional software not directly required by calibration is added as pip
+packages using `env-update` and `octarine.pip`.
 
 There should be only one `env-clone` or `env-create` command for each environment.  If
 no .yml spec is given to `env-create` an empty default python environment is created.
@@ -109,6 +115,75 @@ identifies that pip is required to install the package list.
 In general the fewer packages specified in an conda .yml file the better, but
 .yml files are useful for installing packages not supported by PyPi and for
 performing auxilliary tasks like setting up conda channels.
+
+##### Conda Environment Definitions 2
+
+To address deficiencies with the original build framework (weak default
+diagnostics, broken frozen builds), a second environment definition workflow
+has been developed using pip-tools:
+
+```
+/opt/common-scripts/env-conda   <env>    # Create minimal conda environment.
+/opt/common-scripts/env-compile <env>    # Resolve loose pip constraints to requirements.txt
+/opt/common-scripts/env-sync    <env>    # Download and install requirements.txt
+/opt/common-scripts/env-src-install  ... # Build packages with missing binaries from source.
+...
+```
+
+These commands produce improved diagnostics relative to pip defaults and also
+do a better job with frozen builds.  They compile loosely constrained conda or
+pip requirements into fully pinned requirements.yml and requirements.txt.
+Ultimately the complete environment is built with respect to those fully pinned
+specs rather than on-th-fly dependency resolution.  The commands use the
+existing environments .yml and .pip loosely constrainted pacakge spec files as
+the seed for the full dependency solution.
+
+#### Resolving Dependency Conflicts
+
+Fundamentally, resolving dependency conflicts entails changing loose
+requirements definitions as needed and recompiling the package version
+solutions.   It's both a mathematically precise specification process,
+and at the same time more of an art than a science.
+
+##### Wrong Version of Python Supported
+
+One particularly confusing dependency resolution problem occurs when a
+particular x.y.z version of some package does exist, but not for the desired
+Python version.  In this case pip can make it sound like version x.y.z doesn't
+exist at all, but a quick visit to PyPi immediately contradicts pip: look,
+x.y.z is right there!  Digging deeper by looking at file downloads on PyPi, one
+may find that no distribution exists for the exact version of Python in the
+target environment.  This problem can be resolved using `env-src-install` and
+compiling a version for the target environment from source.
+
+##### Incompatible Numpy ABI Used
+
+A pernicious conflict occurs when an environment has pinned numpy for some
+reason while numpy is in the process of undergoing an ABI change (Application
+Binary Interface).  In this case, a package compiled for one version of numpy
+won't work for versions of numpy with a different ABI.  Worse, this is only
+detected on package import because PyPi has no mechanism to communicate which
+ABI is being supported and can only distribute a package compiled for a single
+ABI version.  Generally newly compiled pacakges on PyPi will track the new
+numpy ABI version, while a back-pinned numpy uses the old ABI version by
+definition.  Here again the solution is to re-compile new package sources
+against the older installed numpy using `env-src-install`.
+
+##### Dependency Maze
+
+A network of dependency constraints on 5-6 interrelated packages can be
+difficult to follow.  Fortunately, this is a common problem so tools have been
+developed that can help out, particularly `pipdeptree`.  In cooperation with
+`Graphviz`, `pipdeptree` can produce graphs of dependency relationships as .png
+files which are annotated with version constraints.  This makes it easier to
+see which constraints must be mutually satisfied.
+
+The script `image-graph-env` is used to run `pipdeptree` as a container job
+conveniently.  This is only useful for environments which build successfully
+but fail to run correctly, and it further helps if packages in conflict can be
+named precisely.  For environments which fail to build, output from
+`env-compile` can often show the dependency conflicts causing the failure
+instead but can be more difficult to understand.
 
 #### Test Definitions
 

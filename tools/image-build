@@ -1,4 +1,6 @@
-#! /bin/bash -eu
+#! /bin/bash
+
+set -eu
 
 # Build the combined deployment image,  including:
 # 1. Perform any required source code updates,  including updating SSL certs
@@ -10,21 +12,7 @@
 #    as fully versioned conda config files.  These may still need tweaking
 #    but form the basis for building frozen environments using USE_FROZEN=1.
 
-# ..................................................................................
-#
-# docker buildx adds advanced capabilities but isn't enabled/installed by default
-#
-# DOCKER_BUILDKIT=1 mentioned here:
-# https://stackoverflow.com/questions/51115856/docker-failed-to-export-image-failed-to-create-image-failed-to-get-layer
-# as a solution to build fail like:
-# failed to export image: failed to create image: failed to get layer sha256:...: layer does not exist
-
-# LOG size settings are a solution to build failuyre with this error:
-#   [output clipped, log limit 1MiB reached]
-
-export DOCKER_BUILDKIT=1
-export BUILDKIT_STEP_LOG_MAX_SIZE=10000000
-export BUILDKIT_STEP_LOG_MAX_SPEED=10000000
+time (
 
 # ..................................................................................
 # Make automatic source adjustments including STScI cert update when on CI-nodes
@@ -33,22 +21,20 @@ image-update
 
 # ..................................................................................
 # Build base image, e.g. our version of scipy-notebook including cert handling
-image-base 
+image-base
 
 
 # ..................................................................................
 # Build STScI shared layer for all deployments
-cd ${COMMON_DIR}
+cd ${COMMON_IMAGE_DIR}
 echo "========================= Building Common Image ========================"
-time docker build --tag ${COMMON_ID} --build-arg USE_FROZEN=${USE_FROZEN} .
-
+time docker build --progress plain --tag ${COMMON_ID} --build-arg BASE_IMAGE=stsci-jh/scipy-notebook .  --file Dockerfile.x
 
 # ..................................................................................
 # Build custom layers for this deployment
 cd ${IMAGE_DIR}
 echo "========================= Building $IMAGE_ID USE_FROZEN=${USE_FROZEN} =========================="
-time docker build --tag ${IMAGE_ID} --build-arg USE_FROZEN=${USE_FROZEN} --build-arg BASE_IMAGE=${COMMON_ID} .
-
+time docker build --progress plain --tag ${IMAGE_ID} --build-arg BASE_IMAGE=${COMMON_ID} . --file Dockerfile.x
 
 # ..................................................................................
 # Dump out environment/kernel specs which capture as much version
@@ -59,3 +45,9 @@ if [[ "$USE_FROZEN" == "0" ]]; then
     echo "========================= Freezing Requirements =========================="
     time image-freeze
 fi
+
+# Remove buildkit caching "enhanced" Dockerfile.x's.
+# cd ${JUPYTERHUB_DIR}
+# docker_dirs="deployments/common  deployments/${DEPLOYMENT_NAME}"
+# find ${docker_dirs} -name 'Dockerfile*.x' | xargs rm -f
+)

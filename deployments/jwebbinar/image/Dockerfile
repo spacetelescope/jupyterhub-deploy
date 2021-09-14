@@ -3,9 +3,6 @@
 ARG BASE_IMAGE
 FROM $BASE_IMAGE AS build
 
-ARG USE_FROZEN=1
-ENV USE_FROZEN=$USE_FROZEN
-
 # ----------------------------------------------------------------------
 
 # All data is arranged on /data opening up options for sharing a file system
@@ -51,21 +48,15 @@ RUN cd /tmp && \
 
 USER ${NB_UID}
 
-# This is a cache buster when environment freezing creates new specs, so Docker
-# build will back up to this point.  Consequently, image build uses git to
-# clear the new specs, they should be committed to git prior to attempting a
-# new frozen build.
-COPY --chown=${NB_UID}:${NB_GID} environments/frozen /opt/environments/frozen
+COPY --chown=${NB_UID}:${NB_GID} env-frozen/ /opt/env-frozen/
 
-# ----------------------------------------------------------------------
-# JWebbinar
-COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/ /opt/environments/jwebbinar
-RUN /opt/common-scripts/env-create jwebbinar /opt/environments/jwebbinar/jwebbinar.yml
-RUN /opt/common-scripts/install-common jwebbinar
-RUN /opt/common-scripts/env-update jwebbinar /opt/environments/jwebbinar/jwebbinar.pip
+# --------------------------- Jwebbinar -------------------------------------
 
-COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/ /opt/environments/jwebbinar
+# BASE
+COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/*.yml /opt/environments/jwebbinar/
+RUN /opt/common-scripts/env-conda jwebbinar
 
+<<<<<<< HEAD
 # ----------------------------------------------------------------------
 # Jdaviz
 #COPY environments/jdaviz/jdaviz.yml /opt/environments/jdaviz/jdaviz.yml
@@ -75,17 +66,33 @@ COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/ /opt/environments/jwebb
 #RUN /opt/common-scripts/env-update jdaviz /opt/environments/jdaviz/jdaviz.pip
 
 #COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/ /opt/environments/jdaviz
+=======
+# COMPILE ALL
+COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/*.pip /opt/environments/jwebbinar/
+RUN /opt/common-scripts/env-compile jwebbinar
 
-# ----------------------------------------------------------------------
-USER root
+# SYNC ALL
+RUN /opt/common-scripts/env-sync  jwebbinar
+>>>>>>> cf130fa6e9afa56d154deb30b9a740b098372716
 
-# Install additional lab and notebook extensions
-USER ${NB_UID}
+# REMAINING ENV
+COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/ /opt/environments/jwebbinar/
 
-# ----------------------------------------------------------------------
-COPY --chown=${NB_UID}:${NB_GID} environments/ /opt/environments
+# --------------------------- Jdaviz -------------------------------------
 
-# ========================= ^^^^^ Custom  ^^^^^ =========================
+# BASE
+COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/*.yml /opt/environments/jdaviz/
+RUN /opt/common-scripts/env-conda jdaviz
+
+# COMPILE ALL
+COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/*.pip /opt/environments/jdaviz/
+RUN /opt/common-scripts/env-compile jdaviz
+
+# SYNC ALL
+RUN /opt/common-scripts/env-sync  jdaviz
+
+# REMAINING ENV
+COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/ /opt/environments/jdaviz/
 # ========================= vvvvv Generic vvvvv  =========================
 
 # Fix JS encoding issue that prevents widgets from displaying properly in notebook mode
@@ -97,12 +104,13 @@ RUN sed -i 's/data-base-url="{{base_url | urlencode}}"/data-base-url="{{base_url
 USER $NB_UID
 RUN /opt/common-scripts/kernel-setup   # set up Ipython / JupyterLab kernels
 
+# ----------------------------------------------------------------------
 # As part of Dockerfile.trailer,  these statements are executed from the
 # perspective of the deployment image directory,  not common.
 
 USER root
 
-# ----------------------------------------------------------------------
+RUN find /home/${NB_USER} ! -uid ${NB_UID} | xargs chown ${NB_UID}:${NB_GID}
 
 # remove this step once nbgitpuller enabled; these contents will be in the
 #  jupyterhub-user-content repo.   Install deployment-specific $HOME files.
@@ -116,15 +124,8 @@ RUN  cat /home/jovyan/global_bashrc >> /etc/bash.bashrc  && \
 # Fix certs in conda for application level SSL, e.g. pass image-test running on CI-node
 RUN /opt/common-scripts/fix-certs
 
-# This top level command runs unit tests for the image,  nominally import tests
-# and notebook runs but it's an arbitrary bash script.
-COPY --chown=${NB_UID}:${NB_GID} environments/test    /opt/environments/test
-
-# Install security patches now that build is complete;  potentially this could be done sooner
-# -- RUN apt-get update && \
-# --     apt-get dist-upgrade --yes && \
-# --     apt-get clean && \
-# --     rm -rf /var/lib/apt/lists/*
+# Copy any remaining environments files not caught by more precise as-needed build copies
+COPY --chown=${NB_UID}:${NB_GID} environments/    /opt/environments/
 
 # For standalone operation outside JupyterHub,  note that  /etc also includes
 # common home directory files.   post-start-hook may not include everything required

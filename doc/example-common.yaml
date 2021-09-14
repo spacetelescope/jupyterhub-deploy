@@ -39,9 +39,9 @@ jupyterhub:
       limit: 15G
   auth:
     users:
-      - [EMAIL ADDRESS]
+      - EMAIL ADDRESS
       - ...
     admin:
       users:
-        - [EMAIL ADDRESS]
+        - EMAIL ADDRESS
         - ...

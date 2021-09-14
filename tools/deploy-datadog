@@ -1,0 +1,11 @@
+#! /bin/bash -e
+
+cd ${JUPYTERHUB_DIR}/datadog
+
+echo "========================= Deploying DataDog ========================"
+helm repo add datadog https://helm.datadoghq.com
+helm repo update
+
+helm upgrade --install datadog datadog/datadog -f datadog.yaml \
+    --set datadog.apiKey=$(get-datadog-api-key) \
+    --create-namespace -n datadog

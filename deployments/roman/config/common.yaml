@@ -16,7 +16,7 @@ jupyterhub:
     image:
       pullPolicy: Always
     memory:
-      guarantee: 7G
+      guarantee: 14G
       limit: 15G
     lifecycleHooks:
       postStart:

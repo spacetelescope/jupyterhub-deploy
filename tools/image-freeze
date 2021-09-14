@@ -1,33 +1,11 @@
-#! /bin/bash -eu
+#! /bin/bash
 
-# Export the intended (vs. as-built) conda environments as fully versioned
-# (frozen) environment specifications.  These specs often require tweaking
-# despite their origin from successfully built systems.  These specs originate
-# inside a fully built container but become specs for frozen environments in
-# the Docker source tree.  Nominally this is run when USE_FROZEN=0 and an
-# environment is being resolved from loosely specified version requirements.
+set -eu
 
-env_list_dirs() {
-    # list the directories at $root_dir defaulting to .
-    
-    root_dir=${1:-.}
+# pip-tools frozen requirements for use with USE_FROZEN=1 are stored at
+# /opt/envs-frozen in the image.  Copy /opt/envs-frozen to env-frozen in the
+# Docker sources mission dir.
 
-    find $root_dir -maxdepth 1 -type d| grep '/' | cut -d '/' -f2
-}
- 
-freeze_deployment() {
-    cd $1
+cd $IMAGE_DIR
 
-    mkdir -p environments/frozen
-
-    for env in `env_list_dirs environments | grep -v base | grep -v frozen`; do
-        if [[ ! -z "$env" ]]; then
-            echo "Dumping frozen versions for ${env}"
-            image-env-export $env  > environments/frozen/${env}-frozen.yml
-        fi
-    done
-}
-
-freeze_deployment $IMAGE_DIR
-
-freeze_deployment $IMAGE_DIR/../../common/image
+image-cp /opt/env-frozen

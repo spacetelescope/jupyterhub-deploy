@@ -8,3 +8,8 @@ bandit
 boto3
 flake8
 black
+colorama
+keyring
+tqdm
+docutils
+webencodings

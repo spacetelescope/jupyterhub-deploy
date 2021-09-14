@@ -1,29 +1,14 @@
 # ================ vvvvv Generic Image vvvvv ==================
 
-
 # If the image (jupyter/scipy-notebook) exists locally it will be used,
 # otherwise the latest from https://hub.docker.com/_/buildpack-deps will be used
-FROM jupyter/scipy-notebook
+
+ARG BASE_IMAGE=stsci-jh/scipy-notebook
+FROM $BASE_IMAGE
 
 # ------------------------------------------------------------------------
 
 LABEL maintainer="Science Platforms <dmd_octarine@stsci.edu>"
-
-# We assume only one user per container, so make it unique
-# UID matches GID
-# --- ARG NB_USER="jovyan"
-# --- ARG NB_UID="1000"
-
-# --- ENV NB_USER=$NB_USER
-# --- ENV NB_UID=$NB_UID
-# --- ENV NB_GID=$NB_UID
-
-ARG USE_FROZEN=1
-ENV USE_FROZEN=$USE_FROZEN
-
-# Enable easy swap of conda with e.g. mamba
-ARG CONDA_VER=conda
-ENV CONDA_VER=${CONDA_VER}
 
 # Environment variables
 ENV MKL_THREADING_LAYER="GNU"
@@ -73,7 +58,8 @@ RUN /opt/common-scripts/apt-install \
         libxslt1-dev \
         python-libxml2 \
         python-dev \
-        python-setuptools
+        python-setuptools \
+        graphviz
 
 # X11 and DS9
 RUN /opt/common-scripts/apt-install \
@@ -120,7 +106,8 @@ RUN wget https://sourceforge.net/projects/turbovnc/files/2.2.6/turbovnc_2.2.6_am
     rm turbovnc_2.2.6_amd64.deb && \
     apt-get remove -y -q light-locker
 
-# ------------------------------------------------------------------------
+# ==================== Begin pip & conda installs =======================
+
 USER root
 
 # Load conda profile scripts by default, symlink target doesn't exist for a bit
@@ -166,4 +153,4 @@ COPY default-home-contents/   /etc/default-home-contents
 # ----------------------------------------------------------------------
 # Add jupyter-lab-extensions to base environment as well as standard packages
 
-RUN /opt/common-scripts/install-common  base
+RUN   USE_FROZEN=0  /opt/common-scripts/install-common  base
