@@ -12,6 +12,8 @@ set -eu
 #    as fully versioned conda config files.  These may still need tweaking
 #    but form the basis for building frozen environments using USE_FROZEN=1.
 
+time (
+
 # ..................................................................................
 # Make automatic source adjustments including STScI cert update when on CI-nodes
 image-update
@@ -48,3 +50,4 @@ fi
 # cd ${JUPYTERHUB_DIR}
 # docker_dirs="deployments/common  deployments/${DEPLOYMENT_NAME}"
 # find ${docker_dirs} -name 'Dockerfile*.x' | xargs rm -f
+)
