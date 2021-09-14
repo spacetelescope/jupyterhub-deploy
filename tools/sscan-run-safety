@@ -48,10 +48,13 @@ import yaml
 import tempfile
 import subprocess
 
+def flush():
+    sys.stdout.flush()
+    sys.stderr.flush()
 
 def banner(title, char="=", spacer=" "):
     print(f"{spacer}{title}{spacer}".center(80, char))
-    sys.stdout.flush()
+    flush()
 
 
 def main(ignore, *frozen_specs_to_scan):
@@ -73,9 +76,9 @@ def scan_spec(ignore, spec):
         file.write(requirements)
         file.close()
         print(open(file.name).read())
-        sys.stdout.flush()
+        flush()
         completion = subprocess.run(("safety", "check", "--full-report", "--file", file.name,) + get_ignore_switches(ignore))
-        sys.stdout.flush()
+        flush()
         return completion.returncode != 0
 
 
@@ -86,6 +89,7 @@ def get_ignore_switches(ignore):
         input_text = open(ignore[1:]).read()
         banner(f"Ignoring IDs in {os.path.basename(ignore)}:")
         print(input_text.strip())
+        flush()
         sids = []
         for line in input_text.splitlines():
             line = line.strip()
@@ -102,6 +106,7 @@ def get_ignore_switches(ignore):
         sids = ignore.split(",")
         banner("Ignoring IDs:")
         print("\n".join(sids))
+        flush()
     ignore_switches = []
     for sid in sids:
         ignore_switches += ["--ignore", sid]
