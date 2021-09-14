@@ -10,3 +10,15 @@ dependencies:
     - fftw
     - pyfftw
     - python==3.8
+    - bqplot-image-gl
+    - bqplot==0.12.29
+    - jupyterlab_widgets
+    - ipydatawidgets
+    - ipykernel
+    - ipympl
+    - ipython
+    - ipyvolume
+    - ipyvue
+    - ipyvuetify
+    - ipywebrtc
+    - ipywidgets
