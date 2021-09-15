@@ -73,4 +73,3 @@ RUN mkdir -p /home/jovyan &&\
 COPY common-scripts/fix-certs /opt/common-scripts/fix-certs
 COPY common-scripts/fix-conda-certs /opt/common-scripts/fix-conda-certs
 RUN /opt/common-scripts/fix-certs
-
