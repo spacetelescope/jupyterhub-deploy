@@ -19,12 +19,23 @@ docker build --progress plain --tag ${OWNER}/ubuntu-certs --file Dockerfile.cert
 
 cd ~
 if [[ ! -d docker-stacks ]]; then
-   git clone https://github.com/jupyter/docker-stacks.git
-   cd docker-stacks
+    git clone https://github.com/jupyter/docker-stacks.git
+    cd docker-stacks
 else
     cd docker-stacks
     git fetch origin
     git rebase origin/master
+fi
+
+# checkout the appropriate docker-stacks revision if using frozen specs;
+# otherwise, collect and stash revision
+env_frozen_dir="${JUPYTERHUB_DIR}/deployments/$DEPLOYMENT_NAME/image/env-frozen"
+mkdir -p $env_frozen_dir
+frozen_hash_spec="$env_frozen_dir/docker-stacks.hash"
+if [[ USE_FROZEN -eq 1 ]]; then
+    git checkout `cat $frozen_hash_spec`
+else
+    echo `git rev-parse HEAD` > $frozen_hash_spec
 fi
 
 # Taken from the docker-stacks Makefile to enable adding --build-arg's again

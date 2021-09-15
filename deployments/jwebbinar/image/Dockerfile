@@ -56,24 +56,12 @@ COPY --chown=${NB_UID}:${NB_GID} env-frozen/ /opt/env-frozen/
 COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/*.yml /opt/environments/jwebbinar/
 RUN /opt/common-scripts/env-conda jwebbinar
 
-<<<<<<< HEAD
-# ----------------------------------------------------------------------
-# Jdaviz
-#COPY environments/jdaviz/jdaviz.yml /opt/environments/jdaviz/jdaviz.yml
-#RUN /opt/common-scripts/env-create jdaviz /opt/environments/jdaviz/jdaviz.yml
-#RUN /opt/common-scripts/install-common jdaviz
-#COPY environments/jdaviz/jdaviz.pip /opt/environments/jdaviz/jdaviz.pip
-#RUN /opt/common-scripts/env-update jdaviz /opt/environments/jdaviz/jdaviz.pip
-
-#COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/ /opt/environments/jdaviz
-=======
 # COMPILE ALL
 COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/*.pip /opt/environments/jwebbinar/
 RUN /opt/common-scripts/env-compile jwebbinar
 
 # SYNC ALL
 RUN /opt/common-scripts/env-sync  jwebbinar
->>>>>>> cf130fa6e9afa56d154deb30b9a740b098372716
 
 # REMAINING ENV
 COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/ /opt/environments/jwebbinar/
@@ -81,18 +69,21 @@ COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/ /opt/environments/jwebb
 # --------------------------- Jdaviz -------------------------------------
 
 # BASE
-COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/*.yml /opt/environments/jdaviz/
-RUN /opt/common-scripts/env-conda jdaviz
+#COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/*.yml /opt/environments/jdaviz/
+#RUN /opt/common-scripts/env-conda jdaviz
 
 # COMPILE ALL
-COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/*.pip /opt/environments/jdaviz/
-RUN /opt/common-scripts/env-compile jdaviz
+#COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/*.pip /opt/environments/jdaviz/
+#RUN /opt/common-scripts/env-compile jdaviz
 
 # SYNC ALL
-RUN /opt/common-scripts/env-sync  jdaviz
+#RUN /opt/common-scripts/env-sync  jdaviz
 
 # REMAINING ENV
-COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/ /opt/environments/jdaviz/
+#COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/ /opt/environments/jdaviz/
+
+# Needed for cleaning up existing/obsolete kernel
+COPY --chown=${NB_UID}:${NB_GID} environments/remove-jdaviz-kernel /opt/environments/
 # ========================= vvvvv Generic vvvvv  =========================
 
 # Fix JS encoding issue that prevents widgets from displaying properly in notebook mode
