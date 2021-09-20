@@ -8,7 +8,7 @@ aiohttp==3.7.4.post0
     # via jupyter-server-proxy
 alabaster==0.7.12
     # via sphinx
-alembic==1.7.1
+alembic==1.7.3
     # via jupyterhub
 ansiwrap==0.8.4
     # via papermill
@@ -124,9 +124,9 @@ bokeh==2.4.0
     # via
     #   ipywidgets-bokeh
     #   jupyter-bokeh
-boto3==1.18.42
+boto3==1.18.44
     # via -r /opt/common-env/common.pip
-botocore==1.21.42
+botocore==1.21.44
     # via
     #   boto3
     #   s3transfer
@@ -160,7 +160,7 @@ chardet==4.0.0
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   aiohttp
-charset-normalizer==2.0.5
+charset-normalizer==2.0.6
     # via requests
 ci-watson==0.5
     # via -r /opt/common-env/testing.pip
@@ -173,7 +173,7 @@ click==8.0.1
     #   pip-tools
 cloudpickle==2.0.0
     # via dask
-crds==11.4.0
+crds==11.4.2
     # via
     #   -r /opt/environments/jwebbinar/jwebbinar.pip
     #   jwst
@@ -252,14 +252,14 @@ glue-astronomy==0.3.2
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   jdaviz
-glue-core==1.2.1
+glue-core==1.2.2
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   glue-astronomy
     #   glue-jupyter
     #   glue-vispy-viewers
     #   jdaviz
-glue-jupyter==0.10
+glue-jupyter==0.10.1
     # via
     #   -r /opt/common-env/jupyter.pip
     #   -r /opt/environments/jwebbinar/jdaviz.pip
@@ -387,7 +387,7 @@ ipywidgets==7.6.5
     #   pythreejs
 ipywidgets-bokeh==1.0.2
     # via -r /opt/common-env/jupyter.pip
-git+https://github.com/spacetelescope/jdaviz.git
+jdaviz==2.0.0
     # via -r /opt/environments/jwebbinar/jdaviz.pip
 jedi==0.18.0
     # via
@@ -445,7 +445,7 @@ jupyter-client==6.1.12
     #   notebook
     #   qtconsole
     #   voila
-jupyter-core==4.7.1
+jupyter-core==4.8.1
     # via
     #   -r /opt/common-env/jupyter.pip
     #   jupyter-client
@@ -556,7 +556,7 @@ multidict==5.1.0
     #   yarl
 mypy-extensions==0.4.3
     # via black
-nbclassic==0.3.1
+nbclassic==0.3.2
     # via jupyterlab
 nbclient==0.5.4
     # via
@@ -784,7 +784,7 @@ pycparser==2.20
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   cffi
-pydeps==1.9.14
+pydeps==1.9.15
     # via -r /opt/common-env/common.pip
 pyds9==1.8.1
     # via
@@ -822,7 +822,7 @@ pyrsistent==0.18.0
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   jsonschema
-pysiaf==0.11.0
+pysiaf==0.13.0
     # via
     #   -r /opt/environments/jwebbinar/jwebbinar.pip
     #   webbpsf
@@ -836,7 +836,7 @@ pytest==6.2.5
     #   ci-watson
     #   pytest-doctestplus
     #   pytest-openfiles
-pytest-doctestplus==0.10.1
+pytest-doctestplus==0.11.0
     # via
     #   -r /opt/common-env/testing.pip
     #   sphinx-astropy
@@ -878,7 +878,7 @@ pyyaml==5.4.1
     #   jdaviz
     #   papermill
     #   sphinx-asdf
-pyzmq==22.2.1
+pyzmq==22.3.0
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   jupyter-client
@@ -907,6 +907,7 @@ regions==0.5
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   glue-astronomy
+    #   jdaviz
 requests==2.26.0
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
@@ -938,6 +939,7 @@ scikit-image==0.18.3
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   -r /opt/environments/jwebbinar/jwebbinar.pip
     #   glue-jupyter
+    #   jdaviz
     #   jwst-pancake
 scikit-learn==0.24.2
     # via -r /opt/environments/jwebbinar/jwebbinar.pip
@@ -1009,7 +1011,7 @@ spectral-cube==0.5.0
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   glue-astronomy
     #   jdaviz
-specutils==1.4.0
+specutils==1.4.1
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   glue-astronomy
@@ -1073,7 +1075,7 @@ stsci-rtd-theme==0.0.2
     # via -r /opt/common-env/docs.pip
 stsci.image==2.3.5
     # via jwst
-stsci.imagestats==1.6.2
+stsci.imagestats==1.6.3
     # via tweakwcs
 stsci.stimage==0.2.5
     # via tweakwcs
@@ -1131,7 +1133,7 @@ tornado==6.1
     #   jupyterlab
     #   notebook
     #   terminado
-tqdm==4.62.2
+tqdm==4.62.3
     # via papermill
 traitlets==5.1.0
     # via
@@ -1180,7 +1182,7 @@ vispy==0.8.1
     #   -r /opt/environments/jwebbinar/jwebbinar.pip
     #   glue-vispy-viewers
     #   jdaviz
-voila==0.2.13
+voila==0.2.14
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   jdaviz

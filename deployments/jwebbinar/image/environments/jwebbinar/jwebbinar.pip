@@ -1,4 +1,4 @@
-jwst
+jwst==1.3.2
 pyfftw
 urllib3
 pandas
@@ -19,7 +19,7 @@ jplephem
 jwst_footprints
 jwxml
 pandokia
-photutils
+photutils==1.1.0
 poppy
 pysiaf
 pysynphot

@@ -17,7 +17,7 @@ dependencies:
   - conda-tree=1.0.3=pyhd8ed1ab_0
   - cryptography=3.4.7=py38ha5dfef3_0
   - decorator=5.1.0=pyhd8ed1ab_0
-  - fftw=3.3.9=nompi_h74d3f13_101
+  - fftw=3.3.10=nompi_hcdd671c_100
   - freetds=1.1.15=h94af77a_0
   - idna=3.1=pyhd3deb0d_0
   - ld_impl_linux-64=2.36.1=hea4e1c9_2
@@ -41,7 +41,7 @@ dependencies:
   - pycparser=2.20=pyh9f0ad1d_2
   - pyopenssl=20.0.1=pyhd8ed1ab_0
   - pysocks=1.7.1=py38h578d9bd_3
-  - python=3.8.10=hb7a2778_2_cpython
+  - python=3.8.12=hb7a2778_0_cpython
   - python_abi=3.8=2_cp38
   - readline=8.1=h46c0cb4_0
   - requests=2.26.0=pyhd8ed1ab_0
@@ -51,7 +51,7 @@ dependencies:
   - sqlite=3.36.0=h9cd32fc_1
   - tk=8.6.11=h27826a3_1
   - tomli=1.2.1=pyhd8ed1ab_0
-  - tqdm=4.62.2=pyhd8ed1ab_0
+  - tqdm=4.62.3=pyhd8ed1ab_0
   - unixodbc=2.3.9=hb166930_0
   - urllib3=1.26.6=pyhd8ed1ab_0
   - wheel=0.37.0=pyhd8ed1ab_1
