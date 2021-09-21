@@ -69,18 +69,21 @@ COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/ /opt/environments/jwebb
 # --------------------------- Jdaviz -------------------------------------
 
 # BASE
-COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/*.yml /opt/environments/jdaviz/
-RUN /opt/common-scripts/env-conda jdaviz
+#COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/*.yml /opt/environments/jdaviz/
+#RUN /opt/common-scripts/env-conda jdaviz
 
 # COMPILE ALL
-COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/*.pip /opt/environments/jdaviz/
-RUN /opt/common-scripts/env-compile jdaviz
+#COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/*.pip /opt/environments/jdaviz/
+#RUN /opt/common-scripts/env-compile jdaviz
 
 # SYNC ALL
-RUN /opt/common-scripts/env-sync  jdaviz
+#RUN /opt/common-scripts/env-sync  jdaviz
 
 # REMAINING ENV
-COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/ /opt/environments/jdaviz/
+#COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/ /opt/environments/jdaviz/
+
+# Needed for cleaning up existing/obsolete kernel
+COPY --chown=${NB_UID}:${NB_GID} environments/remove-jdaviz-kernel /opt/environments/
 # ========================= vvvvv Generic vvvvv  =========================
 
 # Fix JS encoding issue that prevents widgets from displaying properly in notebook mode

@@ -53,7 +53,7 @@ class GitSync(object):
         ignore = ['.gitignore', 'README.md', '']
 
         untracked = [f for f in out('git ls-files').split('\n') if f not in ignore]
-        for f in untracked:
+        for f in [u for u in untracked if u in self.find_upstream_updates(['A', 'M'])]:
             logging.debug('Found untracked local file: {}'.format(f))
 
         return untracked
@@ -69,10 +69,7 @@ class GitSync(object):
 
         return modified
 
-    def find_upstream_updates(self):
-        logging.info('Get list of files that have been modified or added upstream...')
-
-        modes = ['A', 'M']
+    def find_upstream_updates(self, modes):
         files = []
         for line in out(f'git log ..origin/{self.branch_name} --oneline --name-status',
                         cwd=self.repo_dir).split('\n'):
@@ -81,6 +78,7 @@ class GitSync(object):
                     f = os.path.relpath(line.split('\t', 1)[1], self.repo_dir)
                     logging.debug(f'Upstream file [{m}]: {f}')
                     files.append(f)
+                    break
 
         return files
 
@@ -91,7 +89,7 @@ class GitSync(object):
         run(f'git -c user.email={user_email} -c user.name={user_name} merge -Xours --no-edit origin/{self.branch_name}')
 
     def prepare_clone(self):
-        modified_upstream_files = self.find_upstream_updates()
+        modified_upstream_files = self.find_upstream_updates(['A'])
         modified_local_files = self.find_modified_local_files()
         untracked_local_files = self.find_untracked_local_files()
 

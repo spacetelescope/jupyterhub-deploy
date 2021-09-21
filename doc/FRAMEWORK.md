@@ -134,7 +134,7 @@ These commands produce improved diagnostics relative to pip defaults and also
 do a better job with frozen builds.  They compile loosely constrained conda or
 pip requirements into fully pinned requirements.yml and requirements.txt.
 Ultimately the complete environment is built with respect to those fully pinned
-specs rather than on-th-fly dependency resolution.  The commands use the
+specs rather than on-the-fly dependency resolution.  The commands use the
 existing environments .yml and .pip loosely constrainted pacakge spec files as
 the seed for the full dependency solution.
 

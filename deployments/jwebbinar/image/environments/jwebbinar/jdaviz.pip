@@ -1,4 +1,4 @@
-git+https://github.com/spacetelescope/jdaviz.git
+jdaviz==2.0.0
 jwst
 anyio
 appnope
@@ -81,8 +81,8 @@ semantic-version
 Send2Trash
 six
 sniffio
-spectral-cube>
-specutils
+spectral-cube
+specutils==1.4.1
 terminado
 testpath
 tifffile
