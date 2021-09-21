@@ -29,7 +29,7 @@ fi
 
 # checkout the appropriate docker-stacks revision if using frozen specs;
 # otherwise, collect and stash revision
-env_frozen_dir="${JUPYTERHUB_DIR}/deployments/$DEPLOYMENT_NAME/image/env-frozen"
+env_frozen_dir="${IMAGE_DIR}/env-frozen"
 mkdir -p $env_frozen_dir
 frozen_hash_spec="$env_frozen_dir/docker-stacks.hash"
 if [[ USE_FROZEN -eq 1 ]]; then
