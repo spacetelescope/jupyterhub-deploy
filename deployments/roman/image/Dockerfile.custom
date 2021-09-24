@@ -50,15 +50,11 @@ USER ${NB_UID}
 
 COPY --chown=${NB_UID}:${NB_GID} env-frozen/  /opt/env-frozen/
 
-# --- # ------------------------------------------------------------------------------
-# --- # MIRAGE
-# --- # RUN /opt/common-scripts/env-create  mirage /opt/environments/mirage/mirage.yml
-# --- RUN /opt/common-scripts/env-clone base mirage
+# ----------------------------------------------------------------------
+# Add jupyter-lab-extensions to base environment as well as standard packages.
+# Performing common update here enables mission specific frozen spec.
 
-# --- COPY --chown=${NB_UID}:${NB_GID} environments/mirage/mirage.pip /opt/environments/mirage/mirage.pip
-# --- RUN /opt/common-scripts/env-update  mirage /opt/environments/mirage/mirage.pip
-
-# --- RUN /opt/common-scripts/install-common mirage
+RUN   /opt/common-scripts/install-common  base
 
 # ------------------------------------------------------------------------------
 # CVT

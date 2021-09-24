@@ -34,11 +34,7 @@ extending the jupyter/scipy-notebook image.
 installation and testing.   These run inside the container.
 
 3. A *common/image/common-env* directory which defines packages which are nominally
-installed in all conda environments by calling /opt/common-scripts/install-common.
-Calling install-common is optional for each mission but some requirements (e.g.
-installing papermill in the base environment) must be met somehow.   Note that this
-facility augments builds where cloning the base environment is not feasible due to
-version conflicts.
+installed in all conda environments.
 
 4. A *Dockerfile.trailer* file which represents the final steps required to prepare
 a mission image.  As implemented this is just concatenated to a mission's Dockerfile.custom
@@ -63,64 +59,9 @@ which is ultimately installed at `/opt/test`.  Generally it will include a
 command to execute tests for each environment in the standard way:
 `/opt/common-scripts/test-environments`.
 
-#### Conda Environment Definitions 1
+##### Conda Environment Definitions
 
-*IMPORTANT:* This section documents our original conda environment build
-process but is being supplanted by a newer process defined in the next section.
-The frozen "dependency solutions" produced by this process are frequently not
-reproducible.
-
-Conda environments are also installed as jupyter kernels.  Seperate conda
-environments support installation of s/w with conflicting dependencies and
-rapid switching within a single jupyterlab session.
-
-An example `roman-cal` environment is built with these Docker commands:
-
-```
-RUN /opt/common-scripts/env-clone base roman-cal
-# RUN /opt/common-scripts/env-create  roman-cal /opt/environments/roman-cal/roman-cal.yml
-RUN /opt/common-scripts/install-common roman-cal
-RUN /opt/common-scripts/env-update  roman-cal /opt/environments/roman-cal/roman-cal.pip
-RUN /opt/common-scripts/env-update  roman-cal /opt/environments/roman-cal/octarine.pip
-```
-
-As currently implemented `roman-cal` is cloned from the `base` environment supplied by
-scipy-notebook;  this includes many generic compute and lab packages.   An alternative
-method to cloning `base` is to create a new environment using a conda env YAML spec
-and `env-create`;  this can be used to resolve package conflicts but is otherwise
-undesirable as it forfeits base environment features which are not explicitly added
-back in.
-
-The `install-common` script installs generic packages defined by the common image into
-all environments.  This may include several groups of packages which are installed from
-independent spec files using nested  `env-update`'s.  The specs are nominally found
-in deployments/common/image/common-env or /opt/common-env inside the image.
-
-The fundamental calibration software for Roman is installed into `roman-cal`
-using `env-update` and the `roman-cal.pip` list of pip packages.
-
-Additional software not directly required by calibration is added as pip
-packages using `env-update` and `octarine.pip`.
-
-There should be only one `env-clone` or `env-create` command for each environment.  If
-no .yml spec is given to `env-create` an empty default python environment is created.
-
-`env-update` can add additional packages to an existing environment.
-`env-update` can be called multiple times different kinds of package specs:
-using conda environment `.yml` specs, lists of conda packages specified in
-`xxxx.conda` files, or lists of pip packages specified in `xxxx.pip` files.  An
-`xxxx.pip` file is basically identical to a `requirements.txt` file but
-identifies that pip is required to install the package list.
-
-In general the fewer packages specified in an conda .yml file the better, but
-.yml files are useful for installing packages not supported by PyPi and for
-performing auxilliary tasks like setting up conda channels.
-
-##### Conda Environment Definitions 2
-
-To address deficiencies with the original build framework (weak default
-diagnostics, broken frozen builds), a second environment definition workflow
-has been developed using pip-tools:
+The Dockerfile workflow used to create a conda environment using pip-tools is:
 
 ```
 /opt/common-scripts/env-conda   <env>    # Create minimal conda environment.

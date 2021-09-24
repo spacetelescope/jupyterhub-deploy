@@ -1,38 +1,28 @@
 #! /bin/bash
 
-set -ex
+set -eu
 
-function install_nbextensions() {
-    for ext in $*; do
-        jupyter nbextension install --py --sys-prefix ${ext}
-        jupyter nbextension enable --py --sys-prefix ${ext}
-    done
-}
-
-jupyter serverextension enable --sys-prefix jupyter_server_proxy
+jupyter nbextension enable --py --sys-prefix  ipyvuetify
+jupyter nbextension enable --py --sys-prefix  ipysplitpanes
 
 jupyter labextension install \
        @jupyterlab/server-proxy \
        @jupyter-widgets/jupyterlab-manager \
         ipyevents \
-        jupyter-vuetify \
         d3-selection-multi \
-        bqplot@0.5.31
+        jupyter-vuetify \
+        bqplot
 
-install_nbextensions \
-    widgetsnbextension \
-    ipyevents \
-    ipyvuetify \
-    ipysplitpanes \
-    bqplot \
-    bqplot_image_gl
+#         ipysplitpanes \    # ValueError: "ipysplitpanes" is not a valid npm package
+
 
 jupyter lab build -y
 
-npm install jupyter-splitpanes@0.1.0
-npm install jupyter-golden-layout@0.3.0
-npm install bqplot-image-gl@1.4.1
-#npm install bqplot@0.5.31
+# jupyter serverextension enable --sys-prefix jupyter_server_proxy
+
+npm install --save jupyter-splitpanes
+npm install --save jupyter-golden-layout
+npm install --save bqplot-image-gl
 
 # npm audit fix --force
 

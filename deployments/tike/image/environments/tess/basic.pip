@@ -3,8 +3,8 @@ lxml
 cython
 pybind11
 jinja2~=2.11.0
-bokeh
-panel
+bokeh~=2.3.3
+panel==0.12.1
 ipywidgets
 
 numpy
