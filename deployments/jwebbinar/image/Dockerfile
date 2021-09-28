@@ -103,7 +103,13 @@ RUN /opt/common-scripts/env-conda mirisim
 
 # COMPILE ALL
 COPY --chown=${NB_UID}:${NB_GID} environments/mirisim/*.pip /opt/environments/mirisim/
-RUN /opt/common-scripts/env-compile mirisim
+
+# Mirisim pinned requirements conflict with /opt/common-env/jupyter.pip... so omit it
+# and install everything else explicitly.
+RUN /opt/common-scripts/env-compile mirisim  \
+   /opt/common-env/common.pip \
+   /opt/common-env/testing.pip \
+   /opt/common-env/docs.pip
 
 # SYNC ALL
 RUN /opt/common-scripts/env-sync  mirisim

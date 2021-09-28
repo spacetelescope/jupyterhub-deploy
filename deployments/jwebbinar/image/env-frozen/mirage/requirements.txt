@@ -93,9 +93,9 @@ bokeh==2.4.0
     #   ipywidgets-bokeh
     #   jupyter-bokeh
     #   mirage
-boto3==1.18.49
+boto3==1.18.50
     # via -r /opt/common-env/common.pip
-botocore==1.21.49
+botocore==1.21.50
     # via
     #   boto3
     #   s3transfer
