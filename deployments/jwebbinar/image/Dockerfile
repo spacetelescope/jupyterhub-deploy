@@ -48,17 +48,17 @@ RUN cd /tmp && \
 
 USER ${NB_UID}
 
-COPY --chown=${NB_UID}:${NB_GID} env-frozen/ /opt/env-frozen/
-
 # ----------------------------------------------------------------------
 # Add jupyter-lab-extensions to base environment as well as standard packages.
 # Performing common update here enables mission specific frozen spec.
 
+COPY --chown=${NB_UID}:${NB_GID} env-frozen/base/  /opt/env-frozen/base/
 RUN   /opt/common-scripts/install-common  base
 
 # --------------------------- Jwebbinar -------------------------------------
 
 # BASE
+COPY --chown=${NB_UID}:${NB_GID} env-frozen/jwebbinar/ /opt/env-frozen/jwebbinar/
 COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/*.yml /opt/environments/jwebbinar/
 RUN /opt/common-scripts/env-conda jwebbinar
 
@@ -80,6 +80,7 @@ COPY --chown=${NB_UID}:${NB_GID} environments/remove-jdaviz-kernel /opt/environm
 # --------------------------- Mirage -------------------------------------
 
 # BASE
+COPY --chown=${NB_UID}:${NB_GID} env-frozen/mirage/ /opt/env-frozen/mirage/
 COPY --chown=${NB_UID}:${NB_GID} environments/mirage/*.yml /opt/environments/mirage/
 RUN /opt/common-scripts/env-conda mirage
 
@@ -92,6 +93,23 @@ RUN /opt/common-scripts/env-sync  mirage
 
 # REMAINING ENV
 COPY --chown=${NB_UID}:${NB_GID} environments/mirage/ /opt/environments/mirage/
+
+# --------------------------- Mirisim -------------------------------------
+
+# BASE
+COPY --chown=${NB_UID}:${NB_GID} env-frozen/mirisim/ /opt/env-frozen/mirisim/
+COPY --chown=${NB_UID}:${NB_GID} environments/mirisim/*.yml /opt/environments/mirisim/
+RUN /opt/common-scripts/env-conda mirisim
+
+# COMPILE ALL
+COPY --chown=${NB_UID}:${NB_GID} environments/mirisim/*.pip /opt/environments/mirisim/
+RUN /opt/common-scripts/env-compile mirisim
+
+# SYNC ALL
+RUN /opt/common-scripts/env-sync  mirisim
+
+# REMAINING ENV
+COPY --chown=${NB_UID}:${NB_GID} environments/mirisim/ /opt/environments/mirisim/
 # ========================= vvvvv Generic vvvvv  =========================
 
 # Fix JS encoding issue that prevents widgets from displaying properly in notebook mode

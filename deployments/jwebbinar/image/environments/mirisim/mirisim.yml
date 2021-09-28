@@ -1,0 +1,10 @@
+name: mirage
+channels:
+    - conda-forge
+    - defaults
+dependencies:
+    - freetds
+    - fftw
+    - openblas
+    - python~=3.8.8
+    - pip
