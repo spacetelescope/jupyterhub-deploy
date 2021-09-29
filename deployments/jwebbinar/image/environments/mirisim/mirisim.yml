@@ -1,4 +1,4 @@
-name: mirage
+name: mirisim
 channels:
     - conda-forge
     - defaults
