@@ -932,7 +932,7 @@ tweakwcs==0.7.1
     #   jwst
 typing-extensions==3.10.0.2
     # via aiohttp
-urllib3==1.26.4
+urllib3==1.26.5
     # via
     #   -r /opt/environments/mirisim/mirisim.pip
     #   botocore
