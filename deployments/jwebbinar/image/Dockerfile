@@ -114,6 +114,9 @@ RUN /opt/common-scripts/env-compile mirisim  \
 # SYNC ALL
 RUN /opt/common-scripts/env-sync  mirisim
 
+# Install from Mirisim conda repo
+RUN /opt/common-scripts/miricle-linux-py37.0.txt
+
 # REMAINING ENV
 COPY --chown=${NB_UID}:${NB_GID} environments/mirisim/ /opt/environments/mirisim/
 # ========================= vvvvv Generic vvvvv  =========================
