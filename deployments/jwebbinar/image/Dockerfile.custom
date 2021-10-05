@@ -98,10 +98,15 @@ RUN /opt/common-scripts/env-compile mirisim  \
 RUN /opt/common-scripts/env-sync  mirisim
 
 # Install from Mirisim conda repo
-# COPY environments/mirisim/miricle-linux-py37.0.txt  /opt/environments/mirisim/miricle-linux-py37.0.txt
-# RUN /opt/environments/mirisim/miricle-linux-py37.0.txt
-COPY environments/mirisim/mirisim.conda  /opt/environments/mirisim/mirisim.conda
-RUN /opt/common-scripts/env-update  mirisim  /opt/environments/mirisim/mirisim.conda
+COPY environments/mirisim/miricle-linux-py37.0.txt  /opt/environments/mirisim/miricle-linux-py37.0.txt
+RUN /opt/environments/mirisim/miricle-linux-py37.0.txt  &&\
+    /opt/common-scripts/env-clean
+
+# env-update would've been nicer but the package references in miricle-linux/mirisim.conda above don't freeze.
+# hence they need to be tacked onto the frozen build afterwards.
+#
+# COPY environments/mirisim/mirisim.conda  /opt/environments/mirisim/mirisim.conda
+# RUN /opt/common-scripts/env-update  mirisim  /opt/environments/mirisim/mirisim.conda
 
 # REMAINING ENV
 COPY --chown=${NB_UID}:${NB_GID} environments/mirisim/ /opt/environments/mirisim/
