@@ -96,9 +96,9 @@ bleach==3.3.0
     # via
     #   -r /opt/environments/mirisim/miricle-linux-deps-stable-16.pip
     #   nbconvert
-boto3==1.18.54
+boto3==1.18.55
     # via -r /opt/common-env/common.pip
-botocore==1.21.54
+botocore==1.21.55
     # via
     #   boto3
     #   s3transfer
