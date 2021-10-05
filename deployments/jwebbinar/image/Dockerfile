@@ -77,23 +77,6 @@ COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/ /opt/environments/jwebb
 # Needed for cleaning up existing/obsolete kernel
 COPY --chown=${NB_UID}:${NB_GID} environments/remove-jdaviz-kernel /opt/environments/
 
-# --------------------------- Mirage -------------------------------------
-
-# BASE
-COPY --chown=${NB_UID}:${NB_GID} env-frozen/mirage/ /opt/env-frozen/mirage/
-COPY --chown=${NB_UID}:${NB_GID} environments/mirage/*.yml /opt/environments/mirage/
-RUN /opt/common-scripts/env-conda mirage
-
-# COMPILE ALL
-COPY --chown=${NB_UID}:${NB_GID} environments/mirage/*.pip /opt/environments/mirage/
-RUN /opt/common-scripts/env-compile mirage
-
-# SYNC ALL
-RUN /opt/common-scripts/env-sync  mirage
-
-# REMAINING ENV
-COPY --chown=${NB_UID}:${NB_GID} environments/mirage/ /opt/environments/mirage/
-
 # --------------------------- Mirisim -------------------------------------
 
 # BASE

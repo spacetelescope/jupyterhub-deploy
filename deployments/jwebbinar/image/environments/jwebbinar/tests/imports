@@ -30,3 +30,8 @@ astropy
 gwcs
 crds
 
+mirage
+healpy
+grismconf
+NIRCAM_Gsim
+#jwst
