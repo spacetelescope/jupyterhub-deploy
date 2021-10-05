@@ -363,7 +363,7 @@ kiwisolver==1.3.1
     #   matplotlib
 libarchive-c==2.9
     # via -r /opt/environments/mirisim/miricle-linux-deps-stable-16.pip
-lxml==4.6.2
+lxml==4.6.3
     # via
     #   -r /opt/environments/mirisim/miricle-linux-deps-stable-16.pip
     #   crds
@@ -532,7 +532,7 @@ pickleshare==0.7.5
     # via
     #   -r /opt/environments/mirisim/miricle-linux-deps-stable-16.pip
     #   ipython
-pillow==8.1.0
+pillow==8.3.2
     # via
     #   -r /opt/environments/mirisim/miricle-linux-deps-stable-16.pip
     #   glue-vispy-viewers
