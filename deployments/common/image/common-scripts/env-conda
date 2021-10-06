@@ -36,7 +36,7 @@ if [[ "$USE_FROZEN" == "0" ]]; then
     echo "===== Adding common conda packages to ${env}:"
     /opt/common-scripts/env-update ${env}  `find /opt/common-env -name '*.conda' | sort`
     echo "===== Saving frozen conda constraints for environment ${env} to ${env_frozen_yml}"
-    ${CONDA_VER} env export -n ${env} > ${env_frozen_yml}  # must be saved after build outside Docker
+    ${CONDA_VER} env export --no-build -n ${env} > ${env_frozen_yml}  # must be saved after build outside Docker
     cat ${env_frozen_yml}
     echo "===== Removing conda env and re-installing from ${env_frozen_yml}"
     ${CONDA_VER} env remove -n ${env}

@@ -511,7 +511,7 @@ jupyter-telemetry==0.1.0
     # via jupyterhub
 jupyterhub==1.3.0
     # via -r /opt/common-env/jupyter.pip
-jupyterlab==3.1.16
+jupyterlab==3.1.17
     # via -r /opt/common-env/jupyter.pip
 jupyterlab-pygments==0.1.2
     # via

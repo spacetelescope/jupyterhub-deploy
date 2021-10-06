@@ -19,7 +19,7 @@ if [[ "$USE_FROZEN" == "0" ]]; then
     /opt/common-scripts/env-update $env `find /opt/common-env -name '*.pip' | sort`
 
     # Save fully pinned requirements for base,  copy out of image to git later.
-    conda env export -n base >/opt/env-frozen/base/requirements.yml
+    conda env export --no-build -n base >/opt/env-frozen/base/requirements.yml
 else
     # This should override existing packages already installed in base
     /opt/common-scripts/env-update  $env  /opt/env-frozen/base/requirements.yml
