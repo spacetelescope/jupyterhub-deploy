@@ -61,12 +61,12 @@ dependencies:
   - entrypoints=0.3
   - filelock=3.3.0
   - freetype=2.10.4
-  - fsspec=2021.9.0
+  - fsspec=2021.10.0
   - giflib=5.2.1
   - glob2=0.7
   - gmp=6.2.1
   - gmpy2=2.1.0b5
-  - greenlet=1.1.1
+  - greenlet=1.1.2
   - h5py=3.4.0
   - hdf5=1.12.1
   - heapdict=1.0.1
@@ -87,11 +87,11 @@ dependencies:
   - joblib=1.0.1
   - jpeg=9d
   - json5=0.9.5
-  - jsonschema=3.2.0
+  - jsonschema=4.0.1
   - jupyter_core=4.8.1
-  - jupyter_server=1.11.0
+  - jupyter_server=1.11.1
   - jupyter_telemetry=0.1.0
-  - jupyterlab=3.1.14
+  - jupyterlab=3.1.17
   - jupyterlab_pygments=0.1.2
   - jupyterlab_server=2.8.2
   - jupyterlab_widgets=1.0.2
@@ -125,7 +125,7 @@ dependencies:
   - libnghttp2=1.43.0
   - libopenblas=0.3.17
   - libpng=1.6.37
-  - libprotobuf=3.18.0
+  - libprotobuf=3.18.1
   - libsodium=1.0.18
   - libsolv=0.7.19
   - libssh2=1.10.0
@@ -134,6 +134,7 @@ dependencies:
   - libuv=1.41.1
   - libwebp-base=1.2.1
   - libxml2=2.9.12
+  - libzlib=1.2.11
   - libzopfli=1.0.3
   - llvm-openmp=12.0.1
   - llvmlite=0.37.0
@@ -187,7 +188,7 @@ dependencies:
   - pooch=1.5.1
   - prometheus_client=0.11.0
   - prompt-toolkit=3.0.20
-  - protobuf=3.18.0
+  - protobuf=3.18.1
   - psutil=5.8.0
   - ptyprocess=0.7.0
   - py-lief=0.11.5
@@ -196,7 +197,7 @@ dependencies:
   - pycurl=7.44.1
   - pygments=2.10.0
   - pyjwt=2.1.0
-  - pyopenssl=20.0.1
+  - pyopenssl=21.0.0
   - pyparsing=2.4.7
   - pyrsistent=0.17.3
   - pysocks=1.7.1
@@ -206,7 +207,7 @@ dependencies:
   - python-json-logger=2.0.1
   - python-libarchive-c=3.1
   - python_abi=3.9
-  - pytz=2021.1
+  - pytz=2021.3
   - pywavelets=1.1.1
   - pyyaml=5.4.1
   - pyzmq=22.3.0
@@ -233,12 +234,12 @@ dependencies:
   - soupsieve=2.0.1
   - sqlalchemy=1.4.25
   - sqlite=3.36.0
-  - statsmodels=0.12.2
+  - statsmodels=0.13.0
   - sympy=1.8
   - tblib=1.7.0
   - terminado=0.12.1
   - testpath=0.5.0
-  - threadpoolctl=2.2.0
+  - threadpoolctl=3.0.0
   - tifffile=2021.8.30
   - tk=8.6.11
   - tomli=1.2.1
@@ -247,7 +248,7 @@ dependencies:
   - tqdm=4.62.3
   - traitlets=5.1.0
   - typing_extensions=3.10.0.2
-  - tzdata=2021a
+  - tzdata=2021c
   - urllib3=1.26.7
   - wcwidth=0.2.5
   - webencodings=0.5.1
@@ -261,7 +262,7 @@ dependencies:
   - zeromq=4.3.4
   - zfp=0.5.5
   - zict=2.0.0
-  - zipp=3.5.0
+  - zipp=3.6.0
   - zlib=1.2.11
   - zstd=1.5.0
   - pip:
@@ -294,7 +295,7 @@ dependencies:
     - ipygoldenlayout==0.4.0
     - ipysplitpanes==0.2.0
     - ipyvolume==0.5.2
-    - ipyvue==1.6.0
+    - ipyvue==1.6.1
     - ipyvuetify==1.8.1
     - ipywebrtc==0.6.0
     - ipywidgets-bokeh==1.2.1
@@ -317,7 +318,7 @@ dependencies:
     - pluggy==1.0.0
     - py==1.10.0
     - pycodestyle==2.7.0
-    - pydeps==1.10.11
+    - pydeps==1.10.12
     - pyds9==1.8.1
     - pyerfa==2.0.0
     - pyflakes==2.3.1
