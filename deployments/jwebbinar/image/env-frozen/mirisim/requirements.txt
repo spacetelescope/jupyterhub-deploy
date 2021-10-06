@@ -436,7 +436,7 @@ nose==1.3.7
     #   nosexcover
 nosexcover==1.0.11
     # via -r /opt/environments/mirisim/miricle-linux-deps-stable-16.pip
-notebook==6.3.0
+notebook==6.4.1
     # via
     #   -r /opt/environments/mirisim/miricle-linux-deps-stable-16.pip
     #   jupyter
