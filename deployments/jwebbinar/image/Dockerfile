@@ -77,23 +77,6 @@ COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/ /opt/environments/jwebb
 # Needed for cleaning up existing/obsolete kernel
 COPY --chown=${NB_UID}:${NB_GID} environments/remove-jdaviz-kernel /opt/environments/
 
-# --------------------------- Mirage -------------------------------------
-
-# BASE
-COPY --chown=${NB_UID}:${NB_GID} env-frozen/mirage/ /opt/env-frozen/mirage/
-COPY --chown=${NB_UID}:${NB_GID} environments/mirage/*.yml /opt/environments/mirage/
-RUN /opt/common-scripts/env-conda mirage
-
-# COMPILE ALL
-COPY --chown=${NB_UID}:${NB_GID} environments/mirage/*.pip /opt/environments/mirage/
-RUN /opt/common-scripts/env-compile mirage
-
-# SYNC ALL
-RUN /opt/common-scripts/env-sync  mirage
-
-# REMAINING ENV
-COPY --chown=${NB_UID}:${NB_GID} environments/mirage/ /opt/environments/mirage/
-
 # --------------------------- Mirisim -------------------------------------
 
 # BASE
@@ -113,6 +96,17 @@ RUN /opt/common-scripts/env-compile mirisim  \
 
 # SYNC ALL
 RUN /opt/common-scripts/env-sync  mirisim
+
+# Install from Mirisim conda repo
+COPY environments/mirisim/miricle-linux-py37.0.txt  /opt/environments/mirisim/miricle-linux-py37.0.txt
+RUN /opt/environments/mirisim/miricle-linux-py37.0.txt  &&\
+    /opt/common-scripts/env-clean
+
+# env-update would've been nicer but the package references in miricle-linux/mirisim.conda above don't freeze.
+# hence they need to be tacked onto the frozen build afterwards.
+#
+# COPY environments/mirisim/mirisim.conda  /opt/environments/mirisim/mirisim.conda
+# RUN /opt/common-scripts/env-update  mirisim  /opt/environments/mirisim/mirisim.conda
 
 # REMAINING ENV
 COPY --chown=${NB_UID}:${NB_GID} environments/mirisim/ /opt/environments/mirisim/

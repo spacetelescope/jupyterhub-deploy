@@ -1,0 +1,3 @@
+conda install -n mirisim --yes https://miricle:M1r1kle@jenkins.miricle.org/mirisim/stable/16/linux-64/miri-7.4-py38_0.tar.bz2
+conda install -n mirisim --yes https://miricle:M1r1kle@jenkins.miricle.org/mirisim/stable/16/linux-64/pyspecsim-2.1.2-py38_0.tar.bz2
+conda install -n mirisim --yes https://miricle:M1r1kle@jenkins.miricle.org/mirisim/stable/16/linux-64/mirisim-2.4.0-py38_0.tar.bz2
