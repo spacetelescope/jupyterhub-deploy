@@ -97,16 +97,17 @@ RUN /opt/common-scripts/env-compile mirisim  \
 # SYNC ALL
 RUN /opt/common-scripts/env-sync  mirisim
 
-# Install from Mirisim conda repo
-COPY environments/mirisim/miricle-linux-py37.0.txt  /opt/environments/mirisim/miricle-linux-py37.0.txt
-RUN /opt/environments/mirisim/miricle-linux-py37.0.txt  &&\
+# Install from Mirisim conda server, strictly speaking, not frozen, always
+# executes.  env-update would've been nicer/simpler but the package references
+# in miricle-linux don't freeze.  Hence they need to be tacked onto the frozen
+# build afterwards and env-update does nothing when USE_FROZEN=1.
+
+RUN cd /opt/environments/mirisim && \
+    wget https://jenkins.miricle.org/mirisim/stable/16/miricle-linux-py37.0.txt && \
+    chmod +x miricle-linux-py37.0.txt && \
+    /opt/common-scripts/env-run mirisim /opt/environments/mirisim/miricle-linux-py37.0.txt  &&\
     /opt/common-scripts/env-clean
 
-# env-update would've been nicer but the package references in miricle-linux/mirisim.conda above don't freeze.
-# hence they need to be tacked onto the frozen build afterwards.
-#
-# COPY environments/mirisim/mirisim.conda  /opt/environments/mirisim/mirisim.conda
-# RUN /opt/common-scripts/env-update  mirisim  /opt/environments/mirisim/mirisim.conda
 
 # REMAINING ENV
 COPY --chown=${NB_UID}:${NB_GID} environments/mirisim/ /opt/environments/mirisim/

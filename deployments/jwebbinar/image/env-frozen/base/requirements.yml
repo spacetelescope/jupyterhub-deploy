@@ -4,7 +4,7 @@ channels:
 dependencies:
   - _libgcc_mutex=0.1
   - _openmp_mutex=4.5
-  - alembic=1.7.3
+  - alembic=1.7.4
   - altair=4.1.0
   - anyio=3.3.2
   - appdirs=1.4.4
@@ -354,5 +354,5 @@ dependencies:
     - toml==0.10.2
     - traittypes==0.2.1
     - vispy==0.9.0
-    - yarl==1.6.3
+    - yarl==1.7.0
 prefix: /opt/conda

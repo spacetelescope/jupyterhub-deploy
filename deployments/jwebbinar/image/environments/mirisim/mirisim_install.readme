@@ -1,0 +1,10 @@
+The script mirisim_install.bash is the standard mirisim install script which
+was unpacked to define most of the package lists here.
+
+These values were used to interpret statements in the mirisim_install.bash
+script to define concrete files to download.
+
+flavor=stable
+os=linux
+version=16
+pythonVersion=37
