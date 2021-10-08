@@ -58,7 +58,6 @@ def _get_scan_results(image_digest, image_tag):
     """
     admin_arn=os.environ["ADMIN_ARN"]
     image_repo=os.environ["IMAGE_REPO"]
-    image_tag=os.environ["IMAGE_TAG"]
     ecr_account_to_use=os.environ["ECR_ACCOUNT_ID"]
 
     image_id_arg = f"imageTag={image_tag}"
