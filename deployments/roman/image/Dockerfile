@@ -48,17 +48,17 @@ RUN cd /tmp && \
 # All specs for frozen builds need to be available before their normal installs
 USER ${NB_UID}
 
-COPY --chown=${NB_UID}:${NB_GID} env-frozen/  /opt/env-frozen/
-
 # ----------------------------------------------------------------------
 # Add jupyter-lab-extensions to base environment as well as standard packages.
 # Performing common update here enables mission specific frozen spec.
 
+COPY --chown=${NB_UID}:${NB_GID} env-frozen/base/  /opt/env-frozen/base/
 RUN   /opt/common-scripts/install-common  base
 
 # ------------------------------------------------------------------------------
 # CVT
 
+COPY --chown=${NB_UID}:${NB_GID} env-frozen/cvt/  /opt/env-frozen/cvt/
 COPY --chown=${NB_UID}:${NB_GID} environments/cvt/*.yml  /opt/environments/cvt/
 RUN /opt/common-scripts/env-conda cvt
 
@@ -72,6 +72,7 @@ COPY --chown=${NB_UID}:${NB_GID} environments/cvt/ /opt/environments/cvt/
 # ----------------------------------------------------------------------
 # Roman CAL
 
+COPY --chown=${NB_UID}:${NB_GID} env-frozen/roman-cal/  /opt/env-frozen/roman-cal/
 COPY --chown=${NB_UID}:${NB_GID} environments/roman-cal/*.yml  /opt/environments/roman-cal/
 RUN /opt/common-scripts/env-conda roman-cal
 
@@ -80,7 +81,7 @@ RUN /opt/common-scripts/env-compile roman-cal
 
 RUN /opt/common-scripts/env-sync roman-cal
 
-COPY --chown=${NB_UID}:${NB_GID} environments/roman-cal/ /opt/environments/
+COPY --chown=${NB_UID}:${NB_GID} environments/roman-cal/ /opt/environments/roman-cal/
 
 # ========================= ^^^^^ Custom  ^^^^^ =========================
 # ========================= vvvvv Generic vvvvv  =========================

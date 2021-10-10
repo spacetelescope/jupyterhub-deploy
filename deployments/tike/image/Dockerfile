@@ -21,16 +21,16 @@ RUN curl --silent --show-error https://www.astro.princeton.edu/~jhartman/vartool
 
 USER ${NB_UID}
 
-COPY --chown=${NB_UID}:${NB_GID} env-frozen/ /opt/env-frozen/
-
 # ----------------------------------------------------------------------
 # Add jupyter-lab-extensions to base environment as well as standard packages.
 # Performing common update here enables mission specific frozen spec.
 
+COPY --chown=${NB_UID}:${NB_GID} env-frozen/base/  /opt/env-frozen/base/
 RUN   /opt/common-scripts/install-common  base
 
 # --------------------------- TESS -------------------------------------
 
+COPY --chown=${NB_UID}:${NB_GID} env-frozen/tess/  /opt/env-frozen/tess/
 COPY --chown=${NB_UID}:${NB_GID} environments/tess/*.yml /opt/environments/tess/
 RUN /opt/common-scripts/env-conda tess
 
