@@ -367,7 +367,7 @@ if [[ "$flavor" == "test" ]]; then
     pythonVersion="36"
   elif [[ $version -ge 16 ]]; then
     pythonVersion="35"
-  fi
+  fi  
 fi
 if [[ "$flavor" == "stable" ]]; then
   if [[ $version -ge 11 ]]; then
@@ -376,7 +376,7 @@ if [[ "$flavor" == "stable" ]]; then
     pythonVersion="36"
   elif [[ $version -ge 5 ]]; then
     pythonVersion="35"
-  fi
+  fi  
 fi
 
 if [[ $pythonVersion == "37" ]]; then
@@ -401,7 +401,7 @@ if [[ $pythonVersion == "37" ]]; then
 
     ./miricle-$os-py$pythonVersion.0.txt 2>&1 | tee -a $LOG/log.txt
     checkError ${PIPESTATUS[0]}
-    rm miricle-$os-py*.0.txt
+    rm miricle-$os-py*.0.txt    
 else
     verboseEcho "Downloading conda packages from https://jenkins.miricle.org/mirisim/$flavor/$version/miricle-$os-py$pythonVersion.0.txt"
     $download https://jenkins.miricle.org/mirisim/$flavor/$version/miricle-$os-py$pythonVersion.0.txt
