@@ -98,7 +98,7 @@ parso==0.8.2
 pexpect==4.8.0
 photutils==1.1.0
 pickleshare==0.7.5
-Pillow==8.2.0
+Pillow
 pkginfo==1.7.1
 plotly==5.3.1
 pluggy==0.13.1
