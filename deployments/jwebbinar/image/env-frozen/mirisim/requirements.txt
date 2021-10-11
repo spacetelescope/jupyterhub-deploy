@@ -556,7 +556,7 @@ pickleshare==0.7.5
     # via
     #   -r /opt/environments/mirisim/miricle-linux-deps.txt.pip
     #   ipython
-pillow==8.2.0
+pillow==8.3.2
     # via
     #   -r /opt/environments/mirisim/miricle-linux-deps.txt.pip
     #   glue-vispy-viewers
