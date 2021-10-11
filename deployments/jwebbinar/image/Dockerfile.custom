@@ -102,10 +102,10 @@ RUN /opt/common-scripts/env-sync  mirisim
 # in miricle-linux don't freeze.  Hence they need to be tacked onto the frozen
 # build afterwards and env-update does nothing when USE_FROZEN=1.
 
+COPY --chown=${NB_UID}:${NB_GID} environments/mirisim/miricle-linux-py37.0.txt  /opt/environments/mirisim/miricle-linux-py37.0.txt
 RUN cd /opt/environments/mirisim && \
-    wget https://jenkins.miricle.org/mirisim/stable/16/miricle-linux-py37.0.txt && \
     chmod +x miricle-linux-py37.0.txt && \
-    /opt/common-scripts/env-run mirisim /opt/environments/mirisim/miricle-linux-py37.0.txt  &&\
+    /opt/common-scripts/env-run mirisim /opt/environments/mirisim/miricle-linux-py37.0.txt  && \
     /opt/common-scripts/env-clean
 
 

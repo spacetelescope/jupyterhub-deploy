@@ -7,12 +7,12 @@ dependencies:
   - beautifulsoup4=4.10.0
   - brotlipy=0.7.0
   - bzip2=1.0.8
-  - ca-certificates=2021.5.30
-  - certifi=2021.5.30
+  - ca-certificates=2021.10.8
+  - certifi=2021.10.8
   - cffi=1.14.6
   - chardet=4.0.0
   - charset-normalizer=2.0.0
-  - click=8.0.1
+  - click=8.0.2
   - colorama=0.4.4
   - conda=4.10.3
   - conda-build=3.21.4
@@ -26,7 +26,7 @@ dependencies:
   - glob2=0.7
   - icu=68.1
   - idna=3.1
-  - jinja2=3.0.1
+  - jinja2=3.0.2
   - ld_impl_linux-64=2.36.1
   - libarchive=3.5.2
   - libblas=3.9.0
@@ -57,7 +57,7 @@ dependencies:
   - patchelf=0.13
   - pep517=0.11.0
   - pip=21.2.4
-  - pip-tools=6.3.0
+  - pip-tools=6.3.1
   - pkginfo=1.7.1
   - psutil=5.8.0
   - py-lief=0.11.5
