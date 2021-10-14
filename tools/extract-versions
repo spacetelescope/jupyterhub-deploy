@@ -1,0 +1,59 @@
+#! /usr/bin/env python
+# -*-python-*-
+
+"""This script is used to extract versions from a frozen requirements.txt file
+and apply them to a .pip package list which contains only a subset of the
+packages in requirements.txt.  This can be used to nail down versions of a
+package spec to those of a prior working build when solving dependencies for
+floating specs is temporarily too complex.
+
+Originally used to take jupyter.pip from the common-env and apply the last
+working tess solution, then add it as a custom package list in only the tess
+environment.  In this case both the weakly pinned version of jupyter.pip from
+common-env, and the fully pinned version of jupyter.pip from the tess
+environment are used to work out a dependency solution.  Since little had
+changed in common-env/jupyter.pip since the last working tess solution, it
+neither constrains much nor gets in the way much, while the fully pinned
+versions in the tess environment ensure that something workable comes out.
+
+If common-env/jupyter.pip had changed in ways incompatible with tess/jupyter.pip,
+it is also possible to explicitly specify the members of common-env/*.pip
+which should be installed by install-common;  since it wasn't required and
+creates something to maintain,  I did not omit
+"""
+
+import sys
+import pprint
+
+if len(sys.argv) == 1:
+    print("usage: extract-versions  <.pip file>  <requirements.txt/versions file>")
+    print()
+    print("Rewrites <.pip file> in place with exact versions from <requirements.txt/versions file>")
+    sys.exit(1)
+
+pkgs = []
+with open(sys.argv[1]) as pkg_inputs:
+    for line in pkg_inputs.readlines():
+        line = line.strip()
+        if line and not line.startswith("#"):
+            for qualifier in ["==", "===", "!=", "~=", "<=", ">=", ">", "<"]:
+                if qualifier in line:
+                    line = line[:line.index(qualifier)]
+                    break
+            pkgs.append(line)
+
+print("Len(pkgs) =", len(pkgs))
+
+versions = {}
+with open(sys.argv[2]) as versions_file:
+    for line in versions_file.readlines():
+        line = line.strip()
+        if line and not line.startswith("#"):
+            parts = line.split("==")
+            versions[parts[0]] = parts[1]
+
+print("Len(pkgs) =", len(pkgs))
+
+with open(sys.argv[1], "w+") as output_file:
+    for pkg in pkgs:
+        output_file.write(f"{pkg}=={versions[pkg]}\n")
