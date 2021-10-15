@@ -103,7 +103,6 @@ cat <<EOF >>/opt/environments/tess/tests/notebooks
     ${SN}/notebooks/MAST/Kepler/kepler_instrumental_noise_2_spurious_signals_and_time_sampling_effects/kepler_instrumental_noise_2_spurious_signals_and_time_sampling_effects.ipynb
     ${SN}/notebooks/MAST/Kepler/kepler_instrumental_noise_3_seasonal_and_detector_effects/kepler_instrumental_noise_3_seasonal_and_detector_effects.ipynb
     ${SN}/notebooks/MAST/Kepler/kepler_instrumental_noise_4_electronic_noise/kepler_instrumental_noise_4_electronic_noise.ipynb
-    ${SN}/notebooks/MAST/K2/k2_removing_instrumental_noise_using_pld/k2_removing_instrumental_noise_using_pld.ipynb
 
     ${SN}/notebooks/MAST/Kepler/kepler_creating_periodograms/kepler_creating_periodograms.ipynb
     ${SN}/notebooks/MAST/Kepler/kepler_how_to_understand_and_manipulate_the_periodogram_of_an_oscillating_star/kepler_how_to_understand_and_manipulate_the_periodogram_of_an_oscillating_star.ipynb
