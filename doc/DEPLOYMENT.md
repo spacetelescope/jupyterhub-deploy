@@ -83,7 +83,7 @@ Get a copy of the repository with this command:
 
 First, we will setup KMS and CodeCommit with the *kms-codecommit* Terraform module:
 
-- `cd terraform-deploy/kms-codecommit`
+- `cd terraform-deploy/one-time-setup/`
 - `cp backend.conf.template backend.conf`
 - Update *backend.conf* based on the templated values
 - `awsudo -d 3600 $ADMIN_ARN terraform init -backend-config=./backend.conf`
