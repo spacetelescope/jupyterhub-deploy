@@ -105,10 +105,6 @@ Next, we will configure and deploy an EKS cluster and supporting resources neede
 - Update *deployment-name.tfvars* based on the templated values.
 - `awsudo -d 3600 $ADMIN_ARN terraform apply -var-file=$DEPLOYMENT_NAME.tfvars -auto-approve`
 
-EKS kubeconfig is now terraform'd removing the chicken-and-egg problem, so this *should no longer be required*:
-
-- Run `awsudo $ADMIN_ARN aws eks update-kubeconfig --name $DEPLOYMENT_NAME`, then re-run the Terraform command.
-
 # Jupyterhub-deploy
 
 In this section, we will define a Docker image, then build and push it to ECR.  We will then deploy JupyterHub to the EKS cluster.
