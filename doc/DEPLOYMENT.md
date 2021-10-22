@@ -152,10 +152,7 @@ Start by cloning the repository:
 
 - `secrets-clone`
 - `cd deployments/$DEPLOYMENT_NAME/secrets`
-
-Since we use sops to encrypt and decrypt the secret files, we need to fetch the *.sops.yaml* file from S3 (this was created in *terraform-deploy/kms-codecommit*):
-
-- `awsudo $ADMIN_ARN aws s3 cp s3://$DEPLOYMENT_NAME-sops-config/.sops.yaml .sops.yaml`
+- `cp ~/terraform-deploy/one-time-setup/.sops.yaml .sops.yaml`
 
 **SECURITY ISSUE**: having the encrypt role in *.sops.yaml* will give helm more than the minimally required permissions since the deployment process only requires decrypt.
 
