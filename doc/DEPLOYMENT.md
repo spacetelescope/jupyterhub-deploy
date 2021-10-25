@@ -79,36 +79,31 @@ Get a copy of the repository with this command:
 
 - `git clone --recursive https://github.com/spacetelescope/terraform-deploy`
 
-### Setup CodeCommit repository for secrets and an ECR repository for Docker images
+### Setup CodeCommit repository for secrets, an ECR repository for Docker images, and the User Data EFS volume
 
-First, we will setup KMS and CodeCommit with the *kms-codecommit* Terraform module:
+First, we will setup KMS and CodeCommit with the *one-time-setup* Terraform module:
 
-- `cd terraform-deploy/kms-codecommit`
+- `cd terraform-deploy/one-time-setup/`
 - `cp backend.conf.template backend.conf`
 - Update *backend.conf* based on the templated values
 - `awsudo -d 3600 $ADMIN_ARN terraform init -backend-config=./backend.conf`
 - `cp your-vars.tfvars.template $DEPLOYMENT_NAME.tfvars`
 - Update *deployment-name.tfvars* based on the templated values.
 - `awsudo -d 3600 $ADMIN_ARN terraform apply -var-file=$DEPLOYMENT_NAME.tfvars -auto-approve`
-  - BUG: you will need to run this twice until we add a "depends_on".
 
 A file named **_.sops.yaml_** will have been produced, and this will be used in the new CodeCommit repository for appropriate encryption with [sops](https://github.com/mozilla/sops) later in this procedure.
 
 ### Provision EKS cluster
 
-Next, we will configure and deploy an EKS cluster and supporting resources needed to run JupyterHub with the *aws* Terraform module:
+Next, we will configure and deploy an EKS cluster and supporting resources needed to run JupyterHub with the *ephemeral-setup* Terraform module:
 
-- `../aws`
+- `../ephemeral-setup`
 - `cp backend.conf.template backend.conf`
 - Update *backend.conf* based on the templated values
 - `awsudo -d 3600 $ADMIN_ARN terraform init -backend-config=./backend.conf`
 - `cp your-vars.tfvars.template $DEPLOYMENT_NAME.tfvars`
 - Update *deployment-name.tfvars* based on the templated values.
 - `awsudo -d 3600 $ADMIN_ARN terraform apply -var-file=$DEPLOYMENT_NAME.tfvars -auto-approve`
-
-EKS kubeconfig is now terraform'd removing the chicken-and-egg problem, so this *should no longer be required*:
-
-- Run `awsudo $ADMIN_ARN aws eks update-kubeconfig --name $DEPLOYMENT_NAME`, then re-run the Terraform command.
 
 # Jupyterhub-deploy
 
@@ -157,10 +152,7 @@ Start by cloning the repository:
 
 - `secrets-clone`
 - `cd deployments/$DEPLOYMENT_NAME/secrets`
-
-Since we use sops to encrypt and decrypt the secret files, we need to fetch the *.sops.yaml* file from S3 (this was created in *terraform-deploy/kms-codecommit*):
-
-- `awsudo $ADMIN_ARN aws s3 cp s3://$DEPLOYMENT_NAME-sops-config/.sops.yaml .sops.yaml`
+- `cp ~/terraform-deploy/one-time-setup/.sops.yaml .sops.yaml`
 
 **SECURITY ISSUE**: having the encrypt role in *.sops.yaml* will give helm more than the minimally required permissions since the deployment process only requires decrypt.
 
