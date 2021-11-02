@@ -117,8 +117,8 @@ EOF
 
 # .............................................................................................
 
-/opt/common-scripts/set-notebook-kernel tess 'TESS' `cat /opt/environments/tess/tests/notebooks`
-/opt/common-scripts/set-notebook-kernel tess 'TESS' `cat /opt/environments/tess/tests/notebooks-failing`
+# /opt/common-scripts/set-notebook-kernel tess 'TESS' `cat /opt/environments/tess/tests/notebooks`
+# /opt/common-scripts/set-notebook-kernel tess 'TESS' `cat /opt/environments/tess/tests/notebooks-failing`
 
 # /opt/common-scripts/set-notebook-kernel tess 'TESS' `cat /opt/environments/tess/tests/long-notebooks`
 # /opt/common-scripts/set-notebook-kernel tess 'TESS' `cat /opt/environments/tess/tests/long-notebooks-failing`

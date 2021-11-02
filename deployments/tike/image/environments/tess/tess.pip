@@ -16,7 +16,7 @@ ellc
 statsmodels
 
 tqdm
-astrocut
+git+https://github.com/spacetelescope/astrocut@s3-support
 pixiedust
 tess-point
 transitleastsquares
