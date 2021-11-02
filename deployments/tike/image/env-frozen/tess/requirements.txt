@@ -476,7 +476,7 @@ ipywidgets==7.6.5
     #   jupyter-aas-timeseries
     #   jupyter-bokeh
     #   pythreejs
-ipywidgets_bokeh==1.0.2
+ipywidgets-bokeh==1.0.2
     # via
     #   -r /opt/common-env/jupyter.pip
     #   -r /opt/environments/tess/jupyter.pip
@@ -607,7 +607,7 @@ llvmlite==0.37.0
     # via numba
 locket==0.2.1
     # via partd
-lxml==4.6.3
+lxml==4.6.4
     # via -r /opt/environments/tess/basic.pip
 mako==1.1.5
     # via alembic
