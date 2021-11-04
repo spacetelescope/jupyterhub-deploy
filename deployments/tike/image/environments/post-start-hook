@@ -26,7 +26,7 @@ rsync -r  /etc/default-home-contents/ /home/jovyan
 # .............................................................................................
 
 TC=/home/jovyan/tike_content
-/opt/common-scripts/git-sync  https://github.com/spacetelescope/tike_content.git  main  $TC
+/opt/common-scripts/git-sync  https://github.com/spacetelescope/tike_content.git  $JH_CONTENT_VERSION  $TC
 
 SN=/home/jovyan/spacetelescope-notebooks
 /opt/common-scripts/git-sync   https://github.com/spacetelescope/notebooks.git   master   ${SN}
@@ -117,8 +117,6 @@ EOF
 
 # .............................................................................................
 
-# /opt/common-scripts/set-notebook-kernel tess 'TESS' `cat /opt/environments/tess/tests/notebooks`
-# /opt/common-scripts/set-notebook-kernel tess 'TESS' `cat /opt/environments/tess/tests/notebooks-failing`
+# /opt/common-scripts/set-notebook-kernel tess `cat /opt/environments/tess/tests/notebooks`
+# /opt/common-scripts/set-notebook-kernel tess `cat /opt/environments/tess/tests/notebooks-failing`
 
-# /opt/common-scripts/set-notebook-kernel tess 'TESS' `cat /opt/environments/tess/tests/long-notebooks`
-# /opt/common-scripts/set-notebook-kernel tess 'TESS' `cat /opt/environments/tess/tests/long-notebooks-failing`
