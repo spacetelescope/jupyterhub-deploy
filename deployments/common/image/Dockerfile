@@ -18,6 +18,7 @@ ENV CONDA_DIR=/opt/conda
 ENV SHELL=/bin/bash
 ENV PATH=${CONDA_DIR}/bin:${PATH}
 ENV CFLAGS="-fcommon"
+ENV JUPYTERHUB_CONTENT_TAG=main
 
 # ------------------------------------------------------------------------
 USER root

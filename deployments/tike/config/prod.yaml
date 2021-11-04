@@ -2,6 +2,8 @@ jupyterhub:
   singleuser:
     image:
       tag: latest-prod
+    extraEnv:
+      JUPYTERHUB_CONTENT_TAG: jupyterhub-tike-ops
   prePuller:
     continuous:
       enabled: true
