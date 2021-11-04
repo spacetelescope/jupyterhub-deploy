@@ -476,7 +476,7 @@ ipywidgets==7.6.5
     #   jupyter-aas-timeseries
     #   jupyter-bokeh
     #   pythreejs
-ipywidgets-bokeh==1.0.2
+ipywidgets_bokeh==1.0.2
     # via
     #   -r /opt/common-env/jupyter.pip
     #   -r /opt/environments/tess/jupyter.pip
@@ -935,7 +935,7 @@ pyds9==1.8.1
     # via -r /opt/common-env/common.pip
 pyeebls==0.1.6
     # via astrobase
-pyerfa==2.0.0
+pyerfa==2.0.0.1
     # via astropy
 pyflakes==2.4.0
     # via flake8
@@ -1154,7 +1154,7 @@ snowballstemmer==2.1.0
     # via sphinx
 sortedcontainers==2.4.0
     # via distributed
-soupsieve==2.2.1
+soupsieve==2.3
     # via beautifulsoup4
 sphinx==3.5.4
     # via
