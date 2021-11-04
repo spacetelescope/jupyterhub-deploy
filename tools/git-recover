@@ -1,0 +1,44 @@
+#! /bin/bash  -eu
+
+# This script is used to "recover" bad git clones by moving them aside to a timestamped version of the
+# same directory and re-running git-sync to make a new copy.  It runs on a CI-node and exploits
+# direct access to /efs user claims to manipulate user git clones.
+
+if [[ "$#" == "0" ]]; then
+   echo "usage: git-recover <repo-url> <repo-branch> <repo-dir> [usernames...]"
+   echo "Unconditionally renames repo-dir to repo-dir.timestamp for each user and makes a fresh clone of repo-url to repo-dir."
+   echo "If no user names are given,  all users are updated."
+   exit 1
+fi
+
+export PATH=${PATH}:${JUPYTERHUB_DIR}/deployments/common/image/common-scripts
+
+repo_url=$1
+repo_branch=$2
+repo_dir=$3
+shift
+shift
+shift
+
+if [[ "$#" == "0" ]]; then
+   echo "Defaulting to all users."
+   users=$(ls -1 /efs | grep claim | cut -d '-' -f 2 | sort | uniq)
+else
+   users=$*
+fi
+
+echo URL: $repo_url
+echo Branch: $repo_branch
+echo DIR: $repo_dir
+echo Users: $users
+
+for user in $users; do
+    for claim in `ls -1 /efs | grep claim | grep $user`; do
+	echo "Recovering $claim for $user"
+	dir=/efs/$claim/$repo_dir
+	if [ -d $dir ]; then
+	    mv -v $dir $dir.$(isodatetime)
+	fi
+	git-sync $repo_url $repo_branch $dir
+    done
+done

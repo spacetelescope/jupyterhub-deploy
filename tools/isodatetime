@@ -1,0 +1,11 @@
+#! /usr/bin/env python
+
+"""Print the current date+time in isoformat,  w/o subseconds.
+
+e.g. 2021-11-03T19:28:36
+"""
+
+import datetime
+
+print(datetime.datetime.now().isoformat("T").split(".")[0])
+
