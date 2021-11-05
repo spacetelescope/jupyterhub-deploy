@@ -172,7 +172,7 @@ dependencies:
   - packaging=21.2
   - pamela=1.0.0
   - pandas=1.3.4
-  - pandoc=2.16.1
+  - pandoc=2.16
   - pandocfilters=1.5.0
   - parso=0.8.2
   - partd=1.2.0
@@ -216,7 +216,7 @@ dependencies:
   - reproc-cpp=14.2.3
   - requests=2.26.0
   - ripgrep=13.0.0
-  - ruamel.yaml=0.17.17
+  - ruamel.yaml=0.17.16
   - ruamel.yaml.clib=0.2.2
   - ruamel_yaml=0.15.80
   - scikit-image=0.18.3
@@ -239,7 +239,7 @@ dependencies:
   - terminado=0.12.1
   - testpath=0.5.0
   - threadpoolctl=3.0.0
-  - tifffile=2021.11.2
+  - tifffile=2021.10.12
   - tk=8.6.11
   - tomli=1.2.2
   - toolz=0.11.1
@@ -273,8 +273,8 @@ dependencies:
     - astropy-sphinx-theme==1.1
     - async-timeout==4.0.0
     - black==21.7b0
-    - boto3==1.19.10
-    - botocore==1.22.10
+    - boto3==1.19.11
+    - botocore==1.22.11
     - bqplot==0.12.31
     - bqplot-image-gl==1.4.4
     - ci-watson==0.5
@@ -317,7 +317,7 @@ dependencies:
     - pathspec==0.9.0
     - pipdeptree==2.2.0
     - pluggy==1.0.0
-    - py==1.10.0
+    - py==1.11.0
     - pycodestyle==2.8.0
     - pydeps==1.10.12
     - pyds9==1.8.1
