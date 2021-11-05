@@ -26,7 +26,7 @@ rsync -r  /etc/default-home-contents/ /home/jovyan
 # .............................................................................................
 
 TC=/home/jovyan/tike_content
-/opt/common-scripts/git-sync  https://github.com/spacetelescope/tike_content.git  $JUPYTERHUB_CONTENT_TAG  $TC
+/opt/common-scripts/git-sync  https://github.com/spacetelescope/tike_content.git  $JH_CONTENT_VERSION  $TC
 
 SN=/home/jovyan/spacetelescope-notebooks
 /opt/common-scripts/git-sync   https://github.com/spacetelescope/notebooks.git   master   ${SN}

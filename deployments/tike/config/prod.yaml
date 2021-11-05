@@ -3,7 +3,7 @@ jupyterhub:
     image:
       tag: latest-prod
     extraEnv:
-      JUPYTERHUB_CONTENT_TAG: jupyterhub-tike-ops
+      JH_CONTENT_VERSION: jupyterhub-tike-ops
   prePuller:
     continuous:
       enabled: true
