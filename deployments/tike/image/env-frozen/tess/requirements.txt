@@ -205,7 +205,7 @@ cloudpickle==2.0.0
     #   distributed
 colour==0.1.5
     # via pixiedust
-configparser==5.1.0
+configparser==5.0.2
     # via transitleastsquares
 corner==2.2.1
     # via
@@ -329,7 +329,7 @@ glue-jupyter==0.10.1
     #   -r /opt/environments/tess/jupyter.pip
 glue-vispy-viewers==1.0.5
     # via glue-jupyter
-google-auth==1.35.0
+google-auth==2.3.3
     # via
     #   google-auth-oauthlib
     #   tensorboard
@@ -373,9 +373,7 @@ importlib-metadata==4.8.1
     #   alembic
     #   keyring
 importlib-resources==5.4.0
-    # via
-    #   alembic
-    #   jsonschema
+    # via alembic
 iniconfig==1.1.1
     # via pytest
 intel-cmplr-lib-rt==2021.4.0
@@ -518,7 +516,7 @@ jplephem==2.16
     # via astrobase
 json5==0.9.6
     # via jupyterlab-server
-jsonschema==4.2.0
+jsonschema==4.1.2
     # via
     #   jupyter-telemetry
     #   jupyterlab-server
@@ -895,7 +893,7 @@ prometheus-client==0.12.0
     #   jupyter-server
     #   jupyterhub
     #   notebook
-prompt-toolkit==3.0.22
+prompt-toolkit==3.0.21
     # via ipython
 protobuf==3.19.1
     # via
@@ -911,7 +909,7 @@ ptyprocess==0.7.0
     # via
     #   pexpect
     #   terminado
-py==1.11.0
+py==1.10.0
     # via pytest
 pyasn1==0.4.8
     # via
@@ -1215,7 +1213,7 @@ tblib==1.7.0
     # via distributed
 tenacity==8.0.1
     # via papermill
-tensorboard==2.6.0
+tensorboard==2.7.0
     # via
     #   -r /opt/environments/tess/ml.pip
     #   tensorflow
@@ -1223,7 +1221,7 @@ tensorboard-data-server==0.6.1
     # via tensorboard
 tensorboard-plugin-wit==1.8.0
     # via tensorboard
-tensorflow==2.6.2
+tensorflow==2.6.1
     # via -r /opt/environments/tess/ml.pip
 tensorflow-estimator==2.6.0
     # via
