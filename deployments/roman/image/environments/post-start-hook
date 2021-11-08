@@ -29,7 +29,8 @@ rsync -r  /etc/default-home-contents/ /home/jovyan
 
 ROMANCAL_ALL_NOTEBOOKS=`find /home/jovyan/romancal-notebooks -name '*.ipynb' | xargs ls -1`
 
-/opt/common-scripts/set-notebook-kernel romam-cal "`cat /opt/environments/roman-cal/kernel.name`"  ${ROMANCAL_ALL_NOTEBOOKS}
+
+# /opt/common-scripts/set-notebook-kernel romam-cal  ${ROMANCAL_ALL_NOTEBOOKS}
 
 # needs update from romancal_datamodels to new package arrangement
 # echo ${ROMANCAL_ALL_NOTEBOOKS} >/opt/environments/roman-cal/tests/notebooks
