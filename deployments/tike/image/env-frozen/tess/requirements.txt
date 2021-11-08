@@ -30,6 +30,7 @@ aiohttp==3.8.0
     # via
     #   aiobotocore
     #   jupyter-server-proxy
+    #   s3fs
 aioitertools==0.8.0
     # via aiobotocore
 aiosignal==1.2.0
@@ -222,7 +223,7 @@ cython==0.29.24
     #   -r /opt/environments/tess/basic.pip
     #   pylima
     #   ultranest
-dask[distributed]==2021.10.0
+dask[distributed]==2021.11.0
     # via
     #   -r /opt/environments/tess/basic.pip
     #   distributed
@@ -236,7 +237,7 @@ dill==0.3.4
     # via
     #   glue-core
     #   pymc3
-distributed==2021.10.0
+distributed==2021.11.0
     # via dask
 docutils==0.16
     # via
@@ -298,7 +299,7 @@ frozenlist==1.2.0
     # via
     #   aiohttp
     #   aiosignal
-fsspec==2021.10.1
+fsspec==2021.11.0
     # via
     #   dask
     #   s3fs
@@ -360,7 +361,7 @@ idna==3.3
     #   anyio
     #   requests
     #   yarl
-imageio==2.10.2
+imageio==2.10.3
     # via
     #   k2flix
     #   scikit-image
@@ -523,7 +524,7 @@ jsonschema==4.2.1
     #   nbformat
 jupyter-aas-timeseries==0.1.7
     # via aas-timeseries
-jupyter-bokeh==3.0.2
+jupyter_bokeh==3.0.2
     # via
     #   -r /opt/common-env/jupyter.pip
     #   -r /opt/environments/tess/jupyter.pip
@@ -682,7 +683,7 @@ mypy-extensions==0.4.3
     # via black
 nbclassic==0.3.4
     # via jupyterlab
-nbclient==0.5.4
+nbclient==0.5.5
     # via
     #   nbconvert
     #   papermill
@@ -927,7 +928,7 @@ pybind11==2.8.1
     #   vbbinarylensing
 pycodestyle==2.8.0
     # via flake8
-pycparser==2.20
+pycparser==2.21
     # via cffi
 pyct==0.4.8
     # via panel
@@ -1069,7 +1070,7 @@ ruamel.yaml==0.17.17
     # via jupyter-telemetry
 ruamel.yaml.clib==0.2.6
     # via ruamel.yaml
-s3fs==2021.10.1
+s3fs==2021.11.0
     # via -r /opt/environments/tess/basic.pip
 s3transfer==0.4.2
     # via boto3
@@ -1081,7 +1082,7 @@ scikit-learn==1.0.1
     #   astrobase
     #   astroml
     #   lightkurve
-scipy==1.7.1
+scipy==1.7.2
     # via
     #   -r /opt/environments/tess/basic.pip
     #   aesara
@@ -1260,7 +1261,7 @@ tomli==1.2.2
     #   black
     #   pep517
     #   setuptools-scm
-toolz==0.11.1
+toolz==0.11.2
     # via
     #   dask
     #   distributed
