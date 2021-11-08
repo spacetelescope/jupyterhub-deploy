@@ -9,7 +9,7 @@ dependencies:
   - bzip2=1.0.8
   - ca-certificates=2021.10.8
   - certifi=2021.10.8
-  - cffi=1.14.6
+  - cffi=1.15.0
   - chardet=4.0.0
   - charset-normalizer=2.0.0
   - click=8.0.3
@@ -93,7 +93,7 @@ dependencies:
   - scipy=1.7.1
   - setuptools=57.4.0
   - six=1.16.0
-  - soupsieve=2.0.1
+  - soupsieve=2.3
   - sqlite=3.36.0
   - tk=8.6.11
   - tomli=1.2.2
