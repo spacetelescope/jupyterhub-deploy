@@ -15,7 +15,7 @@ cd $JUPYTERHUB_DIR
 secrets_yaml=deployments/${DEPLOYMENT_NAME}/secrets/${ENVIRONMENT}.yaml
 tmp_decrypted=${JUPYTERHUB_DIR}/env.yaml.decrypted
 
-awsudo $ADMIN_ARN aws eks update-kubeconfig --name ${DEPLOYMENT_NAME} --region us-east-1 --role-arn $ADMIN_ARN
+awsudo $ADMIN_ARN "aws eks update-kubeconfig --name ${DEPLOYMENT_NAME} --region us-east-1 --role-arn $ADMIN_ARN"
 
 # clear out and update the helm charts
 rm -r hub/charts/*
@@ -25,7 +25,7 @@ kubectl apply -f ${CONFIG_DIR}/custom-ui-templates-${ENVIRONMENT}-${DEPLOYMENT_N
 
 # have to be in the same directory as .sops.yaml
 pushd $(dirname ${secrets_yaml})
-awsudo $ADMIN_ARN sops --decrypt $(basename ${secrets_yaml}) > $tmp_decrypted
+awsudo $ADMIN_ARN "sops --decrypt $(basename ${secrets_yaml}) > $tmp_decrypted"
 popd
 
 helm upgrade --debug --wait --install ${DEPLOYMENT_NAME}-${ENVIRONMENT} hub -f ${COMMON_CONFIG_DIR}/all.yaml -f ${CONFIG_DIR}/common.yaml -f ${CONFIG_DIR}/${ENVIRONMENT}.yaml -f ${tmp_decrypted} --set-string jupyterhub.singleuser.image.name=${ECR_REGISTRY}/${IMAGE_REPO} --set-string jupyterhub.singleuser.image.tag="latest-${ENVIRONMENT}"
