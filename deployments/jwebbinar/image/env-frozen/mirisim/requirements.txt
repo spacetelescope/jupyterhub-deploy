@@ -4,15 +4,17 @@
 #
 #    pip-compile --output-file=/opt/env-frozen/mirisim/requirements.txt --pip-args='--no-color --default-timeout 100' /opt/common-env/common.pip /opt/common-env/docs.pip /opt/common-env/testing.pip /opt/environments/mirisim/miricle-linux-deps.txt.pip
 #
-aiohttp==3.7.4.post0
+aiohttp==3.8.1
     # via jupyter-server-proxy
+aiosignal==1.2.0
+    # via aiohttp
 alabaster==0.7.12
     # via
     #   -r /opt/environments/mirisim/miricle-linux-deps.txt.pip
     #   sphinx
 ansiwrap==0.8.4
     # via papermill
-anyio==3.3.3
+anyio==3.3.4
     # via jupyter-server
 apipkg==1.5
     # via
@@ -60,7 +62,7 @@ astropy-healpix==0.6
     #   reproject
 astropy-sphinx-theme==1.1
     # via sphinx-astropy
-async-timeout==3.0.1
+async-timeout==4.0.1
     # via aiohttp
 attrs==21.2.0
     # via
@@ -94,9 +96,9 @@ bleach==4.1.0
     # via
     #   -r /opt/environments/mirisim/miricle-linux-deps.txt.pip
     #   nbconvert
-boto3==1.18.58
+boto3==1.20.6
     # via -r /opt/common-env/common.pip
-botocore==1.21.58
+botocore==1.23.6
     # via
     #   boto3
     #   s3transfer
@@ -119,12 +121,11 @@ cffi==1.14.6
     #   cryptography
     #   pynacl
 chardet==4.0.0
-    # via
-    #   -r /opt/environments/mirisim/miricle-linux-deps.txt.pip
-    #   aiohttp
+    # via -r /opt/environments/mirisim/miricle-linux-deps.txt.pip
 charset-normalizer==2.0.4
     # via
     #   -r /opt/environments/mirisim/miricle-linux-deps.txt.pip
+    #   aiohttp
     #   requests
 ci-watson==0.5
     # via
@@ -224,6 +225,10 @@ freetype-py==2.2.0
     # via
     #   -r /opt/environments/mirisim/miricle-linux-deps.txt.pip
     #   vispy
+frozenlist==1.2.0
+    # via
+    #   aiohttp
+    #   aiosignal
 future==0.18.2
     # via
     #   -r /opt/environments/mirisim/miricle-linux-deps.txt.pip
@@ -359,7 +364,7 @@ jupyter-core==4.8.1
     #   qtconsole
 jupyter-desktop-server==0.1.3
     # via -r /opt/common-env/common.pip
-jupyter-server==1.11.1
+jupyter-server==1.11.2
     # via jupyter-server-proxy
 jupyter-server-proxy==3.1.0
     # via jupyter-desktop-server
@@ -542,7 +547,7 @@ parso==0.8.2
     #   jedi
 pathspec==0.9.0
     # via black
-pep517==0.11.0
+pep517==0.12.0
     # via pip-tools
 pexpect==4.8.0
     # via
@@ -556,15 +561,15 @@ pickleshare==0.7.5
     # via
     #   -r /opt/environments/mirisim/miricle-linux-deps.txt.pip
     #   ipython
-pillow==8.3.2
+pillow==8.4.0
     # via
     #   -r /opt/environments/mirisim/miricle-linux-deps.txt.pip
     #   glue-vispy-viewers
     #   matplotlib
     #   sphinx-astropy
-pip-tools==6.3.1
+pip-tools==6.4.0
     # via -r /opt/common-env/common.pip
-pipdeptree==2.1.0
+pipdeptree==2.2.0
     # via -r /opt/common-env/common.pip
 pkginfo==1.7.1
     # via -r /opt/environments/mirisim/miricle-linux-deps.txt.pip
@@ -735,7 +740,7 @@ qtpy==1.11.2
     #   glue-core
     #   glue-vispy-viewers
     #   qtconsole
-regex==2021.10.8
+regex==2021.11.10
     # via black
 reproject==0.8
     # via -r /opt/environments/mirisim/miricle-linux-deps.txt.pip
@@ -749,14 +754,11 @@ requests==2.26.0
     #   papermill
     #   pysiaf
     #   requests-mock
-    #   requests-unixsocket
     #   sphinx
 requests-mock==1.9.2
     # via
     #   -r /opt/common-env/testing.pip
     #   -r /opt/environments/mirisim/miricle-linux-deps.txt.pip
-requests-unixsocket==0.2.0
-    # via jupyter-server
 s3transfer==0.5.0
     # via boto3
 scipy==1.6.3
@@ -836,7 +838,7 @@ sphinx-automodapi==0.13
     #   sphinx-astropy
 sphinx-bootstrap-theme==0.8.0
     # via sphinx-asdf
-sphinx-gallery==0.10.0
+sphinx-gallery==0.10.1
     # via sphinx-astropy
 sphinx-rtd-theme==1.0.0
     # via -r /opt/common-env/docs.pip
@@ -914,7 +916,7 @@ toml==0.10.2
     #   -r /opt/environments/mirisim/miricle-linux-deps.txt.pip
     #   coverage
     #   pytest
-tomli==1.2.1
+tomli==1.2.2
     # via
     #   black
     #   pep517
@@ -950,14 +952,13 @@ tweakwcs==0.7.2
     # via
     #   -r /opt/environments/mirisim/miricle-linux-deps.txt.pip
     #   jwst
-typing-extensions==3.10.0.2
-    # via aiohttp
+typing-extensions==4.0.0
+    # via async-timeout
 urllib3==1.26.6
     # via
     #   -r /opt/environments/mirisim/miricle-linux-deps.txt.pip
     #   botocore
     #   requests
-    #   requests-unixsocket
 vispy==0.9.0
     # via
     #   -r /opt/environments/mirisim/miricle-linux-deps.txt.pip
@@ -982,7 +983,7 @@ xlrd==2.0.1
     # via
     #   -r /opt/environments/mirisim/miricle-linux-deps.txt.pip
     #   glue-core
-yarl==1.7.0
+yarl==1.7.2
     # via aiohttp
 
 # The following packages are considered to be unsafe in a requirements file:

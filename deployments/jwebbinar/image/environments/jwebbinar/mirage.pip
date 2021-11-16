@@ -1,4 +1,4 @@
-git+https://github.com/spacetelescope/mirage@b24012ce68af2c3cbc85efd9d598eef65028318e
+mirage
 healpy
 grismconf
 nircam_gsim
