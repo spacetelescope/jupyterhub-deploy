@@ -5,6 +5,7 @@ import sys
 import subprocess
 import argparse
 import json
+import time
 
 """
 This tool scans an ECR repository to find images with vulnerabilities.
@@ -46,13 +47,12 @@ class Image(object):
 
     def scan_ecr(self, min_severity):
         def do_scan():
-            results = subprocess.check_output((f"""
+            results = subprocess.check_output(f"""
                 awsudo {ADMIN_ARN} aws ecr describe-image-scan-findings
                 --no-paginate
                 --repository-name {IMAGE_REPO}
                 --registry-id {ECR_ACCOUNT_ID}
-                --image-id imageDigest={self.digest}""").split()
-            )
+                --image-id imageDigest={self.digest}""".split())
             return json.loads(results)
 
         vulnerabilities = do_scan()
@@ -88,8 +88,7 @@ class Image(object):
             awsudo -d 3600 {ADMIN_ARN} aws ecr batch-delete-image
             --registry-id {ECR_ACCOUNT_ID}
             --repository-name {IMAGE_REPO}
-            --image-ids imageDigest={self.digest}""".split()
-        )
+            --image-ids imageDigest={self.digest}""".split())
         print(f'Deleted image with digest: {self.digest}')
 
 
@@ -106,6 +105,7 @@ def prompt_for_deletion(img):
         else:
             continue
 
+
 def get_image_digests():
     untagged_images = subprocess.check_output(f"""
         awsudo -d 3600 {ADMIN_ARN} aws ecr list-images
@@ -115,6 +115,7 @@ def get_image_digests():
     )
     digests = json.loads(untagged_images)['imageIds']
     return [i['imageDigest'] for i in digests]
+
 
 def main(args):
     # find candidates for deletion (all untagged images in a repo)
