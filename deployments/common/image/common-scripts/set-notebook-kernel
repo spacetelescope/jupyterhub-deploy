@@ -22,14 +22,18 @@ def set_kernel(kernel, display_name, notebook):
     with open(notebook, "w+") as nbf:
         nbf.write(json.dumps(loaded, indent=1))
 
+
 def parse_args():
-    parser = argparse.ArgumentParser(description='Set the default kernel and kernel display name in the specified Jupyter notebooks.')
-    parser.add_argument('kernel', type=str,
-                        help='Jupyter kernel to use for notebooks by default.')
-    parser.add_argument('notebooks', type=str, nargs='+',
-                        help='Notebooks to update')
+    parser = argparse.ArgumentParser(
+        description="Set the default kernel and kernel display name in the specified Jupyter notebooks."
+    )
+    parser.add_argument(
+        "kernel", type=str, help="Jupyter kernel to use for notebooks by default."
+    )
+    parser.add_argument("notebooks", type=str, nargs="+", help="Notebooks to update")
     args = parser.parse_args()
     return args
+
 
 def main():
     args = parse_args()
@@ -37,13 +41,16 @@ def main():
         display_name = f.read().strip()
     for notebook in args.notebooks:
         if not notebook.startswith("#") and notebook.endswith(".ipynb"):
-            print(f"Setting kernel={args.kernel}  display_name={display_name}  notebook={notebook}")
+            print(
+                f"Setting kernel={args.kernel}  display_name={display_name}  notebook={notebook}"
+            )
             sys.stdout.flush()
             if notebook.startswith("!"):
                 notebook = notebook[1:]
             set_kernel(args.kernel, display_name, notebook)
         else:
             print("Skipping set kernel for", notebook)
+
 
 if __name__ == "__main__":
     main()

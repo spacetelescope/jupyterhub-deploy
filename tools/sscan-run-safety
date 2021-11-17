@@ -48,9 +48,11 @@ import yaml
 import tempfile
 import subprocess
 
+
 def flush():
     sys.stdout.flush()
     sys.stderr.flush()
+
 
 def banner(title, char="=", spacer=" "):
     print(f"{spacer}{title}{spacer}".center(80, char))
@@ -77,7 +79,10 @@ def scan_spec(ignore, spec):
         file.close()
         print(open(file.name).read())
         flush()
-        completion = subprocess.run(("safety", "check", "--full-report", "--file", file.name,) + get_ignore_switches(ignore))
+        completion = subprocess.run(
+            ("safety", "check", "--full-report", "--file", file.name,)
+            + get_ignore_switches(ignore)
+        )
         flush()
         return completion.returncode != 0
 
@@ -93,11 +98,13 @@ def get_ignore_switches(ignore):
         sids = []
         for line in input_text.splitlines():
             line = line.strip()
-            if line.startswith("#"):   # comment lines
+            if line.startswith("#"):  # comment lines
                 continue
-            elif not line:     # blank lines
+            elif not line:  # blank lines
                 continue
-            elif line.startswith("|"): # safety output, e.g. "| tensorflow                 | 1.15.5    | <2.1.4                   | 40675    |"
+            elif line.startswith(
+                "|"
+            ):  # safety output, e.g. "| tensorflow                 | 1.15.5    | <2.1.4                   | 40675    |"
                 sid = line.split("|")[4].strip()
             else:
                 raise ValueError("Bad safety ignore format: " + repr(line))
@@ -115,7 +122,7 @@ def get_ignore_switches(ignore):
 
 def get_pip_dependencies(spec):
     with open(spec) as file:
-        if spec.endswith((".yml",".yaml")):
+        if spec.endswith((".yml", ".yaml")):
             loaded = yaml.safe_load(file)
             conda_deps = loaded["dependencies"]
             for dep in conda_deps:
