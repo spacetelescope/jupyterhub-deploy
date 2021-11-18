@@ -7,18 +7,19 @@ includes metadata associated with an exported image.
 import json
 import subprocess
 import argparse
-import sys
-import shlex
 
-from pprint import pprint
 
 def get_metadata(image_id):
-    json_text = subprocess.run(f"docker inspect {image_id}".split(), capture_output=True, check=True).stdout.decode('utf-8')
+    json_text = subprocess.run(
+        f"docker inspect {image_id}".split(), capture_output=True, check=True
+    ).stdout.decode("utf-8")
     return json.loads(json_text)[0]["Config"]
+
 
 def munge(var, string_list):
     val = str(string_list).replace("'", '"')
     return [f"--change '{var} {val}'"]
+
 
 def build_command(export_file, metadata):
     command = ["docker import "]
@@ -35,19 +36,26 @@ def build_command(export_file, metadata):
 
     return " ".join(command)
 
+
 def parse_cmdline():
-    parser = argparse.ArgumentParser(prog='build-import-cmd')
+    parser = argparse.ArgumentParser(prog="build-import-cmd")
     parser.add_argument(
-        "image_id", nargs="?", help="ID of image originally exported to inspect for metadata.")
+        "image_id",
+        nargs="?",
+        help="ID of image originally exported to inspect for metadata.",
+    )
     parser.add_argument(
-        "export_file", nargs="?", help="filename of exported image data to re-import.")
+        "export_file", nargs="?", help="filename of exported image data to re-import."
+    )
     return parser.parse_args()
+
 
 def main(image_id, export_file):
     metadata = get_metadata(image_id)
     # pprint(metadata)
     cmd = build_command(export_file, metadata)
     print(cmd)
+
 
 if __name__ == "__main__":
     args = parse_cmdline()

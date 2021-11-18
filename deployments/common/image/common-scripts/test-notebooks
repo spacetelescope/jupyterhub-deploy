@@ -29,7 +29,11 @@ def test_notebooks(kernel, notebooks, jobs=1):
 
     Return   count of failed notebooks
     """
-    print(divider(f"Testing {len(notebooks)} notebooks on kernel {kernel} using {jobs} jobs").strip())
+    print(
+        divider(
+            f"Testing {len(notebooks)} notebooks on kernel {kernel} using {jobs} jobs"
+        ).strip()
+    )
     errv = [0]
     with ProcessPoolExecutor(max_workers=jobs) as e:
         for (errno, output) in e.map(
@@ -47,6 +51,7 @@ def divider(title, char="*", width=100):
 
 
 # Because test_notebook chdir's,  it needs to be run serially or as a true subprocess.
+
 
 def test_notebook(kernel, notebook):
     """Run one `notebook` on JupyterHub `kernel` with temporary output."""
@@ -87,9 +92,7 @@ def test_notebook(kernel, notebook):
     os.chdir(here)
 
     elapsed = datetime.datetime.now() - start
-    output += divider(
-        f"Tested {base_nb} {'OK' if not err else 'FAIL'} {elapsed}"
-    )
+    output += divider(f"Tested {base_nb} {'OK' if not err else 'FAIL'} {elapsed}")
 
     return int(err != 0), output
 
@@ -109,11 +112,21 @@ def main():
     # while serially executed jobs work just fine.  Use a leading "!" to designate notebooks
     # which need serial execution.
 
-    parallel_notebooks = [notebook for notebook in args.notebooks if not notebook.startswith("!")]
-    parallel_errs = test_notebooks(args.kernel, parallel_notebooks, args.jobs) if parallel_notebooks else 0
+    parallel_notebooks = [
+        notebook for notebook in args.notebooks if not notebook.startswith("!")
+    ]
+    parallel_errs = (
+        test_notebooks(args.kernel, parallel_notebooks, args.jobs)
+        if parallel_notebooks
+        else 0
+    )
 
-    serial_notebooks =  [notebook[1:] for notebook in args.notebooks if notebook.startswith("!")]
-    serial_errs = test_notebooks(args.kernel, serial_notebooks, 1) if serial_notebooks else 0
+    serial_notebooks = [
+        notebook[1:] for notebook in args.notebooks if notebook.startswith("!")
+    ]
+    serial_errs = (
+        test_notebooks(args.kernel, serial_notebooks, 1) if serial_notebooks else 0
+    )
 
     if parallel_notebooks or serial_notebooks:
         errs = parallel_errs + serial_errs
@@ -124,6 +137,7 @@ def main():
         return errs
     else:
         return 0
+
 
 if __name__ == "__main__":
     sys.exit(main())

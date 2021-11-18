@@ -23,7 +23,6 @@ creates something to maintain,  I did not omit
 """
 
 import sys
-import pprint
 
 if len(sys.argv) == 1:
     print("usage: extract-versions  <.pip file>  <requirements.txt/versions file>")

@@ -3,6 +3,12 @@
 cd $JUPYTERHUB_DIR
 
 echo "====================================================="
+echo "Scanning source code for quality with flake8         "
+echo "====================================================="
+sscan-flake8
+flake8_status=$?
+
+echo "====================================================="
 echo "Scanning source code for vulnerabilities using bandit"
 echo "====================================================="
 sscan-bandit
@@ -14,5 +20,5 @@ echo "====================================================="
 sscan-safety
 safety_status=$?
 
-fail=`expr $bandit_status + $safety_status`
+fail=`expr $flake8_status + $bandit_status + $safety_status`
 exit $fail

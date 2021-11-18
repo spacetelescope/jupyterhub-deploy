@@ -2,13 +2,7 @@
 
 # This script dumps the combined host and image s/w versions needed to characterize a hub.
 
-import os
 import subprocess
-import glob
-import argparse
-
-from collections import defaultdict
-from contextlib import contextmanager
 
 import yaml
 
@@ -20,19 +14,18 @@ def run(cmd, cwd="."):
         stderr=subprocess.STDOUT,
         text=True,
         check=True,
-	cwd=cwd,
+        cwd=cwd,
     )  # maybe succeeds
     return result.stdout
 
 
 def main():
     combined = dict(
-        host = yaml.full_load(run("versions-host")),
-        image = yaml.full_load(run("versions-image")),
+        host=yaml.full_load(run("versions-host")),
+        image=yaml.full_load(run("versions-image")),
     )
     print(yaml.dump(combined))
 
 
 if __name__ == "__main__":
     main()
-

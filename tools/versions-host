@@ -7,18 +7,14 @@
 import os
 import subprocess
 import glob
-import argparse
 
-from collections import defaultdict
 from contextlib import contextmanager
 
 import yaml
 
 
-
-for envvar in ["ADMIN_ARN", "DEPLOYMENT_NAME"]:
-    globals()[envvar] =  os.environ[envvar]
-
+ADMIN_ARN = os.environ["ADMIN_ARN"]
+DEPLOYMENT_NAME = os.environ["DEPLOYMENT_NAME"]
 
 
 def run(cmd, cwd="."):
@@ -28,7 +24,7 @@ def run(cmd, cwd="."):
         stderr=subprocess.STDOUT,
         text=True,
         check=True,
-	cwd=cwd,
+        cwd=cwd,
     )  # maybe succeeds
     return result.stdout
 
@@ -38,9 +34,9 @@ def cwd(dir):
     old = os.getcwd()
     os.chdir(dir)
     try:
-       yield
+        yield
     finally:
-       os.chdir(old)
+        os.chdir(old)
 
 
 def get_terraform():
@@ -52,44 +48,54 @@ def get_terraform():
             extract.update(adjacent_lines(lines, "source", "version"))
             extract.update(adjacent_lines(lines, "chart", "version"))
         return dict(
-            pkgs = extract,
-	    terraform = run("terraform version").splitlines()[0].split()[1],
-            eks = get_eks_version(),
-	)
+            pkgs=extract,
+            terraform=run("terraform version").splitlines()[0].split()[1],
+            eks=get_eks_version(),
+        )
 
 
 def adjacent_lines(lines, first, next):
     extract = {}
-    for i in range(len(lines)-1):
+    for i in range(len(lines) - 1):
         first_words = lines[i].split()
-        next_words = lines[i+1].split()
+        next_words = lines[i + 1].split()
         if len(first_words) < 3 or len(next_words) < 3:
             continue
         if first_words[0] == first and next_words[0] == next:
-            efirst = first_words[2].replace('"','')
-            enext = next_words[2].replace('"', '')
+            efirst = first_words[2].replace('"', "")
+            enext = next_words[2].replace('"', "")
             if enext == "~>":
-               enext = next_words[3].replace('"', '')
+                enext = next_words[3].replace('"', "")
             extract[efirst] = enext
     return extract
 
+
 def get_eks_version():
-    lines = run(f"awsudo {ADMIN_ARN} aws eks describe-cluster --name {DEPLOYMENT_NAME}").splitlines()
+    lines = run(
+        f"awsudo {ADMIN_ARN} aws eks describe-cluster --name {DEPLOYMENT_NAME}"
+    ).splitlines()
     for line in lines:
         if "version" in line:
             return line.split('"')[3]
     return "UNDEFINED"
 
-def  get_helm():
-    pkgs  =  [" ".join(line.split()) for line in run("helm list").splitlines() if not line.startswith(("WARNING","NAME"))],
+
+def get_helm():
+    pkgs = (
+        [
+            " ".join(line.split())
+            for line in run("helm list").splitlines()
+            if not line.startswith(("WARNING", "NAME"))
+        ],
+    )
     return dict(
-       pkgs = pkgs,
-       helm = run("helm version").split('{')[1].split('}')[0].split(","),
+        pkgs=pkgs, helm=run("helm version").split("{")[1].split("}")[0].split(","),
     )
 
 
 def get_python_env():
     return yaml.full_load(run("conda env export"))
+
 
 def get_git_version(path):
     with cwd(path):
@@ -98,16 +104,15 @@ def get_git_version(path):
 
 def main():
     host = dict(
-        jupyterhub_deploy = get_git_version("/home/ec2-user/jupyterhub-deploy"),
-        terraform_deploy = get_git_version("/home/ec2-user/terraform-deploy"),
-        jupyter_docker_stacks = get_git_version("/home/ec2-user/docker-stacks"),
-        terraform = get_terraform(),
-        helm = get_helm(),
-        python_env = get_python_env(),
+        jupyterhub_deploy=get_git_version("/home/ec2-user/jupyterhub-deploy"),
+        terraform_deploy=get_git_version("/home/ec2-user/terraform-deploy"),
+        jupyter_docker_stacks=get_git_version("/home/ec2-user/docker-stacks"),
+        terraform=get_terraform(),
+        helm=get_helm(),
+        python_env=get_python_env(),
     )
     print(yaml.dump(host))
 
 
 if __name__ == "__main__":
     main()
-
