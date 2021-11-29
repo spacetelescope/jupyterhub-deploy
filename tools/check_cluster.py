@@ -160,8 +160,8 @@ def convert_age(age_str):
     age_str = age_subst(age_str, "m", "60")
     age_str = age_subst(age_str, "s", "1")
     age_str = age_str[:-1]
-    print(f"convert_age({repr(age_str_org)}) --> {repr(age_str)} --> {eval(age_str)}")
-    return eval(age_str)
+    print(f"convert_age({repr(age_str_org)}) --> {repr(age_str)} --> {eval(age_str)}")   # nosec
+    return eval(age_str)   # nosec
 
 
 def aws_kv_dict(key_value_dict_list):
@@ -480,7 +480,7 @@ class Checker:
                 self.verbose("Namespace:", namespace)
         if requirement == "all":
             requirement = f"ok_rows=={len(namespaces)}"
-        if eval(requirement, {}, dict(ok_rows=len(rows))):
+        if eval(requirement, {}, dict(ok_rows=len(rows))):   # nosec
             print(f"===> OK overall '{name}'")
         else:
             self.error(f"overall '{name}'")
@@ -496,7 +496,7 @@ class Checker:
     def eval_condition(self, name, namespace, condition):
         namespace = dict(namespace)  # local no-side-effects copy
         namespace.update(self.combined_environment)
-        return eval(condition, {}, namespace)
+        return eval(condition, {}, namespace)   # nosec
 
     def verbose(self, *args, **keys):
         if self._verbose:
