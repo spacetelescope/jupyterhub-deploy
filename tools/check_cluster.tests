@@ -40,8 +40,8 @@ Groups:
       ok_rows==1: NAMESPACE=='default' and 'proxy' in NAME
     - name: User-scheduler
       ok_rows==2: NAMESPACE=='default' and 'user-scheduler' in NAME
-    - name: User-placeholder
-      ok_rows==1: NAMESPACE=='default' and 'user-placeholder' in NAME
+    # - name: User-placeholder
+    #   ok_rows==1: NAMESPACE=='default' and 'user-placeholder' in NAME
   - group: JupyterHub Nodes
     command: kubectl get nodes -A --show-labels=true
     parser: named_columns
