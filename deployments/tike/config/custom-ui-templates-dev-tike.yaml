@@ -19,6 +19,8 @@ data:
 
           <center><h2>Welcome to the Timeseries Integrated Knowledge Engine (TIKE)</h2></center><br/>
 
+          <center>To get started, click "<font color='#f37524'>Start server</font>" below.</center><br/><br/>
+
           TIKE is a <a href="https://jupyter.org/hub">JupyterHub</a> service provided by the Space Telescope Science Institute (STScI), and its main goal is to increase the accessibility of scientific data and software related to the <a href="https://archive.stsci.edu">Mikulski Archive for Space Telescopes (MAST)</a>.  STScI's JupyterHub platforms achieve this by providing a modest, pre-definied computing environment hosted by Amazon Web Services (AWS), which runs in the same AWS region hosting MAST's <a href="https://registry.opendata.aws/collab/stsci">AWS Public Datasets</a>.  The initial focus is on timeseries data, such as those available from the <a href="https://outerspace.stsci.edu/display/TESS/TESS+Archive+Manual">TESS</a>, <a href="https://archive.stsci.edu/missions-and-data/kepler">Kepler</a>, and <a href="https://archive.stsci.edu/missions-and-data/k2">K2</a> missions, and this focus will expand in future releases.<br/><br/>
 
           <b>Useful information</b>&#58;<br/><br/>
