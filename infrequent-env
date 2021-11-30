@@ -5,6 +5,11 @@ export PATH="`pwd`/tools":${PATH}
 # ----------------- vvvv less frequently changed inputs vvvv -------------------------------
 #
 
+export JH_HOSTNAME="${DEPLOYMENT_NAME}.science.stsci.edu"
+if [[ "$ENVIRONMENT" != "prod" ]]; then
+    export JH_HOSTNAME="${ENVIRONMENT}.${JH_HOSTNAME}"
+fi
+
 # Select "conda" tool used to install conda package and environments: conda or mamba
 #   mamba is largely a drop-in replacement for mamba with improved dependency resolution,
 #   parallel downloads, and C++ implementation.

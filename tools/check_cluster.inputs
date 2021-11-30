@@ -1,0 +1,224 @@
+EFS File Systems: "- CreationTime: '2021-10-20T16:42:00+00:00'\n  CreationToken: terraform-20211020164200767000000001\n\
+  \  Encrypted: true\n  FileSystemArn: arn:aws:elasticfilesystem:us-east-1:194502879724:file-system/fs-03fa5e42b828faae1\n\
+  \  FileSystemId: fs-03fa5e42b828faae1\n  KmsKeyId: arn:aws:kms:us-east-1:194502879724:key/7d6055fe-d84e-48c3-aa46-37697c9eeed2\n\
+  \  LifeCycleState: available\n  Name: roman-home-dirs\n  NumberOfMountTargets: 3\n\
+  \  OwnerId: '194502879724'\n  PerformanceMode: generalPurpose\n  SizeInBytes:\n\
+  \    Timestamp: '2021-11-23T18:37:35+00:00'\n    Value: 5478400\n    ValueInIA:\
+  \ 0\n    ValueInStandard: 5478400\n  Tags:\n  - Key: Name\n    Value: roman-home-dirs\n\
+  \  - Key: stsci-backup\n    Value: dmd-2w-sat\n  ThroughputMode: bursting\n- CreationTime:\
+  \ '2021-05-13T15:54:17+00:00'\n  CreationToken: efscinode-I9FLO5JlkF1M\n  Encrypted:\
+  \ true\n  FileSystemArn: arn:aws:elasticfilesystem:us-east-1:194502879724:file-system/fs-4ea508fa\n\
+  \  FileSystemId: fs-4ea508fa\n  KmsKeyId: arn:aws:kms:us-east-1:194502879724:key/7d6055fe-d84e-48c3-aa46-37697c9eeed2\n\
+  \  LifeCycleState: available\n  Name: ci-node\n  NumberOfMountTargets: 3\n  OwnerId:\
+  \ '194502879724'\n  PerformanceMode: generalPurpose\n  SizeInBytes:\n    Timestamp:\
+  \ '2021-11-23T18:34:12+00:00'\n    Value: 681562112\n    ValueInIA: 0\n    ValueInStandard:\
+  \ 681562112\n  Tags:\n  - Key: Name\n    Value: ci-node\n  ThroughputMode: bursting"
+EKS Deployments: 'NAMESPACE     NAME                                        READY   UP-TO-DATE   AVAILABLE   AGE
+
+  datadog       datadog-cluster-agent                       1/1     1            1           20d
+
+  datadog       datadog-kube-state-metrics                  1/1     1            1           20d
+
+  default       hub                                         1/1     1            1           12d
+
+  default       proxy                                       1/1     1            1           12d
+
+  default       user-scheduler                              2/2     2            2           12d
+
+  kube-system   cluster-autoscaler-aws-cluster-autoscaler   1/1     1            1           21d
+
+  kube-system   coredns                                     2/2     2            2           21d
+
+  support       roman-efs-provisioner                       1/1     1            1           21d'
+EKS Services: 'NAMESPACE     NAME                                        TYPE           CLUSTER-IP       EXTERNAL-IP                                                              PORT(S)                      AGE
+
+  datadog       datadog-cluster-agent                       ClusterIP      172.20.117.67    <none>                                                                   5005/TCP                     20d
+
+  datadog       datadog-kube-state-metrics                  ClusterIP      172.20.177.159   <none>                                                                   8080/TCP                     20d
+
+  default       hub                                         ClusterIP      172.20.22.23     <none>                                                                   8081/TCP                     12d
+
+  default       kubernetes                                  ClusterIP      172.20.0.1       <none>                                                                   443/TCP                      21d
+
+  default       proxy-api                                   ClusterIP      172.20.52.136    <none>                                                                   8001/TCP                     12d
+
+  default       proxy-public                                LoadBalancer   172.20.45.166    a88c6fb16565a4f3cabb538289a94a31-360641126.us-east-1.elb.amazonaws.com   443:31955/TCP,80:32311/TCP   12d
+
+  kube-system   cluster-autoscaler-aws-cluster-autoscaler   ClusterIP      172.20.12.70     <none>                                                                   8085/TCP                     21d
+
+  kube-system   kube-dns                                    ClusterIP      172.20.0.10      <none>                                                                   53/UDP,53/TCP                21d'
+JupyterHub Index Page: "--2021-11-23 18:53:20--  http://test.roman.science.stsci.edu/\n\
+  Resolving test.roman.science.stsci.edu (test.roman.science.stsci.edu)... 52.55.198.220,\
+  \ 34.235.194.72, 52.22.162.227\nConnecting to test.roman.science.stsci.edu (test.roman.science.stsci.edu)|52.55.198.220|:80...\
+  \ connected.\nHTTP request sent, awaiting response... 301 Moved Permanently\nLocation:\
+  \ https://test.roman.science.stsci.edu:443/ [following]\n--2021-11-23 18:53:20--\
+  \  https://test.roman.science.stsci.edu/\nConnecting to test.roman.science.stsci.edu\
+  \ (test.roman.science.stsci.edu)|52.55.198.220|:443... connected.\nWARNING: cannot\
+  \ verify test.roman.science.stsci.edu's certificate, issued by \u2018/C=US/ST=MI/L=Ann\
+  \ Arbor/O=Internet2/OU=InCommon/CN=InCommon RSA Server CA\u2019:\n  Unable to locally\
+  \ verify the issuer's authority.\nHTTP request sent, awaiting response... 302 Found\n\
+  Location: /hub/ [following]\n--2021-11-23 18:53:20--  https://test.roman.science.stsci.edu/hub/\n\
+  Connecting to test.roman.science.stsci.edu (test.roman.science.stsci.edu)|52.55.198.220|:443...\
+  \ connected.\nWARNING: cannot verify test.roman.science.stsci.edu's certificate,\
+  \ issued by \u2018/C=US/ST=MI/L=Ann Arbor/O=Internet2/OU=InCommon/CN=InCommon RSA\
+  \ Server CA\u2019:\n  Unable to locally verify the issuer's authority.\nHTTP request\
+  \ sent, awaiting response... 302 Found\nLocation: /hub/login?next=%2Fhub%2F [following]\n\
+  --2021-11-23 18:53:20--  https://test.roman.science.stsci.edu/hub/login?next=%2Fhub%2F\n\
+  Connecting to test.roman.science.stsci.edu (test.roman.science.stsci.edu)|52.55.198.220|:443...\
+  \ connected.\nWARNING: cannot verify test.roman.science.stsci.edu's certificate,\
+  \ issued by \u2018/C=US/ST=MI/L=Ann Arbor/O=Internet2/OU=InCommon/CN=InCommon RSA\
+  \ Server CA\u2019:\n  Unable to locally verify the issuer's authority.\nHTTP request\
+  \ sent, awaiting response... 200 OK\nLength: 4483 (4.4K) [text/html]\nSaving to:\
+  \ \u2018STDOUT\u2019\n\n\n\n<!DOCTYPE HTML>\n<html>\n\n<head>\n    <meta charset=\"\
+  utf-8\">\n\n    <title>JupyterHub</title>\n    <meta http-equiv=\"X-UA-Compatible\"\
+  \ content=\"chrome=1\">\n    <meta name=\"viewport\" content=\"width=device-width,\
+  \ initial-scale=1.0\">\n\n    \n    <link rel=\"stylesheet\" href=\"/hub/static/css/style.min.css?v=a690a7f26f8eda24b6043d972eda379b7f3df65dcb4832fbec0d72d1585b6bdf2bd15c7f3ec4597b79a7c91798181ba23b9a0204da8165b21ff81cd85f89a933\"\
+  \ type=\"text/css\"/>\n    \n    \n    <link rel=\"icon\" href=\"/hub/static/favicon.ico?v=fde5757cd3892b979919d3b1faa88a410f28829feb5ba22b6cf069f2c6c98675fceef90f932e49b510e74d65c681d5846b943e7f7cc1b41867422f0481085c1f\"\
+  \ type=\"image/x-icon\">\n    \n    \n    <script src=\"/hub/static/components/requirejs/require.js?v=bd1aa102bdb0b27fbf712b32cfcd29b016c272acf3d864ee8469376eaddd032cadcf827ff17c05a8c8e20061418fe58cf79947049f5c0dff3b4f73fcc8cad8ec\"\
+  \ type=\"text/javascript\" charset=\"utf-8\"></script>\n    <script src=\"/hub/static/components/jquery/dist/jquery.min.js?v=6cb4f4426f559c06190df97229c05a436820d21498350ac9f118a5625758435171418a022ed523bae46e668f9f8ea871feab6aff58ad2740b67a30f196d65516\"\
+  \ type=\"text/javascript\" charset=\"utf-8\"></script>\n    <script src=\"/hub/static/components/bootstrap/dist/js/bootstrap.min.js?v=a014e9acc78d10a0a7a9fbaa29deac6ef17398542d9574b77b40bf446155d210fa43384757e3837da41b025998ebfab4b9b6f094033f9c226392b800df068bce\"\
+  \ type=\"text/javascript\" charset=\"utf-8\"></script>\n    \n    <script>\n   \
+  \   require.config({\n          \n          urlArgs: \"v=20211122100807\",\n   \
+  \       \n          baseUrl: '/hub/static/js',\n          paths: {\n           \
+  \ components: '../components',\n            jquery: '../components/jquery/dist/jquery.min',\n\
+  \            bootstrap: '../components/bootstrap/dist/js/bootstrap.min',\n     \
+  \       moment: \"../components/moment/moment\",\n          },\n          shim:\
+  \ {\n            bootstrap: {\n              deps: [\"jquery\"],\n             \
+  \ exports: \"bootstrap\"\n            },\n          }\n      });\n    </script>\n\
+  \n    <script type=\"text/javascript\">\n      window.jhdata = {\n        base_url:\
+  \ \"/hub/\",\n        prefix: \"/\",\n        \n        \n        admin_access:\
+  \ false,\n        \n        \n        options_form: false,\n        \n      }\n\
+  \    </script>\n\n    \n    \n\n</head>\n\n<body>\n\n<noscript>\n  <div id='noscript'>\n\
+  \    JupyterHub requires JavaScript.<br>\n    Please enable it to proceed.\n  </div>\n\
+  </noscript>\n\n\n  <nav class=\"navbar navbar-default\">\n    <div class=\"container-fluid\"\
+  >\n      <div class=\"navbar-header\">\n        \n        <span id=\"jupyterhub-logo\"\
+  \ class=\"pull-left\">\n            <a href=\"/hub/\"><img src='/hub/logo' alt='JupyterHub'\
+  \ class='jpy-logo' title='Home'/></a>\n        </span>\n        \n        \n   \
+  \   </div>\n\n      <div class=\"collapse navbar-collapse\" id=\"thenavbar\">\n\
+  \        \n        <ul class=\"nav navbar-nav navbar-right\">\n          \n    \
+  \        <li>\n              \n\n            </li>\n          \n        </ul>\n\
+  \      </div>\n\n      \n      \n    </div>\n  </nav>\n\n\n\n\n\n\n\n\n\n\n\n<div\
+  \ id=\"login-main\" class=\"container\">\n\n<div class=\"service-login\">\n  <a\
+  \ role=\"button\" class='btn btn-jupyter btn-lg' href='/hub/oauth_login?next=%2Fhub%2F'>\n\
+  \    Sign in with MAST\n  </a>\n</div>\n\n</div>\n\n\n\n\n\n\n\n\n\n\n<div class=\"\
+  modal fade\" id=\"error-dialog\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"\
+  error-label\" aria-hidden=\"true\">\n  <div class=\"modal-dialog\">\n    <div class=\"\
+  modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\"\
+  \ class=\"close\" data-dismiss=\"modal\"><span aria-hidden=\"true\">&times;</span><span\
+  \ class=\"sr-only\">Close</span></button>\n        <h4 class=\"modal-title\" id=\"\
+  error-label\">Error</h4>\n      </div>\n      <div class=\"modal-body\">\n     \
+  \   \n  <div class=\"ajax-error\">\n    The error\n  </div>\n\n      </div>\n  \
+  \    <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-default\"\
+  \ data-dismiss=\"modal\">Cancel</button>\n        <button type=\"button\" class=\"\
+  btn btn-primary\" data-dismiss=\"modal\" data-dismiss=\"modal\">OK</button>\n  \
+  \    </div>\n    </div>\n  </div>\n</div>\n\n\n\n\n\n<script>\nif (window.location.protocol\
+  \ === \"http:\") {\n  // unhide http warning\n  var warning = document.getElementById('insecure-login-warning');\n\
+  \  warning.className = warning.className.replace(/\\bhidden\\b/, '');\n}\n// setup\
+  \ onSubmit feedback\n$('form').submit((e) => {\n  var form = $(e.target);\n  form.find('.feedback-container>input').attr('disabled',\
+  \ true);\n  form.find('.feedback-container>*').toggleClass('hidden');\n  form.find('.feedback-widget>*').toggleClass('fa-pulse');\n\
+  });\n</script>\n\n\n</body>\n\n</html>\n     0K ....                           \
+  \                       100%  839M=0s\n\n2021-11-23 18:53:20 (839 MB/s) - written\
+  \ to stdout [4483/4483]"
+JupyterHub Nodes: 'NAME                            STATUS   ROLES    AGE   VERSION               LABELS
+
+  ip-10-146-25-64.ec2.internal    Ready    <none>   32h   v1.21.5-eks-bc4871b   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/instance-type=t3.small,beta.kubernetes.io/os=linux,eks.amazonaws.com/capacityType=ON_DEMAND,eks.amazonaws.com/nodegroup-image=ami-06200bac1d3b301da,eks.amazonaws.com/nodegroup=roman-core-impala-jittery,eks.amazonaws.com/sourceLaunchTemplateId=lt-06dfb7cf86479f1c5,eks.amazonaws.com/sourceLaunchTemplateVersion=1,failure-domain.beta.kubernetes.io/region=us-east-1,failure-domain.beta.kubernetes.io/zone=us-east-1a,hub.jupyter.org/node-purpose=core,kubernetes.io/arch=amd64,kubernetes.io/hostname=ip-10-146-25-64.ec2.internal,kubernetes.io/os=linux,node.kubernetes.io/instance-type=t3.small,topology.kubernetes.io/region=us-east-1,topology.kubernetes.io/zone=us-east-1a
+
+  ip-10-146-26-17.ec2.internal    Ready    <none>   32h   v1.21.5-eks-bc4871b   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/instance-type=t3.small,beta.kubernetes.io/os=linux,eks.amazonaws.com/capacityType=ON_DEMAND,eks.amazonaws.com/nodegroup-image=ami-06200bac1d3b301da,eks.amazonaws.com/nodegroup=roman-core-impala-jittery,eks.amazonaws.com/sourceLaunchTemplateId=lt-06dfb7cf86479f1c5,eks.amazonaws.com/sourceLaunchTemplateVersion=1,failure-domain.beta.kubernetes.io/region=us-east-1,failure-domain.beta.kubernetes.io/zone=us-east-1c,hub.jupyter.org/node-purpose=core,kubernetes.io/arch=amd64,kubernetes.io/hostname=ip-10-146-26-17.ec2.internal,kubernetes.io/os=linux,node.kubernetes.io/instance-type=t3.small,topology.kubernetes.io/region=us-east-1,topology.kubernetes.io/zone=us-east-1c
+
+  ip-10-147-25-213.ec2.internal   Ready    <none>   32h   v1.21.5-eks-bc4871b   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/instance-type=t3.small,beta.kubernetes.io/os=linux,eks.amazonaws.com/capacityType=ON_DEMAND,eks.amazonaws.com/nodegroup-image=ami-06200bac1d3b301da,eks.amazonaws.com/nodegroup=roman-core-impala-jittery,eks.amazonaws.com/sourceLaunchTemplateId=lt-06dfb7cf86479f1c5,eks.amazonaws.com/sourceLaunchTemplateVersion=1,failure-domain.beta.kubernetes.io/region=us-east-1,failure-domain.beta.kubernetes.io/zone=us-east-1b,hub.jupyter.org/node-purpose=core,kubernetes.io/arch=amd64,kubernetes.io/hostname=ip-10-147-25-213.ec2.internal,kubernetes.io/os=linux,node.kubernetes.io/instance-type=t3.small,topology.kubernetes.io/region=us-east-1,topology.kubernetes.io/zone=us-east-1b
+
+  ip-10-147-25-56.ec2.internal    Ready    <none>   32h   v1.21.5-eks-bc4871b   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/instance-type=r5.xlarge,beta.kubernetes.io/os=linux,eks.amazonaws.com/capacityType=ON_DEMAND,eks.amazonaws.com/nodegroup-image=ami-06200bac1d3b301da,eks.amazonaws.com/nodegroup=roman-notebook-giraffe-talented,eks.amazonaws.com/sourceLaunchTemplateId=lt-0b2b9c74b91a71bef,eks.amazonaws.com/sourceLaunchTemplateVersion=1,failure-domain.beta.kubernetes.io/region=us-east-1,failure-domain.beta.kubernetes.io/zone=us-east-1b,hub.jupyter.org/node-purpose=user,kubernetes.io/arch=amd64,kubernetes.io/hostname=ip-10-147-25-56.ec2.internal,kubernetes.io/os=linux,node.kubernetes.io/instance-type=r5.xlarge,topology.kubernetes.io/region=us-east-1,topology.kubernetes.io/zone=us-east-1b'
+JupyterHub Pods: 'NAMESPACE     NAME                                                         READY   STATUS    RESTARTS   AGE   IP              NODE                            NOMINATED
+  NODE   READINESS GATES
+
+  datadog       datadog-cluster-agent-55477fc58b-66tqt                       1/1     Running   0          32h   10.147.25.95    ip-10-147-25-56.ec2.internal    <none>           <none>
+
+  datadog       datadog-kube-state-metrics-6fb56bf889-9ww67                  1/1     Running   0          32h   10.147.25.249   ip-10-147-25-56.ec2.internal    <none>           <none>
+
+  default       continuous-image-puller-mzng6                                1/1     Running   0          32h   10.147.25.97    ip-10-147-25-56.ec2.internal    <none>           <none>
+
+  default       hub-57ffd9747c-nb8fz                                         1/1     Running   0          32h   10.146.25.92    ip-10-146-25-64.ec2.internal    <none>           <none>
+
+  default       proxy-58bdccdb98-gc64g                                       1/1     Running   0          32h   10.147.25.217   ip-10-147-25-213.ec2.internal   <none>           <none>
+
+  default       user-placeholder-0                                           1/1     Running   0          32h   10.147.25.144   ip-10-147-25-56.ec2.internal    <none>           <none>
+
+  default       user-scheduler-c5fbd6b8d-fflns                               1/1     Running   0          32h   10.146.26.94    ip-10-146-26-17.ec2.internal    <none>           <none>
+
+  default       user-scheduler-c5fbd6b8d-zk2gg                               1/1     Running   0          32h   10.146.25.9     ip-10-146-25-64.ec2.internal    <none>           <none>
+
+  kube-system   aws-node-2jzpb                                               1/1     Running   0          32h   10.147.25.56    ip-10-147-25-56.ec2.internal    <none>           <none>
+
+  kube-system   aws-node-h47m8                                               1/1     Running   0          32h   10.146.26.17    ip-10-146-26-17.ec2.internal    <none>           <none>
+
+  kube-system   aws-node-jxk7j                                               1/1     Running   0          32h   10.146.25.64    ip-10-146-25-64.ec2.internal    <none>           <none>
+
+  kube-system   aws-node-twbnx                                               1/1     Running   0          32h   10.147.25.213   ip-10-147-25-213.ec2.internal   <none>           <none>
+
+  kube-system   cluster-autoscaler-aws-cluster-autoscaler-7d85444d49-wzxkm   1/1     Running   0          32h   10.147.25.169   ip-10-147-25-56.ec2.internal    <none>           <none>
+
+  kube-system   coredns-66cb55d4f4-9dwmp                                     1/1     Running   0          32h   10.147.25.45    ip-10-147-25-56.ec2.internal    <none>           <none>
+
+  kube-system   coredns-66cb55d4f4-nnthm                                     1/1     Running   0          32h   10.146.26.66    ip-10-146-26-17.ec2.internal    <none>           <none>
+
+  kube-system   kube-proxy-9fdx7                                             1/1     Running   0          32h   10.146.25.64    ip-10-146-25-64.ec2.internal    <none>           <none>
+
+  kube-system   kube-proxy-kkwl5                                             1/1     Running   0          32h   10.147.25.213   ip-10-147-25-213.ec2.internal   <none>           <none>
+
+  kube-system   kube-proxy-l2vzn                                             1/1     Running   0          32h   10.147.25.56    ip-10-147-25-56.ec2.internal    <none>           <none>
+
+  kube-system   kube-proxy-vd58l                                             1/1     Running   0          32h   10.146.26.17    ip-10-146-26-17.ec2.internal    <none>           <none>
+
+  support       roman-efs-provisioner-6c9fdc5cfc-bvv55                       1/1     Running   0          32h   10.147.25.141   ip-10-147-25-56.ec2.internal    <none>           <none>'
+Kubernetes Pods: 'NAMESPACE     NAME                                                         READY   STATUS    RESTARTS   AGE   IP              NODE                            NOMINATED
+  NODE   READINESS GATES
+
+  datadog       datadog-cluster-agent-55477fc58b-66tqt                       1/1     Running   0          32h   10.147.25.95    ip-10-147-25-56.ec2.internal    <none>           <none>
+
+  datadog       datadog-kube-state-metrics-6fb56bf889-9ww67                  1/1     Running   0          32h   10.147.25.249   ip-10-147-25-56.ec2.internal    <none>           <none>
+
+  default       continuous-image-puller-mzng6                                1/1     Running   0          32h   10.147.25.97    ip-10-147-25-56.ec2.internal    <none>           <none>
+
+  default       hub-57ffd9747c-nb8fz                                         1/1     Running   0          32h   10.146.25.92    ip-10-146-25-64.ec2.internal    <none>           <none>
+
+  default       proxy-58bdccdb98-gc64g                                       1/1     Running   0          32h   10.147.25.217   ip-10-147-25-213.ec2.internal   <none>           <none>
+
+  default       user-placeholder-0                                           1/1     Running   0          32h   10.147.25.144   ip-10-147-25-56.ec2.internal    <none>           <none>
+
+  default       user-scheduler-c5fbd6b8d-fflns                               1/1     Running   0          32h   10.146.26.94    ip-10-146-26-17.ec2.internal    <none>           <none>
+
+  default       user-scheduler-c5fbd6b8d-zk2gg                               1/1     Running   0          32h   10.146.25.9     ip-10-146-25-64.ec2.internal    <none>           <none>
+
+  kube-system   aws-node-2jzpb                                               1/1     Running   0          32h   10.147.25.56    ip-10-147-25-56.ec2.internal    <none>           <none>
+
+  kube-system   aws-node-h47m8                                               1/1     Running   0          32h   10.146.26.17    ip-10-146-26-17.ec2.internal    <none>           <none>
+
+  kube-system   aws-node-jxk7j                                               1/1     Running   0          32h   10.146.25.64    ip-10-146-25-64.ec2.internal    <none>           <none>
+
+  kube-system   aws-node-twbnx                                               1/1     Running   0          32h   10.147.25.213   ip-10-147-25-213.ec2.internal   <none>           <none>
+
+  kube-system   cluster-autoscaler-aws-cluster-autoscaler-7d85444d49-wzxkm   1/1     Running   0          32h   10.147.25.169   ip-10-147-25-56.ec2.internal    <none>           <none>
+
+  kube-system   coredns-66cb55d4f4-9dwmp                                     1/1     Running   0          32h   10.147.25.45    ip-10-147-25-56.ec2.internal    <none>           <none>
+
+  kube-system   coredns-66cb55d4f4-nnthm                                     1/1     Running   0          32h   10.146.26.66    ip-10-146-26-17.ec2.internal    <none>           <none>
+
+  kube-system   kube-proxy-9fdx7                                             1/1     Running   0          32h   10.146.25.64    ip-10-146-25-64.ec2.internal    <none>           <none>
+
+  kube-system   kube-proxy-kkwl5                                             1/1     Running   0          32h   10.147.25.213   ip-10-147-25-213.ec2.internal   <none>           <none>
+
+  kube-system   kube-proxy-l2vzn                                             1/1     Running   0          32h   10.147.25.56    ip-10-147-25-56.ec2.internal    <none>           <none>
+
+  kube-system   kube-proxy-vd58l                                             1/1     Running   0          32h   10.146.26.17    ip-10-146-26-17.ec2.internal    <none>           <none>
+
+  support       roman-efs-provisioner-6c9fdc5cfc-bvv55                       1/1     Running   0          32h   10.147.25.141   ip-10-147-25-56.ec2.internal    <none>           <none>'
+Route-53 Host: 'test.roman.science.stsci.edu is an alias for a88c6fb16565a4f3cabb538289a94a31-360641126.us-east-1.elb.amazonaws.com.
+
+  a88c6fb16565a4f3cabb538289a94a31-360641126.us-east-1.elb.amazonaws.com has address
+  52.22.162.227
+
+  a88c6fb16565a4f3cabb538289a94a31-360641126.us-east-1.elb.amazonaws.com has address
+  34.235.194.72
+
+  a88c6fb16565a4f3cabb538289a94a31-360641126.us-east-1.elb.amazonaws.com has address
+  52.55.198.220'

@@ -1,0 +1,124 @@
+Globals:
+  environment:
+    - DEPLOYMENT_NAME
+    - ENVIRONMENT
+    - JH_HOSTNAME
+    - ADMIN_ARN
+    - ACCOUNT_ID
+  constants:
+    V_K8S: "1.21"
+    MAX_NODE_AGE: 10d
+    MAX_EFS_FILE_SYSTEM_SIZE: 50000000000000
+Groups:
+  - group: Kubernetes Pods
+    command: kubectl get pods -A -o wide
+    parser: named_columns
+    assertions:
+    - name: All pods
+      all: READY=='1/1' and STATUS=='Running' and RESTARTS=='0'
+    - name: EFS provisioner
+      ok_rows==1: NAMESPACE=='support' and 'efs-provisioner' in NAME
+    - name: Kube Proxy
+      ok_rows>=4: NAMESPACE=='kube-system' and 'kube-proxy' in NAME
+    - name: Autoscaler
+      ok_rows==1: NAMESPACE=='kube-system' and 'cluster-autoscaler' in NAME
+    - name: AWS Pods
+      ok_rows>=4: NAMESPACE=='kube-system' and 'aws-node' in NAME
+    - name: Core DNS
+      ok_rows==2: NAMESPACE=='kube-system' and 'coredns' in NAME
+  - group: JupyterHub Pods
+    command: kubectl get pods -A -o wide
+    parser: named_columns
+    assertions:
+    - name: All pods
+      all: READY=='1/1' and STATUS=='Running' and RESTARTS=='0'
+    - name: Image puller
+      ok_rows==1: NAMESPACE=='default' and 'continuous-image-puller' in NAME
+    - name: Hub
+      ok_rows==1: NAMESPACE=='default' and 'hub' in NAME
+    - name: Proxy
+      ok_rows==1: NAMESPACE=='default' and 'proxy' in NAME
+    - name: User-scheduler
+      ok_rows==2: NAMESPACE=='default' and 'user-scheduler' in NAME
+    # - name: User-placeholder
+    #   ok_rows==1: NAMESPACE=='default' and 'user-placeholder' in NAME
+  - group: JupyterHub Nodes
+    command: kubectl get nodes -A --show-labels=true
+    parser: named_columns
+    assertions:
+    - name: At least 4 STATUS Ready new Hub AMI ID
+      ok_rows>=4: STATUS=="Ready" # and HUB_AMI_ID in LABELS
+    - name: All Nodes Ready Status
+      all: STATUS=="Ready" or STATUS=="Ready,SchedulingDisabled"
+    - name: Kubernetes Version
+      all: V_K8S in VERSION
+    - name: Node Age
+      all: convert_age(AGE) < convert_age(MAX_NODE_AGE)
+    - name: Core us-east-1a
+      ok_rows==1:  "'roman-core' in LABELS and 't3.small' in LABELS and 'zone=us-east-1a' in LABELS"
+    - name: Core us-east-1b
+      ok_rows==1:  "'roman-core' in LABELS and 't3.small' in LABELS and 'zone=us-east-1b' in LABELS"
+    - name: Core us-east-1c
+      ok_rows==1:  "'roman-core' in LABELS and 't3.small' in LABELS and 'zone=us-east-1c' in LABELS"
+    - name: Notebook nodes
+      ok_rows>=1:  "'roman-notebook' in LABELS and 'r5.xlarge' in LABELS  and 'region=us-east-1' in LABELS"
+  - group: EKS Services
+    command:  kubectl get services -A
+    parser: named_columns
+    assertions:
+    - name: Datadog Cluster Agent Service
+      ok_rows==1: NAMESPACE=='datadog' and NAME=='datadog-cluster-agent' and TYPE=='ClusterIP' and _['EXTERNAL-IP']=='<none>' and _['PORT(S)']=='5005/TCP'
+    - name: Datadog Kube State Metrics Service
+      ok_rows==1: NAMESPACE=='datadog' and NAME=='datadog-kube-state-metrics' and TYPE=='ClusterIP' and _['EXTERNAL-IP']=='<none>' and _['PORT(S)']=='8080/TCP'
+    - name: Hub Service
+      ok_rows==1: NAMESPACE=='default' and NAME=='hub' and TYPE=='ClusterIP' and _['EXTERNAL-IP']=='<none>' and _['PORT(S)']=='8081/TCP'
+    - name: Kubernetes Service
+      ok_rows==1: NAMESPACE=='default' and NAME=='kubernetes' and TYPE=='ClusterIP' and _['EXTERNAL-IP']=='<none>' and _['PORT(S)']=='443/TCP'
+    - name: Proxy API Service
+      ok_rows==1: NAMESPACE=='default' and NAME=='proxy-api' and TYPE=='ClusterIP' and _['EXTERNAL-IP']=='<none>' and _['PORT(S)']=='8001/TCP'
+    - name: Proxy Public Service
+      ok_rows==1: NAMESPACE=='default' and NAME=='proxy-public' and TYPE=='LoadBalancer' and '.elb.amazonaws.com' in _['EXTERNAL-IP'] and '443:' in _['PORT(S)'] and '80:' in _['PORT(S)'] and 'TCP' in _['PORT(S)'] and 'UDP' not in  _['PORT(S)']
+    - name: Cluster Autoscaler Service
+      ok_rows==1: NAMESPACE=='kube-system' and NAME=='cluster-autoscaler-aws-cluster-autoscaler' and TYPE=='ClusterIP' and _['EXTERNAL-IP']=='<none>' and _['PORT(S)']=='8085/TCP'
+    - name: Kube DNS Service
+      ok_rows==1: NAMESPACE=='kube-system' and NAME=='kube-dns' and TYPE=='ClusterIP' and _['EXTERNAL-IP']=='<none>' and _['PORT(S)']=='53/UDP,53/TCP'
+  - group: EKS Deployments
+    command:  kubectl get deployments -A
+    parser: named_columns
+    assertions:
+    - name: Hub Deployment
+      ok_rows==1: NAMESPACE=='default' and NAME=='hub' and READY=='1/1' and _['UP-TO-DATE']=='1' and AVAILABLE=='1'
+    - name: Proxy Deployment
+      ok_rows==1: NAMESPACE=='default' and NAME=='proxy' and READY=='1/1' and _['UP-TO-DATE']=='1' and AVAILABLE=='1'
+    - name: User Scheduler Deployment
+      ok_rows==1: NAMESPACE=='default' and NAME=='user-scheduler' and READY=='2/2' and _['UP-TO-DATE']=='2' and AVAILABLE=='2'
+    - name: Cluster Autoscaler Deployment
+      ok_rows==1: NAMESPACE=='kube-system' and 'cluster-autoscaler' in NAME and READY=='1/1' and _['UP-TO-DATE']=='1' and AVAILABLE=='1'
+    - name: Core DNS Deployment
+      ok_rows==1: NAMESPACE=='kube-system' and 'coredns' in NAME and READY=='2/2' and _['UP-TO-DATE']=='2' and AVAILABLE=='2'
+    - name: EFS Provisioner Deployment
+      ok_rows==1: NAMESPACE=='support' and 'efs-provisioner' in NAME and READY=='1/1' and _['UP-TO-DATE']=='1' and AVAILABLE=='1'
+    - name: Datadog Cluster Agent Deployment
+      ok_rows==1: NAMESPACE=='datadog' and 'datadog-cluster-agent' in NAME and READY=='1/1' and _['UP-TO-DATE']=='1' and AVAILABLE=='1'
+    - name: Datadog Kube Metrics Deployment
+      ok_rows==1: NAMESPACE=='datadog' and 'datadog-kube-state-metrics' in NAME and READY=='1/1' and _['UP-TO-DATE']=='1' and AVAILABLE=='1'
+  - group: Route-53 Host
+    command: "host {JH_HOSTNAME}"
+    parser: raw
+    assertions:
+    - name: DNS Mapping
+      simple: "'{JH_HOSTNAME} is an alias for' in _"
+  - group: JupyterHub Index Page
+    command: "wget --no-check-certificate -O- {JH_HOSTNAME}"
+    parser: raw
+    assertions:
+    - name: Server Index Page
+      simple: "'HTTP request sent, awaiting response... 200 OK' in _"
+  - group: EFS File Systems
+    command: awsudo {ADMIN_ARN} aws efs describe-file-systems --output yaml --query FileSystems
+    parser: yaml
+    assertions:
+    - name: EFS Home Dirs
+      ok_rows==1: Name==DEPLOYMENT_NAME+'-home-dirs' and LifeCycleState=='available' and Encrypted==True and NumberOfMountTargets==3 and OwnerId==ACCOUNT_ID and aws_kv_dict(Tags)['stsci-backup']=='dmd-2w-sat'
+    - name: EFS Max Size
+      all: int(SizeInBytes['Value']) < MAX_EFS_FILE_SYSTEM_SIZE
