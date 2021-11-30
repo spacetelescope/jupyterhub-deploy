@@ -1,4 +1,8 @@
 jupyterhub:
+  scheduling:
+    userPlaceholder:
+      enabled: true
+      replicas: 1
   singleuser:
     image:
       tag: latest-test
