@@ -75,13 +75,13 @@ Groups:
     - name: Node Age
       all: convert_age(AGE) < convert_age(MAX_NODE_AGE)
     - name: Core us-east-1a
-      ok_rows==1:  "'roman-core' in LABELS and 't3.small' in LABELS and 'zone=us-east-1a' in LABELS"
+      ok_rows==1:  "DEPLOYMENT_NAME+'-core' in LABELS and 't3.small' in LABELS and 'zone=us-east-1a' in LABELS"
     - name: Core us-east-1b
-      ok_rows==1:  "'roman-core' in LABELS and 't3.small' in LABELS and 'zone=us-east-1b' in LABELS"
+      ok_rows==1:  "DEPLOYMENT_NAME+'-core' in LABELS and 't3.small' in LABELS and 'zone=us-east-1b' in LABELS"
     - name: Core us-east-1c
-      ok_rows==1:  "'roman-core' in LABELS and 't3.small' in LABELS and 'zone=us-east-1c' in LABELS"
+      ok_rows==1:  "DEPLOYMENT_NAME+'-core' in LABELS and 't3.small' in LABELS and 'zone=us-east-1c' in LABELS"
     - name: Notebook nodes
-      ok_rows>=1:  "'roman-notebook' in LABELS and 'r5.xlarge' in LABELS  and 'region=us-east-1' in LABELS"
+      ok_rows>=1:  "DEPLOYMENT_NAME+'-notebook' in LABELS and 'r5.xlarge' in LABELS  and 'region=us-east-1' in LABELS"
   - group: EKS Services
     command:  kubectl get services -A
     parser: named_columns
