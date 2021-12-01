@@ -3,6 +3,12 @@
 cd $JUPYTERHUB_DIR
 
 echo "====================================================="
+echo "Checking YAML files for loadability                  "
+echo "====================================================="
+sscan-yaml `find deployments tools -name '*.yaml' -o -name '*.yml'`
+yaml_status=$?
+
+echo "====================================================="
 echo "Scanning source code for quality with flake8         "
 echo "====================================================="
 sscan-flake8
@@ -20,5 +26,32 @@ echo "====================================================="
 sscan-safety
 safety_status=$?
 
-fail=`expr $flake8_status + $bandit_status + $safety_status`
+echo
+echo "----------------------------- sscan overall summary ----------------------------"
+
+if [[ "$yaml_status" == "1" ]]; then
+    echo "ERROR - YAML parsing checks failed."
+else
+    echo "OK - YAML parsing"
+fi
+
+if [[ "$flake8_status" == "1" ]]; then
+    echo "ERROR - Flake8 Python code quality checks failed."
+else
+    echo "OK - Flake8 Python code quality checks."
+fi
+
+if [[ "$bandit_status" == "1" ]]; then
+    echo "ERROR - Bandit source code security scanning found vulnerabilities."
+else
+    echo "OK - Bandit source code security scanning."
+fi
+
+if [[ "$safety_status" == "1" ]]; then
+    echo "ERROR - Safety dependency scans found vulnerabilities."
+else
+    echo "OK - Safety dependency scans."    
+fi
+
+fail=`expr $yaml_status + $flake8_status + $bandit_status + $safety_status`
 exit $fail

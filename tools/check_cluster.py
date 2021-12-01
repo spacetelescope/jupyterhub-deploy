@@ -1,4 +1,4 @@
-#! /Usr/bin/env python
+#! /usr/bin/env python
 
 """Check properties of Terraformed resources and/or JupyterHub to verify good deployment.
 ignore the hub since it may not be delpoyed on the cluster yet.
