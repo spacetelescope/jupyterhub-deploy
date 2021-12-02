@@ -53,15 +53,15 @@ Groups:
     - name: All pods
       all: READY=='1/1' and STATUS=='Running' and RESTARTS=='0'
     - name: Image puller
-      ok_rows==1: NAMESPACE=='default' and 'continuous-image-puller' in NAME
+      ok_rows>=1: NAMESPACE=='default' and 'continuous-image-puller' in NAME
     - name: Hub
       ok_rows==1: NAMESPACE=='default' and 'hub' in NAME
     - name: Proxy
       ok_rows==1: NAMESPACE=='default' and 'proxy' in NAME
     - name: User-scheduler
       ok_rows==2: NAMESPACE=='default' and 'user-scheduler' in NAME
-    # - name: User-placeholder
-    #   ok_rows==1: NAMESPACE=='default' and 'user-placeholder' in NAME
+    - name: User-placeholder
+      ok_rows>=1: NAMESPACE=='default' and 'user-placeholder' in NAME
   - group: JupyterHub Nodes
     command: kubectl get nodes -A --show-labels=true
     parser: named_columns
@@ -75,13 +75,13 @@ Groups:
     - name: Node Age
       all: convert_age(AGE) < convert_age(MAX_NODE_AGE)
     - name: Core us-east-1a
-      ok_rows==1:  "'roman-core' in LABELS and 't3.small' in LABELS and 'zone=us-east-1a' in LABELS"
+      ok_rows==1:  "DEPLOYMENT_NAME+'-core' in LABELS and 't3.small' in LABELS and 'zone=us-east-1a' in LABELS"
     - name: Core us-east-1b
-      ok_rows==1:  "'roman-core' in LABELS and 't3.small' in LABELS and 'zone=us-east-1b' in LABELS"
+      ok_rows==1:  "DEPLOYMENT_NAME+'-core' in LABELS and 't3.small' in LABELS and 'zone=us-east-1b' in LABELS"
     - name: Core us-east-1c
-      ok_rows==1:  "'roman-core' in LABELS and 't3.small' in LABELS and 'zone=us-east-1c' in LABELS"
+      ok_rows==1:  "DEPLOYMENT_NAME+'-core' in LABELS and 't3.small' in LABELS and 'zone=us-east-1c' in LABELS"
     - name: Notebook nodes
-      ok_rows>=1:  "'roman-notebook' in LABELS and 'r5.xlarge' in LABELS  and 'region=us-east-1' in LABELS"
+      ok_rows>=1:  "DEPLOYMENT_NAME+'-notebook' in LABELS and 'r5.xlarge' in LABELS  and 'region=us-east-1' in LABELS"
   - group: EKS Services
     command:  kubectl get services -A
     parser: named_columns

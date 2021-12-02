@@ -9,6 +9,7 @@ export JH_HOSTNAME="${DEPLOYMENT_NAME}.science.stsci.edu"
 if [[ "$ENVIRONMENT" != "prod" ]]; then
     export JH_HOSTNAME="${ENVIRONMENT}.${JH_HOSTNAME}"
 fi
+export JH_HOSTNAME=`echo ${JH_HOSTNAME} | sed -e's/tike/timeseries/g'` 
 
 # Select "conda" tool used to install conda package and environments: conda or mamba
 #   mamba is largely a drop-in replacement for mamba with improved dependency resolution,
