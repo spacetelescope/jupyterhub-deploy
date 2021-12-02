@@ -53,15 +53,15 @@ Groups:
     - name: All pods
       all: READY=='1/1' and STATUS=='Running' and RESTARTS=='0'
     - name: Image puller
-      ok_rows==1: NAMESPACE=='default' and 'continuous-image-puller' in NAME
+      ok_rows>=1: NAMESPACE=='default' and 'continuous-image-puller' in NAME
     - name: Hub
       ok_rows==1: NAMESPACE=='default' and 'hub' in NAME
     - name: Proxy
       ok_rows==1: NAMESPACE=='default' and 'proxy' in NAME
     - name: User-scheduler
       ok_rows==2: NAMESPACE=='default' and 'user-scheduler' in NAME
-    # - name: User-placeholder
-    #   ok_rows==1: NAMESPACE=='default' and 'user-placeholder' in NAME
+    - name: User-placeholder
+      ok_rows>=1: NAMESPACE=='default' and 'user-placeholder' in NAME
   - group: JupyterHub Nodes
     command: kubectl get nodes -A --show-labels=true
     parser: named_columns
