@@ -14,6 +14,7 @@ import subprocess
 import argparse
 import re
 import json
+from collections import defaultdict
 
 import yaml
 
@@ -29,13 +30,14 @@ Globals:
     V_K8S: "1.21"
     MAX_NODE_AGE: 10d
     MAX_EFS_FILE_SYSTEM_SIZE: 50000000000000
+    CORE_NODES: 3
 Groups:
   - group: Kubernetes Pods
-    command: kubectl get pods -A -o wide
+    command: kubectl get pods -A
     parser: named_columns
     assertions:
     - name: All pods
-      all: READY=='1/1' and STATUS=='Running' and RESTARTS=='0'
+      all: STATUS=='Running' and RESTARTS=='0'
     - name: EFS provisioner
       ok_rows==1: NAMESPACE=='support' and 'efs-provisioner' in NAME
     - name: Kube Proxy
@@ -47,21 +49,21 @@ Groups:
     - name: Core DNS
       ok_rows==2: NAMESPACE=='kube-system' and 'coredns' in NAME
   - group: JupyterHub Pods
-    command: kubectl get pods -A -o wide
+    command: kubectl get pods -A
     parser: named_columns
     assertions:
     - name: All pods
-      all: READY=='1/1' and STATUS=='Running' and RESTARTS=='0'
+      all: STATUS=='Running' and RESTARTS=='0'
     - name: Image puller
-      ok_rows==1: NAMESPACE=='default' and 'continuous-image-puller' in NAME
+      ok_rows>=1: NAMESPACE=='default' and 'continuous-image-puller' in NAME
     - name: Hub
       ok_rows==1: NAMESPACE=='default' and 'hub' in NAME
     - name: Proxy
-      ok_rows==1: NAMESPACE=='default' and 'proxy' in NAME
+      ok_rows>=1: NAMESPACE=='default' and 'proxy' in NAME
     - name: User-scheduler
       ok_rows==2: NAMESPACE=='default' and 'user-scheduler' in NAME
-    # - name: User-placeholder
-    #   ok_rows==1: NAMESPACE=='default' and 'user-placeholder' in NAME
+    - name: User-placeholder
+      ok_rows>=1: NAMESPACE=='default' and 'user-placeholder' in NAME
   - group: JupyterHub Nodes
     command: kubectl get nodes -A --show-labels=true
     parser: named_columns
@@ -142,6 +144,43 @@ Groups:
       ok_rows==1: Name==DEPLOYMENT_NAME+'-home-dirs' and LifeCycleState=='available' and Encrypted==True and NumberOfMountTargets==3 and OwnerId==ACCOUNT_ID and aws_kv_dict(Tags)['stsci-backup']=='dmd-2w-sat'
     - name: EFS Max Size
       all: int(SizeInBytes['Value']) < MAX_EFS_FILE_SYSTEM_SIZE
+  - group: Daemonsets named rows
+    command: kubectl get daemonsets -A
+    parser: named_rows
+    assertions:
+    - name: datadog - proxy - aws-nodes READY
+      simple: _['datadog']['READY'] == _['kube-proxy']['READY'] == _['aws-node']['READY']
+    - name: datadog - proxy - aws-nodes DESIRED
+      simple: _['datadog']['DESIRED'] == _['kube-proxy']['DESIRED'] == _['aws-node']['DESIRED']
+    - name: datadog - proxy - aws-nodes CURRENT
+      simple: _['datadog']['CURRENT'] == _['kube-proxy']['CURRENT'] == _['aws-node']['CURRENT']
+    - name: datadog - proxy - aws-nodes UP-TO-DATE
+      simple: _['datadog']['UP-TO-DATE'] == _['kube-proxy']['UP-TO-DATE'] == _['aws-node']['UP-TO-DATE']
+    - name: datadog - proxy - aws-nodes AVAILABLE
+      simple: _['datadog']['AVAILABLE'] == _['kube-proxy']['AVAILABLE'] == _['aws-node']['AVAILABLE']
+    - name: continuous image puller notebook nodes only
+      simple: int(_['continuous-image-puller']['READY']) == int(_['aws-node']['READY']) - CORE_NODES
+  - group: Daemonsets named columns
+    command: kubectl get daemonsets -A
+    parser: named_columns
+    assertions:
+    - name: continuous-image-puller
+      ok_rows==1: NAMESPACE=='default' and NAME=='continuous-image-puller'
+    - name: datadog
+      ok_rows==1: NAMESPACE=='datadog' and NAME=='datadog'
+    - name: kube-proxy
+      ok_rows==1: NAMESPACE=='kube-system' and NAME=='kube-proxy'
+    - name: 
+      ok_rows==1: NAMESPACE=='kube-system' and NAME=='aws-node'
+    - name: matching daemonset states
+      all: READY==DESIRED==CURRENT==AVAILABLE==_['UP-TO-DATE']
+  - group: Pod to Node Map
+    command: kubectl get pods -A -o wide
+    replace_output:
+      input: NOMINATED NODE 
+      output: NOMINATED_NODE
+    parser: node_map
+    print_parsing: true
 """  # noqa: E501
 
 
@@ -160,8 +199,10 @@ def convert_age(age_str):
     age_str = age_subst(age_str, "m", "60")
     age_str = age_subst(age_str, "s", "1")
     age_str = age_str[:-1]
-    print(f"convert_age({repr(age_str_org)}) --> {repr(age_str)} --> {eval(age_str)}")   # nosec
-    return eval(age_str)   # nosec
+    print(
+        f"convert_age({repr(age_str_org)}) --> {repr(age_str)} --> {eval(age_str)}"  # nosec
+    )  # nosec
+    return eval(age_str)  # nosec
 
 
 def aws_kv_dict(key_value_dict_list):
@@ -185,6 +226,17 @@ def run(cmd, cwd=".", timeout=10):
         timeout=timeout,
     )  # maybe succeeds
     return result.stdout
+
+
+def parse_node_map(output):
+    namespaces = parse_named_columns(output)
+    node_map = defaultdict(list)
+    for namespace in namespaces:
+        node_map[namespace["NODE"]].append(
+            namespace["NAMESPACE"] + ":" + namespace["NAME"]
+        )
+    output = ["Mapping from Node to Pod", "-" * 80, yaml.dump(dict(node_map))]
+    return "\n".join(output)
 
 
 def parse_named_columns(output):
@@ -213,6 +265,10 @@ def parse_named_columns(output):
         d["_"] = d
         rows.append(d)
     return rows
+
+
+def parse_named_rows(output, key="NAME"):
+    return {"_": {row[key]: row for row in parse_named_columns(output)}}
 
 
 def parse_raw(output):
@@ -428,12 +484,20 @@ class Checker:
             print("===> Fetching", repr(group), "with", repr(command))
             print("=" * 80)
             try:
-                self._outputs[group] = run(command).strip()
+                output = run(command).strip()
             except Exception as exc:
                 error = f"Command FAILED for '{group}': '{command}' : '{str(exc)}'"
                 self.error(error)
-                self._outputs[group] = error
+                output = error
+        self._outputs[group] = self.replace_output(check, output)
         return self._outputs[group]
+
+    def replace_output(self, check, output):
+        if check.get("replace_output"):
+            input_patt = check.get("replace_output").get("input")
+            output_patt = check.get("replace_output").get("output")
+            output = re.sub(input_patt, output_patt, output, flags=re.MULTILINE)
+        return output
 
     def run_check(self, check):
         print("=" * 80)
@@ -445,10 +509,11 @@ class Checker:
         if not output.startswith("Command FAILED"):
             parser = globals()[f"parse_{check['parser']}"]
             namespaces = parser(output)
+            if check.get("print_parsing"):
+                print(namespaces)
             assertions = check.get("assertions", [])
-            self.check_assertions(check["group"], assertions, namespaces)
-            if not assertions:
-                print("======> No assertions defined.")
+            if assertions:
+                self.check_assertions(check["group"], assertions, namespaces)
 
     def check_assertions(self, group, assertions, namespaces):
         for assertion in assertions:
@@ -472,7 +537,7 @@ class Checker:
         rows = []
         for i, namespace in enumerate(namespaces):
             self.verbose(f"Checking '{name}' #{i} : {condition} ... ", end="")
-            if self.eval_condition(name, namespace, condition):
+            if self.eval_condition(namespace, condition):
                 rows.append(namespace)
                 self.verbose("OK")
             else:
@@ -480,23 +545,23 @@ class Checker:
                 self.verbose("Namespace:", namespace)
         if requirement == "all":
             requirement = f"ok_rows=={len(namespaces)}"
-        if eval(requirement, {}, dict(ok_rows=len(rows))):   # nosec
+        if self.eval_condition(dict(ok_rows=len(rows)), requirement):  # nosec
             print(f"===> OK overall '{name}'")
         else:
             self.error(f"overall '{name}'")
             self.verbose("Namespace:", namespace)
 
     def verify_simple(self, name, namespace, condition):
-        if self.eval_condition(name, namespace, condition):
+        if self.eval_condition(namespace, condition):
             print(f"===> OK '{name}'")
         else:
             self.error(f"'{name}'")
             self.verbose("Namespace:", namespace)
 
-    def eval_condition(self, name, namespace, condition):
+    def eval_condition(self, namespace, condition):
         namespace = dict(namespace)  # local no-side-effects copy
         namespace.update(self.combined_environment)
-        return eval(condition, {}, namespace)   # nosec
+        return eval(condition, {}, namespace)  # nosec
 
     def verbose(self, *args, **keys):
         if self._verbose:
