@@ -4,4 +4,6 @@
 
 cd $JUPYTERHUB_DIR
 
-flake8  --max-line-length 120  --count  --statistics  `sscan-find-python-files`
+echo "flake8 version:"  `flake8 --version`
+
+flake8  --max-line-length 120  --count  --statistics  --ignore W291,W503 `sscan-find-python-files`
