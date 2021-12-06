@@ -5,8 +5,7 @@ set -eu
 #     usage:  image-cp   <path-inside-container>   [<path-on-host> or PWD]
 #
 #     Copy the specified filepath out of the currently configured image
-#     to the specified location on the host or the PWD.   This version is
-#     limited to single files which can be cat'ed out of Docker.
+#     to the specified location on the host or the PWD.
 
 PATH_TO_EXPORT=$1
 WHERE_TO_PUT_IT=${2:-`pwd`}
