@@ -39,7 +39,7 @@ Groups:
     parser: named_columns
     assertions:
     - name: All pods
-      all: STATUS=='Running' and RESTARTS<=MAX_RESTARTS
+      all: STATUS=='Running' and int(RESTARTS)<=MAX_RESTARTS
     - name: EFS provisioner
       ok_rows==1: NAMESPACE=='support' and 'efs-provisioner' in NAME
     - name: Kube Proxy
@@ -55,7 +55,7 @@ Groups:
     parser: named_columns
     assertions:
     - name: All pods
-      all: STATUS=='Running' and RESTARTS<=MAX_RESTARTS
+      all: STATUS=='Running' and int(RESTARTS)<=MAX_RESTARTS
     - name: Image puller
       ok_rows>=1: NAMESPACE=='default' and 'continuous-image-puller' in NAME
     - name: Hub
