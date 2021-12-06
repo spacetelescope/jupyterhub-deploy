@@ -6,7 +6,7 @@ export PATH="`pwd`/tools":${PATH}
 #
 
 export JH_HOSTNAME="${DEPLOYMENT_NAME}.science.stsci.edu"
-if [[ "$ENVIRONMENT" != "prod" ]]; then
+if [[ "$ENVIRONMENT" != "prod" && "$DEPLOYMENT_NAME" != "jwebbinar" ]]; then
     export JH_HOSTNAME="${ENVIRONMENT}.${JH_HOSTNAME}"
 fi
 export JH_HOSTNAME=`echo ${JH_HOSTNAME} | sed -e's/tike/timeseries/g'` 

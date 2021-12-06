@@ -31,13 +31,15 @@ Globals:
     MAX_NODE_AGE: 10d
     MAX_EFS_FILE_SYSTEM_SIZE: 50000000000000
     CORE_NODES: 3
+    NOTEBOOK_EC2_TYPE: r5.xlarge
+    MAX_RESTARTS: 0
 Groups:
   - group: Kubernetes Pods
     command: kubectl get pods -A
     parser: named_columns
     assertions:
     - name: All pods
-      all: STATUS=='Running' and RESTARTS=='0'
+      all: STATUS=='Running' and RESTARTS<=MAX_RESTARTS
     - name: EFS provisioner
       ok_rows==1: NAMESPACE=='support' and 'efs-provisioner' in NAME
     - name: Kube Proxy
@@ -53,7 +55,7 @@ Groups:
     parser: named_columns
     assertions:
     - name: All pods
-      all: STATUS=='Running' and RESTARTS=='0'
+      all: STATUS=='Running' and RESTARTS<=MAX_RESTARTS
     - name: Image puller
       ok_rows>=1: NAMESPACE=='default' and 'continuous-image-puller' in NAME
     - name: Hub
@@ -83,7 +85,7 @@ Groups:
     - name: Core us-east-1c
       ok_rows==1:  "DEPLOYMENT_NAME+'-core' in LABELS and 't3.small' in LABELS and 'zone=us-east-1c' in LABELS"
     - name: Notebook nodes
-      ok_rows>=1:  "DEPLOYMENT_NAME+'-notebook' in LABELS and 'r5.xlarge' in LABELS  and 'region=us-east-1' in LABELS"
+      ok_rows>=1:  "DEPLOYMENT_NAME+'-notebook' in LABELS and NOTEBOOK_EC2_TYPE in LABELS  and 'region=us-east-1' in LABELS"
   - group: EKS Services
     command:  kubectl get services -A
     parser: named_columns
