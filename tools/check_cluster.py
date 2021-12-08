@@ -5,7 +5,6 @@ ignore the hub since it may not be delpoyed on the cluster yet.
 
 check creation date
 check for global hammer
-check for datadog
 """
 
 import sys
@@ -15,6 +14,8 @@ import argparse
 import re
 import json
 from collections import defaultdict
+import builtins
+
 
 import yaml
 
@@ -172,17 +173,25 @@ Groups:
       ok_rows==1: NAMESPACE=='datadog' and NAME=='datadog'
     - name: kube-proxy
       ok_rows==1: NAMESPACE=='kube-system' and NAME=='kube-proxy'
-    - name: 
+    - name:
       ok_rows==1: NAMESPACE=='kube-system' and NAME=='aws-node'
     - name: matching daemonset states
       all: READY==DESIRED==CURRENT==AVAILABLE==_['UP-TO-DATE']
   - group: Pod to Node Map
     command: kubectl get pods -A -o wide
     replace_output:
-      input: NOMINATED NODE 
+      input: NOMINATED NODE
       output: NOMINATED_NODE
     parser: node_map
     print_parsing: true
+  - group: Test builtin functions
+    function: test_function([{'Name':'a', 'State':'Available'},  {'Name':'b', 'State':'Evicted'}])
+    parser: yaml
+    assertions:
+    - name: Node a
+      ok_rows==1: Name=='a'
+    - name: State Available
+      all: State=='Available'
 """  # noqa: E501
 
 
@@ -298,6 +307,15 @@ def parse_json(output):
     return json.loads(output)
 
 
+def parse_none(output):
+    """Return the input as the output,  i.e. no changes."""
+    return output
+
+
+def test_function(parameters):
+    return yaml.dump(parameters)
+
+
 class Checker:
     """The Checker class runs a number of tests defined in a `test_spec` string.
 
@@ -405,12 +423,12 @@ class Checker:
 
     def __init__(
         self,
-        test_spec,
-        output_file,
-        input_file,
-        verbose,
-        groups_regex,
-        variables,
+        test_spec=TEST_SPEC,
+        output_file=None,
+        input_file=None,
+        verbose=False,
+        groups_regex=".+",
+        variables=None,
     ):
         self._output_file = output_file
         self._input_file = input_file
@@ -423,6 +441,7 @@ class Checker:
         )
         self._outputs = {}
         self._errors = 0
+        self._error_msgs = []
 
     @property
     def groups(self):
@@ -440,19 +459,22 @@ class Checker:
         return self.loaded_spec.get("Globals", {}).get("constants", {})
 
     @property
-    def builtin_functions(self):
-        return dict(
+    def builtins(self):
+        result = {key:getattr(builtins, key) for key in dir(builtins)}  # Python builtins
+        result.update(dict(
             convert_age=convert_age,
             aws_kv_dict=aws_kv_dict,
-        )
+            test_function=test_function,
+        ))
+        return result
 
     @property
     def combined_environment(self):
         env = dict()
+        env.update(self.builtins)
         env.update(self.spec_constants)
         env.update(self.spec_environment)
         env.update(self.variables)
-        env.update(self.builtin_functions)
         return env
 
     def main(self):
@@ -503,12 +525,18 @@ class Checker:
 
     def run_check(self, check):
         print("=" * 80)
-        output = self.get_command_output(check)
-        print(output)
-        print("=" * 80)
+        try:
+            output = self.get_command_output(check)
+        except Exception as exc:
+            self.error("Failed obtaining command output for group", repr(check.get("group")),
+                       ":", str(exc))
+            print("=" * 80)
+            return
         if self._output_file:
             return
-        if not output.startswith("Command FAILED"):
+        if not output.startswith("FAILED"):
+            print(output)
+            print("=" * 80)
             parser = globals()[f"parse_{check['parser']}"]
             namespaces = parser(output)
             if check.get("print_parsing"):
@@ -517,25 +545,51 @@ class Checker:
             if assertions:
                 self.check_assertions(check["group"], assertions, namespaces)
 
-    def check_assertions(self, group, assertions, namespaces):
+    def get_command_output(self, check):
+        group = check["group"]
+        if not self._input_file:
+            self._outputs[group] = self.compute_outputs(group, check)
+        return self._outputs[group]
+
+    def compute_outputs(self, group, check):
+        if check.get("command"):
+            command = check.get("command").format(**self.combined_environment)
+        elif check.get("function"):
+            command = check.get("function")
+        else:
+            raise RuntimeError(f"Group {group} doesn't define an input command.")
+        print("===> Fetching", repr(group), "with", repr(command))
+        print("=" * 80)
+        try:
+            if check.get("command"):
+                outputs = run(command).strip()
+            else:
+                outputs = eval(command, self.combined_environment, self.combined_environment)
+        except Exception as exc:
+            import traceback
+            traceback.print_exc()
+            outputs = f"FAILED for '{group}': '{command}' : '{str(exc)}'"
+            self.error(outputs)
+        return outputs
+
+    def check_assertions(self, group_name, assertions, namespaces):
         for assertion in assertions:
             assertion = dict(assertion)
-            name = assertion.pop("name")
-            print("===> Checking", repr(group), ":", repr(name), ":", assertion)
+            assertion_name = assertion.pop("name")
             requirement, condition = list(assertion.items())[0]
-            condition = condition.format(**self.combined_environment)
+            # condition = condition.format(**self.combined_environment)
+            print(f"Checking assertion '{assertion_name}': {requirement} : {condition}")
             if requirement == "simple":
-                self.verify_simple(name, namespaces, condition)
+                self.verify_simple(group_name, assertion_name, namespaces, condition)
             elif requirement.startswith(("ok_rows", "all")):
-                self.verify_rows(name, namespaces, requirement, condition)
+                self.verify_rows(group_name, assertion_name, namespaces, requirement, condition)
             else:
                 raise ValueError(
                     f"Unhandled requirement: {requirement} for assertion: {assertion}"
                 )
             print()
 
-    def verify_rows(self, name, namespaces, requirement, condition):
-        self.verbose(f"Checking '{name}': {repr(condition)}")
+    def verify_rows(self, group_name, name, namespaces, requirement, condition):
         rows = []
         for i, namespace in enumerate(namespaces):
             self.verbose(f"Checking '{name}' #{i} : {condition} ... ", end="")
@@ -543,21 +597,19 @@ class Checker:
                 rows.append(namespace)
                 self.verbose("OK")
             else:
-                self.verbose("FAILED")
-                self.verbose("Namespace:", namespace)
+                self.verbose("FAILED on row:", namespace)
         if requirement == "all":
             requirement = f"ok_rows=={len(namespaces)}"
         if self.eval_condition(dict(ok_rows=len(rows)), requirement):  # nosec
-            print(f"===> OK overall '{name}'")
+            print(f"===> OK Group '{group_name}' Assertion '{name}'")
         else:
-            self.error(f"overall '{name}'")
-            self.verbose("Namespace:", namespace)
+            self.error(f"Group '{group_name}' Assertion '{name}' failed on row:", namespace)
 
-    def verify_simple(self, name, namespace, condition):
+    def verify_simple(self, group_name, name, namespace, condition):
         if self.eval_condition(namespace, condition):
-            print(f"===> OK '{name}'")
+            print(f"===> OK Group '{group_name}' Assertion '{name}'")
         else:
-            self.error(f"'{name}'")
+            self.error(f"Group '{group_name}' Assertion '{name}' failed.")
             self.verbose("Namespace:", namespace)
 
     def eval_condition(self, namespace, condition):
@@ -571,7 +623,14 @@ class Checker:
 
     def error(self, *args):
         self._errors += 1
+        self._error_msgs.append(" ".join(str(arg) for arg in args))
         print("===> ERROR: ", *args)
+
+    def show_error_status(self):
+        print("="*80)
+        print("Overall", self._errors, "errors occurred:")
+        for msg in self._error_msgs:
+            print(msg)
 
 
 def parse_args():
@@ -640,10 +699,7 @@ def main():
         variables=args.variables,
     )
     errors = checker.main()
-    if errors:
-        print("Total Errors:", errors)
-    else:
-        print("No Errors Detected")
+    checker.show_error_status()
     return errors
 
 
