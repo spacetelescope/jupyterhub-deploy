@@ -19,7 +19,9 @@ import builtins
 
 import yaml
 
-TEST_SPEC = """
+
+
+CLUSTER_CHECKS = """
 Globals:
   environment:
     - DEPLOYMENT_NAME
@@ -423,7 +425,7 @@ class Checker:
 
     def __init__(
         self,
-        test_spec=TEST_SPEC,
+        test_spec=CLUSTER_CHECKS,
         output_file=None,
         input_file=None,
         verbose=False,
@@ -557,7 +559,7 @@ class Checker:
             if check.get("command"):
                 outputs = run(command).strip()
             else:
-                outputs = eval(
+                outputs = eval(    # nosec
                     command, self.combined_environment, self.combined_environment
                 )
         except Exception as exc:
@@ -689,7 +691,7 @@ def main():
     Return the number of failing tests or 0 if all tests pass.
     """
     args = parse_args()
-    test_spec = open(args.test_spec).read().strip() if args.test_spec else TEST_SPEC
+    test_spec = open(args.test_spec).read().strip() if args.test_spec else CLUSTER_CHECKS
     checker = Checker(
         test_spec=test_spec,
         output_file=args.output_file,

@@ -1,0 +1,23 @@
+Globals:
+  environment:
+    - DEPLOYMENT_NAME
+    - ENVIRONMENT
+    - JH_HOSTNAME
+    - ADMIN_ARN
+    - ACCOUNT_ID
+  constants:
+    V_K8S: "1.21"
+    MAX_NODE_AGE: 10d
+    MAX_EFS_FILE_SYSTEM_SIZE: 50000000000000
+    CORE_NODES: 3
+    NOTEBOOK_EC2_TYPE: r5.xlarge
+    MAX_RESTARTS: 0
+Groups:
+  - group: Test builtin functions
+    function: test_function([{'Name':'a', 'State':'Available'},  {'Name':'b', 'State':'Evicted'}])
+    parser: yaml
+    assertions:
+    - name: Node a
+      ok_rows==1: Name=='a'
+    - name: State Available
+      ok_rows==1: State=='Available'
