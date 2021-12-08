@@ -460,12 +460,16 @@ class Checker:
 
     @property
     def builtins(self):
-        result = {key:getattr(builtins, key) for key in dir(builtins)}  # Python builtins
-        result.update(dict(
-            convert_age=convert_age,
-            aws_kv_dict=aws_kv_dict,
-            test_function=test_function,
-        ))
+        result = {
+            key: getattr(builtins, key) for key in dir(builtins)
+        }  # Python builtins
+        result.update(
+            dict(
+                convert_age=convert_age,
+                aws_kv_dict=aws_kv_dict,
+                test_function=test_function,
+            )
+        )
         return result
 
     @property
@@ -528,8 +532,12 @@ class Checker:
         try:
             output = self.get_command_output(check)
         except Exception as exc:
-            self.error("Failed obtaining command output for group", repr(check.get("group")),
-                       ":", str(exc))
+            self.error(
+                "Failed obtaining command output for group",
+                repr(check.get("group")),
+                ":",
+                str(exc),
+            )
             print("=" * 80)
             return
         if self._output_file:
@@ -564,9 +572,12 @@ class Checker:
             if check.get("command"):
                 outputs = run(command).strip()
             else:
-                outputs = eval(command, self.combined_environment, self.combined_environment)
+                outputs = eval(
+                    command, self.combined_environment, self.combined_environment
+                )
         except Exception as exc:
             import traceback
+
             traceback.print_exc()
             outputs = f"FAILED for '{group}': '{command}' : '{str(exc)}'"
             self.error(outputs)
@@ -582,7 +593,9 @@ class Checker:
             if requirement == "simple":
                 self.verify_simple(group_name, assertion_name, namespaces, condition)
             elif requirement.startswith(("ok_rows", "all")):
-                self.verify_rows(group_name, assertion_name, namespaces, requirement, condition)
+                self.verify_rows(
+                    group_name, assertion_name, namespaces, requirement, condition
+                )
             else:
                 raise ValueError(
                     f"Unhandled requirement: {requirement} for assertion: {assertion}"
@@ -603,7 +616,9 @@ class Checker:
         if self.eval_condition(dict(ok_rows=len(rows)), requirement):  # nosec
             print(f"===> OK Group '{group_name}' Assertion '{name}'")
         else:
-            self.error(f"Group '{group_name}' Assertion '{name}' failed on row:", namespace)
+            self.error(
+                f"Group '{group_name}' Assertion '{name}' failed on row:", namespace
+            )
 
     def verify_simple(self, group_name, name, namespace, condition):
         if self.eval_condition(namespace, condition):
@@ -627,7 +642,7 @@ class Checker:
         print("===> ERROR: ", *args)
 
     def show_error_status(self):
-        print("="*80)
+        print("=" * 80)
         print("Overall", self._errors, "errors occurred:")
         for msg in self._error_msgs:
             print(msg)
