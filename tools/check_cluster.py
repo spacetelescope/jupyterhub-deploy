@@ -505,21 +505,6 @@ class Checker:
         with open(self._output_file, "w+") as file:
             yaml.dump(self._outputs, file)
 
-    def get_command_output(self, check):
-        group = check["group"]
-        if not self._input_file:
-            command = check.get("command").format(**self.combined_environment)
-            print("===> Fetching", repr(group), "with", repr(command))
-            print("=" * 80)
-            try:
-                output = run(command).strip()
-            except Exception as exc:
-                error = f"Command FAILED for '{group}': '{command}' : '{str(exc)}'"
-                self.error(error)
-                output = error
-        self._outputs[group] = self.replace_output(check, output)
-        return self._outputs[group]
-
     def replace_output(self, check, output):
         if check.get("replace_output"):
             input_patt = check.get("replace_output").get("input")
