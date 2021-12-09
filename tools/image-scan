@@ -1,7 +1,183 @@
-#! /bin/bash -eu
-echo "=========== ECR Docker Image Vulnerability Scan for $IMAGE_ID"
-cd  $JUPYTERHUB_DIR
-image-scan-report "$IMAGE_UBUNTU_NAME" $IMAGE_VULNERABILITY_LEVEL >ecr-scan-report.yaml
+#! /usr/bin/env python
+# -*-python-*-
 
-echo "=========== ECR Scan Summary ================================"
-image-scan-summary ecr-scan-report.yaml
+"""This tool pulls down Docker image scan reports from ECR based on
+the current environment which is used to identify the image.
+
+Run "image-scan-report --help" for usage information.
+
+The result of the report is a YAML file limited to CVE's which are
+at the minimum severity level or greater.
+
+For each CVE, the tool follows the URI reported by ECR (to an Ubuntu
+website) and extracts the CVE status from that site, e.g. "Deferred" or
+"Needed".
+"""
+
+import sys
+import os
+import subprocess
+import json
+import yaml
+import copy
+import argparse
+import requests
+import bs4
+import time
+
+
+KEEP_LEVELS = {
+    "CRITICAL": ["CRITICAL"],
+    "HIGH": ["CRITICAL", "HIGH"],
+    "MEDIUM": ["CRITICAL", "HIGH", "MEDIUM"],
+    "LOW": ["CRITICAL", "HIGH", "MEDIUM", "LOW"],
+    "INFORMATIONAL": ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFORMATIONAL"],
+    "ALL": ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFORMATIONAL"],
+}
+
+FAIL_LEVELS = ["CRITCAL", "HIGH"]
+
+
+def run(cmd, cwd="."):
+    result = subprocess.run(
+        cmd.split(),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        check=True,
+        cwd=cwd,
+    )  # maybe succeeds
+    return result.stdout
+
+
+def _get_scan_results(image_digest, image_tag):
+    """Issue an AWS command to dump the ECR scan results as JSON, load the
+    JSON,  and return the resulting dict.
+    """
+    admin_arn = os.environ["ADMIN_ARN"]
+    image_repo = os.environ["IMAGE_REPO"]
+    ecr_account_to_use = os.environ["ECR_ACCOUNT_ID"]
+
+    image_id_arg = f"imageTag={image_tag}"
+    if image_digest:
+        image_id_arg = f"imageDigest={image_digest}"
+
+    print(
+        f"Fetching ECR vulnerability scan for registry={ecr_account_to_use} repo={image_repo} tag={image_tag}",
+        file=sys.stderr,
+    )
+
+    scan_results = run(
+        f"awsudo -d 3600 {admin_arn}  aws ecr describe-image-scan-findings "
+        f"--no-paginate "
+        f"--registry-id {ecr_account_to_use} "
+        f"--repository-name {image_repo} "
+        f"--image-id {image_id_arg}"
+    )
+    return json.loads(scan_results)
+
+
+def get_scan_results(image_digest):
+    image_tag = os.environ["IMAGE_TAG"]
+    try:
+        return _get_scan_results(image_digest, image_tag)
+    except Exception:
+        print(
+            f"Failed fetching {image_tag}.  Trying for approved tag.", file=sys.stderr
+        )
+        if image_tag.startswith("unscanned-"):
+            return _get_scan_results(image_digest, image_tag[len("unscanned-"):])
+        else:
+            raise
+
+
+def limit_levels(version, levels, full_results):
+    """Only keep findings with statuses in `levels`.  Assume `full_results` contains
+    everything returned from ECR which e.g. **may** include LOW or INFORMATIONAL CVE's
+    which are normally ignored when scanning for MEDIUM and higher;  remove lower
+    priority CVS's from return dict.
+    """
+    reduced_results = copy.deepcopy(full_results)
+    findings = reduced_results["imageScanFindings"]["findings"]
+    reduced_results["imageScanFindings"]["findings"] = []
+    reduced_results["overall_status"] = "OK"
+    for finding in findings:
+        if finding["severity"] in levels or "ALL" in levels:
+            reduced_results["imageScanFindings"]["findings"].append(finding)
+            uri = finding["uri"]
+            if "ubuntu" in uri:
+                ubuntu_status = fetch_ubuntu_uri_status(uri, version)
+                finding["cve_status"] = (
+                    finding["name"]
+                    + " -- "
+                    + finding["severity"]
+                    + " -- "
+                    + ubuntu_status
+                )
+            else:
+                print("Unknown CVE URI:", uri)
+        if finding["severity"] in FAIL_LEVELS:
+            reduced_results["overall_status"] = "FAILED"
+    return reduced_results
+
+
+def get_report_dict(version, levels, image_digest):
+    """Get the overall scan report dict which includes both ECR findings which
+    have severities in `levels` and the Ubuntu status string for the CVE for
+    Ubuntu `version`.
+    """
+    sys.stderr.flush()
+    vulnerabilities = get_scan_results(image_digest)
+    while vulnerabilities["imageScanStatus"]["status"] != "COMPLETE":
+        print(
+            "Waiting for ECR scan,  prior status:",
+            vulnerabilities["imageScanStatus"]["status"],
+            file=sys.stderr,
+        )
+        sys.stderr.flush()
+        time.sleep(10)
+        vulnerabilities = get_scan_results(image_digest)
+    reduced = limit_levels(version, levels, vulnerabilities)
+    return reduced
+
+
+def fetch_ubuntu_uri_status(uri, version_name):
+    """Follow the Ubuntu `uri` included in ECR output for each CVE.  Rip the
+    status for Ubuntu which includes substring `version_name` in its table
+    entry and return a summary string which shows Ubuntu's status on addressing
+    / remediating the CVE.
+    """
+    response = requests.get(uri)
+    soup = bs4.BeautifulSoup(response.text, "lxml")
+    for row in soup.find_all("tr"):
+        tds = row.find_all("td")
+        if len(tds) < 2:
+            continue
+        if version_name.lower() in tds[0].text.lower():
+            return tds[0].text.strip() + " -- " + tds[1].text.split()[0]
+    return "unknown"
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--version", help="Ubuntu version substring, e.g. Groovy", default=os.environ["IMAGE_UBUNTU_NAME"])
+    parser.add_argument("--levels", help="Minimum severity level, e.g. MEDIUM", default=os.environ["IMAGE_VULNERABILITY_LEVEL"])
+    parser.add_argument(
+        "--image-digest",
+        dest="image_digest",
+        default=None,
+        help="Digest of image to scan, e.g. sha256:*",
+    )
+    args = parser.parse_args()
+
+    levels = KEEP_LEVELS[args.levels.upper()]
+    reduced = get_report_dict(args.version, levels, args.image_digest)
+    print(yaml.dump(reduced))
+
+    if reduced["overall_status"] == "FAILED":
+        sys.exit(1)
+    sys.exit(0)
+
+
+if __name__ == "__main__":
+    main()
