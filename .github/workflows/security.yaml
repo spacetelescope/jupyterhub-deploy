@@ -1,4 +1,4 @@
-name: Source Code Scanning
+name: Security Scans
 on:
    schedule: # weekly
      - cron: '0 0 * * 0'
@@ -11,8 +11,8 @@ on:
         - main
 
 jobs:
-  source-scanning:
-    name: "${{ matrix.DEPLOYMENT_NAME }}  -- Source Code Scanning"
+  security-scanning:
+    name: "${{ matrix.DEPLOYMENT_NAME }}  -- Security"
     runs-on: ubuntu-18.04
 
     strategy:
@@ -46,20 +46,6 @@ jobs:
       #      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       #   with:
       #      args: --severity-threshold=high
-
-      - name: YAML Parsing
-        shell: bash
-        continue-on-error: false
-        run: |
-           source setup-env
-           tools/sscan-yaml `find deployments tools -name '*.yaml' -o -name '*.yml'`
-
-      - name: Flake8 Scan
-        shell: bash
-        continue-on-error: false
-        run: |
-           source setup-env
-           tools/sscan-flake8
 
       - name: Bandit Scan
         shell: bash
