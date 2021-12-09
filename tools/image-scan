@@ -86,7 +86,7 @@ def get_scan_results(image_digest):
             f"Failed fetching {image_tag}.  Trying for approved tag.", file=sys.stderr
         )
         if image_tag.startswith("unscanned-"):
-            return _get_scan_results(image_digest, image_tag[len("unscanned-"):])
+            return _get_scan_results(image_digest, image_tag[len("unscanned-") :])
         else:
             raise
 
@@ -160,8 +160,16 @@ def fetch_ubuntu_uri_status(uri, version_name):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--version", help="Ubuntu version substring, e.g. Groovy", default=os.environ["IMAGE_UBUNTU_NAME"])
-    parser.add_argument("--levels", help="Minimum severity level, e.g. MEDIUM", default=os.environ["IMAGE_VULNERABILITY_LEVEL"])
+    parser.add_argument(
+        "--version",
+        help="Ubuntu version substring, e.g. Groovy",
+        default=os.environ["IMAGE_UBUNTU_NAME"],
+    )
+    parser.add_argument(
+        "--levels",
+        help="Minimum severity level, e.g. MEDIUM",
+        default=os.environ["IMAGE_VULNERABILITY_LEVEL"],
+    )
     parser.add_argument(
         "--image-digest",
         dest="image_digest",
