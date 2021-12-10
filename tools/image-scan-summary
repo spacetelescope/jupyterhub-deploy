@@ -1,6 +1,0 @@
-#! /bin/bash -eu
-
-# Do a poor man's summary of an ECR scan report, grepping out the most critical
-# information.
-
-grep -E 'cve|description|uri|imageDigest|registryId|repositoryName|imageScanCompletedAt'  $1

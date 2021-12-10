@@ -1,5 +1,0 @@
-#! /bin/bash -eu
-
-# Print Docker history of the most recently built image.
-# If you want some other image,  just use "docker history"
-docker history --no-trunc `docker image ls |  head -2 | tail -1 | awk '{ print $3; }'`

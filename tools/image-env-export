@@ -1,6 +1,0 @@
-#! /bin/bash -eu
-
-# Launch the latest mission image and export the conda environment
-# named $1.
-
-image-exec conda env export --no-build --name $1
