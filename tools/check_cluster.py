@@ -203,7 +203,7 @@ Groups:
 
 def convert_age(age_str):
     """Convert k8s abbreviated-style datetime str e.g. 14d2h to an integer."""
-    age_str_org = age_str
+    # age_str_org = age_str
 
     def age_subst(age_str, letter, factor):
         parts = age_str.split(letter)
