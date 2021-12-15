@@ -1,6 +1,5 @@
 #!/usr/bin/bash
  
-secret=$(awsudo $ADMIN_ARN aws secretsmanager get-secret-value --secret-id ${DATADOG_API_KEY_ID} --region us-east-1 | grep 'SecretString' | awk -F: '{print $2}' | xargs | sed 's|["'\'']||g' | sed '
- s/,$//')
+secret=$(awsudo $ADMIN_ARN aws secretsmanager get-secret-value --secret-id ${DATADOG_API_KEY_ID} --region us-east-1 --version-stage AWSCURRENT --query SecretString --output text | cut -d: -f2 | tr -d \"})
 
 echo ${secret}
