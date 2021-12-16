@@ -1,6 +1,5 @@
 #!/usr/bin/bash
 
-
 export dd_key_type=$1
 if [ -z "$dd_key_type" ]; then
     echo "Missing arg: key type (app or api)"
@@ -18,6 +17,3 @@ key_type = os.environ.get('dd_key_type')
 data = json.loads(keys)
 print(data[f'dd-dmd-awscloud-{key_type}key'])
 EOF
-
-
-
