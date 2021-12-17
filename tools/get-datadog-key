@@ -1,0 +1,19 @@
+#!/usr/bin/bash
+
+export dd_key_type=$1
+if [ -z "$dd_key_type" ]; then
+    echo "Missing arg: key type (app or api)"
+    exit 1
+fi
+
+export dd_keys=$(awsudo $ADMIN_ARN aws secretsmanager get-secret-value --secret-id ${DATADOG_API_KEY_ID} --region us-east-1 --version-stage AWSCURRENT --query SecretString --output text)
+
+python<<EOF
+import os, json
+
+keys = os.environ.get('dd_keys')
+key_type = os.environ.get('dd_key_type')
+
+data = json.loads(keys)
+print(data[f'dd-dmd-awscloud-{key_type}key'])
+EOF
