@@ -1,14 +1,18 @@
 
+# NOTE: had to do this...
+# rm /home/ec2-user/python/ssl/cert.pem   //delete existing symlink
+# ln -s /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem  /home/ec2-user/python/ssl/cert.pem  //create new symlink to cert bundle
+
 import os
 import subprocess
 import json
-#from time import time
-#from datadog import initialize, api
+import math
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from datadog_api_client.v1 import ApiClient, Configuration
 from datadog_api_client.v1.api.metrics_api import MetricsApi
+
 
 
 def get_key(key_type):
@@ -23,10 +27,17 @@ def get_key(key_type):
     return str(out).lstrip("b'").rstrip("\\n'")
 
 
-def get_data(api_key, app_key):
+def get_raw_data(api_key, app_key):
     os.environ['DD_SITE'] = 'datadoghq.com'
     os.environ['DD_API_KEY'] = api_key
     os.environ['DD_APP_KEY'] = app_key
+
+    # TODO: get these vars elsewhere (arg? env?)
+    account = 'aws-account-name:aws-tess-tike-ops'
+    cluster = 'eks_cluster-name:tike'
+    pod_name = 'pod_name:jupyter-*'
+
+    query = f'max:kubernetes_state.pod.count{{{account},{cluster},{pod_name}}} by {{pod_name}}'
 
     configuration = Configuration()
     with ApiClient(configuration) as api_client:
@@ -34,50 +45,52 @@ def get_data(api_key, app_key):
         response = api_instance.query_metrics(
             _from=int((datetime.now() + relativedelta(days=-1)).timestamp()),
             to=int(datetime.now().timestamp()),
-            query="system.cpu.idle{*}",
+            query=query
         )
 
-        print(response)
-
-    #options = {
-    #    'api_key': api_key,
-    #    'app_key': app_key
-    #}
-    #initialize(**options)
-
-    # time period over which we want data
-    #time_interval = 604800 # seconds in a week
-    #end = int(time())
-    #start = end - time_interval
-
-    # TODO: get these vars elsewhere (arg? env?)
-    account = 'aws-tess-tike-ops'
-    cluster = 'tike'
-    pod_name = 'jupyter-*'
-
-    query = f'max:kubernetes_state.pod.count{{{account},{cluster},{pod_name}}} by {{pod_name}}'
-    #max:kubernetes_state.pod.count{$account,$cluster,$pod_name} by {pod_name}
-    print()
-    print(query)
-    print()
-    print()
-
-    #results = api.Metric.query(
-    #    query=query,
-    #    start=start - time_interval,
-    #    end=end
-    #)
-
-    #print(json.dumps(results, indent=2))
+        return response
 
 
-if __name__ == '__main__':
-    get_data(
+
+def parse_data(data):
+    users = {}
+    for s in data['series']:
+        user = s['tag_set'][0].lstrip('pod_name:')
+        users[user] = []
+        print(len(s['pointlist']))
+        for p in s['pointlist']:
+            val = p.value[1]
+            if val:
+                users[user].append(val)
+
+    for u in users:
+        # rounded up to the minute
+        mins = math.ceil(float(len(users[u]))*5/60)
+        print(mins, u)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+it() __name__ == '__main__':
+    raw_data = get_raw_data(
         get_key('api'),
         get_key('app')
     )
 
-
+    parse_data(raw_data)
 
 
 
