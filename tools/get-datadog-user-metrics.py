@@ -43,11 +43,10 @@ def get_raw_data(api_key, app_key):
     with ApiClient(configuration) as api_client:
         api_instance = MetricsApi(api_client)
         response = api_instance.query_metrics(
-            _from=int((datetime.now() + relativedelta(days=-1)).timestamp()),
+            _from=int((datetime.now() + relativedelta(weeks=-1)).timestamp()),
             to=int(datetime.now().timestamp()),
             query=query
         )
-
         return response
 
 
@@ -57,54 +56,24 @@ def parse_data(data):
     for s in data['series']:
         user = s['tag_set'][0].lstrip('pod_name:')
         users[user] = []
-        print(len(s['pointlist']))
         for p in s['pointlist']:
             val = p.value[1]
             if val:
                 users[user].append(val)
 
     for u in users:
-        # rounded up to the minute
-        mins = math.ceil(float(len(users[u]))*5/60)
-        print(mins, u)
+        hours = math.ceil(float(len(users[u])))
+
+        print(hours, u)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-it() __name__ == '__main__':
+if __name__ == '__main__':
     raw_data = get_raw_data(
         get_key('api'),
         get_key('app')
     )
 
     parse_data(raw_data)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
