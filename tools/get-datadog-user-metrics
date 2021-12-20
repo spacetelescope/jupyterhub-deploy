@@ -64,6 +64,7 @@ def parse_data(data):
             if val:
                 users_raw[user].append(val)
 
+    # anonymise identifiable info
     users = {}
     for u in users_raw:
         hours = math.ceil(float(len(users_raw[u])))
@@ -80,7 +81,7 @@ def print_report(data, end_date):
     print(title)
     print('-'*len(title))
     print(f'\nNumber of unique users: {int(len(_sorted))}\n')
-    print('Total usage hours per user (anonymized):')
+    print('Total usage hours per user (anonymised):')
     for (u, val) in _sorted:
         print(f'\t{u}\t{val}')
     print()
@@ -110,4 +111,4 @@ if __name__ == '__main__':
 
     user_data = parse_data(raw_data)
 
-    print_report(user_data, args["end-date"])
+    print_report(user_data, args['end-date'])
