@@ -3,8 +3,8 @@ lxml
 cython
 pybind11
 jinja2~=2.11.0
-bokeh~=2.3.3
-panel==0.12.1
+bokeh~=2.4.2
+panel
 ipywidgets
 
 numpy
@@ -23,16 +23,17 @@ oktopus
 uncertainties
 fbpca
 
-astropy
+astropy~=4.3.0
 astroquery
 pyvo
 #pyvodb
 corner
 
-boto3==1.17.106
-s3fs #==2021.7.0
-aiobotocore==1.4.2
-botocore==1.20.106
+boto3==1.19.8
+s3fs
+s3transfer
+aiobotocore~=2.0.0
+botocore
 requests
 dask[distributed]
 future

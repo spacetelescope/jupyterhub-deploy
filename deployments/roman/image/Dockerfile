@@ -15,7 +15,7 @@ ENV MIRAGE_DATA=/data/mirage \
 # ----------------------------------------------------------------------
 
 ENV CRDS_PATH=/home/jovyan/crds_cache
-ENV CRDS_SERVER_URL=https://jwst-crds.stsci.edu
+ENV CRDS_SERVER_URL=https://roman-crds-test.stsci.edu
 ENV CRDS_VERBOSITY=20
 
 # ----------------------------------------------------------------------

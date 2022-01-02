@@ -34,15 +34,16 @@ def test_notebooks(kernel, notebooks, jobs=1):
             f"Testing {len(notebooks)} notebooks on kernel {kernel} using {jobs} jobs"
         ).strip()
     )
-    errv = [0]
+    failing_notebooks = []
     with ProcessPoolExecutor(max_workers=jobs) as e:
-        for (errno, output) in e.map(
+        for (failed, notebook, output) in e.map(
             test_notebook, [kernel] * len(notebooks), notebooks
         ):
-            errv.append(errno)
             sys.stdout.write(output)
             sys.stdout.flush()
-    return sum(errv)
+            if failed:
+                failing_notebooks.append(notebook)
+    return failing_notebooks
 
 
 def divider(title, char="*", width=100):
@@ -94,7 +95,7 @@ def test_notebook(kernel, notebook):
     elapsed = datetime.datetime.now() - start
     output += divider(f"Tested {base_nb} {'OK' if not err else 'FAIL'} {elapsed}")
 
-    return int(err != 0), output
+    return int(err != 0), notebook, output
 
 
 def main():
@@ -118,23 +119,25 @@ def main():
     parallel_errs = (
         test_notebooks(args.kernel, parallel_notebooks, args.jobs)
         if parallel_notebooks
-        else 0
+        else []
     )
 
     serial_notebooks = [
         notebook[1:] for notebook in args.notebooks if notebook.startswith("!")
     ]
     serial_errs = (
-        test_notebooks(args.kernel, serial_notebooks, 1) if serial_notebooks else 0
+        test_notebooks(args.kernel, serial_notebooks, 1) if serial_notebooks else []
     )
 
     if parallel_notebooks or serial_notebooks:
         errs = parallel_errs + serial_errs
         if errs:
-            print(divider(f"Test Notebooks Errors={errs}"))
+            print(divider(f"Test Notebooks Errors={len(errs)}"))
+            print("\n".join(errs))
+            print(divider(f"Test Notebooks Errors={len(errs)}"))
         else:
             print(divider("Test Notebooks OK"))
-        return errs
+        return len(errs) != 0
     else:
         return 0
 
