@@ -3,12 +3,7 @@ on:
    schedule: # weekly
      - cron: '0 0 * * 0'
    push:
-      branches:
-        - main
-        - test
    pull_request:
-      branches:
-        - main
 
 jobs:
   security-scanning:

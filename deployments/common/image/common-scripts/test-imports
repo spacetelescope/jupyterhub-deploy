@@ -4,8 +4,20 @@
 """Import the packages listed on the command line to test installation."""
 
 import sys
+import traceback
 
-if (len(sys.argv) < 2):
+
+def flush():
+    sys.stdout.flush()
+    sys.stderr.flush()
+
+
+def fprint(*args, **keys):
+    print(*args, **keys)
+    flush()
+
+
+if len(sys.argv) < 2:
     print("test-imports <pkgs...>", file=sys.stderr)
     sys.exit(1)
 
@@ -14,13 +26,15 @@ import_list = sys.argv[1:]
 errs = 0
 for pkg in import_list:
     if pkg.startswith("#"):
-        print("Skipping", pkg)
+        fprint("Skipping", pkg)
         continue
     try:
+        fprint("Importing", pkg, "... ", end="")
         __import__(pkg)
-        print("Importing", pkg, "... ok")
+        fprint("ok")
     except ImportError:
-        print("Importing", pkg, "... FAIL")
+        traceback.print_exc()
+        fprint("FAIL")
         errs += 1
-
+    flush()
 sys.exit(errs)
