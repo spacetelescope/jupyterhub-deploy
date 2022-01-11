@@ -116,18 +116,12 @@ def main():
     parallel_notebooks = [
         notebook for notebook in args.notebooks if not notebook.startswith("!")
     ]
-    parallel_errs = (
-        test_notebooks(args.kernel, parallel_notebooks, args.jobs)
-        if parallel_notebooks
-        else []
-    )
+    parallel_errs = test_notebooks(args.kernel, parallel_notebooks, args.jobs)
 
     serial_notebooks = [
         notebook[1:] for notebook in args.notebooks if notebook.startswith("!")
     ]
-    serial_errs = (
-        test_notebooks(args.kernel, serial_notebooks, 1) if serial_notebooks else []
-    )
+    serial_errs = test_notebooks(args.kernel, serial_notebooks, 1)
 
     if parallel_notebooks or serial_notebooks:
         errs = parallel_errs + serial_errs
