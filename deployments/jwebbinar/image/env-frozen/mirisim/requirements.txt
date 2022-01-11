@@ -14,7 +14,7 @@ alabaster==0.7.12
     #   sphinx
 ansiwrap==0.8.4
     # via papermill
-anyio==3.4.0
+anyio==3.5.0
     # via jupyter-server
 apipkg==1.5
     # via
@@ -96,9 +96,9 @@ bleach==4.1.0
     # via
     #   -r /opt/environments/mirisim/miricle-linux-deps.txt.pip
     #   nbconvert
-boto3==1.20.32
+boto3==1.20.33
     # via -r /opt/common-env/common.pip
-botocore==1.23.32
+botocore==1.23.33
     # via
     #   boto3
     #   s3transfer
