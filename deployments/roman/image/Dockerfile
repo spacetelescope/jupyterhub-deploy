@@ -118,6 +118,11 @@ RUN /opt/common-scripts/fix-certs
 # Copy any remaining environments files not caught by more precise as-needed build copies
 COPY --chown=${NB_UID}:${NB_GID} environments/    /opt/environments/
 
+# Run conservative version of "npm audit fix" on all discoverable npm environments
+# RUN /opt/common-scripts/env-npm-audit  /  fix  && \
+#    /opt/common-scripts/env-yarn-audit  /  fix && \
+#    /opt/common-scripts/crosslink --link `find /opt/conda -name node_modules`
+
 # For standalone operation outside JupyterHub,  note that  /etc also includes
 # common home directory files.   post-start-hook may not include everything required
 # for running on AWS,  just common functions needed for both AWS and standalone/CI.
