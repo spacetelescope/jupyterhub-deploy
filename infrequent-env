@@ -72,7 +72,7 @@ fi
 # PIP_SWITCHES are passed through to pip by Docker and the pip install scripts
 # env-update and env-compile/sync.
 
-export PIP_SWITCHES="--no-color --default-timeout 100 --no-build-isolation --use-deprecated=legacy-resolver"
+export PIP_SWITCHES="--no-color --default-timeout 100"
 if [[ "${CLEAR_PKG_CACHES}" == "1" ]]; then
     export PIP_SWITCHES="${PIP_SWITCHES} --no-cache-dir"
 fi

@@ -1,30 +1,14 @@
 #! /bin/bash
 
-set -eu
+set -eux
 
 jupyter nbextension enable --py --sys-prefix  ipyvuetify
 jupyter nbextension enable --py --sys-prefix  ipysplitpanes
 
-jupyter labextension install \
-       @jupyterlab/server-proxy \
-       @jupyter-widgets/jupyterlab-manager \
-        ipyevents \
-        d3-selection-multi \
-        jupyter-vuetify \
-        bqplot
-
-#         ipysplitpanes \    # ValueError: "ipysplitpanes" is not a valid npm package
-
-
-jupyter lab build -y
-
-# jupyter serverextension enable --sys-prefix jupyter_server_proxy
-
-npm install --save jupyter-splitpanes
-npm install --save jupyter-golden-layout
-npm install --save bqplot-image-gl
-
-# npm audit fix --force
+npm install -g d3-selection-multi
+npm install -g jupyter-splitpanes
+npm install -g jupyter-golden-layout
+npm install -g bqplot-image-gl
 
 # Skip cache clearing if buildkit caching is enabled or dev-mode is enabled.
 if [[ "${CLEAR_PKG_CACHES}" == "1" ]]; then

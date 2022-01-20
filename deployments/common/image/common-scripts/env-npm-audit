@@ -1,0 +1,38 @@
+#! /bin/bash
+
+if [[ "$#" == "0" ]]; then
+   cat <<EOF
+usage:  env-npm-audit <root-path> [fix [--force]]
+
+Runs npm audit on all discoverable package-lock.json files under
+<root_path> to identify vulnerabilities in described packages.
+
+Adding "fix" should result in innocuous package updates according to
+semver rules to address vulnerabilities.
+
+Adding "fix --force" will apply riskier package updates which are
+considered "possibly breaking changes" according to semver rules.
+
+There's no guarantee every package follows semver rules and that
+the resulting "fixes" don't break something.
+EOF
+exit 2
+fi
+
+root_path=$1
+shift
+
+for lockfile in `find ${root_path} -name package-lock.json 2>/dev/null`; do
+    audit_path=`dirname ${lockfile}`
+    cd ${audit_path}
+    echo "======================= Auditing ${audit_path} ====================="
+    npm audit --no-progress --audit-level moderate
+    if [[ "$1" == "fix" ]]; then
+	echo "======================= Fixing ${audit_path} ====================="
+	npm audit fix --no-progress --audit-level moderate
+	echo "======================= Followup Audit ${audit_path} ====================="
+	npm audit --no-progress --audit-level moderate
+    fi
+done
+
+npm cache clean --force

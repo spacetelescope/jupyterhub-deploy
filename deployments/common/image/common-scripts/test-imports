@@ -23,7 +23,7 @@ if len(sys.argv) < 2:
 
 import_list = sys.argv[1:]
 
-errs = 0
+errs = []
 for pkg in import_list:
     if pkg.startswith("#"):
         fprint("Skipping", pkg)
@@ -35,6 +35,10 @@ for pkg in import_list:
     except ImportError:
         traceback.print_exc()
         fprint("FAIL")
-        errs += 1
+        errs.append(pkg)
     flush()
-sys.exit(errs)
+fprint("=" * 80)
+fprint(
+    f" Failing packages: {len(errs)} ".center(80, "=") + "\n", "\n".join(errs), sep=""
+)
+sys.exit(int(len(errs) != 0))

@@ -14,7 +14,6 @@ pandeia-engine
 git+https://github.com/spacetelescope/pandeia-coronagraphy.git@1d5ad4c641e7f637814bcc058ffa59b4d52911f2
 
 astroscrappy
-cubeviz
 dust_extinction
 fitsblender
 ginga
