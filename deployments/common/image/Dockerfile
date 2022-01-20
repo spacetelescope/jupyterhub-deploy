@@ -87,13 +87,20 @@ RUN /opt/common-scripts/apt-install \
         apt-file \
         libxpa-dev \
         libxt-dev \
-        libbz2-dev \
-        nvidia-cuda-toolkit
+        libbz2-dev
+
+# YYYY SEC
+#       nvidia-cuda-toolkit
 
 # Latex
-RUN /opt/common-scripts/apt-install \
-        texlive-latex-recommended \
-        cm-super
+# RUN /opt/common-scripts/apt-install \
+#        texlive-latex-recommended \
+#        cm-super
+
+# YYYY SEC
+# RUN apt-get update && \
+#    apt-get remove --yes libpdfbox-java libfontbox-java && \
+#    apt autoremove --yes
 
 # ------------------------------------------------------------------------
 # This must be run after conda installs
@@ -140,3 +147,17 @@ RUN cat /opt/common-scripts/global_bashrc >> /etc/bash.bashrc
 # augmented by specific deployments
 USER ${NB_UID}
 COPY default-home-contents/   /etc/default-home-contents
+
+# ----------------------------------------------------------------------
+# YYYY SEC
+
+RUN npm set config set cafile /etc/ssl/certs/stsci-tls-ca-bundle.pem
+
+RUN npm install -g --prod yarn             && \
+    npm install -g --prod yarn-audit-fix   && \
+    yarn config set cafile /etc/ssl/certs/stsci-tls-ca-bundle.pem && \
+    npm cache clean --force && \
+    yarn cache clean --force
+    
+
+

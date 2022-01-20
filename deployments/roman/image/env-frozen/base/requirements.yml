@@ -17,7 +17,7 @@ dependencies:
   - backports=1.0
   - backports.functools_lru_cache=1.6.4
   - beautifulsoup4=4.10.0
-  - blas=2.112
+  - blas=2.113
   - blas-devel=3.9.0
   - bleach=4.1.0
   - blinker=1.4
@@ -47,26 +47,26 @@ dependencies:
   - conda=4.11.0
   - conda-build=3.21.7
   - conda-package-handling=1.7.3
-  - conda-tree=1.0.4
+  - conda-tree=1.0.5
   - configurable-http-proxy=4.5.0
   - cryptography=36.0.1
   - cycler=0.11.0
-  - cython=0.29.26
+  - cython=0.29.27
   - cytoolz=0.11.2
-  - dask=2021.12.0
-  - dask-core=2021.12.0
+  - dask=2022.1.1
+  - dask-core=2022.1.1
   - dataclasses=0.8
   - debugpy=1.5.1
   - decorator=5.1.1
   - defusedxml=0.7.1
   - deprecation=2.1.0
   - dill=0.3.4
-  - distributed=2021.12.0
+  - distributed=2022.1.1
   - entrypoints=0.3
   - executing=0.8.2
   - filelock=3.4.2
   - flit-core=3.6.0
-  - fonttools=4.28.5
+  - fonttools=4.29.0
   - freetype=2.10.4
   - fsspec=2022.1.0
   - giflib=5.2.1
@@ -78,26 +78,27 @@ dependencies:
   - hdf5=1.12.1
   - heapdict=1.0.1
   - icu=69.1
-  - idna=3.1
+  - idna=3.3
   - imagecodecs=2021.11.20
-  - imageio=2.13.5
-  - importlib-metadata=4.10.0
+  - imageio=2.14.1
+  - importlib-metadata=4.10.1
   - importlib_resources=5.4.0
   - ipykernel=6.7.0
-  - ipympl=0.8.5
-  - ipython=7.31.0
+  - ipympl=0.8.7
+  - ipython=8.0.1
   - ipython_genutils=0.2.0
   - ipywidgets=7.6.5
   - jbig=2.1
   - jedi=0.18.1
   - jinja2=3.0.3
   - joblib=1.1.0
-  - jpeg=9d
+  - jpeg=9e
   - json5=0.9.5
   - jsonschema=4.4.0
   - jupyter-packaging=0.11.1
+  - jupyter_client=7.1.2
   - jupyter_core=4.9.1
-  - jupyter_server=1.13.2
+  - jupyter_server=1.13.4
   - jupyter_telemetry=0.1.0
   - jupyterlab=3.2.8
   - jupyterlab_pygments=0.1.2
@@ -130,9 +131,9 @@ dependencies:
   - liblapacke=3.9.0
   - liblief=0.11.5
   - libllvm11=11.1.0
-  - libmamba=0.19.1
-  - libmambapy=0.19.1
-  - libnghttp2=1.43.0
+  - libmamba=0.20.0
+  - libmambapy=0.20.0
+  - libnghttp2=1.46.0
   - libopenblas=0.3.18
   - libpng=1.6.37
   - libprotobuf=3.19.3
@@ -141,23 +142,22 @@ dependencies:
   - libssh2=1.10.0
   - libstdcxx-ng=11.2.0
   - libtiff=4.3.0
-  - libuv=1.42.0
-  - libwebp-base=1.2.1
+  - libuv=1.43.0
+  - libwebp-base=1.2.2
   - libxml2=2.9.12
   - libzlib=1.2.11
   - libzopfli=1.0.3
   - llvm-openmp=12.0.1
-  - llvmlite=0.37.0
+  - llvmlite=0.38.0
   - locket=0.2.0
   - lz4-c=1.9.3
   - lzo=2.10
   - mako=1.1.6
-  - mamba=0.19.1
+  - mamba=0.20.0
   - markupsafe=2.0.1
   - matplotlib-base=3.5.1
   - matplotlib-inline=0.1.3
   - mistune=0.8.4
-  - mock=4.0.3
   - mpc=1.2.1
   - mpfr=4.1.0
   - mpmath=1.2.1
@@ -165,18 +165,18 @@ dependencies:
   - munkres=1.1.4
   - mypy_extensions=0.4.3
   - nbclassic=0.3.5
-  - nbclient=0.5.9
-  - nbconvert=6.4.0
+  - nbclient=0.5.10
+  - nbconvert=6.4.1
   - nbformat=5.1.3
   - ncurses=6.2
   - nest-asyncio=1.5.4
   - networkx=2.6.3
-  - nodejs=17.1.0
+  - nodejs=17.4.0
   - nomkl=1.0
-  - notebook=6.4.7
-  - numba=0.54.1
+  - notebook=6.4.8
+  - numba=0.55.0
   - numexpr=2.8.0
-  - numpy=1.20.3
+  - numpy=1.21.5
   - oauthlib=3.1.1
   - olefile=0.46
   - openblas=0.3.18
@@ -184,8 +184,8 @@ dependencies:
   - openssl=1.1.1l
   - packaging=21.3
   - pamela=1.0.0
-  - pandas=1.3.5
-  - pandoc=2.17
+  - pandas=1.4.0
+  - pandoc=2.17.0.1
   - pandocfilters=1.5.0
   - parso=0.8.3
   - partd=1.2.0
@@ -200,12 +200,12 @@ dependencies:
   - pip-tools=6.4.0
   - pkginfo=1.8.2
   - platformdirs=2.3.0
-  - prometheus_client=0.12.0
-  - prompt-toolkit=3.0.24
+  - prometheus_client=0.13.1
+  - prompt-toolkit=3.0.26
   - protobuf=3.19.3
   - psutil=5.9.0
   - ptyprocess=0.7.0
-  - pure_eval=0.2.1
+  - pure_eval=0.2.2
   - py-lief=0.11.5
   - pybind11-abi=4
   - pycosat=0.6.3
@@ -214,14 +214,14 @@ dependencies:
   - pygments=2.11.2
   - pyjwt=2.3.0
   - pyopenssl=21.0.0
-  - pyparsing=3.0.6
-  - pyrsistent=0.18.0
+  - pyparsing=3.0.7
+  - pyrsistent=0.18.1
   - pysocks=1.7.1
-  - pytables=3.6.1
+  - pytables=3.7.0
   - python=3.9.7
   - python-dateutil=2.8.2
   - python-json-logger=2.0.1
-  - python-libarchive-c=3.2
+  - python-libarchive-c=4.0
   - python_abi=3.9
   - pytz=2021.3
   - pywavelets=1.2.0
@@ -247,13 +247,13 @@ dependencies:
   - sniffio=1.2.0
   - sortedcontainers=2.4.0
   - soupsieve=2.3.1
-  - sqlalchemy=1.4.29
+  - sqlalchemy=1.4.31
   - sqlite=3.37.0
-  - stack_data=0.1.3
+  - stack_data=0.1.4
   - statsmodels=0.13.1
   - sympy=1.9
   - tblib=1.7.0
-  - terminado=0.12.1
+  - terminado=0.13.1
   - testpath=0.5.0
   - threadpoolctl=3.0.0
   - tifffile=2021.11.2
@@ -264,10 +264,11 @@ dependencies:
   - tornado=6.1
   - tqdm=4.62.3
   - traitlets=5.1.1
-  - typed-ast=1.5.1
+  - typed-ast=1.5.2
   - typing=3.10.0.0
   - typing_extensions=4.0.1
   - tzdata=2021e
+  - unicodedata2=14.0.0
   - urllib3=1.26.8
   - wcwidth=0.2.5
   - webencodings=0.5.1
@@ -284,21 +285,21 @@ dependencies:
   - zict=2.0.0
   - zipp=3.7.0
   - zlib=1.2.11
-  - zstd=1.5.1
+  - zstd=1.5.2
   - pip:
     - aiohttp==3.8.1
     - aiosignal==1.2.0
     - alabaster==0.7.12
     - ansiwrap==0.8.4
     - appdirs==1.4.4
-    - astropy==5.0
+    - astropy==5.0.1
     - astropy-sphinx-theme==1.1
     - async-timeout==4.0.2
     - black==21.7b0
-    - boto3==1.20.37
-    - botocore==1.23.37
+    - boto3==1.20.46
+    - botocore==1.23.46
     - bqplot==0.12.32
-    - bqplot-image-gl==1.4.4
+    - bqplot-image-gl==1.4.5
     - ci-watson==0.5
     - docutils==0.16
     - echo==0.6
@@ -306,8 +307,8 @@ dependencies:
     - fast-histogram==0.10
     - flake8==4.0.1
     - freetype-py==2.2.0
-    - frozenlist==1.2.0
-    - glue-core==1.2.3
+    - frozenlist==1.3.0
+    - glue-core==1.2.4
     - glue-jupyter==0.10.1
     - glue-vispy-viewers==1.0.5
     - hsluv==5.0.2
@@ -324,18 +325,17 @@ dependencies:
     - ipywidgets-bokeh==1.2.1
     - jmespath==0.10.0
     - jupyter-bokeh==3.0.4
-    - jupyter-client==6.1.12
     - jupyter-desktop-server==0.1.3
-    - jupyter-server-proxy==3.2.0
+    - jupyter-server-proxy==3.2.1
     - jupyterhub==1.5.0
     - mccabe==0.6.1
     - mpl-scatter-density==0.7
-    - multidict==5.2.0
+    - multidict==6.0.2
     - nbgitpuller==1.0.2
     - nbsphinx==0.8.8
-    - numpydoc==1.1.0
+    - numpydoc==1.2
     - openpyxl==3.0.9
-    - papermill==2.3.3
+    - papermill==2.3.4
     - pipdeptree==2.2.1
     - pluggy==1.0.0
     - py==1.11.0
@@ -351,7 +351,7 @@ dependencies:
     - pythreejs==2.3.0
     - qtconsole==5.2.2
     - qtpy==2.0.0
-    - regex==2021.11.10
+    - regex==2022.1.18
     - requests-mock==1.9.3
     - s3transfer==0.5.0
     - simpervisor==0.4
