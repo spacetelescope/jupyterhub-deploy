@@ -5,6 +5,15 @@ kind: ConfigMap
 metadata:
   name: hub-templates
 data:
+  login.html: |
+    {% extends "templates/login.html" %}
+    {% block main %}
+    <div class="container">
+      <center><h2>Welcome to JWebbinar</h2></center><br/>
+      Welcome to the JWebbinar compute platform. Use this service to work along with class material. The requirements to use this service are to register for JWebbinar sessions and create a MyST account.<br/>
+    </div>
+    {{ super() }}
+    {% endblock %}
   spawn.html: |
     {% extends "page.html" %}
     {% if announcement_spawn %}

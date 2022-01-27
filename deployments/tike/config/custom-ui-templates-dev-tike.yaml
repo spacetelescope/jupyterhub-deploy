@@ -5,6 +5,16 @@ kind: ConfigMap
 metadata:
   name: hub-templates
 data:
+  login.html: |
+    {% extends "templates/login.html" %} 
+    {% block main %} 
+    <br/>
+    <div class="container">
+      <center><h2>Welcome to the Timeseries Integrated Knowledge Engine (TIKE)</h2></center><br/>
+      TIKE is a <a target="_blank" href="https://jupyter.org/hub">JupyterHub</a> service provided by the Space Telescope Science Institute (STScI), and its main goal is to increase the accessibility of scientific data and software related to the <a target="_blank" href="https://archive.stsci.edu">Mikulski Archive for Space Telescopes (MAST)</a>.<br/>
+    </div>
+    {{ super() }}
+    {% endblock %}
   spawn.html: |
     {% extends "page.html" %}
     {% if announcement_spawn %}
