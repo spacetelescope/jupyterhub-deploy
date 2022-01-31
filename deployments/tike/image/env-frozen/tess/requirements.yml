@@ -88,7 +88,7 @@ dependencies:
   - py-lief=0.11.5
   - pycosat=0.6.3
   - pycparser=2.21
-  - pyopenssl=21.0.0
+  - pyopenssl=22.0.0
   - pyparsing=3.0.7
   - pysocks=1.7.1
   - python=3.8.12
@@ -102,7 +102,7 @@ dependencies:
   - ripgrep=13.0.0
   - ruamel_yaml=0.15.80
   - scipy=1.7.3
-  - setuptools=60.5.0
+  - setuptools=60.6.0
   - six=1.16.0
   - soupsieve=2.3.1
   - sqlite=3.37.0

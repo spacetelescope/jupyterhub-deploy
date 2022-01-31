@@ -177,7 +177,7 @@ dependencies:
   - numba=0.55.0
   - numexpr=2.8.0
   - numpy=1.21.5
-  - oauthlib=3.1.1
+  - oauthlib=3.2.0
   - olefile=0.46
   - openblas=0.3.18
   - openjpeg=2.4.0
@@ -213,7 +213,7 @@ dependencies:
   - pycurl=7.44.1
   - pygments=2.11.2
   - pyjwt=2.3.0
-  - pyopenssl=21.0.0
+  - pyopenssl=22.0.0
   - pyparsing=3.0.7
   - pyrsistent=0.18.1
   - pysocks=1.7.1

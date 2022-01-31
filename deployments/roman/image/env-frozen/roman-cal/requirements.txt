@@ -164,7 +164,7 @@ cffi==1.15.0
     # via
     #   argon2-cffi-bindings
     #   cryptography
-charset-normalizer==2.0.10
+charset-normalizer==2.0.11
     # via
     #   aiohttp
     #   requests
@@ -664,7 +664,7 @@ numpydoc==1.2
     # via
     #   pysiaf
     #   sphinx-astropy
-oauthlib==3.1.1
+oauthlib==3.2.0
     # via jupyterhub
 openpyxl==3.0.9
     # via
@@ -796,7 +796,7 @@ pygments==2.11.2
     #   sphinx
 pyopengl==3.1.5
     # via glue-vispy-viewers
-pyopenssl==21.0.0
+pyopenssl==22.0.0
     # via certipy
 pyparsing==3.0.7
     # via
@@ -960,7 +960,6 @@ six==1.16.0
     #   pandeia-engine
     #   pandeia.engine
     #   pyds9
-    #   pyopenssl
     #   pysynphot
     #   python-dateutil
     #   radio-beam
