@@ -54,6 +54,15 @@ RUN /opt/common-scripts/env-src-install  tess  juliet
 
 RUN /opt/common-scripts/env-src-install  tess  tvguide
 
+# ellc is a dependency of allesfitter
+RUN /opt/common-scripts/env-src-install  tess  ellc
 RUN /opt/common-scripts/env-src-install  tess  allesfitter
+
+# ----------------------------------------------------------------------
+# YYYY SEC
+
+USER $NB_USER
+RUN  /opt/common-scripts/npm-audit  /opt/conda/envs/tess/lib/python3.8/site-packages/panel  fix  && \
+     /opt/common-scripts/env-clean
 
 # ========================= ^^^^^ Custom  ^^^^^ =========================

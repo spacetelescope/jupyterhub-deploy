@@ -54,7 +54,16 @@ RUN /opt/common-scripts/env-src-install  tess  juliet
 
 RUN /opt/common-scripts/env-src-install  tess  tvguide
 
+# ellc is a dependency of allesfitter
+RUN /opt/common-scripts/env-src-install  tess  ellc
 RUN /opt/common-scripts/env-src-install  tess  allesfitter
+
+# ----------------------------------------------------------------------
+# YYYY SEC
+
+USER $NB_USER
+RUN  /opt/common-scripts/npm-audit  /opt/conda/envs/tess/lib/python3.8/site-packages/panel  fix  && \
+     /opt/common-scripts/env-clean
 
 # ========================= ^^^^^ Custom  ^^^^^ =========================
 # ========================= vvvvv Generic vvvvv  =========================
@@ -91,18 +100,21 @@ RUN /opt/common-scripts/fix-certs
 # Copy any remaining environments files not caught by more precise as-needed build copies
 COPY --chown=${NB_UID}:${NB_GID} environments/    /opt/environments/
 
-# Run conservative version of "npm audit fix" on all discoverable npm environments
-# RUN /opt/common-scripts/env-npm-audit  /  fix  && \
-#    /opt/common-scripts/env-yarn-audit  /  fix && \
-#    /opt/common-scripts/crosslink --link `find /opt/conda -name node_modules`
+# ----------------------------------------------------------------------
+# YYYY SEC
 
+USER root
+RUN  /opt/common-scripts/npm-audit  /usr/share/npm/node_modules/socks-proxy-agent  fix  && \
+     /opt/common-scripts/env-clean
+
+RUN  find /opt/conda -name yarn.lock | grep jupyterlab/staging | xargs rm -f || true
+
+# ----------------------------------------------------------------------
 # For standalone operation outside JupyterHub,  note that  /etc also includes
 # common home directory files.   post-start-hook may not include everything required
 # for running on AWS,  just common functions needed for both AWS and standalone/CI.
 
 USER $NB_USER
 WORKDIR /home/$NB_USER
-
 RUN /opt/environments/post-start-hook
-
 CMD [ "start-notebook.sh" ]

@@ -7,12 +7,10 @@ everest-pipeline
 reproject
 astroML>=1.0a1
 
-allesfitter
 dynesty
 rebound
 ultranest
 
-ellc
 statsmodels
 
 tqdm
@@ -32,11 +30,13 @@ astrobase
 psycopg2-binary
 #emcee==3.0rc1
 h5py
-batman-package
 corner
 transitleastsquares>=1.0
 paramiko
 
-#batman-package-installed-from-source
-#radvel-installed-from-source
-#juliet-installed-from-source
+# Installed from source due to numpy ABI version issues
+#batman-package
+#radvel-installed
+#juliet-installed
+#allesfitter
+#ellc

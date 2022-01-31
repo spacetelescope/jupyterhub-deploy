@@ -26,10 +26,6 @@ tensorflow
 keras
 seaborn
 
-juliet
-batman
-radvel
-
 tess_stars2px  #tess-point
 transitleastsquares
 wotan
@@ -39,6 +35,12 @@ aas_timeseries
 s3fs
 
 #Pyriod-is-notebook-only-has-widgets
-allesfitter
 tvguide
 astrobase
+
+batman
+radvel
+juliet
+ellc
+allesfitter
+
