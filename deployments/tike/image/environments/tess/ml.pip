@@ -1,5 +1,5 @@
 six
-tensorflow~=2.7.0
+tensorflow-cpu~=2.7.0
 tensorflow-estimator~=2.7.0
 tensorboard~=2.7.0
 keras~=2.7.0

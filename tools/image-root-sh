@@ -1,8 +1,0 @@
-#! /bin/bash -eu
-
-# Open a shell on a container as user "root"
-
-export IMAGE_RUN_PARS="$IMAGE_RUN_PARS --user root"
-
-image-sh
-

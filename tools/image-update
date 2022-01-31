@@ -39,11 +39,13 @@ fi
 #
 if [[ "${USE_BUILDKIT_CACHING}" == "1" ]]; then
     export BUILDKIT="--mount=type=cache,sharing=private,target=/home/jovyan/.cache,uid=1000,gid=100"
-    export BUILDKIT="${BUILDKIT} --mount=type=cache,sharing=private,target=/opt/conda-cache,uid=1000,gid=100"
     export BUILDKIT="${BUILDKIT} --mount=type=cache,sharing=private,target=/var/cache/apt,uid=1000,gid=100"
 else
     export BUILDKIT=""
 fi
+
+# export BUILDKIT="${BUILDKIT} --mount=type=cache,sharing=private,target=/opt/conda/pkgs,uid=1000,gid=100"
+
 
 cd ${JUPYTERHUB_DIR}
 docker_dirs="deployments/common  deployments/${DEPLOYMENT_NAME}"
