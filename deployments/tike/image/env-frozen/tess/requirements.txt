@@ -39,7 +39,7 @@ aiosignal==1.2.0
     # via aiohttp
 alabaster==0.7.12
     # via sphinx
-alembic==1.7.5
+alembic==1.7.6
     # via jupyterhub
 ansiwrap==0.8.4
     # via papermill
@@ -61,7 +61,7 @@ astrocut @ git+https://github.com/spacetelescope/astrocut@s3-support
     # via -r /opt/environments/tess/tess.pip
 astroml==1.0.2
     # via -r /opt/environments/tess/tess.pip
-astropy==4.3.1
+astropy==5.0.1
     # via
     #   -r /opt/environments/tess/basic.pip
     #   aas-timeseries
@@ -300,7 +300,7 @@ flatbuffers==2.0
     # via
     #   jaxlib
     #   tensorflow-cpu
-fonttools==4.29.0
+fonttools==4.29.1
     # via matplotlib
 freetype-py==2.2.0
     # via vispy
@@ -335,7 +335,7 @@ glue-jupyter==0.10.1
     # via -r /opt/common-env/jupyter.pip
 glue-vispy-viewers==1.0.5
     # via glue-jupyter
-google-auth==2.5.0
+google-auth==2.6.0
     # via
     #   google-auth-oauthlib
     #   tensorboard
@@ -811,6 +811,7 @@ packaging==21.3
     # via
     #   -r /opt/environments/tess/ml.pip
     #   arviz
+    #   astropy
     #   bleach
     #   bokeh
     #   dask
@@ -829,6 +830,7 @@ packaging==21.3
     #   sphinx
     #   sphinx-astropy
     #   starry
+    #   xarray
 palettable==3.3.0
     # via aas-timeseries
 pamela==1.0.0
@@ -1018,6 +1020,7 @@ pywavelets==1.2.0
     # via scikit-image
 pyyaml==6.0
     # via
+    #   astropy
     #   bokeh
     #   dask
     #   distributed
@@ -1254,7 +1257,7 @@ theano-pymc==1.1.2
     # via
     #   -r /opt/environments/tess/ml.pip
     #   pymc3
-threadpoolctl==3.0.0
+threadpoolctl==3.1.0
     # via
     #   -r /opt/environments/tess/basic.pip
     #   scikit-learn
@@ -1267,7 +1270,7 @@ tomli==1.2.3
     #   black
     #   pep517
     #   setuptools-scm
-tomlkit==0.8.0
+tomlkit==0.9.0
     # via jupyter-packaging
 toolz==0.11.2
     # via
@@ -1383,7 +1386,7 @@ wrapt==1.13.3
     # via
     #   aiobotocore
     #   tensorflow-cpu
-xarray==0.21.0
+xarray==0.21.1
     # via arviz
 xlrd==2.0.1
     # via glue-core

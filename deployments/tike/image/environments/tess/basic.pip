@@ -23,7 +23,7 @@ oktopus
 uncertainties
 fbpca
 
-astropy~=4.3.0
+astropy
 astroquery
 pyvo
 #pyvodb
