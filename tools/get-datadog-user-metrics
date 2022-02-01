@@ -14,6 +14,18 @@ from dateutil.relativedelta import relativedelta
 from datadog_api_client.v1 import ApiClient, Configuration
 from datadog_api_client.v1.api.metrics_api import MetricsApi
 
+"""
+As written now, this script is not very extensible, and aims to collect user data for
+a given week from DataDog.  User hours per week is not a direct DataDog metric, so a time
+range of one week is specified for the API query.
+
+The query response itself contains timeseries data.  It just so happens that by fetching
+data for a week results in the series intervals being one hour, which is what we need.
+Had the interval been different, we would have needed to do the binning ourselves.
+
+See https://github.com/spacetelescope/jupyterhub-deploy/tree/main/doc/DATADOG_USER_METRICS.md
+for more information.
+"""
 
 
 def get_key(key_type):
