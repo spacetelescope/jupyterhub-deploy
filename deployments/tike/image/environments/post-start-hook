@@ -36,6 +36,7 @@ SN=/home/jovyan/spacetelescope-notebooks
 mkdir -p /opt/environments/tess/tests
 
 cat <<EOF >/opt/environments/tess/tests/notebooks
+    ${TC}/code/test_notebooks/packages_priority1.ipynb
     ${TC}/code/test_notebooks/packages_priority2.ipynb
     ${TC}/code/test_notebooks/packages_priority3.ipynb
     ${TC}/code/test-cloud-lightkurve.py
@@ -60,8 +61,6 @@ EOF
 #      /opt/common-scripts/test-notebooks tess `cat /opt/environments/test/tests/notebooks-failing`
 
 cat <<EOF >/opt/environments/tess/tests/notebooks-failing
-    ${TC}/code/test_notebooks/packages_priority1.ipynb
-
     ${SN}/notebooks/MAST/TESS/interm_tasc_lc/interm_tasc_lc.ipynb
     ${SN}/notebooks/MAST/TESS/interm_tess_prf_retrieve/interm_tess_prf_retrieve.ipynb
     ${SN}/notebooks/MAST/TESS/beginner_tess_tap_search/beginner_tess_tap_search.ipynb
