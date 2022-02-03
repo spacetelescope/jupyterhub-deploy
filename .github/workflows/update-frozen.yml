@@ -1,28 +1,24 @@
-name:  Image Build, Test
+name: Update Frozen Requirements
 on:
-   push:
-      branches:
-        - main
-        - test
-   pull_request:
-      branches:
-        - main
-        - test
+   schedule:  # weekly
+     - cron: '0 0 * * 0'
 
 jobs:
   docker:
-    name: "${{ matrix.DEPLOYMENT_NAME }}  USE_FROZEN=${{ matrix.USE_FROZEN }} -- Image Build, Test"
+    name: "${{ matrix.DEPLOYMENT_NAME }} -- Image Build, Test"
     runs-on: ubuntu-18.04
 
     strategy:
       max-parallel: 3
       fail-fast: false
       matrix:
-        DEPLOYMENT_NAME: [ jwebbinar, roman, tike]
-        USE_FROZEN: [ 0, 1 ]
+        DEPLOYMENT_NAME: [ tike, jwebbinar, roman ]
+        USE_FROZEN: [ 0 ]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
+        with:
+          ref: main
 
       - name: Free Disk Space,  Enlarge Swapfile
         shell: bash
@@ -47,7 +43,7 @@ jobs:
       - name: Set Up Environment
         shell: bash
         run: |
-           tools/image-configure ${{ matrix.DEPLOYMENT_NAME }}  ${{ matrix.USE_FROZEN }}
+           tools/image-configure ${{ matrix.DEPLOYMENT_NAME }}  0
            df -h
 
       - name: Image Build
@@ -61,10 +57,6 @@ jobs:
            docker image ls
            df -h
 
-      - name: Git Diffs (Frozen Version Specs)
-        shell: bash
-        run: git diff
-
       - name: Image Functional Tests
         shell: bash
         run: |
@@ -72,3 +64,19 @@ jobs:
            source setup-env
            tools/image-test
            df -h
+
+      - name: Git Diffs (Frozen Version Specs)
+        shell: bash
+        run: git diff
+
+      - name: Commit & Push
+        uses: actions-js/push@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          author_email: mrfreeze@nowhere.com
+          author_name: Mr. Freeze
+          message: Automatic requirements update
+          branch: update-frozen-${{ matrix.DEPLOYMENT_NAME }}
+          directory: deployments/${{ matrix.DEPLOYMENT_NAME}}/image/env-frozen
+          force: true
+          tags: false
