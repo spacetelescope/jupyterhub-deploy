@@ -1,3 +1,6 @@
 # Format this file using vulnerability lines grepped out of "safety" output.
 # Blank lines or lines beginnning with # are ignored.
 | tensorflow                 | 2.6.0     | ==2.6.0                  | 41161    |
+| numpy                      | 1.21.5    | <1.22.0                  | 44716    |
+| numpy                      | 1.21.5    | <1.22.0                  | 44717    |
+| numpy                      | 1.21.5    | >0                       | 44715    |
