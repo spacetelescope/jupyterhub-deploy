@@ -65,6 +65,10 @@ jobs:
            tools/image-test
            df -h
 
+      - name: Create Chilly Build
+        shell: bash
+        run: tools/image-chilly-build
+
       - name: Git Diffs (Frozen Version Specs)
         shell: bash
         run: git diff
