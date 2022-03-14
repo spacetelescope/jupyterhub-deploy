@@ -1,7 +1,9 @@
 name: Update Frozen Requirements
 on:
-   schedule:  # weekly
-     - cron: '0 0 * * 0'
+  schedule:  # weekly
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+     
 
 jobs:
   docker:
@@ -65,9 +67,9 @@ jobs:
            tools/image-test
            df -h
 
-      - name: Create Chilly Build
+      - name: Create Chilly Build Requirements
         shell: bash
-        run: tools/image-chilly-build
+        run: tools/image-chilly-freeze
 
       - name: Git Diffs (Frozen Version Specs)
         shell: bash
