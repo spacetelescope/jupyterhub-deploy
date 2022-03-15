@@ -3,7 +3,10 @@
 # nbgitpuller and then update the default kernels specified in the
 # notebook files using set-notebook-kernels.
 
-/opt/common-scripts/git-sync https://github.com/spacetelescope/jwebbinar_prep current_webbinar /home/jovyan/jwebbinar_prep
+#/opt/common-scripts/git-sync https://github.com/spacetelescope/jwebbinar_prep current_webbinar /home/jovyan/jwebbinar_prep
+
+/opt/common-scripts/git-sync https://github.com/Q3D/q3dfit.git main /home/jovyan/q3dfit
+
 
 #/opt/common-scripts/set-notebook-kernel jwebbinar jwebbinar_prep/spec_analysis/*.ipynb
 #/opt/common-scripts/set-notebook-kernel jdaviz jwebbinar_prep/mos_session/Mosviz_solutions.ipynb
