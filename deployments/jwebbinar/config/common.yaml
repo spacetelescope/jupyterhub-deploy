@@ -21,7 +21,7 @@ jupyterhub:
         c.KubeSpawner.lifecycle_hooks = {
             "postStart": {
                 "exec": {
-                    "command": ["/bin/sh", "-c", "rsync -r /etc/default-home-contents/ /home/jovyan; /opt/environments/setup-notebooks; chmod +x /home/jovyan/Desktop/*.desktop; /opt/common-scripts/symlink-crds; /opt/environments/remove-jdaviz-kernel"]
+                    "command": ["/bin/sh", "-c", "rsync -r /etc/default-home-contents/ /home/jovyan; /opt/environments/setup-notebooks; chmod +x /home/jovyan/Desktop/*.desktop; /opt/common-scripts/symlink-crds; /opt/environments/remove-kernel jdaviz; /opt/environments/remove-kernel mirisim"]
                 }
             }
         }
@@ -64,7 +64,9 @@ jupyterhub:
     extraEnv:
       CRDS_PATH:  /home/jovyan/crds_cache
       CRDS_SERVER_URL: https://jwst-crds.stsci.edu
-      CRDS_CONTEXT: jwst_0717.pmap
+      #CRDS_CONTEXT: jwst_0717.pmap
+      # for jwst=1.3.3
+      CRDS_CONTEXT: jwst_0764.pmap
     defaultUrl: "/lab"
     memory:
       guarantee: 14G

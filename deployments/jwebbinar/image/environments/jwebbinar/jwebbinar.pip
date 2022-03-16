@@ -30,6 +30,8 @@ asdf
 #astropy
 gwcs
 crds
+sep
+astroscrappy
 
 # for Q3D
 astropy>=4.3.1
