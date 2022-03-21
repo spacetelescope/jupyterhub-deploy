@@ -9,3 +9,7 @@ set -eu
 cd $IMAGE_DIR
 
 image-cp /opt/env-frozen
+
+# fuzz out mission specific pip reqs only to create a build with less security issues
+cp -r env-frozen env-chilly
+sed -i 's/==/~=/g' env-chilly/$DEPLOYMENT_NAME/requirements.txt
