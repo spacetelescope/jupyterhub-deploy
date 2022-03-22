@@ -44,6 +44,7 @@ time docker build --progress plain --tag ${IMAGE_ID} --build-arg BASE_IMAGE=${CO
 if [[ "$USE_FROZEN" == "0" ]]; then
     echo "========================= Freezing Requirements =========================="
     time image-freeze
+    time image-chilly-freeze
 fi
 
 # Remove buildkit caching "enhanced" Dockerfile.x's.
