@@ -67,12 +67,6 @@ jobs:
            tools/image-test
            df -h
 
-      - name: Create Chilly Build Requirements
-        shell: bash
-        run: |
-          source setup-env
-          tools/image-chilly-freeze
-
       - name: Git Diffs (Frozen Version Specs)
         shell: bash
         run: git diff
