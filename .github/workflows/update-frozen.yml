@@ -52,7 +52,7 @@ jobs:
         shell: bash
         run: |
           source setup-env
-          tools/image-chilly-swap
+          tools/image-chilly-swap "deployments/${{ matrix.DEPLOYMENT_NAME }}/image"
 
       - name: Image Build
         shell: bash
@@ -85,6 +85,6 @@ jobs:
           author_name: Mr. Freeze
           message: Automatic requirements update
           branch: update-frozen-${{ matrix.DEPLOYMENT_NAME }}
-          directory: deployments/${{ matrix.DEPLOYMENT_NAME}}/image/env-frozen
+          directory: deployments/${{ matrix.DEPLOYMENT_NAME }}/image/env-frozen
           force: true
           tags: false
