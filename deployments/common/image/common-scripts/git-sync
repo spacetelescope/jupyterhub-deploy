@@ -115,7 +115,7 @@ class GitSync(object):
 
     def init_repo(self):
         logging.info(f'Repo {self.repo_dir} doesn\'t exist. Cloning...')
-        run(f'git clone --branch {self.branch_name} {self.git_url} {self.repo_dir}')
+        run(f'git clone --filter=blob:none  --branch {self.branch_name} {self.git_url} {self.repo_dir}')
         logging.info(f'Repo {self.repo_dir} initialized')
 
     def sync(self):
