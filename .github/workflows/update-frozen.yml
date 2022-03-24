@@ -52,8 +52,7 @@ jobs:
         shell: bash
         run: |
           source setup-env
-          pwd
-          ls deployments
+          ls deployments/roman
           tools/image-chilly-swap "deployments/${{ matrix.DEPLOYMENT_NAME }}/image"
 
       - name: Image Build
