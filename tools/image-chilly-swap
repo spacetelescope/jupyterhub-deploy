@@ -1,7 +1,4 @@
 # fuzz out mission specific pip reqs only to create a build with less security issues
 DIR=${1:-$IMAGE_DIR}
-echo $DIR
-pwd
-ls $DIR
 mv $DIR/env-frozen $DIR/env-frozen-old
 mv $DIR/env-chilly $DIR/env-frozen

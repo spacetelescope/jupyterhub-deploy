@@ -1,3 +1,0 @@
-# fuzz out mission specific pip reqs only to create a build with less security issues
-cp -r ${IMAGE_DIR}/env-frozen ${IMAGE_DIR}/env-chilly
-sed -i 's/==/~=/g' ${IMAGE_DIR}/env-chilly/$DEPLOYMENT_NAME/requirements.txt
