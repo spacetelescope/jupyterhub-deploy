@@ -48,12 +48,11 @@ jobs:
            tools/image-configure ${{ matrix.DEPLOYMENT_NAME }}  0
            df -h
 
-      - name: Set Chilly Build
-        shell: bash
-        run: |
-          source setup-env
-          ls deployments/roman/image
-          tools/image-chilly-swap "deployments/${{ matrix.DEPLOYMENT_NAME }}/image"
+      # - name: Set Chilly Build
+      #   shell: bash
+      #   run: |
+      #     source setup-env
+      #     tools/image-chilly-swap "deployments/${{ matrix.DEPLOYMENT_NAME }}/image"
 
       - name: Image Build
         shell: bash
