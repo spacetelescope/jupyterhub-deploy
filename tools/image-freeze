@@ -11,7 +11,5 @@ cd $IMAGE_DIR
 image-cp /opt/env-frozen
 
 # fuzz out mission specific pip reqs only to create a build with less security issues
-ls
 cp -r env-frozen env-chilly
-ls
 find ./env-chilly -type f -name "requirements.txt" -exec sed -i 's/==/~=/g' {} +
