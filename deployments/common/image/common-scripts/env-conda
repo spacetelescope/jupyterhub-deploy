@@ -26,6 +26,7 @@ env=$1
 
 env_yml=/opt/environments/${env}/${env}.yml
 env_frozen_yml=/opt/env-frozen/${env}/requirements.yml
+env_chilly_yml=/opt/env-chilly/${env}/requirements.yml
 
 . /etc/profile.d/conda.sh
 
@@ -35,6 +36,15 @@ if [[ "$USE_FROZEN" == "0" ]]; then
     ${CONDA_VER} env create --quiet --name ${env} --file ${env_yml}
     echo "===== Adding common conda packages to ${env}:"
     /opt/common-scripts/env-update ${env}  `find /opt/common-env -name '*.conda' | sort`
+    echo "===== Saving frozen conda constraints for environment ${env} to ${env_frozen_yml}"
+    ${CONDA_VER} env export --no-build -n ${env} > ${env_frozen_yml}  # must be saved after build outside Docker
+    cat ${env_frozen_yml}
+    echo "===== Removing conda env and re-installing from ${env_frozen_yml}"
+    ${CONDA_VER} env remove -n ${env}
+fi
+
+if [[ "$CHILLY_BUILD" == "1" ]]; then
+    ${CONDA_VER} env create --quiet --name ${env} --file ${env_chilly_yml}
     echo "===== Saving frozen conda constraints for environment ${env} to ${env_frozen_yml}"
     ${CONDA_VER} env export --no-build -n ${env} > ${env_frozen_yml}  # must be saved after build outside Docker
     cat ${env_frozen_yml}
