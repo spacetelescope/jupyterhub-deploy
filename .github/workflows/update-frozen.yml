@@ -15,7 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         DEPLOYMENT_NAME: [ tike, jwebbinar, roman ]
-        USE_FROZEN: [ 0 ]
+        USE_FROZEN: [ 2 ]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
