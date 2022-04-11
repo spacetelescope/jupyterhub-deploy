@@ -3,4 +3,4 @@ DIR=${1:-$IMAGE_DIR}
 
 cp $DIR/env-frozen $DIR/env-chilly
 
-find ./env-chilly -type f -name "requirements.txt" -exec sed -i 's/==/~=/g' {} +
+find $DIR/env-chilly -type f -name "requirements.txt" -exec sed -i 's/==/~=/g' {} +
