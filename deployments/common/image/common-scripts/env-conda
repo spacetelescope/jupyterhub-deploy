@@ -41,16 +41,17 @@ if [[ "$USE_FROZEN" == "0" ]]; then
     cat ${env_frozen_yml}
     echo "===== Removing conda env and re-installing from ${env_frozen_yml}"
     ${CONDA_VER} env remove -n ${env}
-fi
-
-if [[ "$CHILLY_BUILD" == "1" ]]; then
+elif [[ "$USE_FROZEN" == "2" ]]; then
+    # Chilly build, create conda env from chilly requirements.yml then export frozen to build
     ${CONDA_VER} env create --quiet --name ${env} --file ${env_chilly_yml}
     echo "===== Saving frozen conda constraints for environment ${env} to ${env_frozen_yml}"
     ${CONDA_VER} env export --no-build -n ${env} > ${env_frozen_yml}  # must be saved after build outside Docker
     cat ${env_frozen_yml}
     echo "===== Removing conda env and re-installing from ${env_frozen_yml}"
     ${CONDA_VER} env remove -n ${env}
+
 fi
+
 
 echo "===== Creating conda environment ${env} from frozen constraints ${env_frozen_yml}"
 ${CONDA_VER} env create --quiet --name ${env} --file ${env_frozen_yml}

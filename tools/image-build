@@ -41,7 +41,7 @@ time docker build --progress plain --tag ${IMAGE_ID} --build-arg BASE_IMAGE=${CO
 # information as possible, not yet perfect/complete, may require
 # examination of diffs and manual updates to reject bad changes.
 
-if [[ "$USE_FROZEN" == "0" ]] || [[ "$CHILLY_BUILD" == "1" ]]; then
+if [[ "$USE_FROZEN" == "0" ]] || [[ "$USE_FROZEN" == "2" ]]; then
     echo "========================= Freezing Requirements =========================="
     time image-freeze
 fi
