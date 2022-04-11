@@ -1,6 +1,6 @@
 # chill out mission specific pip reqs only to create a build with less security issues
 DIR=${1:-$IMAGE_DIR}
 
-cp $DIR/env-frozen $DIR/env-chilly
+cp -r $DIR/env-frozen $DIR/env-chilly
 
 find $DIR/env-chilly -type f -name "requirements.txt" -exec sed -i 's/==/~=/g' {} +
