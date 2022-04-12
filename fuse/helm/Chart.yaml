@@ -1,0 +1,6 @@
+apiVersion: v2
+name: s3-otomount 
+description: Mount S3 buckets on K8S Nodes using goofys
+type: application
+version: 0.1.0
+appVersion: 0.1.0
