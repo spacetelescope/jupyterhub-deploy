@@ -85,6 +85,7 @@ fi
 export ECR_REGISTRY=${ECR_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
 export IMAGE_REPO=${DEPLOYMENT_NAME}
 export COMMON_REPO=${IMAGE_REPO}
+export FUSE_REPO=${IMAGE_REPO}
 
 export ADMIN_ARN=arn:aws:iam::${ACCOUNT_ID}:role/${ADMIN_ROLENAME}
 
@@ -98,6 +99,7 @@ export COMMON_CONFIG_DIR=`pwd`/deployments/common/config
 
 export COMMON_ID=${ECR_REGISTRY}/${COMMON_REPO}:${COMMON_TAG}
 export IMAGE_ID=${ECR_REGISTRY}/${IMAGE_REPO}:${IMAGE_TAG}
+export FUSE_ID=${ECR_REGISTRY}/${FUSE_REPO}:${FUSE_TAG}
 
 # --------------- vvvvv misc env settings vvvvv ---------------------------------
 

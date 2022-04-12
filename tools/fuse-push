@@ -1,0 +1,8 @@
+#! /bin/bash
+
+set -eu
+
+image-login
+
+echo "================================== Pushing ${ECR_FUSE_ID} =============================="
+docker push $ECR_FUSE_ID
