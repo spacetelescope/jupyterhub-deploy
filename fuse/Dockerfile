@@ -5,7 +5,8 @@ ENV CGO_ENABLED=0
 COPY tls-ca-bundle.pem  /tmp/cert.pem
 RUN mv /etc/ssl/cert.pem /etc/ssl/cert.pem.org  && \
     mv /tmp/cert.pem  /etc/ssl
-RUN apk add -U git
+RUN apk add -U git  && \
+    git config --global http.sslCAInfo /etc/ssl/cert.pem
 RUN git clone https://github.com/kahing/goofys.git . && \
     go build -ldflags "-X main.Version=`git rev-parse HEAD`"
 

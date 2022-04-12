@@ -4,5 +4,5 @@ set -eu
 
 image-login
 
-echo "================================== Pushing ${ECR_FUSE_ID} =============================="
-docker push $ECR_FUSE_ID
+echo "================================== Pushing ${FUSE_ID} =============================="
+docker push $FUSE_ID
