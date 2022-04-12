@@ -1,0 +1,20 @@
+#! /bin/bash
+
+set -eu
+
+cd ${JUPYTERHUB_DIR}
+
+helm upgrade --debug --wait --install ${DEPLOYMENT_NAME}-fuse-gf-ds-${ENVIRONMENT} fuse/helm \
+     --namespace fuse --create-namespace \
+     --set-string iamRoleARN=$(echo ${ADMIN_ARN} | sed -e 's/jupyterhub-admin/tike-worker/g') 
+
+    # --set-string image.repository=${ECR_REGISTRY}/${FUSE_REPO} \
+    # --set-string image.tag=${FUSE_TAG} \
+    # 
+
+
+# helm repo add otomount  https://jaytmiller.github.io/jupyterhub-deploy@add-fuse
+
+# helm upgrade --install s3-mounter otomount/s3-otomount   \ 
+# --namespace otomount --set bucketName=<your-bucket-name> \
+# --set iamRoleARN=<your-role-arn> --create-namespace

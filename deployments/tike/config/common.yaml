@@ -14,10 +14,17 @@ jupyterhub:
       - name: hub-templates
         configMap:
           name: hub-templates
+      - name: mntdatas3
+        hostPath:
+          path: /s3/gf/stpubdata
+          type: Directory
     extraVolumeMounts:
       ## Make the hub pod hub container mount that ConfigMap volume
-      - mountPath: /etc/jupyterhub/templates
-        name: hub-templates
+      - name: hub-templates
+        mountPath: /etc/jupyterhub/templates
+      - name: mntdatas3
+        mountPath: /s3/gf/stpubdata
+        readOnly: true
   prePuller:
     continuous:
       enabled: true

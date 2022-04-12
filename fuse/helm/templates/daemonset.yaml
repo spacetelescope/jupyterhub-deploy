@@ -21,8 +21,10 @@ spec:
       {{- end }}
       containers:
       - name: mounter 
-        image: otomato/goofys
-        command: ["./goofys", "-f", "{{ .Values.bucketName }}", "{{ .Values.mountPath }}"]
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag}}
+        command: ["./goofys", "-f", "--dir-mode", "0555", "--file-mode",  "0444",
+                  "-o", "ro,allow_other,noatime,noexec",
+                  "{{ .Values.bucketName }}", "{{ .Values.mountPath }}"]
         securityContext:
           privileged: true
         volumeMounts:

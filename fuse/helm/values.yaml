@@ -1,9 +1,9 @@
 
 image:
-  repository: otomato/goofys
+  repository: 378083651696.dkr.ecr.us-east-1.amazonaws.com/tike
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: unscanned-latest-fuse-dev
 
 imagePullSecrets: []
 nameOverride: ""
@@ -11,11 +11,11 @@ fullnameOverride: ""
 
 serviceAccount:
   # Specifies whether a service account should be created
-  create: true
-  name: s3-mounter
+  create: false
+  name: default
 
-bucketName: my-bucket
-iamRoleARN: my-role
-mountPath: /var/s3
-hostPath: /mnt/s3data
+bucketName: stpubdata
+iamRoleARN: arn:aws:iam::354270652163:role/tike-worker
+mountPath: /s3/gf/stpubdata
+hostPath: /s3/gf/stpubdata
 
