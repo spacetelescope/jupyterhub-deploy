@@ -4,12 +4,17 @@ set -eu
 
 cd ${JUPYTERHUB_DIR}
 
-helm upgrade --debug --wait --install ${DEPLOYMENT_NAME}-fuse-gf-ds-${ENVIRONMENT} fuse/helm \
-     --namespace fuse --create-namespace \
-     --set-string iamRoleARN=$(echo ${ADMIN_ARN} | sed -e 's/jupyterhub-admin/tike-worker/g') 
+image-login
 
-    # --set-string image.repository=${ECR_REGISTRY}/${FUSE_REPO} \
-    # --set-string image.tag=${FUSE_TAG} \
+helm upgrade --debug --wait --install ${DEPLOYMENT_NAME}-fuse-${ENVIRONMENT} fuse/helm \
+     --values fuse/helm/values.yaml \
+     --set-string iamRoleARN=${WORKER_ARN} \
+     --set-string image.repository=${ECR_REGISTRY}/${FUSE_REPO} \
+     --set-string image.tag=$(echo ${FUSE_TAG} | sed -e 's/unscanned-//g')
+
+    # --set-string .image.repository=${ECR_REGISTRY}/${FUSE_REPO} \
+    # --set-string .image.tag=${FUSE_TAG} \
+    # --namespace fuse --create-namespace \
     # 
 
 

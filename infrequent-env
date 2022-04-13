@@ -4,7 +4,6 @@ export PATH="`pwd`/tools":${PATH}
 
 # ----------------- vvvv less frequently changed inputs vvvv -------------------------------
 #
-
 export JH_HOSTNAME="${DEPLOYMENT_NAME}.science.stsci.edu"
 if [[ "$ENVIRONMENT" != "prod" && "$DEPLOYMENT_NAME" != "jwebbinar" ]]; then
     export JH_HOSTNAME="${ENVIRONMENT}.${JH_HOSTNAME}"
@@ -82,13 +81,6 @@ fi
 
 # Octarine AWS JupyterHub setup
 
-export ECR_REGISTRY=${ECR_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
-export IMAGE_REPO=${DEPLOYMENT_NAME}
-export COMMON_REPO=${IMAGE_REPO}
-export FUSE_REPO=${IMAGE_REPO}
-
-export ADMIN_ARN=arn:aws:iam::${ACCOUNT_ID}:role/${ADMIN_ROLENAME}
-
 export JUPYTERHUB_DIR=`pwd`
 
 export IMAGE_DIR=`pwd`/deployments/${DEPLOYMENT_NAME}/image
@@ -96,6 +88,15 @@ export CONFIG_DIR=`pwd`/deployments/${DEPLOYMENT_NAME}/config
 
 export COMMON_IMAGE_DIR=`pwd`/deployments/common/image
 export COMMON_CONFIG_DIR=`pwd`/deployments/common/config
+
+export ADMIN_ARN=arn:aws:iam::${ACCOUNT_ID}:role/${ADMIN_ROLENAME}
+export WORKER_ROLE=${DEPLOYMENT_NAME}-worker
+export WORKER_ARN=$(echo ${ADMIN_ARN} | sed -e 's/${ADMIN_ROLE}/${WORKER_ROLE}/g') 
+
+export ECR_REGISTRY=${ECR_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
+export IMAGE_REPO=${DEPLOYMENT_NAME}
+export COMMON_REPO=${IMAGE_REPO}
+export FUSE_REPO=${IMAGE_REPO}
 
 export COMMON_ID=${ECR_REGISTRY}/${COMMON_REPO}:${COMMON_TAG}
 export IMAGE_ID=${ECR_REGISTRY}/${IMAGE_REPO}:${IMAGE_TAG}
