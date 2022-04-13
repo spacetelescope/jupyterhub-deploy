@@ -1,15 +1,14 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: s3
+  name: s3-pv
   labels:
-    type: local
+    type: s3
 spec:
   storageClassName: local-storage
   accessModes:
     - ReadOnlyMany
   capacity:
     storage: 1M
-  storage:
   hostPath:
     path: /s3

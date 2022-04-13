@@ -30,6 +30,14 @@ jupyterhub:
     storage:
       dynamic:
         storageClass: "aws-efs"
+      extraVolumes:
+        - name: s3-pvc
+          persistentVolumeClaim:
+            claimName: s3-pvc
+      extraVolumeMounts:
+        - name: s3-pvc
+          mountPath: /s3
+          readOnly: true
     lifecycleHooks:
       postStart:
         exec:
@@ -41,17 +49,6 @@ jupyterhub:
     memory:
       guarantee: 14G
       limit: 15G
-    extraVolumes:
-      - name: s3
-        hostPath:
-          path: /s3
-        type: DirectoryOrCreate
-        readOnly: true
-    extraVolumeMounts:
-      - name: s3
-        mountPath: /s3
-        readOnly: true
-        shared: true
   cull:
     enabled: true
     timeout: 1800
