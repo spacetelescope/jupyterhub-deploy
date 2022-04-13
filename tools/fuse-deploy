@@ -12,14 +12,3 @@ helm upgrade --debug --wait --install ${DEPLOYMENT_NAME}-fuse-${ENVIRONMENT} fus
      --set-string image.repository=${ECR_REGISTRY}/${FUSE_REPO} \
      --set-string image.tag=$(echo ${FUSE_TAG} | sed -e 's/unscanned-//g')
 
-    # --set-string .image.repository=${ECR_REGISTRY}/${FUSE_REPO} \
-    # --set-string .image.tag=${FUSE_TAG} \
-    # --namespace fuse --create-namespace \
-    # 
-
-
-# helm repo add otomount  https://jaytmiller.github.io/jupyterhub-deploy@add-fuse
-
-# helm upgrade --install s3-mounter otomount/s3-otomount   \ 
-# --namespace otomount --set bucketName=<your-bucket-name> \
-# --set iamRoleARN=<your-role-arn> --create-namespace

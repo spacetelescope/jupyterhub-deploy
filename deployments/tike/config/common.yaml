@@ -42,14 +42,16 @@ jupyterhub:
       guarantee: 14G
       limit: 15G
     extraVolumes:
-      - name: mntdatas3
+      - name: s3
         hostPath:
-          path: /s3/gf/stpubdata
-          type: Directory
-    extraVolumeMounts:
-      - name: mntdatas3
-        mountPath: /s3/gf/stpubdata
+          path: /s3
+        type: DirectoryOrCreate
         readOnly: true
+    extraVolumeMounts:
+      - name: s3
+        mountPath: /s3
+        readOnly: true
+        shared: true
   cull:
     enabled: true
     timeout: 1800

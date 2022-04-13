@@ -25,6 +25,10 @@ spec:
         command: ["./goofys", "-f", "--dir-mode", "0555", "--file-mode",  "0444",
                   "-o", "ro,allow_other,noatime,noexec",
                   "{{ .Values.bucketName }}", "{{ .Values.mountPath }}"]
+        lifecycle:
+          preStop:
+            exec:
+              command: ["umount", "/s3/gf/stpubdata"]
         securityContext:
           privileged: true
         volumeMounts:
