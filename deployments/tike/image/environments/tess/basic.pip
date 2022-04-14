@@ -24,7 +24,7 @@ uncertainties
 fbpca
 
 astropy~=5.0.4
-astroquery
+astroquery==0.4.5
 pyvo
 #pyvodb
 corner

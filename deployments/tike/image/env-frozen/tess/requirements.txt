@@ -95,7 +95,7 @@ astropy-healpix==0.6
     # via reproject
 astropy-sphinx-theme==1.1
     # via sphinx-astropy
-astroquery==0.4.6
+astroquery==0.4.5
     # via
     #   -r /opt/environments/tess/basic.pip
     #   lightkurve
@@ -577,7 +577,7 @@ jupyterhub==1.5.0
     # via -r /opt/common-env/jupyter.pip
 jupyterlab==3.3.3
     # via -r /opt/common-env/jupyter.pip
-jupyterlab-pygments==0.2.1
+jupyterlab-pygments==0.2.2
     # via
     #   -r /opt/common-env/jupyter.pip
     #   nbconvert
@@ -1199,7 +1199,7 @@ snowballstemmer==2.2.0
     # via sphinx
 sortedcontainers==2.4.0
     # via distributed
-soupsieve==2.3.2
+soupsieve==2.3.2.post1
     # via beautifulsoup4
 sphinx==3.5.4
     # via
