@@ -17,12 +17,13 @@ spec:
       containers:
       - name: {{ .Values.bucketName }} 
         image: {{ .Values.image.repository }}:{{ .Values.image.tag}}
+        imagePullPolicy: Always
         command: ["./s3fs", "-f", "-o", "iam_role=auto", "-o", "uid=1000,gid=100,ro,allow_other,noatime,noexec",
  		  "{{ .Values.bucketName }}", "/s3/fs/{{ .Values.bucketName}}"]
         lifecycle:
           preStop:
             exec:
-              command: ["umount", "/s3/fs/{{ .Values.bucketName}}"]
+              command: ["umount", "-f", "/s3/fs/{{ .Values.bucketName}}"]
         securityContext:
           privileged: true
         volumeMounts:

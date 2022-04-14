@@ -17,13 +17,14 @@ spec:
       containers:
       - name: s3-goofys-{{ .Values.bucketName }} 
         image: {{ .Values.image.repository }}:{{ .Values.image.tag}}
+        imagePullPolicy: Always
         command: ["./goofys", "-f", "--dir-mode", "0555", "--file-mode",  "0444",
                   "-o", "ro,allow_other,noatime,noexec",
                   "{{ .Values.bucketName }}", "/s3/gf/{{ .Values.bucketName}}"]
         lifecycle:
           preStop:
             exec:
-              command: ["umount", "/s3/gf/{{ .Values.bucketName}}"]
+              command: ["umount", "-f", "/s3/gf/{{ .Values.bucketName}}"]
         securityContext:
           privileged: true
         volumeMounts:
