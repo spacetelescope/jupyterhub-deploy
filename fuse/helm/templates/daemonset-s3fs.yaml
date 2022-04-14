@@ -18,7 +18,7 @@ spec:
       - name: {{ .Values.bucketName }} 
         image: {{ .Values.image.repository }}:{{ .Values.image.tag}}
         imagePullPolicy: Always
-        command: ["./s3fs", "-f", "-o", "iam_role=auto", "-o", "uid=1000,gid=100,ro,allow_other,noatime,noexec",
+        command: ["./s3fs", "-d", "-d", "-f", "-o", "iam_role=auto", "-o", "uid=1000,gid=100,ro,allow_other,noatime,noexec",
  		  "{{ .Values.bucketName }}", "/s3/fs/{{ .Values.bucketName}}"]
         lifecycle:
           preStop:
