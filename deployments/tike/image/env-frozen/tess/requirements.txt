@@ -12,7 +12,7 @@ absl-py==1.0.0
     #   jaxlib
     #   tensorboard
     #   tensorflow-cpu
-aesara==2.3.8
+aesara==2.5.3
     # via -r /opt/environments/tess/ml.pip
 aesara-theano-fallback==0.1.0
     # via
@@ -33,13 +33,13 @@ aiohttp==3.8.1
     #   aiobotocore
     #   jupyter-server-proxy
     #   s3fs
-aioitertools==0.8.0
+aioitertools==0.10.0
     # via aiobotocore
 aiosignal==1.2.0
     # via aiohttp
 alabaster==0.7.12
     # via sphinx
-alembic==1.7.5
+alembic==1.7.7
     # via jupyterhub
 ansiwrap==0.8.4
     # via papermill
@@ -53,15 +53,23 @@ argon2-cffi==21.3.0
     #   notebook
 argon2-cffi-bindings==21.2.0
     # via argon2-cffi
-arviz==0.11.4
+arviz==0.12.0
     # via pymc3
+asdf==2.11.0
+    # via crds
+asdf-standard==1.0.1
+    # via
+    #   asdf
+    #   asdf-transform-schemas
+asdf-transform-schemas==0.2.2
+    # via asdf
 astrobase==0.5.3
     # via -r /opt/environments/tess/tess.pip
 astrocut @ git+https://github.com/spacetelescope/astrocut@s3-support
     # via -r /opt/environments/tess/tess.pip
-astroml==1.0.2
+astroml==1.0.2.post1
     # via -r /opt/environments/tess/tess.pip
-astropy==4.3.1
+astropy==5.0.4
     # via
     #   -r /opt/environments/tess/basic.pip
     #   aas-timeseries
@@ -70,6 +78,7 @@ astropy==4.3.1
     #   astroml
     #   astropy-healpix
     #   astroquery
+    #   crds
     #   ediunplugged
     #   everest-pipeline
     #   exoplanet
@@ -86,7 +95,7 @@ astropy-healpix==0.6
     # via reproject
 astropy-sphinx-theme==1.1
     # via sphinx-astropy
-astroquery==0.4.5
+astroquery==0.4.6
     # via
     #   -r /opt/environments/tess/basic.pip
     #   lightkurve
@@ -106,7 +115,7 @@ attrs==21.4.0
     #   aiohttp
     #   jsonschema
     #   pytest
-autograd==1.3
+autograd==1.4
     # via
     #   -r /opt/environments/tess/basic.pip
     #   oktopus
@@ -120,17 +129,16 @@ batman-package==2.4.8
     # via transitleastsquares
 bcrypt==3.2.0
     # via paramiko
-beautifulsoup4==4.10.0
+beautifulsoup4==4.11.1
     # via
     #   astroquery
     #   lightkurve
-bidict==0.21.4
+    #   nbconvert
+bidict==0.22.0
     # via pyastronomy
 black==21.7b0
-    # via
-    #   -r /opt/common-env/common.pip
-    #   ipython
-bleach==4.1.0
+    # via -r /opt/common-env/common.pip
+bleach==5.0.0
     # via
     #   nbconvert
     #   panel
@@ -154,12 +162,12 @@ botocore==1.22.8
     #   aiobotocore
     #   boto3
     #   s3transfer
-bqplot==0.12.32
+bqplot==0.12.33
     # via
     #   -r /opt/common-env/jupyter.pip
     #   bqplot-image-gl
     #   glue-jupyter
-bqplot-image-gl==1.4.5
+bqplot-image-gl==1.4.6
     # via
     #   -r /opt/common-env/jupyter.pip
     #   glue-jupyter
@@ -179,15 +187,15 @@ cffi==1.15.0
     #   bcrypt
     #   cryptography
     #   pynacl
-cftime==1.5.2
+cftime==1.6.0
     # via netcdf4
-charset-normalizer==2.0.11
+charset-normalizer==2.0.12
     # via
     #   aiohttp
     #   requests
-ci-watson==0.5
+ci-watson==0.6.1
     # via -r /opt/common-env/testing.pip
-click==8.0.3
+click==8.1.2
     # via
     #   black
     #   distributed
@@ -211,35 +219,39 @@ corner==2.2.1
     #   -r /opt/environments/tess/basic.pip
     #   -r /opt/environments/tess/tess.pip
     #   ultranest
-cryptography==36.0.1
+crds==11.12.1
+    # via ci-watson
+cryptography==36.0.2
     # via
     #   paramiko
     #   pyopenssl
     #   secretstorage
 cycler==0.11.0
     # via matplotlib
-cython==0.29.27
+cython==0.29.28
     # via
     #   -r /opt/environments/tess/basic.pip
     #   pylima
     #   ultranest
-dask[distributed]==2022.01.1
+dask[distributed]==2022.04.0
     # via
     #   -r /opt/environments/tess/basic.pip
     #   distributed
-debugpy==1.5.1
+debugpy==1.6.0
     # via ipykernel
 decorator==5.1.1
     # via ipython
 defusedxml==0.7.1
     # via nbconvert
+deprecat==2.1.1
+    # via pymc3
 deprecation==2.1.0
     # via jupyter-packaging
 dill==0.3.4
     # via
     #   glue-core
     #   pymc3
-distributed==2022.01.1
+distributed==2022.04.0
     # via dask
 docutils==0.16
     # via
@@ -249,7 +261,7 @@ docutils==0.16
     #   sphinx-rtd-theme
 dpcpp-cpp-rt==2022.0.2
     # via mkl-fft
-dynesty==1.1
+dynesty==1.2.2
     # via -r /opt/environments/tess/tess.pip
 echo==0.6
     # via glue-core
@@ -259,7 +271,7 @@ emcee==3.1.1
     # via
     #   -r /opt/environments/tess/tess.pip
     #   pylima
-entrypoints==0.3
+entrypoints==0.4
     # via
     #   jupyter-client
     #   jupyterhub
@@ -268,13 +280,13 @@ entrypoints==0.3
     #   papermill
 et-xmlfile==1.1.0
     # via openpyxl
-etuples==0.3.4
+etuples==0.3.5
     # via
     #   aesara
     #   minikanren
 everest-pipeline==2.0.12
     # via -r /opt/environments/tess/tess.pip
-executing==0.8.2
+executing==0.8.3
     # via stack-data
 exoplanet==0.5.2
     # via
@@ -284,15 +296,18 @@ exoplanet-core==0.1.2
     # via exoplanet
 fast-histogram==0.10
     # via mpl-scatter-density
-fastprogress==1.0.0
+fastjsonschema==2.15.3
+    # via nbformat
+fastprogress==1.0.2
     # via pymc3
 fbpca==1.0
     # via
     #   -r /opt/environments/tess/basic.pip
     #   lightkurve
-filelock==3.4.2
+filelock==3.6.0
     # via
     #   aesara
+    #   crds
     #   theano-pymc
 flake8==4.0.1
     # via -r /opt/common-env/testing.pip
@@ -300,7 +315,7 @@ flatbuffers==2.0
     # via
     #   jaxlib
     #   tensorflow-cpu
-fonttools==4.29.0
+fonttools==4.32.0
     # via matplotlib
 freetype-py==2.2.0
     # via vispy
@@ -331,11 +346,11 @@ glue-core==1.2.4
     # via
     #   glue-jupyter
     #   glue-vispy-viewers
-glue-jupyter==0.10.1
+glue-jupyter==0.12.0
     # via -r /opt/common-env/jupyter.pip
 glue-vispy-viewers==1.0.5
     # via glue-jupyter
-google-auth==2.5.0
+google-auth==2.6.4
     # via
     #   google-auth-oauthlib
     #   tensorboard
@@ -345,7 +360,7 @@ google-pasta==0.2.0
     # via tensorflow-cpu
 greenlet==1.1.2
     # via sqlalchemy
-grpcio==1.43.0
+grpcio==1.44.0
     # via
     #   -r /opt/environments/tess/ml.pip
     #   tensorboard
@@ -368,20 +383,23 @@ idna==3.3
     #   anyio
     #   requests
     #   yarl
-imageio==2.14.1
+imageio==2.16.2
     # via
     #   k2flix
     #   scikit-image
 imagesize==1.3.0
     # via sphinx
-importlib-metadata==4.10.1
+importlib-metadata==4.11.3
     # via
     #   alembic
     #   keyring
     #   markdown
-importlib-resources==5.4.0
+importlib-resources==5.7.0
     # via
     #   alembic
+    #   asdf
+    #   asdf-standard
+    #   asdf-transform-schemas
     #   jsonschema
 iniconfig==1.1.1
     # via pytest
@@ -405,7 +423,7 @@ ipyevents==2.0.1
     # via -r /opt/common-env/jupyter.pip
 ipygoldenlayout==0.4.0
     # via -r /opt/common-env/jupyter.pip
-ipykernel==6.7.0
+ipykernel==6.13.0
     # via
     #   -r /opt/common-env/common.pip
     #   -r /opt/common-env/jupyter.pip
@@ -413,13 +431,13 @@ ipykernel==6.7.0
     #   ipywidgets
     #   notebook
     #   qtconsole
-ipympl==0.8.7
+ipympl==0.9.0
     # via
     #   -r /opt/common-env/jupyter.pip
     #   glue-jupyter
 ipysplitpanes==0.2.0
     # via -r /opt/common-env/jupyter.pip
-ipython==8.0.1
+ipython==8.2.0
     # via
     #   -r /opt/common-env/common.pip
     #   glue-core
@@ -433,8 +451,6 @@ ipython-genutils==0.2.0
     #   -r /opt/common-env/jupyter.pip
     #   ipympl
     #   ipywidgets
-    #   jupyter-server
-    #   nbformat
     #   notebook
     #   qtconsole
 ipyvolume==0.5.2
@@ -447,7 +463,7 @@ ipyvue==1.7.0
     #   ipygoldenlayout
     #   ipysplitpanes
     #   ipyvuetify
-ipyvuetify==1.8.1
+ipyvuetify==1.8.2
     # via
     #   -r /opt/common-env/jupyter.pip
     #   glue-jupyter
@@ -455,7 +471,7 @@ ipywebrtc==0.6.0
     # via
     #   -r /opt/common-env/jupyter.pip
     #   ipyvolume
-ipywidgets==7.6.5
+ipywidgets==7.7.0
     # via
     #   -r /opt/common-env/jupyter.pip
     #   -r /opt/environments/tess/basic.pip
@@ -473,17 +489,17 @@ ipywidgets==7.6.5
     #   pythreejs
 ipywidgets-bokeh==1.2.1
     # via -r /opt/common-env/jupyter.pip
-jax==0.2.27
+jax==0.3.6
     # via -r /opt/environments/tess/ml.pip
-jaxlib==0.1.76
+jaxlib==0.3.5
     # via -r /opt/environments/tess/ml.pip
 jedi==0.18.1
     # via ipython
-jeepney==0.7.1
+jeepney==0.8.0
     # via
     #   keyring
     #   secretstorage
-jinja2==2.11.3
+jinja2==3.0.3
     # via
     #   -r /opt/environments/tess/basic.pip
     #   bokeh
@@ -499,6 +515,7 @@ jinja2==2.11.3
     #   sphinx
 jmespath==0.10.0
     # via
+    #   asdf
     #   boto3
     #   botocore
 joblib==1.1.0
@@ -511,6 +528,7 @@ json5==0.9.6
     # via jupyterlab-server
 jsonschema==4.4.0
     # via
+    #   asdf
     #   jupyter-telemetry
     #   jupyterlab-server
     #   nbformat
@@ -518,7 +536,7 @@ jupyter-aas-timeseries==0.1.7
     # via aas-timeseries
 jupyter-bokeh==3.0.4
     # via -r /opt/common-env/jupyter.pip
-jupyter-client==7.1.2
+jupyter-client==7.2.2
     # via
     #   -r /opt/common-env/jupyter.pip
     #   ipykernel
@@ -526,7 +544,7 @@ jupyter-client==7.1.2
     #   nbclient
     #   notebook
     #   qtconsole
-jupyter-core==4.9.1
+jupyter-core==4.9.2
     # via
     #   -r /opt/common-env/jupyter.pip
     #   jupyter-client
@@ -538,9 +556,9 @@ jupyter-core==4.9.1
     #   qtconsole
 jupyter-desktop-server==0.1.3
     # via -r /opt/common-env/common.pip
-jupyter-packaging==0.11.1
+jupyter-packaging==0.12.0
     # via -r /opt/common-env/jupyter.pip
-jupyter-server==1.13.4
+jupyter-server==1.16.0
     # via
     #   -r /opt/common-env/jupyter.pip
     #   jupyter-server-proxy
@@ -548,6 +566,7 @@ jupyter-server==1.13.4
     #   jupyterlab-server
     #   nbclassic
     #   nbgitpuller
+    #   notebook-shim
 jupyter-server-proxy==3.2.1
     # via
     #   -r /opt/common-env/jupyter.pip
@@ -556,15 +575,15 @@ jupyter-telemetry==0.1.0
     # via jupyterhub
 jupyterhub==1.5.0
     # via -r /opt/common-env/jupyter.pip
-jupyterlab==3.2.8
+jupyterlab==3.3.3
     # via -r /opt/common-env/jupyter.pip
-jupyterlab-pygments==0.1.2
+jupyterlab-pygments==0.2.1
     # via
     #   -r /opt/common-env/jupyter.pip
     #   nbconvert
-jupyterlab-server==2.10.3
+jupyterlab-server==2.12.0
     # via jupyterlab
-jupyterlab-widgets==1.0.2
+jupyterlab-widgets==1.1.0
     # via
     #   -r /opt/common-env/jupyter.pip
     #   ipywidgets
@@ -580,13 +599,13 @@ keras-preprocessing==1.1.2
     # via tensorflow-cpu
 keyring==23.5.0
     # via astroquery
-kiwisolver==1.3.2
+kiwisolver==1.4.2
     # via
     #   matplotlib
     #   vispy
 libclang==13.0.0
     # via tensorflow-cpu
-lightkurve==2.0.11
+lightkurve==2.2.0
     # via -r /opt/environments/tess/tess.pip
 llvmlite==0.38.0
     # via numba
@@ -597,19 +616,22 @@ logical-unification==0.4.5
     #   aesara
     #   cons
     #   minikanren
-lxml==4.7.1
-    # via -r /opt/environments/tess/basic.pip
-mako==1.1.6
+lxml==4.8.0
+    # via
+    #   -r /opt/environments/tess/basic.pip
+    #   crds
+mako==1.2.0
     # via alembic
 markdown==3.3.6
     # via
     #   panel
     #   pixiedust
     #   tensorboard
-markupsafe==2.0.1
+markupsafe==2.1.1
     # via
     #   jinja2
     #   mako
+    #   nbconvert
 matplotlib==3.5.1
     # via
     #   -r /opt/common-env/docs.pip
@@ -672,19 +694,19 @@ multipledispatch==0.6.0
     #   minikanren
 mypy-extensions==0.4.3
     # via black
-nbclassic==0.3.5
+nbclassic==0.3.7
     # via jupyterlab
-nbclient==0.5.10
+nbclient==0.6.0
     # via
     #   nbconvert
     #   papermill
-nbconvert==6.4.1
+nbconvert==6.5.0
     # via
     #   -r /opt/common-env/common.pip
     #   jupyter-server
     #   nbsphinx
     #   notebook
-nbformat==5.1.3
+nbformat==5.3.0
     # via
     #   ipywidgets
     #   jupyter-server
@@ -693,11 +715,11 @@ nbformat==5.1.3
     #   nbsphinx
     #   notebook
     #   papermill
-nbgitpuller==1.0.2
+nbgitpuller==1.1.0
     # via -r /opt/common-env/common.pip
 nbsphinx==0.8.8
     # via -r /opt/common-env/docs.pip
-nest-asyncio==1.5.4
+nest-asyncio==1.5.5
     # via
     #   ipykernel
     #   jupyter-client
@@ -705,26 +727,29 @@ nest-asyncio==1.5.4
     #   notebook
 netcdf4==1.5.8
     # via arviz
-networkx==2.6.3
+networkx==2.8
     # via scikit-image
-notebook==6.4.8
+notebook==6.4.10
     # via
     #   -r /opt/common-env/jupyter.pip
     #   glue-jupyter
     #   nbclassic
     #   nbgitpuller
     #   widgetsnbextension
+notebook-shim==0.1.0
+    # via nbclassic
 numba==0.55.1
     # via
     #   pylima
     #   transitleastsquares
     #   wotan
-numpy==1.21.5
+numpy==1.21.6
     # via
     #   -r /opt/common-env/common.pip
     #   -r /opt/environments/tess/basic.pip
     #   aesara
     #   arviz
+    #   asdf
     #   astrobase
     #   astroml
     #   astropy
@@ -736,13 +761,13 @@ numpy==1.21.5
     #   bqplot
     #   celerite
     #   cftime
+    #   crds
     #   echo
     #   ediunplugged
     #   emcee
     #   everest-pipeline
     #   exoplanet-core
     #   fast-histogram
-    #   fastprogress
     #   george
     #   glue-core
     #   glue-vispy-viewers
@@ -791,7 +816,7 @@ numpy==1.21.5
     #   vispy
     #   wotan
     #   xarray
-numpydoc==1.2
+numpydoc==1.2.1
     # via sphinx-astropy
 oauthlib==3.2.0
     # via
@@ -811,16 +836,19 @@ packaging==21.3
     # via
     #   -r /opt/environments/tess/ml.pip
     #   arviz
-    #   bleach
+    #   asdf
+    #   astropy
     #   bokeh
     #   dask
     #   deprecation
     #   distributed
+    #   ipykernel
     #   jupyter-packaging
     #   jupyter-server
     #   jupyterlab
     #   jupyterlab-server
     #   matplotlib
+    #   nbconvert
     #   pytest
     #   pytest-doctestplus
     #   qtpy
@@ -829,11 +857,13 @@ packaging==21.3
     #   sphinx
     #   sphinx-astropy
     #   starry
+    #   statsmodels
+    #   xarray
 palettable==3.3.0
     # via aas-timeseries
 pamela==1.0.0
     # via jupyterhub
-pandas==1.4.0
+pandas==1.4.2
     # via
     #   -r /opt/environments/tess/basic.pip
     #   arviz
@@ -847,17 +877,19 @@ pandas==1.4.0
     #   xarray
 pandocfilters==1.5.0
     # via nbconvert
-panel==0.12.6
+panel==0.12.7
     # via -r /opt/environments/tess/basic.pip
 papermill==2.3.4
     # via -r /opt/common-env/common.pip
-param==1.12.0
+param==1.12.1
     # via
     #   panel
     #   pyct
     #   pyviz-comms
-paramiko==2.9.2
+paramiko==2.10.3
     # via -r /opt/environments/tess/tess.pip
+parsley==1.3
+    # via crds
 parso==0.8.3
     # via jedi
 partd==1.2.0
@@ -876,7 +908,7 @@ pexpect==4.8.0
     # via ipython
 pickleshare==0.7.5
     # via ipython
-pillow==9.0.0
+pillow==9.1.0
     # via
     #   astrobase
     #   astrocut
@@ -888,7 +920,7 @@ pillow==9.0.0
     #   matplotlib
     #   scikit-image
     #   sphinx-astropy
-pip-tools==6.4.0
+pip-tools==6.6.0
     # via -r /opt/common-env/common.pip
 pipdeptree==2.2.1
     # via -r /opt/common-env/common.pip
@@ -896,20 +928,21 @@ pixiedust==1.1.19
     # via -r /opt/environments/tess/tess.pip
 pluggy==1.0.0
     # via pytest
-prometheus-client==0.13.1
+prometheus-client==0.14.1
     # via
     #   jupyter-server
     #   jupyterhub
     #   notebook
-prompt-toolkit==3.0.26
+prompt-toolkit==3.0.29
     # via ipython
-protobuf==3.19.4
+protobuf==3.20.0
     # via
     #   tensorboard
     #   tensorflow-cpu
 psutil==5.9.0
     # via
     #   distributed
+    #   ipykernel
     #   pytest-openfiles
 psycopg2-binary==2.9.3
     # via -r /opt/environments/tess/tess.pip
@@ -929,7 +962,7 @@ pyasn1-modules==0.2.8
     # via google-auth
 pyastronomy==0.17.1
     # via pylima
-pybind11==2.9.0
+pybind11==2.9.2
     # via
     #   -r /opt/environments/tess/basic.pip
     #   vbbinarylensing
@@ -939,7 +972,7 @@ pycparser==2.21
     # via cffi
 pyct==0.4.8
     # via panel
-pydeps==1.10.12
+pydeps==1.10.14
     # via -r /opt/common-env/common.pip
 pyds9==1.8.1
     # via -r /opt/common-env/common.pip
@@ -952,13 +985,12 @@ pyflakes==2.4.0
 pygments==2.11.2
     # via
     #   ipython
-    #   jupyterlab-pygments
     #   nbconvert
     #   qtconsole
     #   sphinx
 pylima==0.8.3
     # via -r /opt/environments/tess/tess.pip
-pymc3==3.11.4
+pymc3==3.11.5
     # via
     #   exoplanet
     #   pymc3-ext
@@ -967,27 +999,27 @@ pymc3-ext==0.1.1
     # via starry
 pynacl==1.5.0
     # via paramiko
-pyopengl==3.1.5
+pyopengl==3.1.6
     # via glue-vispy-viewers
 pyopenssl==22.0.0
     # via certipy
-pyparsing==3.0.7
+pyparsing==3.0.8
     # via
     #   matplotlib
     #   packaging
-pypdf2==1.26.0
+pypdf2==1.27.4
     # via everest-pipeline
 pyrsistent==0.18.1
     # via jsonschema
 pysyzygy==0.0.2
     # via everest-pipeline
-pytest==6.2.5
+pytest==7.1.1
     # via
     #   -r /opt/common-env/testing.pip
     #   ci-watson
     #   pytest-doctestplus
     #   pytest-openfiles
-pytest-doctestplus==0.11.2
+pytest-doctestplus==0.12.0
     # via
     #   -r /opt/common-env/testing.pip
     #   sphinx-astropy
@@ -1004,20 +1036,22 @@ python-json-logger==2.0.2
     # via jupyter-telemetry
 pythreejs==2.3.0
     # via ipyvolume
-pytz==2021.3
+pytz==2022.1
     # via
     #   babel
     #   pandas
-pyviz-comms==2.1.0
+pyviz-comms==2.2.0
     # via panel
-pyvo==1.2.1
+pyvo==1.3
     # via
     #   -r /opt/environments/tess/basic.pip
     #   astroquery
-pywavelets==1.2.0
+pywavelets==1.3.0
     # via scikit-image
 pyyaml==6.0
     # via
+    #   asdf
+    #   astropy
     #   bokeh
     #   dask
     #   distributed
@@ -1029,9 +1063,9 @@ pyzmq==22.3.0
     #   jupyter-server
     #   notebook
     #   qtconsole
-qtconsole==5.2.2
+qtconsole==5.3.0
     # via glue-core
-qtpy==2.0.0
+qtpy==2.0.1
     # via
     #   echo
     #   glue-core
@@ -1041,7 +1075,7 @@ quantities==0.13.0
     # via pyastronomy
 rebound==3.19.2
     # via -r /opt/environments/tess/tess.pip
-regex==2022.1.18
+regex==2022.3.15
     # via black
 reproject==0.8
     # via -r /opt/environments/tess/tess.pip
@@ -1051,6 +1085,7 @@ requests==2.27.1
     #   astrobase
     #   astroquery
     #   ci-watson
+    #   crds
     #   ipyvolume
     #   jupyterhub
     #   jupyterlab-server
@@ -1069,17 +1104,17 @@ requests-oauthlib==1.3.1
     # via google-auth-oauthlib
 rsa==4.8
     # via google-auth
-ruamel.yaml==0.17.20
+ruamel-yaml==0.17.21
     # via jupyter-telemetry
-ruamel.yaml.clib==0.2.6
-    # via ruamel.yaml
+ruamel-yaml-clib==0.2.6
+    # via ruamel-yaml
 s3fs==2021.11.1
     # via -r /opt/environments/tess/basic.pip
-s3transfer==0.5.0
+s3transfer==0.5.2
     # via
     #   -r /opt/environments/tess/basic.pip
     #   boto3
-scikit-image==0.19.1
+scikit-image==0.19.2
     # via glue-jupyter
 scikit-learn==1.0.2
     # via
@@ -1121,6 +1156,8 @@ seaborn==0.11.2
     # via -r /opt/environments/tess/basic.pip
 secretstorage==3.3.1
     # via keyring
+semantic-version==2.9.0
+    # via asdf
 semver==2.13.0
     # via pymc3
 send2trash==1.8.0
@@ -1149,6 +1186,7 @@ six==1.16.0
     #   keras-preprocessing
     #   mkl-service
     #   multipledispatch
+    #   paramiko
     #   patsy
     #   pyastronomy
     #   pyds9
@@ -1161,7 +1199,7 @@ snowballstemmer==2.2.0
     # via sphinx
 sortedcontainers==2.4.0
     # via distributed
-soupsieve==2.3.1
+soupsieve==2.3.2
     # via beautifulsoup4
 sphinx==3.5.4
     # via
@@ -1182,7 +1220,7 @@ sphinx-automodapi==0.14.1
     # via
     #   -r /opt/common-env/docs.pip
     #   sphinx-astropy
-sphinx-bootstrap-theme==0.8.0
+sphinx-bootstrap-theme==0.8.1
     # via sphinx-asdf
 sphinx-gallery==0.10.1
     # via sphinx-astropy
@@ -1200,15 +1238,15 @@ sphinxcontrib-qthelp==1.0.3
     # via sphinx
 sphinxcontrib-serializinghtml==1.1.5
     # via sphinx
-sqlalchemy==1.4.31
+sqlalchemy==1.4.35
     # via
     #   alembic
     #   jupyterhub
-stack-data==0.1.4
+stack-data==0.2.0
     # via ipython
 starry==1.2.0
     # via -r /opt/environments/tess/exoplanet.pip
-statsmodels==0.13.1
+statsmodels==0.13.2
     # via -r /opt/environments/tess/tess.pip
 stdlib-list==0.8.0
     # via pydeps
@@ -1230,44 +1268,43 @@ tensorboard-data-server==0.6.1
     # via tensorboard
 tensorboard-plugin-wit==1.8.1
     # via tensorboard
-tensorflow-cpu==2.7.0
+tensorflow-cpu==2.7.1
     # via -r /opt/environments/tess/ml.pip
 tensorflow-estimator==2.7.0
     # via
     #   -r /opt/environments/tess/ml.pip
     #   tensorflow-cpu
-tensorflow-io-gcs-filesystem==0.23.1
+tensorflow-io-gcs-filesystem==0.24.0
     # via tensorflow-cpu
 termcolor==1.1.0
     # via tensorflow-cpu
-terminado==0.13.1
+terminado==0.13.3
     # via
     #   jupyter-server
     #   notebook
-tess-point==0.7.0
+tess-point==0.7.1
     # via -r /opt/environments/tess/tess.pip
-testpath==0.5.0
-    # via nbconvert
 textwrap3==0.9.2
     # via ansiwrap
 theano-pymc==1.1.2
     # via
     #   -r /opt/environments/tess/ml.pip
     #   pymc3
-threadpoolctl==3.0.0
+threadpoolctl==3.1.0
     # via
     #   -r /opt/environments/tess/basic.pip
     #   scikit-learn
-tifffile==2021.11.2
+tifffile==2022.4.8
     # via scikit-image
-toml==0.10.2
-    # via pytest
+tinycss2==1.1.1
+    # via nbconvert
 tomli==1.2.3
     # via
     #   black
     #   pep517
+    #   pytest
     #   setuptools-scm
-tomlkit==0.8.0
+tomlkit==0.10.1
     # via jupyter-packaging
 toolz==0.11.2
     # via
@@ -1276,7 +1313,7 @@ toolz==0.11.2
     #   logical-unification
     #   minikanren
     #   partd
-torch==1.10.2
+torch==1.11.0
     # via -r /opt/environments/tess/ml.pip
 tornado==6.1
     # via
@@ -1291,7 +1328,7 @@ tornado==6.1
     #   nbgitpuller
     #   notebook
     #   terminado
-tqdm==4.62.3
+tqdm==4.64.0
     # via
     #   -r /opt/environments/tess/tess.pip
     #   astrobase
@@ -1333,27 +1370,31 @@ transitleastsquares==1.0.31
     #   ediunplugged
 tvguide==1.0.3
     # via -r /opt/environments/tess/tess.pip
-typing-extensions==3.10.0.2
+typing-extensions==4.1.1
     # via
+    #   aesara
+    #   aioitertools
     #   arviz
     #   bokeh
     #   jax
     #   pymc3
     #   tensorflow-cpu
     #   torch
-ultranest==3.3.3
+ultranest==3.4.4
     # via -r /opt/environments/tess/tess.pip
 uncertainties==3.1.6
     # via
     #   -r /opt/environments/tess/basic.pip
     #   lightkurve
-urllib3==1.26.8
+urllib3==1.26.9
     # via
     #   botocore
+    #   distributed
+    #   lightkurve
     #   requests
 vbbinarylensing==3.2.0
     # via pylima
-vispy==0.9.4
+vispy==0.9.6
     # via glue-vispy-viewers
 wcwidth==0.2.5
     # via prompt-toolkit
@@ -1362,9 +1403,10 @@ webencodings==0.5.1
     #   -r /opt/environments/tess/ml.pip
     #   bleach
     #   html5lib
-websocket-client==1.2.3
+    #   tinycss2
+websocket-client==1.3.2
     # via jupyter-server
-werkzeug==2.0.2
+werkzeug==2.1.1
     # via tensorboard
 wheel==0.37.1
     # via
@@ -1373,25 +1415,26 @@ wheel==0.37.1
     #   pip-tools
     #   tensorboard
     #   tensorflow-cpu
-widgetsnbextension==3.5.2
+widgetsnbextension==3.6.0
     # via
     #   -r /opt/common-env/jupyter.pip
     #   ipywidgets
 wotan==1.10
     # via -r /opt/environments/tess/tess.pip
-wrapt==1.13.3
+wrapt==1.14.0
     # via
     #   aiobotocore
+    #   deprecat
     #   tensorflow-cpu
-xarray==0.21.0
+xarray==2022.3.0
     # via arviz
 xlrd==2.0.1
     # via glue-core
 yarl==1.7.2
     # via aiohttp
-zict==2.0.0
+zict==2.1.0
     # via distributed
-zipp==3.7.0
+zipp==3.8.0
     # via
     #   importlib-metadata
     #   importlib-resources

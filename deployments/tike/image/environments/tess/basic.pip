@@ -2,7 +2,7 @@ lxml
 
 cython
 pybind11
-jinja2~=2.11.0
+jinja2
 bokeh~=2.4.2
 panel
 ipywidgets
@@ -23,7 +23,7 @@ oktopus
 uncertainties
 fbpca
 
-astropy~=4.3.0
+astropy~=5.0.4
 astroquery
 pyvo
 #pyvodb
