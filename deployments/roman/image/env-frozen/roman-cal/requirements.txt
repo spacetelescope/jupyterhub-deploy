@@ -10,7 +10,7 @@ aiosignal==1.2.0
     # via aiohttp
 alabaster==0.7.12
     # via sphinx
-alembic==1.7.5
+alembic==1.7.7
     # via jupyterhub
 ansiwrap==0.8.4
     # via papermill
@@ -24,11 +24,10 @@ argon2-cffi==21.3.0
     #   notebook
 argon2-cffi-bindings==21.2.0
     # via argon2-cffi
-asdf==2.8.3
+asdf==2.11.0
     # via
     #   asdf-astropy
     #   asdf-coordinates-schemas
-    #   asdf-transform-schemas
     #   asdf-wcs-schemas
     #   crds
     #   gwcs
@@ -40,19 +39,25 @@ asdf==2.8.3
     #   specutils
     #   stdatamodels
     #   stpipe
-asdf-astropy==0.1.2
+asdf-astropy==0.2.0
     # via
     #   gwcs
     #   jwst
 asdf-coordinates-schemas==0.1.0
     # via asdf-astropy
-asdf-transform-schemas==0.2.0
-    # via asdf-astropy
+asdf-standard==1.0.1
+    # via
+    #   asdf
+    #   asdf-transform-schemas
+asdf-transform-schemas==0.2.2
+    # via
+    #   asdf
+    #   asdf-astropy
 asdf-wcs-schemas==0.1.1
     # via gwcs
 asteval==0.9.26
     # via jdaviz
-astropy==5.0.1
+astropy==5.0.4
     # via
     #   asdf-astropy
     #   astroquery
@@ -75,7 +80,6 @@ astropy==5.0.1
     #   jwst-pancake
     #   ndcube
     #   pandeia-engine
-    #   pandeia.engine
     #   photutils
     #   poppy
     #   pysiaf
@@ -91,14 +95,14 @@ astropy==5.0.1
     #   stcal
     #   stdatamodels
     #   stpipe
-    #   stsci.tools
+    #   stsci-tools
     #   stsynphot
     #   synphot
     #   tweakwcs
     #   webbpsf
 astropy-sphinx-theme==1.1
     # via sphinx-astropy
-astroquery==0.4.5
+astroquery==0.4.6
     # via -r /opt/environments/roman-cal/octarine.pip
 astroscrappy==1.1.0
     # via -r /opt/environments/roman-cal/octarine.pip
@@ -119,37 +123,36 @@ babel==2.9.1
     #   sphinx
 backcall==0.2.0
     # via ipython
-bayesicfitting==2.8.1
+bayesicfitting==3.0.1
     # via jwst
-beautifulsoup4==4.10.0
+beautifulsoup4==4.11.1
     # via
     #   astroquery
+    #   nbconvert
     #   pysynphot
     #   stsynphot
 black==21.7b0
-    # via
-    #   -r /opt/common-env/common.pip
-    #   ipython
-bleach==4.1.0
+    # via -r /opt/common-env/common.pip
+bleach==5.0.0
     # via nbconvert
 bokeh==2.4.2
     # via
     #   -r /opt/environments/roman-cal/octarine.pip
     #   ipywidgets-bokeh
     #   jupyter-bokeh
-boto3==1.20.46
+boto3==1.21.40
     # via -r /opt/common-env/common.pip
-botocore==1.23.46
+botocore==1.24.40
     # via
     #   boto3
     #   s3transfer
-bqplot==0.12.32
+bqplot==0.12.33
     # via
     #   -r /opt/common-env/jupyter.pip
     #   bqplot-image-gl
     #   glue-jupyter
     #   jdaviz
-bqplot-image-gl==1.4.5
+bqplot-image-gl==1.4.6
     # via
     #   -r /opt/common-env/jupyter.pip
     #   glue-jupyter
@@ -164,13 +167,13 @@ cffi==1.15.0
     # via
     #   argon2-cffi-bindings
     #   cryptography
-charset-normalizer==2.0.11
+charset-normalizer==2.0.12
     # via
     #   aiohttp
     #   requests
-ci-watson==0.5
+ci-watson==0.6.1
     # via -r /opt/common-env/testing.pip
-click==8.0.3
+click==8.1.2
     # via
     #   black
     #   jdaviz
@@ -178,24 +181,25 @@ click==8.0.3
     #   pip-tools
 cloudpickle==2.0.0
     # via dask
-crds==11.6.0
+crds==11.12.0
     # via
+    #   ci-watson
     #   jwst
     #   romancal
     #   stpipe
-cryptography==36.0.1
+cryptography==36.0.2
     # via
     #   pyopenssl
     #   secretstorage
 cycler==0.11.0
     # via matplotlib
-cython==0.29.27
+cython==0.29.28
     # via jwst-pancake
-dask[array]==2022.1.1
+dask[array]==2022.4.0
     # via
     #   casa-formats-io
     #   spectral-cube
-debugpy==1.5.1
+debugpy==1.6.0
     # via ipykernel
 decorator==5.1.1
     # via ipython
@@ -213,13 +217,13 @@ docutils==0.16
     #   sphinx-rtd-theme
 drizzle==1.13.4
     # via jwst
-dust-extinction==1.0
+dust-extinction==1.1
     # via -r /opt/environments/roman-cal/octarine.pip
 echo==0.6
     # via
     #   glue-core
     #   jdaviz
-entrypoints==0.3
+entrypoints==0.4
     # via
     #   jupyter-client
     #   jupyterhub
@@ -228,17 +232,19 @@ entrypoints==0.3
     #   papermill
 et-xmlfile==1.1.0
     # via openpyxl
-executing==0.8.2
+executing==0.8.3
     # via stack-data
 fast-histogram==0.10
     # via mpl-scatter-density
-filelock==3.4.2
+fastjsonschema==2.15.3
+    # via nbformat
+filelock==3.6.0
     # via crds
-fitsblender==0.4.0
+fitsblender==0.4.1
     # via -r /opt/environments/roman-cal/octarine.pip
 flake8==4.0.1
     # via -r /opt/common-env/testing.pip
-fonttools==4.29.0
+fonttools==4.32.0
     # via matplotlib
 freetype-py==2.2.0
     # via vispy
@@ -246,13 +252,13 @@ frozenlist==1.3.0
     # via
     #   aiohttp
     #   aiosignal
-fsspec==2022.1.0
+fsspec==2022.3.0
     # via dask
 future==0.18.2
     # via bayesicfitting
-ginga==3.2.0
+ginga==3.3.0
     # via -r /opt/environments/roman-cal/octarine.pip
-glue-astronomy==0.3.2
+glue-astronomy==0.3.3
     # via jdaviz
 glue-core==1.2.4
     # via
@@ -261,7 +267,7 @@ glue-core==1.2.4
     #   glue-jupyter
     #   glue-vispy-viewers
     #   jdaviz
-glue-jupyter==0.10.1
+glue-jupyter==0.12.0
     # via
     #   -r /opt/common-env/jupyter.pip
     #   jdaviz
@@ -271,7 +277,7 @@ glue-vispy-viewers==1.0.5
     #   glue-jupyter
 greenlet==1.1.2
     # via sqlalchemy
-gwcs==0.18.0
+gwcs==0.18.1
     # via
     #   jdaviz
     #   jwst
@@ -286,27 +292,29 @@ hsluv==5.0.2
     # via vispy
 html5lib==1.1
     # via astroquery
-idna==2.10
+idna==3.3
     # via
     #   anyio
     #   jdaviz
     #   requests
     #   yarl
-imageio==2.14.1
+imageio==2.16.2
     # via scikit-image
 imagesize==1.3.0
     # via sphinx
-importlib-metadata==4.10.1
+importlib-metadata==4.11.3
     # via
     #   alembic
     #   keyring
-importlib-resources==5.4.0
+importlib-resources==5.7.0
     # via
     #   alembic
     #   asdf
     #   asdf-astropy
+    #   asdf-standard
     #   asdf-transform-schemas
     #   asdf-wcs-schemas
+    #   jsonschema
 iniconfig==1.1.1
     # via pytest
 ipydatawidgets==4.2.0
@@ -319,7 +327,7 @@ ipygoldenlayout==0.4.0
     # via
     #   -r /opt/common-env/jupyter.pip
     #   jdaviz
-ipykernel==6.7.0
+ipykernel==6.13.0
     # via
     #   -r /opt/common-env/common.pip
     #   -r /opt/common-env/jupyter.pip
@@ -327,7 +335,7 @@ ipykernel==6.7.0
     #   ipywidgets
     #   notebook
     #   qtconsole
-ipympl==0.8.7
+ipympl==0.9.0
     # via
     #   -r /opt/common-env/jupyter.pip
     #   glue-jupyter
@@ -335,7 +343,7 @@ ipysplitpanes==0.2.0
     # via
     #   -r /opt/common-env/jupyter.pip
     #   jdaviz
-ipython==8.0.1
+ipython==8.2.0
     # via
     #   -r /opt/common-env/common.pip
     #   glue-core
@@ -348,8 +356,6 @@ ipython-genutils==0.2.0
     #   -r /opt/common-env/jupyter.pip
     #   ipympl
     #   ipywidgets
-    #   jupyter-server
-    #   nbformat
     #   notebook
     #   qtconsole
 ipyvolume==0.5.2
@@ -363,7 +369,7 @@ ipyvue==1.7.0
     #   ipysplitpanes
     #   ipyvuetify
     #   jdaviz
-ipyvuetify==1.8.1
+ipyvuetify==1.8.2
     # via
     #   -r /opt/common-env/jupyter.pip
     #   glue-jupyter
@@ -372,7 +378,7 @@ ipywebrtc==0.6.0
     # via
     #   -r /opt/common-env/jupyter.pip
     #   ipyvolume
-ipywidgets==7.6.5
+ipywidgets==7.7.0
     # via
     #   -r /opt/common-env/jupyter.pip
     #   bqplot
@@ -386,19 +392,21 @@ ipywidgets==7.6.5
     #   ipywidgets-bokeh
     #   jupyter-bokeh
     #   pythreejs
+    #   sidecar
 ipywidgets-bokeh==1.2.1
     # via -r /opt/common-env/jupyter.pip
-jdaviz==2.2.0
+jdaviz==2.4.0
     # via -r /opt/environments/roman-cal/roman-cal.pip
 jedi==0.18.1
     # via ipython
-jeepney==0.7.1
+jeepney==0.8.0
     # via
     #   keyring
     #   secretstorage
 jinja2==3.0.3
     # via
     #   bokeh
+    #   jdaviz
     #   jupyter-server
     #   jupyterhub
     #   jupyterlab
@@ -408,7 +416,7 @@ jinja2==3.0.3
     #   notebook
     #   numpydoc
     #   sphinx
-jmespath==0.10.0
+jmespath==1.0.0
     # via
     #   asdf
     #   boto3
@@ -421,7 +429,7 @@ jplephem==2.17
     # via -r /opt/environments/roman-cal/octarine.pip
 json5==0.9.6
     # via jupyterlab-server
-jsonschema==3.2.0
+jsonschema==4.4.0
     # via
     #   asdf
     #   jupyter-telemetry
@@ -433,7 +441,7 @@ jsonschema==3.2.0
     #   stdatamodels
 jupyter-bokeh==3.0.4
     # via -r /opt/common-env/jupyter.pip
-jupyter-client==7.1.2
+jupyter-client==7.2.2
     # via
     #   -r /opt/common-env/jupyter.pip
     #   ipykernel
@@ -442,7 +450,7 @@ jupyter-client==7.1.2
     #   notebook
     #   qtconsole
     #   voila
-jupyter-core==4.9.1
+jupyter-core==4.9.2
     # via
     #   -r /opt/common-env/jupyter.pip
     #   jupyter-client
@@ -454,9 +462,9 @@ jupyter-core==4.9.1
     #   qtconsole
 jupyter-desktop-server==0.1.3
     # via -r /opt/common-env/common.pip
-jupyter-packaging==0.11.1
+jupyter-packaging==0.12.0
     # via -r /opt/common-env/jupyter.pip
-jupyter-server==1.13.4
+jupyter-server==1.16.0
     # via
     #   -r /opt/common-env/jupyter.pip
     #   jupyter-server-proxy
@@ -464,6 +472,7 @@ jupyter-server==1.13.4
     #   jupyterlab-server
     #   nbclassic
     #   nbgitpuller
+    #   notebook-shim
     #   voila
 jupyter-server-proxy==3.2.1
     # via
@@ -473,19 +482,23 @@ jupyter-telemetry==0.1.0
     # via jupyterhub
 jupyterhub==1.5.0
     # via -r /opt/common-env/jupyter.pip
-jupyterlab==3.2.8
-    # via -r /opt/common-env/jupyter.pip
-jupyterlab-pygments==0.1.2
+jupyterlab==3.3.3
+    # via
+    #   -r /opt/common-env/jupyter.pip
+    #   sidecar
+jupyterlab-pygments==0.2.1
     # via
     #   -r /opt/common-env/jupyter.pip
     #   nbconvert
-jupyterlab-server==2.10.3
-    # via jupyterlab
-jupyterlab-widgets==1.0.2
+jupyterlab-server==2.12.0
+    # via
+    #   jupyterlab
+    #   voila
+jupyterlab-widgets==1.1.0
     # via
     #   -r /opt/common-env/jupyter.pip
     #   ipywidgets
-jwst==1.4.2
+jwst==1.4.6
     # via -r /opt/environments/roman-cal/roman-cal.pip
 jwst-backgrounds==1.1.2
     # via -r /opt/environments/roman-cal/octarine.pip
@@ -497,7 +510,7 @@ jwxml==0.3.2
     # via -r /opt/environments/roman-cal/octarine.pip
 keyring==23.5.0
     # via astroquery
-kiwisolver==1.3.2
+kiwisolver==1.4.2
     # via
     #   matplotlib
     #   vispy
@@ -505,16 +518,17 @@ locket==0.2.1
     # via partd
 lockfile==0.12.2
     # via python-daemon
-lxml==4.7.1
+lxml==4.8.0
     # via
     #   crds
     #   pysiaf
-mako==1.1.6
+mako==1.2.0
     # via alembic
-markupsafe==2.0.1
+markupsafe==2.1.1
     # via
     #   jinja2
     #   mako
+    #   nbconvert
 matplotlib==3.5.1
     # via
     #   -r /opt/common-env/docs.pip
@@ -524,6 +538,7 @@ matplotlib==3.5.1
     #   glue-vispy-viewers
     #   healpy
     #   ipympl
+    #   jdaviz
     #   jwst-footprints
     #   jwst-pancake
     #   jwxml
@@ -549,21 +564,21 @@ multidict==6.0.2
     #   yarl
 mypy-extensions==0.4.3
     # via black
-nbclassic==0.3.5
+nbclassic==0.3.7
     # via jupyterlab
-nbclient==0.5.10
+nbclient==0.5.13
     # via
     #   nbconvert
     #   papermill
     #   voila
-nbconvert==6.4.1
+nbconvert==6.5.0
     # via
     #   -r /opt/common-env/common.pip
     #   jupyter-server
     #   nbsphinx
     #   notebook
     #   voila
-nbformat==5.1.3
+nbformat==5.3.0
     # via
     #   ipywidgets
     #   jupyter-server
@@ -572,28 +587,30 @@ nbformat==5.1.3
     #   nbsphinx
     #   notebook
     #   papermill
-nbgitpuller==1.0.2
+nbgitpuller==1.1.0
     # via -r /opt/common-env/common.pip
 nbsphinx==0.8.8
     # via -r /opt/common-env/docs.pip
 ndcube==2.0.1
     # via specutils
-nest-asyncio==1.5.4
+nest-asyncio==1.5.5
     # via
     #   ipykernel
     #   jupyter-client
     #   nbclient
     #   notebook
-networkx==2.6.3
+networkx==2.8
     # via scikit-image
-notebook==6.4.8
+notebook==6.4.10
     # via
     #   -r /opt/common-env/jupyter.pip
     #   glue-jupyter
     #   nbclassic
     #   nbgitpuller
     #   widgetsnbextension
-numpy==1.22.1
+notebook-shim==0.1.0
+    # via nbclassic
+numpy==1.22.3
     # via
     #   -r /opt/common-env/common.pip
     #   asdf
@@ -631,7 +648,6 @@ numpy==1.22.1
     #   ndcube
     #   pandas
     #   pandeia-engine
-    #   pandeia.engine
     #   photutils
     #   poppy
     #   pyerfa
@@ -650,17 +666,17 @@ numpy==1.22.1
     #   spherical-geometry
     #   stcal
     #   stdatamodels
-    #   stsci.image
-    #   stsci.imagestats
-    #   stsci.stimage
-    #   stsci.tools
+    #   stsci-image
+    #   stsci-imagestats
+    #   stsci-stimage
+    #   stsci-tools
     #   stsynphot
     #   synphot
     #   tifffile
     #   tweakwcs
     #   vispy
     #   webbpsf
-numpydoc==1.2
+numpydoc==1.2.1
     # via
     #   pysiaf
     #   sphinx-astropy
@@ -675,15 +691,16 @@ packaging==21.3
     #   asdf
     #   asdf-astropy
     #   astropy
-    #   bleach
     #   bokeh
     #   dask
     #   deprecation
+    #   ipykernel
     #   jupyter-packaging
     #   jupyter-server
     #   jupyterlab
     #   jupyterlab-server
     #   matplotlib
+    #   nbconvert
     #   pytest
     #   pytest-doctestplus
     #   qtpy
@@ -692,15 +709,15 @@ packaging==21.3
     #   sphinx-astropy
 pamela==1.0.0
     # via jupyterhub
-pandas==1.4.0
+pandas==1.4.2
     # via
     #   -r /opt/environments/roman-cal/octarine.pip
     #   bqplot
     #   glue-core
-pandeia-engine==1.6.2
-    # via -r /opt/environments/roman-cal/octarine.pip
-pandeia.engine==1.6.2
-    # via jwst-pancake
+pandeia-engine==1.7
+    # via
+    #   -r /opt/environments/roman-cal/octarine.pip
+    #   jwst-pancake
 pandocfilters==1.5.0
     # via nbconvert
 pandokia==2.3.0
@@ -719,17 +736,17 @@ pep517==0.12.0
     # via pip-tools
 pexpect==4.8.0
     # via ipython
-photutils==1.3.0
+photutils==1.4.0
     # via
     #   -r /opt/environments/roman-cal/octarine.pip
+    #   jdaviz
     #   jwst
     #   jwst-pancake
     #   pandeia-engine
-    #   pandeia.engine
     #   webbpsf
 pickleshare==0.7.5
     # via ipython
-pillow==9.0.0
+pillow==9.1.0
     # via
     #   bokeh
     #   glue-vispy-viewers
@@ -740,7 +757,7 @@ pillow==9.0.0
     #   matplotlib
     #   scikit-image
     #   sphinx-astropy
-pip-tools==6.4.0
+pip-tools==6.6.0
     # via -r /opt/common-env/common.pip
 pipdeptree==2.2.1
     # via -r /opt/common-env/common.pip
@@ -752,15 +769,16 @@ poppy==1.0.2
     #   jwst
     #   jwst-pancake
     #   webbpsf
-prometheus-client==0.13.1
+prometheus-client==0.14.1
     # via
     #   jupyter-server
     #   jupyterhub
     #   notebook
-prompt-toolkit==3.0.26
+prompt-toolkit==3.0.29
     # via ipython
 psutil==5.9.0
     # via
+    #   ipykernel
     #   jwst
     #   pytest-openfiles
     #   roman-datamodels
@@ -777,7 +795,7 @@ pycodestyle==2.8.0
     # via flake8
 pycparser==2.21
     # via cffi
-pydeps==1.10.12
+pydeps==1.10.14
     # via -r /opt/common-env/common.pip
 pyds9==1.8.1
     # via
@@ -790,15 +808,14 @@ pyflakes==2.4.0
 pygments==2.11.2
     # via
     #   ipython
-    #   jupyterlab-pygments
     #   nbconvert
     #   qtconsole
     #   sphinx
-pyopengl==3.1.5
+pyopengl==3.1.6
     # via glue-vispy-viewers
 pyopenssl==22.0.0
     # via certipy
-pyparsing==3.0.7
+pyparsing==3.0.8
     # via
     #   jwst
     #   matplotlib
@@ -806,7 +823,7 @@ pyparsing==3.0.7
     #   romancal
 pyrsistent==0.18.1
     # via jsonschema
-pysiaf==0.14.0
+pysiaf==0.15.0
     # via
     #   -r /opt/environments/roman-cal/octarine.pip
     #   webbpsf
@@ -814,13 +831,13 @@ pysynphot==2.0.0
     # via
     #   -r /opt/environments/roman-cal/octarine.pip
     #   jwst-pancake
-pytest==6.2.5
+pytest==7.1.1
     # via
     #   -r /opt/common-env/testing.pip
     #   ci-watson
     #   pytest-doctestplus
     #   pytest-openfiles
-pytest-doctestplus==0.11.2
+pytest-doctestplus==0.12.0
     # via
     #   -r /opt/common-env/testing.pip
     #   sphinx-astropy
@@ -839,13 +856,13 @@ python-json-logger==2.0.2
     # via jupyter-telemetry
 pythreejs==2.3.0
     # via ipyvolume
-pytz==2021.3
+pytz==2022.1
     # via
     #   babel
     #   pandas
-pyvo==1.2.1
+pyvo==1.3
     # via astroquery
-pywavelets==1.2.0
+pywavelets==1.3.0
     # via scikit-image
 pyyaml==6.0
     # via
@@ -862,9 +879,9 @@ pyzmq==22.3.0
     #   jupyter-server
     #   notebook
     #   qtconsole
-qtconsole==5.2.2
+qtconsole==5.3.0
     # via glue-core
-qtpy==2.0.0
+qtpy==2.0.1
     # via
     #   echo
     #   ginga
@@ -873,9 +890,9 @@ qtpy==2.0.0
     #   qtconsole
 radio-beam==0.3.3
     # via spectral-cube
-regex==2022.1.18
+regex==2022.3.15
     # via black
-regions==0.5
+regions==0.6
     # via
     #   glue-astronomy
     #   jdaviz
@@ -896,19 +913,19 @@ requests==2.27.1
     #   sphinx
 requests-mock==1.9.3
     # via -r /opt/common-env/testing.pip
-roman-datamodels==0.8.0
+roman-datamodels==0.11.0
     # via romancal
-romanad==0.8.0
+romanad==0.11.0
     # via roman-datamodels
-romancal==0.5.0
+romancal==0.6.0
     # via -r /opt/environments/roman-cal/roman-cal.pip
-ruamel.yaml==0.17.20
+ruamel-yaml==0.17.21
     # via jupyter-telemetry
-ruamel.yaml.clib==0.2.6
-    # via ruamel.yaml
-s3transfer==0.5.0
+ruamel-yaml-clib==0.2.6
+    # via ruamel-yaml
+s3transfer==0.5.2
     # via boto3
-scikit-image==0.19.1
+scikit-image==0.19.2
     # via
     #   -r /opt/environments/roman-cal/octarine.pip
     #   glue-jupyter
@@ -916,7 +933,7 @@ scikit-image==0.19.1
     #   jwst-pancake
 scikit-learn==1.0.2
     # via -r /opt/environments/roman-cal/octarine.pip
-scipy==1.7.3
+scipy==1.8.0
     # via
     #   bayesicfitting
     #   dust-extinction
@@ -928,25 +945,26 @@ scipy==1.7.3
     #   jwst-footprints
     #   jwst-pancake
     #   pandeia-engine
-    #   pandeia.engine
     #   poppy
     #   pysiaf
     #   radio-beam
     #   scikit-image
     #   scikit-learn
     #   specutils
-    #   stsci.image
+    #   stsci-image
     #   stsynphot
     #   synphot
     #   webbpsf
 secretstorage==3.3.1
     # via keyring
-semantic-version==2.8.5
+semantic-version==2.9.0
     # via asdf
 send2trash==1.8.0
     # via
     #   jupyter-server
     #   notebook
+sidecar==0.5.1
+    # via jdaviz
 simpervisor==0.4
     # via jupyter-server-proxy
 six==1.16.0
@@ -956,9 +974,7 @@ six==1.16.0
     #   fitsblender
     #   html5lib
     #   ipydatawidgets
-    #   jsonschema
     #   pandeia-engine
-    #   pandeia.engine
     #   pyds9
     #   pysynphot
     #   python-dateutil
@@ -969,13 +985,11 @@ sniffio==1.2.0
     # via anyio
 snowballstemmer==2.2.0
     # via sphinx
-soupsieve==2.3.1
+soupsieve==2.3.2
     # via beautifulsoup4
 spectral-cube==0.6.0
-    # via
-    #   glue-astronomy
-    #   jdaviz
-specutils==1.6.0
+    # via glue-astronomy
+specutils==1.7.0
     # via
     #   glue-astronomy
     #   jdaviz
@@ -1002,7 +1016,7 @@ sphinx-automodapi==0.14.1
     # via
     #   -r /opt/common-env/docs.pip
     #   sphinx-astropy
-sphinx-bootstrap-theme==0.8.0
+sphinx-bootstrap-theme==0.8.1
     # via sphinx-asdf
 sphinx-gallery==0.10.1
     # via sphinx-astropy
@@ -1020,71 +1034,67 @@ sphinxcontrib-qthelp==1.0.3
     # via sphinx
 sphinxcontrib-serializinghtml==1.1.5
     # via sphinx
-sqlalchemy==1.4.31
+sqlalchemy==1.4.35
     # via
     #   alembic
     #   jupyterhub
-stack-data==0.1.4
+stack-data==0.2.0
     # via ipython
-stcal==0.6.0
+stcal==0.6.2
     # via
     #   jwst
     #   romancal
-stdatamodels==0.4.0
+stdatamodels==0.4.2
     # via
     #   jwst
     #   stpipe
 stdlib-list==0.8.0
     # via pydeps
-stpipe==0.3.1
+stpipe==0.3.3
     # via
     #   jwst
     #   romancal
-stsci-rtd-theme==0.0.2
-    # via -r /opt/common-env/docs.pip
-stsci.image==2.3.5
+stsci-image==2.3.5
     # via jwst
-stsci.imagestats==1.6.3
+stsci-imagestats==1.6.3
     # via
     #   jwst
     #   tweakwcs
-stsci.stimage==0.2.5
+stsci-rtd-theme==0.0.2
+    # via -r /opt/common-env/docs.pip
+stsci-stimage==0.2.5
     # via tweakwcs
-stsci.tools==4.0.1
+stsci-tools==4.0.1
     # via
     #   -r /opt/environments/roman-cal/octarine.pip
     #   fitsblender
 stsynphot==1.1.0
-    # via
-    #   pandeia-engine
-    #   pandeia.engine
+    # via pandeia-engine
 synphot==1.1.1
     # via
     #   pandeia-engine
-    #   pandeia.engine
     #   stsynphot
     #   webbpsf
 tenacity==8.0.1
     # via papermill
-terminado==0.13.1
+terminado==0.13.3
     # via
     #   jupyter-server
     #   notebook
-testpath==0.5.0
-    # via nbconvert
 textwrap3==0.9.2
     # via ansiwrap
-threadpoolctl==3.0.0
+threadpoolctl==3.1.0
     # via scikit-learn
-tifffile==2021.11.2
+tifffile==2022.4.8
     # via scikit-image
-toml==0.10.2
-    # via pytest
+tinycss2==1.1.1
+    # via nbconvert
 tomli==1.2.3
     # via
     #   black
     #   pep517
-tomlkit==0.8.0
+    #   pytest
+tomlkit==0.10.1
     # via jupyter-packaging
 toolz==0.11.2
     # via
@@ -1101,7 +1111,7 @@ tornado==6.1
     #   nbgitpuller
     #   notebook
     #   terminado
-tqdm==4.62.3
+tqdm==4.64.0
     # via papermill
 traitlets==5.1.1
     # via
@@ -1133,17 +1143,17 @@ traittypes==0.2.1
     #   ipyvolume
 tweakwcs==0.7.3
     # via jwst
-typing-extensions==4.0.1
+typing-extensions==4.1.1
     # via bokeh
-urllib3==1.26.8
+urllib3==1.26.9
     # via
     #   botocore
     #   requests
-vispy==0.9.4
+vispy==0.9.6
     # via
     #   glue-vispy-viewers
     #   jdaviz
-voila==0.3.1
+voila==0.3.5
     # via jdaviz
 wcwidth==0.2.5
     # via prompt-toolkit
@@ -1155,15 +1165,16 @@ webencodings==0.5.1
     # via
     #   bleach
     #   html5lib
-websocket-client==1.2.3
+    #   tinycss2
+websocket-client==1.3.2
     # via jupyter-server
-websockets==10.1
+websockets==10.2
     # via voila
 wheel==0.37.1
     # via
     #   jupyter-packaging
     #   pip-tools
-widgetsnbextension==3.5.2
+widgetsnbextension==3.6.0
     # via
     #   -r /opt/common-env/jupyter.pip
     #   ipywidgets
@@ -1171,7 +1182,7 @@ xlrd==2.0.1
     # via glue-core
 yarl==1.7.2
     # via aiohttp
-zipp==3.7.0
+zipp==3.8.0
     # via
     #   importlib-metadata
     #   importlib-resources
