@@ -2,20 +2,20 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   labels:
-    app: s3-s3fs-mounter
-  name: s3-s3fs-mounter
+    app: s3-s3fs-{{ .Values.bucketName }}
+  name: s3-s3fs-{{ .Values.bucketName }}
   namespace: {{ .Release.Namespace }}
 spec:
   selector:
     matchLabels: 
-      app: s3-s3fs-mounter
+      app: s3-s3fs-{{ .Values.bucketName }}
   template:
     metadata:
       labels:
-        app: s3-s3fs-mounter
+        app: s3-s3fs-{{ .Values.bucketName }}
     spec:
       containers:
-      - name: mounter 
+      - name: {{ .Values.bucketName }} 
         image: {{ .Values.image.repository }}:{{ .Values.image.tag}}
         command: ["./s3fs", "-f", "-o", "iam_role=auto", "-o", "uid=1000,gid=100,ro,allow_other,noatime,noexec",
  		  "{{ .Values.bucketName }}", "/s3/fs/{{ .Values.bucketName}}"]
