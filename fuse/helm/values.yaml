@@ -1,21 +1,10 @@
-
 image:
   repository: <fuse-repository-name>
   pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
   tag: <fuse-image-tag>
 
-imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-serviceAccount:
-  # Specifies whether a service account should be created
-  create: false
-  name: default
-
-bucketName: stpubdata
-iamRoleARN: <worker_arn>
-mountPath: /s3/gf/stpubdata
-hostPath: /s3/gf/stpubdata
-
+bucketName: <e.g. stpubdata>
+rootPath: </s3/gf  or /s3/fs>
