@@ -18,10 +18,8 @@ spec:
       - name: {{ .Values.bucketName }} 
         image: {{ .Values.image.repository }}:{{ .Values.image.tag}}
         imagePullPolicy: Always
-        command:
-        - /bin/sh
-        - -c
-        - ./s3fs {{ .Values.bucketName }} /s3/fs/{{ .Values.bucketName }} -o iam_role=auto,ro,allow_other,noatime,noexec,nodev,nosuid && tail -f /dev/null
+        command: ["./s3fs", "-f", "-d", "-d", "{{ .Values.bucketName }}", "/s3/fs/{{ .Values.bucketName }}",
+                  "-o", "curldbg,dbglevel=info,use_cache=/tmp,iam_role=auto,ro,allow_other,noatime,noexec,nodev,nosuid"]
         lifecycle:
           preStop:
             exec:

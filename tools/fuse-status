@@ -1,0 +1,10 @@
+#! /bin/bash
+
+set -eu
+
+echo "====================== DAEMONSETS ==========================="
+kubectl get daemonsets -n fuse
+
+echo "====================== PODS ==========================="
+kubectl get pods -n fuse
+

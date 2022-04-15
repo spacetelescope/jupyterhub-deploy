@@ -8,3 +8,4 @@ fullnameOverride: ""
 
 bucketName: <e.g. stpubdata>
 rootPath: </s3/gf  or /s3/fs>
+region: us-east-1

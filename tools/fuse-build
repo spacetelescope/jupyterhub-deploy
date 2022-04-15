@@ -13,4 +13,4 @@ if [ -f "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem" ]; then
    cp -f /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem tls-ca-bundle.pem
 fi
 
-docker build . --tag $FUSE_ID
+docker build --tag $FUSE_ID --tag fuse-s3  .
