@@ -19,7 +19,7 @@ spec:
         image: {{ .Values.image.repository }}:{{ .Values.image.tag}}
         imagePullPolicy: Always
         command: ["./s3fs", "-f", "-d", "-d", "{{ .Values.bucketName }}", "/s3/fs/{{ .Values.bucketName }}",
-                  "-o", "curldbg,dbglevel=info,use_cache=/tmp,iam_role=auto,ro,allow_other,noatime,noexec,nodev,nosuid"]
+                  "-o", "curldbg,dbglevel=info,use_cache=/tmp,iam_role=auto,connect_timeout=60,readwrite_timeout=60,ro,allow_other,noatime,noexec,nodev,nosuid"]
         lifecycle:
           preStop:
             exec:

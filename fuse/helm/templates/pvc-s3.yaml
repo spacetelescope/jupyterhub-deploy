@@ -4,6 +4,7 @@ metadata:
   name: s3-pvc
   labels:
     type: s3
+  namespace: default
 spec:
   storageClassName: local-storage
   selector:
