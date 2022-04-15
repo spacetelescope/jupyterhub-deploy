@@ -2,24 +2,26 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   labels:
-    app: s3-s3fs-{{ .Values.bucketName }}
-  name: s3-s3fs-{{ .Values.bucketName }}
+    app: s3-fs-{{ .Values.bucketName }}
+  name: s3-fs-{{ .Values.bucketName }}
   namespace: {{ .Release.Namespace }}
 spec:
   selector:
     matchLabels: 
-      app: s3-s3fs-{{ .Values.bucketName }}
+      app: s3-fs-{{ .Values.bucketName }}
   template:
     metadata:
       labels:
-        app: s3-s3fs-{{ .Values.bucketName }}
+        app: s3-fs-{{ .Values.bucketName }}
     spec:
       containers:
       - name: {{ .Values.bucketName }} 
         image: {{ .Values.image.repository }}:{{ .Values.image.tag}}
         imagePullPolicy: Always
-        command: ["./s3fs", "-d", "-d", "-f", "-o", "iam_role=auto", "-o", "uid=1000,gid=100,ro,allow_other,noatime,noexec",
- 		  "{{ .Values.bucketName }}", "/s3/fs/{{ .Values.bucketName}}"]
+        command:
+        - /bin/sh
+        - -c
+        - ./s3fs {{ .Values.bucketName }} /s3/fs/{{ .Values.bucketName }} -o iam_role=auto,ro,allow_other,noatime,noexec,nodev,nosuid && tail -f /dev/null
         lifecycle:
           preStop:
             exec:
@@ -38,3 +40,5 @@ spec:
       - name: mntdatas3
         hostPath:
           path: "/s3/fs/{{ .Values.bucketName}}"
+      nodeSelector:
+        hub.jupyter.org/node-purpose: user

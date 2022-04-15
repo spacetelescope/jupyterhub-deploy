@@ -19,7 +19,7 @@ spec:
         image: {{ .Values.image.repository }}:{{ .Values.image.tag}}
         imagePullPolicy: Always
         command: ["./goofys", "-f", "--dir-mode", "0555", "--file-mode",  "0444",
-                  "-o", "ro,allow_other,noatime,noexec",
+                  "-o", "ro,allow_other,noatime,noexec,nosuid,nodev",
                   "{{ .Values.bucketName }}", "/s3/gf/{{ .Values.bucketName}}"]
         lifecycle:
           preStop:
@@ -39,3 +39,5 @@ spec:
       - name: mntdatas3
         hostPath:
           path: "/s3/gf/{{ .Values.bucketName}}"
+      nodeSelector:
+        hub.jupyter.org/node-purpose: user

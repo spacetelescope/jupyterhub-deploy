@@ -27,9 +27,10 @@ COPY tls-ca-bundle.pem  /tmp/cert.pem
 RUN mv /etc/ssl/cert.pem /etc/ssl/cert.pem.org  && \
     mv /tmp/cert.pem  /etc/ssl
 
+RUN apk add fuse curl libxml2 libstdc++
+
 COPY --from=builder /build/goofys .
 COPY --from=builder /build/s3fs .
 
-RUN apk add fuse curl libxml2 libstdc++
+CMD [./goofys]  # dump help,  overridden by daemonset to run goofys or s3fs and mount
 
-CMD [./goofys]
