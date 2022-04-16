@@ -12,3 +12,8 @@ helm upgrade --debug --wait --install ${DEPLOYMENT_NAME}-fuse-${ENVIRONMENT} fus
      --set-string bucketName=stpubdata \
      --set-string image.repository=${ECR_REGISTRY}/${FUSE_REPO} \
      --set-string image.tag=$(echo ${FUSE_TAG} | sed -e 's/unscanned-//g')
+
+
+sleep 10
+fuse-status
+
