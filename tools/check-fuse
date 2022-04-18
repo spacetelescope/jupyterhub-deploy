@@ -1,0 +1,54 @@
+#! /bin/bash -x
+
+cd $JUPYERHUB_DIR
+
+check_cluster.py  --test-spec -  <<EOS
+Globals:
+  environment:
+  - DEPLOYMENT_NAME
+  - ENVIRONMENT
+  - JH_HOSTNAME
+  constants:
+    MAX_RESTARTS: 0
+    LOG_REACH: 30m
+Groups:
+  - group: FUSE Pods
+    command: kubectl get pods -n fuse
+    parser: named_columns
+    assertions:
+    - name: s3-fs pods
+      ok_rows>=1: 's3-fs' in NAME and STATUS=='Running'
+    - name: s3-gf pods
+      ok_rows>=1: 's3-gf' in NAME and STATUS=='Running'
+    - name: All fuse pods running
+      all: STATUS=='Running'
+    - name: Acceptable restart count
+      all: int(RESTARTS)<=MAX_RESTARTS
+    - name: File listing works in daemon pod
+      all: print(run(f'kubectl exec -t -n fuse {_["NAME"]} -- ls /s3')) or True
+  - group: Daemonsets named columns
+    command: kubectl get daemonsets -n fuse
+    parser: named_columns
+    assertions:
+    - name: s3-fs daemonset
+      ok_rows==1: 's3-fs' in NAME and READY=='1' and STATUS=='Running' and int(RESTARTS) <= MAX_RESTARTS
+    - name: s3-gf daemonset
+      ok_rows==1: 's3-gf' in NAME and READY=='1' and STATUS=='Running' and int(RESTARTS) <= MAX_RESTARTS
+    - name: matching daemonset states
+      all: READY==DESIRED==CURRENT==AVAILABLE==_['UP-TO-DATE']
+  - group: Log Error Check
+    function: pod_logs(LOG_REACH, 'fuse')
+    parser: yaml
+    assertions:
+    - name: No errors in logs
+      simple: ERRORS==0
+  - group: Pod to Node Map
+    command: kubectl get pods -o wide
+    replace_output:
+      input: NOMINATED NODE
+      output: NOMINATED_NODE
+    parser: node_map
+    print_parsing: true
+  - group: S3 PV
+    command: kubectl get pv
+EOS

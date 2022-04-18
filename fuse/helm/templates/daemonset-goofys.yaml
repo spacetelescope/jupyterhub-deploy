@@ -2,20 +2,20 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   labels:
-    app: s3-goofys-{{ .Values.bucketName }}
-  name: s3-goofys-{{ .Values.bucketName }}
+    app: s3-gf-{{ .Values.bucketName }}
+  name: s3-gf-{{ .Values.bucketName }}
   namespace: {{ .Release.Namespace }}
 spec:
   selector:
     matchLabels: 
-      app: s3-goofys-{{ .Values.bucketName }}
+      app: s3-gf-{{ .Values.bucketName }}
   template:
     metadata:
       labels:
-        app: s3-goofys-{{ .Values.bucketName }}
+        app: s3-gf-{{ .Values.bucketName }}
     spec:
       containers:
-      - name: s3-goofys-{{ .Values.bucketName }} 
+      - name: s3-gf-{{ .Values.bucketName }} 
         image: {{ .Values.image.repository }}:{{ .Values.image.tag}}
         imagePullPolicy: Always
         command: ["./goofys", "-f", "--dir-mode", "0555", "--file-mode",  "0444",

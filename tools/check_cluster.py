@@ -479,6 +479,7 @@ class Checker:
                 test_function=test_function,
                 functools=functools,
                 pod_logs=self.pod_logs,
+                run=run,
             )
         )
         return result
@@ -658,8 +659,9 @@ class Checker:
         for msg in self._error_msgs:
             print(msg)
 
-    def pod_logs(self, log_reach="30m"):
-        loaded = yaml.safe_load(run("kubectl get pods -A --output yaml"))
+    def pod_logs(self, log_reach="30m", namesp=None):
+        namespace_switch = "-A" if namesp is None else "-n " + namesp
+        loaded = yaml.safe_load(run(f"kubectl get pods {namespace_switch}  --output yaml"))
         pods = [
             (pod["metadata"]["namespace"], pod["metadata"]["name"])
             for pod in loaded["items"]
@@ -668,6 +670,8 @@ class Checker:
         print("Fetching", len(loaded["items"]), "pod logs")
         pod_errors = dict()
         for i, (namespace, name) in enumerate(pods):
+            if namesp and namesp != namespace:
+                continue
             pod = f"{namespace}:{name}"
             print()
             output = run(
@@ -699,7 +703,7 @@ def parse_args():
         dest="test_spec",
         action="store",
         default=None,
-        help="Custom test specification.  Defaults to None meaning use built-in spec.",
+        help="Custom test specification.  Defaults to None meaning use built-in spec.   Use '-' for stdin.",
     )
     parser.add_argument(
         "--output-file",
@@ -754,9 +758,14 @@ def main():
     Return the number of failing tests or 0 if all tests pass.
     """
     args = parse_args()
-    test_spec = (
-        open(args.test_spec).read().strip() if args.test_spec else CLUSTER_CHECKS
-    )
+
+    if args.test_spec == "-":
+        test_spec = sys.stdin.read().strip()
+    elif args.test_spec == None:
+        test_spec = CLUSTER_CHECKS.strip()
+    else:
+        test_spec = open(args.test_spec).read().strip()
+
     checker = Checker(
         test_spec=test_spec,
         output_file=args.output_file,
