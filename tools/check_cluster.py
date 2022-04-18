@@ -194,8 +194,8 @@ Groups:
   - group: Pod to Node Map
     command: kubectl get pods -A -o wide
     replace_output:
-      input: NOMINATED NODE
-      output: NOMINATED_NODE
+      - input: NOMINATED NODE
+        output: NOMINATED_NODE
     parser: node_map
     print_parsing: true
 """  # noqa: E501
@@ -521,9 +521,10 @@ class Checker:
 
     def replace_output(self, check, output):
         if check.get("replace_output"):
-            input_patt = check.get("replace_output").get("input")
-            output_patt = check.get("replace_output").get("output")
-            output = re.sub(input_patt, output_patt, output, flags=re.MULTILINE)
+            for replacement in check.get("replace_output"):
+                input_patt = replacement.get("input")
+                output_patt = replacement.get("output")
+                output = re.sub(input_patt, output_patt, output, flags=re.MULTILINE)
         return output
 
     def run_check(self, check):

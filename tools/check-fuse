@@ -17,23 +17,25 @@ Groups:
     parser: named_columns
     assertions:
     - name: s3-fs pods
-      ok_rows>=1: 's3-fs' in NAME and STATUS=='Running'
+      ok_rows>=1: "'s3-fs' in NAME and STATUS=='Running'"
     - name: s3-gf pods
-      ok_rows>=1: 's3-gf' in NAME and STATUS=='Running'
+      ok_rows>=1: "'s3-gf' in NAME and STATUS=='Running'"
     - name: All fuse pods running
       all: STATUS=='Running'
     - name: Acceptable restart count
       all: int(RESTARTS)<=MAX_RESTARTS
-    - name: File listing works in daemon pod
-      all: print(run(f'kubectl exec -t -n fuse {_["NAME"]} -- ls /s3')) or True
+    - name: File listing works in daemon pod s3-fs
+      ok_rows>=1: "'s3-fs' in NAME and (print(run(f'kubectl exec -t -n fuse {NAME} -- ls /s3/fs/stpubdata')) or True)"
+    - name: File listing works in daemon pod s3-gf
+      ok_rows>=1: "'s3-gf' in NAME and (print(run(f'kubectl exec -t -n fuse {NAME} -- ls /s3/gf/stpubdata')) or True)"
   - group: Daemonsets named columns
     command: kubectl get daemonsets -n fuse
     parser: named_columns
     assertions:
     - name: s3-fs daemonset
-      ok_rows==1: 's3-fs' in NAME and READY=='1' and STATUS=='Running' and int(RESTARTS) <= MAX_RESTARTS
+      ok_rows==1: "'s3-fs' in NAME and READY=='1'"
     - name: s3-gf daemonset
-      ok_rows==1: 's3-gf' in NAME and READY=='1' and STATUS=='Running' and int(RESTARTS) <= MAX_RESTARTS
+      ok_rows==1: "'s3-gf' in NAME and READY=='1'"
     - name: matching daemonset states
       all: READY==DESIRED==CURRENT==AVAILABLE==_['UP-TO-DATE']
   - group: Log Error Check
@@ -43,12 +45,32 @@ Groups:
     - name: No errors in logs
       simple: ERRORS==0
   - group: Pod to Node Map
-    command: kubectl get pods -o wide
+    command: kubectl get pods -o wide -A
     replace_output:
-      input: NOMINATED NODE
-      output: NOMINATED_NODE
+      - input: NOMINATED NODE
+        output: NOMINATED_NODE
+      - input: READINESS GATES
+        output: READINESS_GATES
     parser: node_map
     print_parsing: true
   - group: S3 PV
     command: kubectl get pv
+    parser: named_columns
+    replace_output:
+    - input: ACCESS MODES
+      output: ACCESS_MODES
+    - input: RECLAIM POLICY
+      output: RECLAIM_POLICY
+    assertions:
+    - name: pv properties
+      ok_rows==1: "NAME=='s3-pv' and ACCESS_MODES=='ROX' and STATUS=='Bound' and RECLAIM_POLICY=='Retain' and STORAGECLASS=='local-storage'"
+  - group: S3 PVC
+    command: kubectl get pvc
+    parser: named_columns
+    replace_output:
+    - input: ACCESS MODES
+      output: ACCESS_MODES
+    assertions:
+    - name: pvc properties
+      ok_rows==1: "NAME=='s3-pvc' and ACCESS_MODES=='ROX' and STATUS=='Bound' and VOLUME=='s3-pv' and STORAGECLASS=='local-storage'"
 EOS
