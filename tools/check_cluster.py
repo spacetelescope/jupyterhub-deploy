@@ -762,7 +762,7 @@ def main():
 
     if args.test_spec == "-":
         test_spec = sys.stdin.read().strip()
-    elif args.test_spec == None:
+    elif args.test_spec is None:
         test_spec = CLUSTER_CHECKS.strip()
     else:
         test_spec = open(args.test_spec).read().strip()
