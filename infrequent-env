@@ -1,6 +1,6 @@
 #! /bin/bash -eu
 
-export PATH="`pwd`/tools":${PATH}
+export PATH="`pwd`/tools:`pwd`/fuse/bin:${PATH}"
 
 # ----------------- vvvv less frequently changed inputs vvvv -------------------------------
 #
