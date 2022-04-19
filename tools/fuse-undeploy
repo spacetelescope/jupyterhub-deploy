@@ -1,0 +1,15 @@
+#! /bin/bash
+
+set -u
+
+cd ${JUPYTERHUB_DIR}
+
+helm uninstall -n fuse ${DEPLOYMENT_NAME}-fuse-${ENVIRONMENT}
+
+kubectl delete  pv s3-pv  --wait=false
+kubectl delete  pvc s3-pvc --wait=false
+
+
+
+
+

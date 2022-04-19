@@ -1,0 +1,12 @@
+#! /bin/sh
+
+# This script (deploy-fuse) completes all steps required to deploy the fuse S3 resources
+
+echo "================================== Building Docker Image ${FUSE_ID} =============================="
+fuse-build
+
+echo "================================== Pushing Docker Image ${FUSE_ID} =============================="
+fuse-push
+
+echo "================================== Deploying Helm Release fuse:${DEPLOYMENT_NAME}-fuse-${ENVIRONMENT} =============================="
+fuse-deploy # unlike fuse-deploy, just install the Helm chart

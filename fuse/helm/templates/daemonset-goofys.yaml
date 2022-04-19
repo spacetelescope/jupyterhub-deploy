@@ -18,7 +18,7 @@ spec:
       - name: s3-gf-{{ .Values.bucketName }} 
         image: {{ .Values.image.repository }}:{{ .Values.image.tag}}
         imagePullPolicy: Always
-        command: ["./goofys", "-f", "--dir-mode", "0555", "--file-mode",  "0444",
+        command: ["./goofys", "-f", "--uid", "1000", "--gid", "1000", "--dir-mode", "0555", "--file-mode", "0444",
                   "-o", "ro,allow_other,noatime,noexec,nosuid,nodev",
                   "{{ .Values.bucketName }}", "/s3/gf/{{ .Values.bucketName}}"]
         lifecycle:
