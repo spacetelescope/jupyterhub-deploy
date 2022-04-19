@@ -1,6 +1,6 @@
-#! /bin/bash -x
+#! /bin/bash
 
-cd $JUPYERHUB_DIR
+set -u
 
 check_cluster.py  --test-spec -  <<EOS
 Globals:
