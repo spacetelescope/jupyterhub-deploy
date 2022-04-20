@@ -1,0 +1,14 @@
+#! /bin/bash
+
+set -u
+
+cd $JUPYTERUB_DIR
+
+# Uninstall the helm release,  nominally the hub
+helm uninstall ${DEPLOYMENT_NAME}-${ENVIRONMENT}
+
+# Delete the user pods which are still running to free things like S3 mounts
+for notebook in kubectl get pods | grep jupyter | grep stsci | awk 'NR >= 2 { print $1; }'; do
+    kubectl delete ${notebook}
+done
+

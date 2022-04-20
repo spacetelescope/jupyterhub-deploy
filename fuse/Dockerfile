@@ -15,12 +15,14 @@ RUN apk add -U git  && \
 
 # Build goofys
 RUN git clone https://github.com/kahing/goofys.git . && \
+    git checkout 08534b2  && \
     go build -ldflags "-X main.Version=`git rev-parse HEAD`"
 
-# Build s3fs-fuse
+# Build s3fs-fuse 
 RUN apk add --no-cache -U build-base autoconf automake libxml2-dev fuse-dev curl-dev
-RUN git clone https://github.com/s3fs-fuse/s3fs-fuse.git && \
-    cd s3fs-fuse/  && \
+RUN git clone  https://github.com/s3fs-fuse/s3fs-fuse.git && \
+    cd s3fs-fuse  && \
+    git checkout v1.91 && \
     ./autogen.sh && \
     ./configure && \
     make && \

@@ -9,6 +9,8 @@ helm uninstall -n fuse ${DEPLOYMENT_NAME}-fuse-${ENVIRONMENT}
 kubectl delete   --force  --wait=false  pvc s3-pvc
 kubectl delete   --force  --wait=false  pv s3-pv
 
+fuse-status
+
 
 
 
