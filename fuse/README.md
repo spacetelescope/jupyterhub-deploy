@@ -1,13 +1,11 @@
-Overview
-========
+# Overview
 
 The principle task of this system is to use FUSE-based file systems to mount
 S3 buckets as ordinary directories within JupyterHub notebook sessions.
 In its initial incarnation it supports both goofys and s3fs-fuse S3
 implementations.
 
-Pt 1 - Mounting S3 as directories on nodes
-==========================================
+# Pt 1 - Mounting S3 as directories on nodes
 
 The fundamental task of the S3 FUSE programs is to make an S3 bucket and/or
 prefix to appear to be a directory on a node.  Each node is required to run
@@ -54,8 +52,7 @@ Re-deploying a new container or configuration requires a couple minutes, while
 re-deploying nodegroups requires 10's of minutes.  Hence,  once implemented,
 S3 daemonsets should be easier to maintain.
 
-Pt 2 - Mounting Node Directories in Notebook Pods
-=================================================
+# Pt 2 - Mounting Node Directories in Notebook Pods
 
 Once S3 is effectively mounted on the worker nodes as ordinary directories,
 using either method above, there is an additional task required of passing
@@ -73,11 +70,9 @@ and there are nuances like "the PVC must be in the same namespace as
 JupyterHub."  But however complex relative to Docker bind mounts, we have the
 same complexity for either method of attaching S3 to the nodes.
 
-Workflows
-=========
+# Workflows
 
-Deployment
-----------
+## Deployment
 
 The following high level workflow shows deploying fuse and jupyterhub.
 
@@ -100,8 +95,7 @@ $ undeploy-jupyterhub  # tear down hub and notebook pods dropping all fuse PVC u
 $ undeploy-fuse        # tear down all fuse resources, PVC usage = 0
 ```
 
-Development
------------
+## Development
 
 The following commands are used as needed during iterative development:
 ```
@@ -132,8 +126,7 @@ $ kubectl exec -it -n fuse <fuse-podname> -- command   # use /bin/sh not bash, t
 $ helm uninstall -n fuse tike-fuse-dev  # Delete all fuse resources,  opposite of fuse-deploy
 ```
 
-How does it work?
-=================
+# How does it work?
 
 Deploying a helm chart creates a new `fuse` namespace and a helm release named
 e.g.  `tike-fuse-dev`.  The chart creates two daemonsets which run S3 pods on
@@ -170,10 +163,9 @@ mount /s3.
 mounted on every notebook pod in JupyterHub config files.  The same pv and pvc
 are used by all notebook pods.
 
-Organization of the FUSE S3 subsystem
-=====================================
+# Organization of the FUSE S3 subsystem
 
-At a high level,  the "fuse" source files really consist of:
+At a high level,  our "fuse" source files really consist of:
 
 1. A Dockerfile
 2. A Helm chart
@@ -212,29 +204,25 @@ jupyterhub-deploy/
         common.yaml
 ```
 
-Source Projects
-===============
+# Source Projects
 
 I started this JupyterHub effort using inputs from several similar Kubernetes
 projects I found on GitHub:
 
-Goofys on Kubernetes
---------------------
+## Goofys on Kubernetes
 
 Primary basis for our development,  Dockerfile, Helm, etc.
 
 * [Blog](https://dev.to/otomato_io/mount-s3-objects-to-kubernetes-pods-12f5)
 * [GitHub Project](https://github.com/otomato-gh/s3-mounter)
 
-s3fs-fuse on Kubernetes
------------------------
+## s3fs-fuse on Kubernetes
 
 Additional nuances like `tini`,  s3fs mount options, etc.
 
 * [Blog](https://icicimov.github.io/blog/virtualization/Kubernetes-shared-storage-with-S3-backend/)
 
-Our Changes
------------
+## Our Changes
 
 Doing a simple fork and small deltas did not seem feasible so I customized
 it/them for the following and integrated the result directly with our
@@ -253,8 +241,7 @@ jupyterhub-deploy repo:
 * Wrote helper scripts to record development and debug methods
 * Added a deployment checker based on the jupyterhub cluster checker.
 
-More Information
-================
+# More Information
 
 This presentation compares several FUSE file systems, including goofys and
 s3fs-fuse:
@@ -276,26 +263,21 @@ consequence of the program design.
 
 3. It indicates goofys has significantly better performance in most situations.
 
-Observed Errors
-===============
+# Observed Errors
 
 This section goes over error messages seen habitually in file system logs.
 
-Goofys
-------
+## Goofys
 None
 
-s3fs-fuse
----------
-
+## s3fs-fuse
 The default s3fs-fuse log level is `CRIT` so the errors observed below are not
 nominally seen.  I did spend half a day trying to track down fixes with Google
 and GitHub but despite a few promising leads was not able to fix them.  Since
 they're only seen with logging turned up, there's no reason to believe they are
 not the norm in many configurations of s3fs.
 
-Startup IAM perms
-+++++++++++++++++
+### Startup IAM perms
 
 During our development using elevated log levels, at mount time we see:
 ```
@@ -321,8 +303,7 @@ Adding `iam_role=tike-worker` vs. `iam_role=auto` to the mount options was not
 successful at eliminating this error as some GitHub conversations suggested it
 might be.
 
-Ongoing ERRs
-++++++++++++
+### Ongoing ERRs
 
 We observed the following on a recurring basis in the error log:
 ```
