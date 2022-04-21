@@ -96,10 +96,14 @@ export WORKER_ARN=$(echo ${ADMIN_ARN} | sed -e 's/${ADMIN_ROLE}/${WORKER_ROLE}/g
 export ECR_REGISTRY=${ECR_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
 export IMAGE_REPO=${DEPLOYMENT_NAME}
 export COMMON_REPO=${IMAGE_REPO}
-export FUSE_REPO=${IMAGE_REPO}
 
 export COMMON_ID=${ECR_REGISTRY}/${COMMON_REPO}:${COMMON_TAG}
 export IMAGE_ID=${ECR_REGISTRY}/${IMAGE_REPO}:${IMAGE_TAG}
+
+# -------------------- FUSE S3 settings -----------------------------------------------
+
+export FUSE_S3_BUCKETS="stpubdata"  # space separated
+export FUSE_REPO=${IMAGE_REPO}
 export FUSE_ID=${ECR_REGISTRY}/${FUSE_REPO}:${FUSE_TAG}
 
 # --------------- vvvvv misc env settings vvvvv ---------------------------------
