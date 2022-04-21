@@ -73,86 +73,6 @@ and there are nuances like "the PVC must be in the same namespace as
 JupyterHub."  But however complex relative to Docker bind mounts, we have the
 same complexity for either method of attaching S3 to the nodes.
 
-Organization of the FUSE S3 subsystem
-=====================================
-
-The "fuse" source fiels really consist of:
-
-a. A Dockerfile
-b. A Helm chart
-c. Several kubernetes specs
-d. Support scripts
-e. JupyterHub config
-
-jupyterhub-deploy/
-  setup-env
-  infrequent-env
-  fuse/
-    bin/
-      deploy-fuse        -- zero to deployed tike-fuse-dev Helm release
-      fuse-build         -- builds fuse Dockerfile
-      fuse-push          -- pushes fuse image
-      fuse-deploy        -- installs fuse Helm chart / resources
-      fuse-undeploy      -- uinstalls helm chart,  force deletes storage if needed
-      fuse-status        -- displays fuse resources
-      fuse-check         -- fetches and runs assertions on fuse resources
-    Dockerfile           -- daemonset image, contains both s3fs and goofys
-    helm/
-       Chart.yaml
-       values.yaml
-       templates/
-         daemonset-gf.yaml
-         daemonset-fs.yaml
-         local-storage.yaml
-         pv-s3.yaml
-         pvc.yaml
-         _helpers.tpl
-  deployments/
-    tike/
-      config/
-        common.yaml
-
-Source Projects
-===============
-
-I started this JupyterHub effort using inputs from several similar Kubernetes
-projects I found on GitHub:
-
-Goofys on Kubernetes
---------------------
-
-Primary project
-
-https://dev.to/otomato_io/mount-s3-objects-to-kubernetes-pods-12f5
-https://github.com/otomato-gh/s3-mounter
-
-s3fs-fuse on Kubernetes
------------------------
-
-Additional nuances like `tini`
-
-https://icicimov.github.io/blog/virtualization/Kubernetes-shared-storage-with-S3-backend/
-
-Our Changes
------------
-
-Doing a simple fork and small deltas did not seem feasible so I customized
-it/them for the following and integrated the result directly with our
-jupyterhub-deploy repo:
-
-* Modified Dockerfile to install both goofys and s3fs-fuse in same image
-* Modified Dockerfile to handle STScI SSL cert requirements
-* Added "tini" to the Dockerfile as an "init" substitute to reap orphans
-* Adjusted Helm chart as different project
-* Updated values.yaml to reflect changes in parameters
-* Removed security resources in favor of tike-worker instance role
-* Forked the daemonset spec into two:  one for goofys,  one for s3fs-fuse
-* Modified goofys and s3fs-fuse mount options
-* Hardwired /s3/fs/<bucket> and /s3/gf/<bucket> in daemonsets
-* Added the k8s storage resources required to mount /s3 inside JupyterHub
-* Wrote helper scripts to record development and debug methods
-* Added a deployment checker based on the jupyterhub cluster checker.
-
 How does it work?
 =================
 
@@ -200,6 +120,89 @@ the pv and mounted on every notebook pod.  The same pv and pvc are
 used by all notebook pods and represent the local /s3 directory tree
 which is replicated on every notebook node vs. e.g. claims for
 distinct EFS $HOME volumes/directories.
+
+Organization of the FUSE S3 subsystem
+=====================================
+
+At a high level,  the "fuse" source files really consist of:
+
+1. A Dockerfile
+2. A Helm chart
+3. Several kubernetes specs
+4. Support scripts
+5. JupyterHub config
+
+In more detail,  the source is organized like this:
+```
+jupyterhub-deploy/
+  setup-env
+  infrequent-env
+  fuse/
+    bin/
+      deploy-fuse        -- zero to deployed tike-fuse-dev Helm release
+      fuse-build         -- builds fuse Dockerfile
+      fuse-push          -- pushes fuse image
+      fuse-deploy        -- installs fuse Helm chart / resources
+      fuse-undeploy      -- uinstalls helm chart,  force deletes storage if needed
+      fuse-status        -- displays fuse resources
+      fuse-check         -- fetches and runs assertions on fuse resources
+    Dockerfile           -- daemonset image, contains both s3fs and goofys
+    helm/
+       Chart.yaml
+       values.yaml
+       templates/
+         daemonset-gf.yaml
+         daemonset-fs.yaml
+         local-storage.yaml
+         pv-s3.yaml
+         pvc.yaml
+         _helpers.tpl
+  deployments/
+    tike/
+      config/
+        common.yaml
+```
+
+Source Projects
+===============
+
+I started this JupyterHub effort using inputs from several similar Kubernetes
+projects I found on GitHub:
+
+Goofys on Kubernetes
+--------------------
+
+Primary basis for our development
+
+[Blog](https://dev.to/otomato_io/mount-s3-objects-to-kubernetes-pods-12f5)
+[GitHub Project](https://github.com/otomato-gh/s3-mounter)
+
+s3fs-fuse on Kubernetes
+-----------------------
+
+Additional nuances like `tini`,  s3fs mount options
+
+[Blog](https://icicimov.github.io/blog/virtualization/Kubernetes-shared-storage-with-S3-backend/)
+
+Our Changes
+-----------
+
+Doing a simple fork and small deltas did not seem feasible so I customized
+it/them for the following and integrated the result directly with our
+jupyterhub-deploy repo:
+
+* Modified Dockerfile to install both goofys and s3fs-fuse in same image
+* Modified Dockerfile to handle STScI SSL cert requirements
+* Modified goofys and s3fs-fuse mount options
+* Forked the daemonset spec into two:  one for goofys,  one for s3fs-fuse
+* Hardwired /s3/fs/<bucket> and /s3/gf/<bucket> into daemonsets, simplifying params
+* Added "tini" to the Dockerfile as an "init" substitute to reap orphans
+* Adjusted Helm chart as different project
+* Updated values.yaml to reflect changes in parameters
+* Removed security resources in favor of implied tike-worker instance role
+* Added the k8s storage resources/specs required to mount /s3 inside JupyterHub
+* Wrote helper scripts to record development and debug methods
+* Added a deployment checker based on the jupyterhub cluster checker.
 
 More Information
 ================
