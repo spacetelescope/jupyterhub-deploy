@@ -221,17 +221,17 @@ projects I found on GitHub:
 Goofys on Kubernetes
 --------------------
 
-Primary basis for our development
+Primary basis for our development,  Dockerfile, Helm, etc.
 
-[Blog](https://dev.to/otomato_io/mount-s3-objects-to-kubernetes-pods-12f5)
-[GitHub Project](https://github.com/otomato-gh/s3-mounter)
+* [Blog](https://dev.to/otomato_io/mount-s3-objects-to-kubernetes-pods-12f5)
+* [GitHub Project](https://github.com/otomato-gh/s3-mounter)
 
 s3fs-fuse on Kubernetes
 -----------------------
 
-Additional nuances like `tini`,  s3fs mount options
+Additional nuances like `tini`,  s3fs mount options, etc.
 
-[Blog](https://icicimov.github.io/blog/virtualization/Kubernetes-shared-storage-with-S3-backend/)
+* [Blog](https://icicimov.github.io/blog/virtualization/Kubernetes-shared-storage-with-S3-backend/)
 
 Our Changes
 -----------
