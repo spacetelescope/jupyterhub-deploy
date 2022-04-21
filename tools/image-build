@@ -18,10 +18,9 @@ time (
 # Make automatic source adjustments including STScI cert update when on CI-nodes
 image-update
 
-if  [[ "$USE_FROZEN" == "2" ]]; then
-    time image-chill
-fi
-
+# ..................................................................................
+# Chill any frozen reqs every time to make sure it's available if needed
+time image-chill
 
 # ..................................................................................
 # Build base image, e.g. our version of scipy-notebook including cert handling

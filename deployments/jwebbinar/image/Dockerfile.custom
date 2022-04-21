@@ -59,6 +59,7 @@ RUN   /opt/common-scripts/install-common  base
 
 # BASE
 COPY --chown=${NB_UID}:${NB_GID} env-frozen/jwebbinar/ /opt/env-frozen/jwebbinar/
+COPY --chown=${NB_UID}:${NB_GID} env-chilly/jwebbinar/ /opt/env-chilly/jwebbinar/
 COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/*.yml /opt/environments/jwebbinar/
 RUN /opt/common-scripts/env-conda jwebbinar
 
@@ -81,6 +82,7 @@ COPY --chown=${NB_UID}:${NB_GID} environments/remove-jdaviz-kernel /opt/environm
 
 # BASE
 COPY --chown=${NB_UID}:${NB_GID} env-frozen/mirisim/ /opt/env-frozen/mirisim/
+COPY --chown=${NB_UID}:${NB_GID} env-chilly/mirisim/ /opt/env-chilly/mirisim/
 COPY --chown=${NB_UID}:${NB_GID} environments/mirisim/*.yml /opt/environments/mirisim/
 RUN /opt/common-scripts/env-conda mirisim
 
