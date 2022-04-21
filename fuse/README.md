@@ -6,8 +6,8 @@ S3 buckets as ordinary directories within JupyterHub notebook sessions.
 In its initial incarnation it supports both goofys and s3fs-fuse S3
 implementations.
 
-Mounting S3 as directories on nodes
-===================================
+Pt 1 - Mounting S3 as directories on nodes
+==========================================
 
 The fundamental task of the S3 FUSE programs is to make an S3 bucket and/or
 prefix to appear to be a directory on a node.  Each node is required to run
@@ -54,8 +54,8 @@ Re-deploying a new container or configuration requires a couple minutes, while
 re-deploying nodegroups requires 10's of minutes.  Hence,  once implemented,
 S3 daemonsets should be easier to maintain.
 
-Mounting Node Storage in Notebook Pods
-======================================
+Pt 2 - Mounting Node Directories in Notebook Pods
+=================================================
 
 Once S3 is effectively mounted on the worker nodes as ordinary directories,
 using either method above, there is an additional task required of passing
@@ -73,6 +73,62 @@ and there are nuances like "the PVC must be in the same namespace as
 JupyterHub."  But however complex relative to Docker bind mounts, we have the
 same complexity for either method of attaching S3 to the nodes.
 
+Workflows
+=========
+
+Deployment
+----------
+
+The following high level workflow shows deploying fuse and jupyterhub.
+
+It also shows the reverse process of undeploying.  Because jupyterhub leaves
+notebook pods untouched when the hub helm release is uninstalled,
+`undeploy-jupyterhub` also deletes all notebook pods in addition to the hub.
+Notebook pods are deleted because otherwise they leave dangling references to
+the PVC which prevents it and the PV from being deleted during fuse-undeploy.
+While possibly not required, deleting the hub prevents additional users from
+logging on and adding new references to the PVC.
+
+```
+# Update setup-env and infrequent-env as needed
+
+$ deploy-fuse          # top level deployment,  build, push, deploy, status
+$ deploy-jupyterhub    # second so PVC exists to mount into notebook pods
+$ fuse-check           # run automated checks on fuse s3 resources, functionality
+
+$ undeploy-jupyterhub  # tear down hub and notebook pods dropping all fuse PVC use
+$ undeploy-fuse        # tear down all fuse resources, PVC usage = 0
+```
+
+The following commands are used as needed during iterative development:
+```
+# Change Dockerfile
+$ fuse-build              # build Docker image
+$ fuse-push               # push Docker image with fuse image tag. vs hub tag
+
+# Change Helm files, etc.
+$ fuse-deploy             # Run Helm chart creating daemonsets, storage resources
+                          # Note: this is a small fraction of deploy-fuse
+
+# Change hub config
+$ deploy-jupyterhub       # Deploy the hub server
+
+
+# Other useful commands
+$ fuse-status             # Dump basics on all fuse resources
+$ fuse-check              # Run canned checks such as they are
+
+$ kubectl get pods -n fuse
+$ kubectl get daemonsets -n fuse
+$ kubectl logs -n fuse <fuse-podname>
+$ kubectl describe <resource-kind: pod, daemonset, ...> -n fuse <resource-name>
+$ kubectl exec -it -n fuse <fuse-podname> -- command   # use /bin/sh not bash, test commands, etc.
+
+# NOTE:  the PVC is in the default namespace as required by Z2JH,  not fuse
+
+$ helm uninstall -n fuse tike-fuse-dev  # Delete all fuse resources,  opposite of fuse-deploy
+```
+
 How does it work?
 =================
 
@@ -80,26 +136,18 @@ Deploying a helm chart creates a new `fuse` namespace and a helm release named
 e.g.  `tike-fuse-dev`.  The chart creates two daemonsets which run S3 pods on
 every notebook node, one per bucket per file system per node.  The chart also
 creates a PVC for /s3 which is mounted by every notebook pod using the
-JupyterHub config YAML.  Minimal IAM perms attached to worker nodes grant
-"readonly" access to the stpubdata bucket only; these were determined by ITSD
-automatically based on perms used by a very limited test run which successfully
-mounted and listed a direcrtory.
+JupyterHub config YAML as new users are spawned.  Minimal IAM perms attached to
+worker nodes grant "readonly" access to buckets.
 
-1. A single daemon image.  The system has a Dockerfile and an image which
-contains the FUSE library as well as both goofys and s3fs-fuse programs.  Both
-programs fit in < 60M.  When a container is launched, a single bucket is
-mounted by one of the two file systems.  Daemonsets launch the same container
-with different commands and parameters depending on file system and bucket.
-Supporting more file systems requires adding to the image and adding new
-daemonsets.   The image is Alpine-based with minimal s/w beyond that needed
-for the file systems.
+1. A single daemon image.  The Dockerfile defines an image which contains the
+FUSE library as well as both goofys and s3fs-fuse programs.  Both programs fit
+in < 60M.  It is launched running one file system or the other, not both.  The
+image is Alpine-based with minimal s/w beyond that needed for the file systems,
+e.g. no bash only sh.
 
 2. Daemonsets.  Each daemonset runs one file system pod on each notebook node
-for each bucket.  Core nodes do not run the s3 daemonsets.  Currently each
-daemon pod only mounts one bucket.  Additional buckets merely need to be added
-to the bucket list defined in infrequent-env.  Each new file system nominally
-requires installing additional code in the image and a new daemonset spec to
-launch pods for it.
+for each bucket.  Core nodes do not run the s3 daemonsets.  There is one
+daemonset for goofys and one for s3fs fuse.
 
 Generally the path structure is:   /s3/<file system>/<bucket>
 
@@ -108,18 +156,15 @@ stpubdata is mounted as /s3/gf/stpubdata in each goofys daemon pod.
 stpubdata is mounted as /s3/fs/stpubdata in each s3fs-fuse daemon pod.
 
 3. A local-storage StorageClass is added to represent data which exists
-directly on a node's file system.  (Why we need to do this is beyond me.)
+directly on a node's file system.
 
 4. A /s3 PersistentVolume which represents the entire /s3 directory tree
-containing all s3 file system mounts.  This single point represents both an
-arbitrary number of file systems and an arbitrary number of buckets: each
-notebook pod is only configured to mount /s3.
+containing all s3 file system mounts.  Each notebook pod is only configured to
+mount /s3.
 
-5. A /s3 PersistentVolumeClaim.  ReadOnlyMany.  The pvc is bound to
-the pv and mounted on every notebook pod.  The same pv and pvc are
-used by all notebook pods and represent the local /s3 directory tree
-which is replicated on every notebook node vs. e.g. claims for
-distinct EFS $HOME volumes/directories.
+5. A /s3 PersistentVolumeClaim.  ReadOnlyMany.  The pvc is bound to the pv and
+mounted on every notebook pod in JupyterHub config files.  The same pv and pvc
+are used by all notebook pods.
 
 Organization of the FUSE S3 subsystem
 =====================================
