@@ -100,6 +100,9 @@ $ undeploy-jupyterhub  # tear down hub and notebook pods dropping all fuse PVC u
 $ undeploy-fuse        # tear down all fuse resources, PVC usage = 0
 ```
 
+Development
+-----------
+
 The following commands are used as needed during iterative development:
 ```
 # Change Dockerfile
@@ -145,15 +148,16 @@ in < 60M.  It is launched running one file system or the other, not both.  The
 image is Alpine-based with minimal s/w beyond that needed for the file systems,
 e.g. no bash only sh.
 
-2. Daemonsets.  Each daemonset runs one file system pod on each notebook node
-for each bucket.  Core nodes do not run the s3 daemonsets.  There is one
-daemonset for goofys and one for s3fs fuse.
-
+2. Daemonsets.  Each daemonset runs one file system pod for each bucket on each
+notebook node. Core nodes do not run the s3 daemonsets.  There is one daemonset
+for goofys and one for s3fs fuse.
+```
 Generally the path structure is:   /s3/<file system>/<bucket>
 
 stpubdata is mounted as /s3/gf/stpubdata in each goofys daemon pod.
 
 stpubdata is mounted as /s3/fs/stpubdata in each s3fs-fuse daemon pod.
+```
 
 3. A local-storage StorageClass is added to represent data which exists
 directly on a node's file system.
