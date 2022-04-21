@@ -59,6 +59,7 @@ RUN   /opt/common-scripts/install-common  base
 # CVT
 
 COPY --chown=${NB_UID}:${NB_GID} env-frozen/cvt/  /opt/env-frozen/cvt/
+COPY --chown=${NB_UID}:${NB_GID} env-chilly/cvt/  /opt/env-chilly/cvt/
 COPY --chown=${NB_UID}:${NB_GID} environments/cvt/*.yml  /opt/environments/cvt/
 RUN /opt/common-scripts/env-conda cvt
 
@@ -73,6 +74,7 @@ COPY --chown=${NB_UID}:${NB_GID} environments/cvt/ /opt/environments/cvt/
 # Roman CAL
 
 COPY --chown=${NB_UID}:${NB_GID} env-frozen/roman-cal/  /opt/env-frozen/roman-cal/
+COPY --chown=${NB_UID}:${NB_GID} env-chilly/roman-cal/  /opt/env-chilly/roman-cal/
 COPY --chown=${NB_UID}:${NB_GID} environments/roman-cal/*.yml  /opt/environments/roman-cal/
 RUN /opt/common-scripts/env-conda roman-cal
 
