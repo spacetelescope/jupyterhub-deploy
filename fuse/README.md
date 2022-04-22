@@ -68,7 +68,8 @@ require the application of 4 different concepts and specs:
 Simply put, it's complicated, as each spec has a minimum of several settings
 and there are nuances like "the PVC must be in the same namespace as
 JupyterHub."  But however complex relative to Docker bind mounts, we have the
-same complexity for either method of attaching S3 to the nodes for Zero-to-JH.
+same complexity for either method of attaching S3 to the notebook pods of
+Zero-to-JH.
 
 # Workflows
 
@@ -76,16 +77,19 @@ same complexity for either method of attaching S3 to the nodes for Zero-to-JH.
 
 The following high level workflow shows deploying fuse and jupyterhub.
 
-It also shows the reverse process of undeploying.  Because jupyterhub leaves
-notebook pods untouched when the hub helm release is uninstalled,
-`undeploy-jupyterhub` also deletes all notebook pods in addition to the hub.
-Notebook pods are deleted because otherwise they leave dangling references to
-the PVC which prevents it and the PV from being deleted during fuse-undeploy.
-While possibly not required, deleting the hub prevents additional users from
-logging on and adding new references to the PVC.
+It also shows the reverse process of undeploying.
+
+Because jupyterhub leaves notebook pods untouched when the hub helm release is
+uninstalled, `undeploy-jupyterhub` also deletes all notebook pods in addition
+to the hub.  Notebook pods are deleted because otherwise they leave dangling
+references to the PVC which prevents it and the PV from being deleted during
+`fuse-undeploy`.  Also deleting the hub prevents additional users from logging on
+and adding new references to the PVC.  This process of re-deploying fuse while
+users are active is something which will no doubt evolve over time if FUSE-based
+S3 support is chosen at all.
 
 ```
-# Update setup-env and infrequent-env as needed
+# Update setup-env and infrequent-env as needed to set up the deployment
 
 $ deploy-fuse          # top level deployment,  build, push, deploy, status
 $ deploy-jupyterhub    # second so PVC exists to mount into notebook pods
@@ -105,6 +109,7 @@ $ fuse-push               # push Docker image with fuse image tag. vs hub tag
 
 # Change Helm files, etc.
 $ fuse-deploy             # Run Helm chart creating daemonsets, storage resources
+                          # Afterwards fuse pods exist and /s3 can be tested in them
                           # Note: this is a small fraction of deploy-fuse
 
 # Change hub config
@@ -125,6 +130,10 @@ $ kubectl exec -it -n fuse <fuse-podname> -- command   # use /bin/sh not bash, t
 
 $ helm uninstall -n fuse tike-fuse-dev  # Delete all fuse resources,  opposite of fuse-deploy
 ```
+
+*NOTE:* all of the above is basically kubernetes based.  Part of this scheme
+involves making /s3 on a node represent an S3 bucket.  That can be observed
+directly by using SSM to connect to the node.
 
 # How does it work?
 
