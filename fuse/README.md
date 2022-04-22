@@ -150,11 +150,11 @@ stpubdata is mounted as /s3/fs/stpubdata in each s3fs-fuse daemon pod.
 node's file system.
 
 4. A /s3 PersistentVolume represents the entire /s3 directory tree containing
-all s3 file system mounts.  Each notebook pod is only configured to mount /s3.
+all s3 file system mounts.
 
 5. A /s3 PersistentVolumeClaim bound ReadOnlyMany to the /s3 pv and mounted on
 every notebook pod in JupyterHub config files.  The same pv and pvc are used by
-all notebook pods.
+all notebook pods.  Each notebook pod is only configured to mount /s3.
 
 # Organization of the FUSE S3 subsystem
 
@@ -199,8 +199,8 @@ jupyterhub-deploy/
 
 # Source Projects
 
-This JupyterHub effort took inputs from several similar Kubernetes projects on
-GitHub,  primarily:
+This effort took inputs from several similar Kubernetes projects on GitHub,
+primarily:
 
 ## Goofys on Kubernetes
 
@@ -246,12 +246,9 @@ A few things of note:
 difficult to know when it is configured correctly.
 
 2. It exposes the reason why s3fs-fuse is ~40x slower than goofys for the task
-of listing out s3://stpubdata/hst/public.  While goofys performs a single GET
-operation, s3fs-fuse performs 1 + nOBJs GET operations.  While s3fs-fuse may
-fetch more information, for many cases it is a poor compromise and not needed.
-Perhaps most importantly, this explains that the observed difference in
-performance is probably not the result of misconfiguring s3fs,  it is a
-consequence of the program design.
+of listing out s3://stpubdata/hst/public.  While goofys performs a single
+S3 operation, s3fs-fuse performs 1 + nOBJs S3 operations needed to support
+additional posix details.
 
 3. It indicates goofys has significantly better performance in most situations.
 
