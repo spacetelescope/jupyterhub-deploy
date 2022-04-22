@@ -68,7 +68,7 @@ require the application of 4 different concepts and specs:
 Simply put, it's complicated, as each spec has a minimum of several settings
 and there are nuances like "the PVC must be in the same namespace as
 JupyterHub."  But however complex relative to Docker bind mounts, we have the
-same complexity for either method of attaching S3 to the nodes.
+same complexity for either method of attaching S3 to the nodes for Zero-to-JH.
 
 # Workflows
 
@@ -129,21 +129,15 @@ $ helm uninstall -n fuse tike-fuse-dev  # Delete all fuse resources,  opposite o
 # How does it work?
 
 Deploying a helm chart creates a new `fuse` namespace and a helm release named
-e.g.  `tike-fuse-dev`.  The chart creates two daemonsets which run S3 pods on
-every notebook node, one per bucket per file system per node.  The chart also
-creates a PVC for /s3 which is mounted by every notebook pod using the
-JupyterHub config YAML as new users are spawned.  Minimal IAM perms attached to
-worker nodes grant "readonly" access to buckets.
+e.g.  `tike-fuse-dev`.  It consists of:
 
 1. A single daemon image.  The Dockerfile defines an image which contains the
-FUSE library as well as both goofys and s3fs-fuse programs.  Both programs fit
-in < 60M.  It is launched running one file system or the other, not both.  The
-image is Alpine-based with minimal s/w beyond that needed for the file systems,
-e.g. no bash only sh.
+FUSE library and both goofys and s3fs-fuse programs.  Both programs fit in <
+60M.
 
-2. Daemonsets.  Each daemonset runs one file system pod for each bucket on each
-notebook node. Core nodes do not run the s3 daemonsets.  There is one daemonset
-for goofys and one for s3fs fuse.
+2. Two daemonsets: one for goofys, one for fuse.  Each daemonset runs one file
+system pod for each bucket on each notebook node.  Hence each notebook node
+runs two additional small pods.
 ```
 Generally the path structure is:   /s3/<file system>/<bucket>
 
@@ -152,16 +146,15 @@ stpubdata is mounted as /s3/gf/stpubdata in each goofys daemon pod.
 stpubdata is mounted as /s3/fs/stpubdata in each s3fs-fuse daemon pod.
 ```
 
-3. A local-storage StorageClass is added to represent data which exists
-directly on a node's file system.
+3. A local-storage StorageClass represents data which exists directly on a
+node's file system.
 
-4. A /s3 PersistentVolume which represents the entire /s3 directory tree
-containing all s3 file system mounts.  Each notebook pod is only configured to
-mount /s3.
+4. A /s3 PersistentVolume represents the entire /s3 directory tree containing
+all s3 file system mounts.  Each notebook pod is only configured to mount /s3.
 
-5. A /s3 PersistentVolumeClaim.  ReadOnlyMany.  The pvc is bound to the pv and
-mounted on every notebook pod in JupyterHub config files.  The same pv and pvc
-are used by all notebook pods.
+5. A /s3 PersistentVolumeClaim bound ReadOnlyMany to the /s3 pv and mounted on
+every notebook pod in JupyterHub config files.  The same pv and pvc are used by
+all notebook pods.
 
 # Organization of the FUSE S3 subsystem
 
@@ -184,9 +177,9 @@ jupyterhub-deploy/
       fuse-build         -- builds fuse Dockerfile
       fuse-push          -- pushes fuse image
       fuse-deploy        -- installs fuse Helm chart / resources
-      fuse-undeploy      -- uinstalls helm chart,  force deletes storage if needed
+      fuse-undeploy      -- uinstalls helm chart,  force deletes storage
       fuse-status        -- displays fuse resources
-      fuse-check         -- fetches and runs assertions on fuse resources
+      fuse-check         -- fetches fuse info and runs health assertions
     Dockerfile           -- daemonset image, contains both s3fs and goofys
     helm/
        Chart.yaml
@@ -206,8 +199,8 @@ jupyterhub-deploy/
 
 # Source Projects
 
-I started this JupyterHub effort using inputs from several similar Kubernetes
-projects I found on GitHub:
+This JupyterHub effort took inputs from several similar Kubernetes projects on
+GitHub,  primarily:
 
 ## Goofys on Kubernetes
 
@@ -224,9 +217,8 @@ Additional nuances like `tini`,  s3fs mount options, etc.
 
 ## Our Changes
 
-Doing a simple fork and small deltas did not seem feasible so I customized
-it/them for the following and integrated the result directly with our
-jupyterhub-deploy repo:
+Using the above as examples and a starting point, I customized it/them for the
+following and integrated the result directly with our jupyterhub-deploy repo:
 
 * Modified Dockerfile to install both goofys and s3fs-fuse in same image
 * Modified Dockerfile to handle STScI SSL cert requirements
@@ -238,7 +230,7 @@ jupyterhub-deploy repo:
 * Updated values.yaml to reflect changes in parameters
 * Removed security resources in favor of implied tike-worker instance role
 * Added the k8s storage resources/specs required to mount /s3 inside JupyterHub
-* Wrote helper scripts to record development and debug methods
+* Wrote helper scripts to simplify development and deployment
 * Added a deployment checker based on the jupyterhub cluster checker.
 
 # More Information
