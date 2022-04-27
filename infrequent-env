@@ -107,10 +107,14 @@ export TF_LOG_PATH=terraform.log
 
 function where () {
     info="${DEPLOYMENT_NAME}-${ENVIRONMENT}"
-    if [[ "${USE_FROZEN}" == "1" ]]; then
-        info="${info}-frozen"
-    else
+    if [[ "${USE_FROZEN}" == "0" ]]; then
         info="${info}-floating"
+    elif [[ "${USE_FROZEN}" == "1" ]]; then
+        info="${info}-frozen"
+    elif [[ "${USE_FROZEN}" == "2" ]]; then
+        info="${info}-chilly"
+    else
+        info="${info}-ERROR"
     fi
     if [[ "${USE_BUILDKIT_CACHING}" == "1" ]]; then
         info="${info}-bkcache"

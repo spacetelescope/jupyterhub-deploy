@@ -54,7 +54,7 @@ env_reqs="/opt/env-frozen/${env}/requirements.txt"
 echo "-------------------------------------------------------------------------------"
 source /opt/common-scripts/env-activate ${env}
 
-if [[ "$USE_FROZEN" != "1" ]]; then
+if [[ "$USE_FROZEN" == "0" ]]; then
     echo "===== Solving pip package versions for environment ${env}..."
     all_constraints="${env_pip} ${extra_pkgs}"
     for pip in ${all_constraints}; do
