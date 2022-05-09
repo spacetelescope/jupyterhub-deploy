@@ -76,38 +76,3 @@ COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/ /opt/environments/jwebb
 
 # Needed for cleaning up existing/obsolete kernel (also now used for Mirisim)
 COPY --chown=${NB_UID}:${NB_GID} environments/remove-kernel /opt/environments/
-
-# --------------------------- Mirisim -------------------------------------
-
-# BASE
-#COPY --chown=${NB_UID}:${NB_GID} env-frozen/mirisim/ /opt/env-frozen/mirisim/
-#COPY --chown=${NB_UID}:${NB_GID} environments/mirisim/*.yml /opt/environments/mirisim/
-#RUN /opt/common-scripts/env-conda mirisim
-
-# COMPILE ALL
-#COPY --chown=${NB_UID}:${NB_GID} environments/mirisim/*.pip /opt/environments/mirisim/
-
-# Mirisim pinned requirements conflict with /opt/common-env/jupyter.pip... so omit it
-# and install everything else explicitly.
-#RUN /opt/common-scripts/env-compile mirisim  \
-#   /opt/common-env/common.pip \
-#   /opt/common-env/testing.pip \
-#   /opt/common-env/docs.pip
-
-# SYNC ALL
-#RUN /opt/common-scripts/env-sync  mirisim
-
-# Install from Mirisim conda server, strictly speaking, not frozen, always
-# executes.  env-update would've been nicer/simpler but the package references
-# in miricle-linux don't freeze.  Hence they need to be tacked onto the frozen
-# build afterwards and env-update does nothing when USE_FROZEN=1.
-
-#COPY --chown=${NB_UID}:${NB_GID} environments/mirisim/miricle-linux-py37.0.txt  /opt/environments/mirisim/miricle-linux-py37.0.txt
-#RUN cd /opt/environments/mirisim && \
-#    chmod +x miricle-linux-py37.0.txt && \
-#    /opt/common-scripts/env-run mirisim /opt/environments/mirisim/miricle-linux-py37.0.txt  && \
-#    /opt/common-scripts/env-clean
-
-
-# REMAINING ENV
-#COPY --chown=${NB_UID}:${NB_GID} environments/mirisim/ /opt/environments/mirisim/
