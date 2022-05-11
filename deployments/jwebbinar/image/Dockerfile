@@ -58,24 +58,40 @@ RUN   /opt/common-scripts/install-common  base
 # --------------------------- Jwebbinar -------------------------------------
 
 # BASE
-COPY --chown=${NB_UID}:${NB_GID} env-frozen/jwebbinar/ /opt/env-frozen/jwebbinar/
-COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/*.yml /opt/environments/jwebbinar/
-RUN /opt/common-scripts/env-conda jwebbinar
+#COPY --chown=${NB_UID}:${NB_GID} env-frozen/jwebbinar/ /opt/env-frozen/jwebbinar/
+#COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/*.yml /opt/environments/jwebbinar/
+#RUN /opt/common-scripts/env-conda jwebbinar
 
 # COMPILE ALL
-COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/*.pip /opt/environments/jwebbinar/
-RUN /opt/common-scripts/env-compile jwebbinar
+#COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/*.pip /opt/environments/jwebbinar/
+#RUN /opt/common-scripts/env-compile jwebbinar
 
 # SYNC ALL
-RUN /opt/common-scripts/env-sync  jwebbinar
+#RUN /opt/common-scripts/env-sync jwebbinar
 
 # REMAINING ENV
-COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/ /opt/environments/jwebbinar/
+#COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/ /opt/environments/jwebbinar/
 
 # --------------------------- Jdaviz -------------------------------------
 
+# BASE
+COPY --chown=${NB_UID}:${NB_GID} env-frozen/jdaviz/ /opt/env-frozen/jdaviz/
+COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/*.yml /opt/environments/jdaviz/
+RUN /opt/common-scripts/env-conda jdaviz
+
+# COMPILE ALL
+COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/*.pip /opt/environments/jdaviz/
+RUN /opt/common-scripts/env-compile jdaviz
+
+# SYNC ALL
+RUN /opt/common-scripts/env-sync jdaviz
+
+# REMAINING ENV
+COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/ /opt/environments/jdaviz/
+
+
 # Needed for cleaning up existing/obsolete kernel (also now used for Mirisim)
-COPY --chown=${NB_UID}:${NB_GID} environments/remove-kernel /opt/environments/
+#COPY --chown=${NB_UID}:${NB_GID} environments/remove-kernel /opt/environments/
 # ========================= vvvvv Generic vvvvv  =========================
 
 # Fix JS encoding issue that prevents widgets from displaying properly in notebook mode

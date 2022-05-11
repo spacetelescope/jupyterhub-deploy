@@ -33,6 +33,6 @@ helm upgrade --debug --wait --install ${DEPLOYMENT_NAME}-${ENVIRONMENT} hub -f $
 rm ${tmp_decrypted}
 
 # Only use 1 more IP address than is needed at all times
-kubectl set env ds aws-node -n kube-system WARM_IP_TARGET=1
+#kubectl set env ds aws-node -n kube-system WARM_IP_TARGET=1
 
 kubectl get svc proxy-public
