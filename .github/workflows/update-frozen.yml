@@ -3,7 +3,7 @@ on:
   schedule:  # weekly
     - cron: '0 0 * * 0'
   workflow_dispatch:
-     
+
 
 jobs:
   docker:
@@ -70,6 +70,11 @@ jobs:
       - name: Git Diffs (Frozen Version Specs)
         shell: bash
         run: git diff
+
+      - name: Clear Chilly
+        shell: bash
+        run: |
+           rm -rf deployments/${{ matrix.DEPLOYMENT_NAME }}/image/env-chilly
 
       - name: Commit & Push
         uses: actions-js/push@master

@@ -31,6 +31,7 @@ RUN   /opt/common-scripts/install-common  base
 # --------------------------- TESS -------------------------------------
 
 COPY --chown=${NB_UID}:${NB_GID} env-frozen/tess/  /opt/env-frozen/tess/
+COPY --chown=${NB_UID}:${NB_GID} env-chilly/tess/  /opt/env-chilly/tess/
 COPY --chown=${NB_UID}:${NB_GID} environments/tess/*.yml /opt/environments/tess/
 RUN /opt/common-scripts/env-conda tess
 
