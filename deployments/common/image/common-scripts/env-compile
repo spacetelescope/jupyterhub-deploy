@@ -46,25 +46,33 @@ fi
 env=$1
 shift;
 
-extra_pkgs=${*:-/opt/common-env/*.pip}
-env_yml="/opt/environments/${env}/${env}.yml"
-env_pip="/opt/environments/${env}/*.pip"
 env_reqs="/opt/env-frozen/${env}/requirements.txt"
 
 echo "-------------------------------------------------------------------------------"
 source /opt/common-scripts/env-activate ${env}
 
-if [[ "$USE_FROZEN" == "0" ]]; then
-    echo "===== Solving pip package versions for environment ${env}..."
-    all_constraints="${env_pip} ${extra_pkgs}"
-    for pip in ${all_constraints}; do
-        echo ${pip}   # show one per line.
-    done
+case ${USE_FROZEN} in
+    0)
+	extra_pkgs=${*:-/opt/common-env/*.pip}
+	env_pip="/opt/environments/${env}/*.pip"
+	all_constraints="${env_pip} ${extra_pkgs}"
+	;;
+    1)
+	exit 0
+	;;
+    2)
+	all_constraints="/opt/env-chilly/${env}/requirements.txt"
+	;;
+esac
 
-    # If pip-compile finds an existing requirements.txt file that fulfils the
-    # dependencies then no changes will be made, even if updates are available.
-    rm -f ${env_reqs}  # ... hence this delete is REQUIRED
+echo "===== Solving pip package versions for environment ${env}..."
+for pip in ${all_constraints}; do
+    echo ${pip}   # show one per line.
+done
 
-    pip-compile  -v  --output-file ${env_reqs} --pip-args "${PIP_SWITCHES}"  ${all_constraints}
-    /opt/common-scripts/env-clean
-fi
+# If pip-compile finds an existing requirements.txt file that fulfils the
+# dependencies then no changes will be made, even if updates are available.
+rm -f ${env_reqs}  # ... hence this delete is REQUIRED
+
+pip-compile  -v  --output-file ${env_reqs} --pip-args "${PIP_SWITCHES}"  ${all_constraints}
+/opt/common-scripts/env-clean
