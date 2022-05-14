@@ -6,7 +6,7 @@ dependencies:
   - _openmp_mutex=4.5
   - alembic=1.7.7
   - altair=4.2.0
-  - anyio=3.5.0
+  - anyio=3.6.1
   - aom=3.3.0
   - argon2-cffi=21.3.0
   - argon2-cffi-bindings=21.2.0
@@ -93,10 +93,10 @@ dependencies:
   - jsonschema=4.5.1
   - jupyter-packaging=0.12.0
   - jupyter_client=7.3.1
-  - jupyter_core=4.9.2
+  - jupyter_core=4.10.0
   - jupyter_server=1.17.0
   - jupyter_telemetry=0.1.0
-  - jupyterlab=3.4.0
+  - jupyterlab=3.4.2
   - jupyterlab_pygments=0.2.2
   - jupyterlab_server=2.13.0
   - jupyterlab_widgets=1.1.0
@@ -115,21 +115,21 @@ dependencies:
   - libbrotlidec=1.0.9
   - libbrotlienc=1.0.9
   - libcblas=3.9.0
-  - libcurl=7.83.0
+  - libcurl=7.83.1
   - libdeflate=1.10
   - libedit=3.1.20191231
   - libev=4.33
   - libffi=3.4.2
-  - libgcc-ng=11.2.0
-  - libgfortran-ng=11.2.0
-  - libgfortran5=11.2.0
-  - libgomp=11.2.0
+  - libgcc-ng=12.1.0
+  - libgfortran-ng=12.1.0
+  - libgfortran5=12.1.0
+  - libgomp=12.1.0
   - libiconv=1.16
   - liblapack=3.9.0
   - liblapacke=3.9.0
   - libllvm11=11.1.0
-  - libmamba=0.23.0
-  - libmambapy=0.23.0
+  - libmamba=0.23.1
+  - libmambapy=0.23.1
   - libnghttp2=1.47.0
   - libnsl=2.0.0
   - libopenblas=0.3.20
@@ -138,7 +138,7 @@ dependencies:
   - libsodium=1.0.18
   - libsolv=0.7.22
   - libssh2=1.10.0
-  - libstdcxx-ng=11.2.0
+  - libstdcxx-ng=12.1.0
   - libtiff=4.3.0
   - libuuid=2.32.1
   - libuv=1.43.0
@@ -155,7 +155,7 @@ dependencies:
   - lz4-c=1.9.3
   - lzo=2.10
   - mako=1.2.0
-  - mamba=0.23.0
+  - mamba=0.23.1
   - markupsafe=2.1.1
   - matplotlib-base=3.5.2
   - matplotlib-inline=0.1.3
@@ -198,7 +198,7 @@ dependencies:
   - pickleshare=0.7.5
   - pillow=9.1.0
   - pip=21.3.1
-  - pip-tools=6.6.0
+  - pip-tools=6.6.1
   - prometheus_client=0.14.1
   - prompt-toolkit=3.0.29
   - protobuf=3.20.1
@@ -211,7 +211,7 @@ dependencies:
   - pycparser=2.21
   - pycurl=7.45.1
   - pygments=2.12.0
-  - pyjwt=2.3.0
+  - pyjwt=2.4.0
   - pyopenssl=22.0.0
   - pyparsing=3.0.9
   - pyrsistent=0.18.1
@@ -234,7 +234,7 @@ dependencies:
   - ruamel.yaml.clib=0.2.6
   - ruamel_yaml=0.15.80
   - scikit-image=0.19.2
-  - scikit-learn=1.0.2
+  - scikit-learn=1.1.0
   - scipy=1.8.0
   - seaborn=0.11.2
   - seaborn-base=0.11.2
@@ -298,8 +298,8 @@ dependencies:
     - astropy-sphinx-theme==1.1
     - async-timeout==4.0.2
     - black==21.7b0
-    - boto3==1.22.12
-    - botocore==1.25.12
+    - boto3==1.23.0
+    - botocore==1.26.0
     - bqplot==0.12.33
     - bqplot-image-gl==1.4.9
     - casa-formats-io==0.1
@@ -309,7 +309,7 @@ dependencies:
     - echo==0.6
     - et-xmlfile==1.1.0
     - fast-histogram==0.10
-    - filelock==3.6.0
+    - filelock==3.7.0
     - flake8==4.0.1
     - freetype-py==2.3.0
     - frozenlist==1.3.0

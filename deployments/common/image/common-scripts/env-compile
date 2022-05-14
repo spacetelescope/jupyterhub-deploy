@@ -75,4 +75,10 @@ done
 rm -f ${env_reqs}  # ... hence this delete is REQUIRED
 
 pip-compile  -v  --output-file ${env_reqs} --pip-args "${PIP_SWITCHES}"  ${all_constraints}
+
+# Save requirements.simple.txt with no comments so that chilly
+# freezes and frozen freezes compare only package diffs.
+grep -v "#"  ${env_reqs}  \
+     > $(echo ${env_reqs} | sed -e's/\.txt/\.simple\.txt/g')
+
 /opt/common-scripts/env-clean
