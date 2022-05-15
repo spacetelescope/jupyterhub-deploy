@@ -1,4 +1,4 @@
-pip<22
+pip
 pip-tools
 setuptools
 nodejs
