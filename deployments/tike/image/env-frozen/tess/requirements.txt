@@ -175,7 +175,7 @@ bqplot-image-gl==1.4.9
     # via
     #   -r /opt/common-env/jupyter.pip
     #   glue-jupyter
-cachetools==5.0.0
+cachetools==5.1.0
     # via
     #   google-auth
     #   pymc3
@@ -239,7 +239,7 @@ cython==0.29.28
     #   -r /opt/environments/tess/basic.pip
     #   pylima
     #   ultranest
-dask[array,distributed]==2022.5.0
+dask[array]==2022.5.0
     # via
     #   -r /opt/environments/tess/basic.pip
     #   casa-formats-io
@@ -259,8 +259,8 @@ dill==0.3.4
     # via
     #   glue-core
     #   pymc3
-distributed==2022.05.0
-    # via dask
+distributed==2022.5.0
+    # via -r /opt/environments/tess/basic.pip
 docutils==0.16
     # via
     #   -r /opt/environments/tess/ml.pip
@@ -390,7 +390,7 @@ idna==3.3
     #   anyio
     #   requests
     #   yarl
-imageio==2.19.1
+imageio==2.19.2
     # via
     #   k2flix
     #   scikit-image
@@ -497,7 +497,7 @@ ipywidgets==7.7.0
     #   pythreejs
 ipywidgets-bokeh==1.2.1
     # via -r /opt/common-env/jupyter.pip
-jax==0.3.10
+jax==0.3.12
     # via -r /opt/environments/tess/ml.pip
 jaxlib==0.3.10
     # via -r /opt/environments/tess/ml.pip
@@ -1306,7 +1306,7 @@ tensorflow-io-gcs-filesystem==0.25.0
     # via tensorflow-cpu
 termcolor==1.1.0
     # via tensorflow-cpu
-terminado==0.13.3
+terminado==0.15.0
     # via
     #   jupyter-server
     #   notebook
@@ -1365,7 +1365,7 @@ tqdm==4.64.0
     #   panel
     #   papermill
     #   transitleastsquares
-traitlets==5.2.0
+traitlets==5.2.1.post0
     # via
     #   aas-timeseries
     #   bqplot

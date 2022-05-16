@@ -36,7 +36,8 @@ aiobotocore~=2.0.0
 aioboto3==9.3.0
 botocore
 requests
-dask[distributed]
+dask
+distributed
 future
 threadpoolctl
 joblib

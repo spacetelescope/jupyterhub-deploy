@@ -356,7 +356,7 @@ idna==2.10
     #   jdaviz
     #   requests
     #   yarl
-imageio==2.19.1
+imageio==2.19.2
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   scikit-image
@@ -1231,7 +1231,7 @@ synphot==1.1.1
     #   webbpsf
 tenacity==8.0.1
     # via papermill
-terminado==0.13.3
+terminado==0.15.0
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   jupyter-server
@@ -1276,7 +1276,7 @@ tqdm==4.64.0
     # via
     #   nircam-gsim
     #   papermill
-traitlets==5.2.0
+traitlets==5.2.1.post0
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   bqplot
