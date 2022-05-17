@@ -19,11 +19,11 @@ attrs==21.4.0
 babel==2.10.1
 backcall==0.2.0
 beautifulsoup4==4.11.1
-black==21.7b0
+black==21.12b0
 bleach==5.0.0
 bokeh==2.4.2
-boto3==1.23.0
-botocore==1.26.0
+boto3==1.23.1
+botocore==1.26.1
 bqplot==0.12.33
 bqplot-image-gl==1.4.9
 casa-formats-io==0.1
@@ -143,6 +143,7 @@ pickleshare==0.7.5
 pillow==9.1.0
 pip-tools==6.6.1
 pipdeptree==2.2.1
+platformdirs==2.5.2
 pluggy==1.0.0
 prometheus-client==0.14.1
 prompt-toolkit==3.0.29

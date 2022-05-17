@@ -53,6 +53,6 @@ dependencies:
   - xz=5.2.5
   - zlib=1.2.11
   - pip:
-    - cython==0.29.28
+    - cython==0.29.29
     - pyfftw==0.13.0
 prefix: /opt/conda/envs/tess
