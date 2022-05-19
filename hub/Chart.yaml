@@ -3,3 +3,5 @@ appVersion: '1.0'
 description: Deployment Chart for JupyterHub
 name: hub
 version: 0.0.1
+feature-gates:
+    BoundServiceAccountTokenVolume=false

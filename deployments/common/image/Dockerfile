@@ -155,6 +155,7 @@ RUN npm set config set cafile /etc/ssl/certs/stsci-tls-ca-bundle.pem
 
 RUN npm install -g --prod yarn             && \
     npm install -g --prod yarn-audit-fix   && \
+    npm install -g minimist                && \
     yarn config set cafile /etc/ssl/certs/stsci-tls-ca-bundle.pem && \
     npm cache clean --force && \
     yarn cache clean --force
