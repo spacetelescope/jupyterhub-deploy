@@ -27,10 +27,6 @@ USER root
 #
 # COPY common-scripts/apt-install  /opt/common-scripts/apt-install
 
-# Needed as of 05/19/2022 to address CVE-2022-25235, CVE-2022-25236
-#RUN apt-get update --yes --fix-missing \
-#    apt-get upgrade expat --yes
-
 # Misc system tools
 RUN /opt/common-scripts/apt-install \
         tree \
