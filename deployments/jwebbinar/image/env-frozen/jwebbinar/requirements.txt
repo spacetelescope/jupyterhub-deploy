@@ -14,7 +14,7 @@ alembic==1.7.7
     # via jupyterhub
 ansiwrap==0.8.4
     # via papermill
-anyio==3.5.0
+anyio==3.6.1
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   jupyter-server
@@ -29,7 +29,7 @@ argon2-cffi==21.3.0
     #   notebook
 argon2-cffi-bindings==21.2.0
     # via argon2-cffi
-asdf==2.11.0
+asdf==2.11.1
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   -r /opt/environments/jwebbinar/jwebbinar.pip
@@ -44,11 +44,13 @@ asdf==2.11.0
     #   specutils
     #   stdatamodels
     #   stpipe
-asdf-astropy==0.2.0
-    # via gwcs
+asdf-astropy==0.2.1
+    # via
+    #   gwcs
+    #   jwst
 asdf-coordinates-schemas==0.1.0
     # via asdf-astropy
-asdf-standard==1.0.1
+asdf-standard==1.0.2
     # via
     #   asdf
     #   asdf-transform-schemas
@@ -69,6 +71,7 @@ astropy==5.0.4
     #   asdf-astropy
     #   astroquery
     #   astroscrappy
+    #   bayesicfitting
     #   casa-formats-io
     #   crds
     #   drizzle
@@ -90,6 +93,7 @@ astropy==5.0.4
     #   pandeia-engine
     #   photutils
     #   poppy
+    #   pvextractor
     #   pysiaf
     #   pysynphot
     #   pyvo
@@ -128,7 +132,7 @@ attrs==21.4.0
     #   aiohttp
     #   jsonschema
     #   pytest
-babel==2.9.1
+babel==2.10.1
     # via
     #   jupyterlab-server
     #   sphinx
@@ -138,6 +142,8 @@ backcall==0.2.0
     #   ipython
 batman-package==2.4.8
     # via mirage
+bayesicfitting==3.0.1
+    # via jwst
 beautifulsoup4==4.11.1
     # via
     #   astroquery
@@ -150,15 +156,15 @@ bleach==5.0.0
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   nbconvert
-bokeh==2.4.2
+bokeh==2.4.3
     # via
     #   hotsoss
     #   ipywidgets-bokeh
     #   jupyter-bokeh
     #   mirage
-boto3==1.21.40
+boto3==1.23.5
     # via -r /opt/common-env/common.pip
-botocore==1.24.40
+botocore==1.26.5
     # via
     #   boto3
     #   s3transfer
@@ -167,17 +173,19 @@ bottleneck==1.3.4
 bqplot==0.12.33
     # via
     #   -r /opt/common-env/jupyter.pip
+    #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   bqplot-image-gl
     #   glue-jupyter
     #   jdaviz
-bqplot-image-gl==1.4.6
+bqplot-image-gl==1.4.9
     # via
     #   -r /opt/common-env/jupyter.pip
+    #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   glue-jupyter
     #   jdaviz
 casa-formats-io==0.1
     # via spectral-cube
-certifi==2021.10.8
+certifi==2022.5.18.1
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   requests
@@ -196,23 +204,23 @@ charset-normalizer==2.0.12
     #   requests
 ci-watson==0.6.1
     # via -r /opt/common-env/testing.pip
-click==8.1.2
+click==8.1.3
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   black
     #   jdaviz
     #   papermill
     #   pip-tools
-cloudpickle==2.0.0
+cloudpickle==2.1.0
     # via dask
-crds==11.12.1
+crds==11.15.0
     # via
     #   -r /opt/environments/jwebbinar/jwebbinar.pip
     #   ci-watson
     #   jwst
     #   mirage
     #   stpipe
-cryptography==36.0.2
+cryptography==37.0.2
     # via
     #   pyopenssl
     #   secretstorage
@@ -220,9 +228,9 @@ cycler==0.11.0
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   matplotlib
-cython==0.29.28
+cython==0.29.30
     # via jwst-pancake
-dask[array]==2022.4.0
+dask[array]==2022.5.0
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   casa-formats-io
@@ -239,11 +247,11 @@ defusedxml==0.7.1
     #   nbconvert
 deprecation==2.1.0
     # via jupyter-packaging
-dill==0.3.4
+dill==0.3.5.1
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   glue-core
-docutils==0.16
+docutils==0.17.1
     # via
     #   nbsphinx
     #   python-daemon
@@ -263,7 +271,6 @@ entrypoints==0.4
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   jupyter-client
     #   jupyterhub
-    #   jupyterlab-server
     #   nbconvert
     #   papermill
 et-xmlfile==1.1.0
@@ -276,15 +283,15 @@ fast-histogram==0.10
     #   mpl-scatter-density
 fastjsonschema==2.15.3
     # via nbformat
-filelock==3.6.0
+filelock==3.7.0
     # via crds
-fitsblender==0.4.1
+fitsblender==0.4.2
     # via -r /opt/environments/jwebbinar/jwebbinar.pip
 flake8==4.0.1
     # via -r /opt/common-env/testing.pip
-fonttools==4.32.0
+fonttools==4.33.3
     # via matplotlib
-freetype-py==2.2.0
+freetype-py==2.3.0
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   vispy
@@ -292,15 +299,17 @@ frozenlist==1.3.0
     # via
     #   aiohttp
     #   aiosignal
-fsspec==2022.3.0
+fsspec==2022.5.0
     # via dask
+future==0.18.2
+    # via bayesicfitting
 ginga==3.3.0
     # via -r /opt/environments/jwebbinar/jwebbinar.pip
 glue-astronomy==0.4.0
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   jdaviz
-glue-core==1.2.4
+glue-core==1.3.0
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   glue-astronomy
@@ -349,24 +358,26 @@ hsluv==5.0.2
     # via vispy
 html5lib==1.1
     # via astroquery
-idna==2.10
+idna==3.3
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   anyio
     #   jdaviz
     #   requests
     #   yarl
-imageio==2.16.2
+imageio==2.19.2
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   scikit-image
 imagesize==1.3.0
     # via sphinx
-importlib-metadata==4.11.3
+importlib-metadata==4.11.4
     # via
     #   alembic
+    #   jupyterlab-server
     #   keyring
-importlib-resources==5.7.0
+    #   sphinx
+importlib-resources==5.7.1
     # via
     #   alembic
     #   asdf
@@ -377,7 +388,7 @@ importlib-resources==5.7.0
     #   jsonschema
 iniconfig==1.1.1
     # via pytest
-ipydatawidgets==4.2.0
+ipydatawidgets==4.3.1.post1
     # via
     #   -r /opt/common-env/jupyter.pip
     #   pythreejs
@@ -386,6 +397,7 @@ ipyevents==2.0.1
 ipygoldenlayout==0.4.0
     # via
     #   -r /opt/common-env/jupyter.pip
+    #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   jdaviz
 ipykernel==6.13.0
     # via
@@ -397,15 +409,16 @@ ipykernel==6.13.0
     #   jupyter-console
     #   notebook
     #   qtconsole
-ipympl==0.9.0
+ipympl==0.9.1
     # via
     #   -r /opt/common-env/jupyter.pip
     #   glue-jupyter
 ipysplitpanes==0.2.0
     # via
     #   -r /opt/common-env/jupyter.pip
+    #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   jdaviz
-ipython==8.2.0
+ipython==8.3.0
     # via
     #   -r /opt/common-env/common.pip
     #   glue-core
@@ -425,9 +438,11 @@ ipython-genutils==0.2.0
 ipyvolume==0.5.2
     # via
     #   -r /opt/common-env/jupyter.pip
+    #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   glue-jupyter
 ipyvue==1.7.0
     # via
+    #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   glue-jupyter
     #   ipygoldenlayout
     #   ipysplitpanes
@@ -436,6 +451,7 @@ ipyvue==1.7.0
 ipyvuetify==1.8.2
     # via
     #   -r /opt/common-env/jupyter.pip
+    #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   glue-jupyter
     #   jdaviz
 ipywebrtc==0.6.0
@@ -457,9 +473,10 @@ ipywidgets==7.7.0
     #   jupyter
     #   jupyter-bokeh
     #   pythreejs
+    #   sidecar
 ipywidgets-bokeh==1.2.1
     # via -r /opt/common-env/jupyter.pip
-jdaviz==2.0.0
+jdaviz @ git+https://github.com/spacetelescope/jdaviz.git
     # via -r /opt/environments/jwebbinar/jdaviz.pip
 jedi==0.18.1
     # via
@@ -469,7 +486,7 @@ jeepney==0.8.0
     # via
     #   keyring
     #   secretstorage
-jinja2==3.0.3
+jinja2==3.1.1
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   bokeh
@@ -495,9 +512,9 @@ joblib==1.1.0
     #   spectral-cube
 jplephem==2.17
     # via -r /opt/environments/jwebbinar/jwebbinar.pip
-json5==0.9.6
+json5==0.9.8
     # via jupyterlab-server
-jsonschema==4.4.0
+jsonschema==4.5.1
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   asdf
@@ -510,7 +527,7 @@ jupyter==1.0.0
     # via mirage
 jupyter-bokeh==3.0.4
     # via -r /opt/common-env/jupyter.pip
-jupyter-client==7.2.2
+jupyter-client==7.3.1
     # via
     #   -r /opt/common-env/jupyter.pip
     #   ipykernel
@@ -522,7 +539,7 @@ jupyter-client==7.2.2
     #   voila
 jupyter-console==6.4.3
     # via jupyter
-jupyter-core==4.9.2
+jupyter-core==4.10.0
     # via
     #   -r /opt/common-env/jupyter.pip
     #   jupyter-client
@@ -536,7 +553,7 @@ jupyter-desktop-server==0.1.3
     # via -r /opt/common-env/common.pip
 jupyter-packaging==0.12.0
     # via -r /opt/common-env/jupyter.pip
-jupyter-server==1.16.0
+jupyter-server==1.17.0
     # via
     #   -r /opt/common-env/jupyter.pip
     #   jupyter-server-proxy
@@ -552,15 +569,17 @@ jupyter-server-proxy==3.2.1
     #   jupyter-desktop-server
 jupyter-telemetry==0.1.0
     # via jupyterhub
-jupyterhub==1.5.0
+jupyterhub==2.3.0
     # via -r /opt/common-env/jupyter.pip
-jupyterlab==3.3.3
-    # via -r /opt/common-env/jupyter.pip
+jupyterlab==3.4.2
+    # via
+    #   -r /opt/common-env/jupyter.pip
+    #   sidecar
 jupyterlab-pygments==0.2.2
     # via
     #   -r /opt/common-env/jupyter.pip
     #   nbconvert
-jupyterlab-server==2.12.0
+jupyterlab-server==2.14.0
     # via
     #   jupyterlab
     #   voila
@@ -568,11 +587,9 @@ jupyterlab-widgets==1.1.0
     # via
     #   -r /opt/common-env/jupyter.pip
     #   ipywidgets
-jwst==1.3.3
+jwst==1.5.2
     # via
-    #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   -r /opt/environments/jwebbinar/jwebbinar.pip
-    #   -r /opt/environments/jwebbinar/mirage.pip
     #   mirage
 jwst-backgrounds==1.1.2
     # via
@@ -584,14 +601,14 @@ jwst-pancake @ git+https://github.com/spacetelescope/pandeia-coronagraphy.git@1d
     # via -r /opt/environments/jwebbinar/jwebbinar.pip
 jwxml==0.3.2
     # via -r /opt/environments/jwebbinar/jwebbinar.pip
-keyring==23.5.0
+keyring==23.5.1
     # via astroquery
 kiwisolver==1.4.2
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   matplotlib
     #   vispy
-locket==0.2.1
+locket==1.0.0
     # via partd
 lockfile==0.12.2
     # via python-daemon
@@ -608,20 +625,23 @@ markupsafe==2.1.1
     #   jinja2
     #   mako
     #   nbconvert
-matplotlib==3.5.1
+matplotlib==3.5.2
     # via
     #   -r /opt/common-env/docs.pip
     #   -r /opt/environments/jwebbinar/jdaviz.pip
+    #   bayesicfitting
     #   glue-core
     #   glue-vispy-viewers
     #   healpy
     #   ipympl
+    #   jdaviz
     #   jwst-footprints
     #   jwst-pancake
     #   jwxml
     #   mirage
     #   mpl-scatter-density
     #   poppy
+    #   pvextractor
     #   pysiaf
     #   webbpsf
 matplotlib-inline==0.1.3
@@ -630,7 +650,7 @@ matplotlib-inline==0.1.3
     #   ipython
 mccabe==0.6.1
     # via flake8
-mirage==2.2.1
+mirage @ git+https://github.com/spacetelescope/mirage.git
     # via -r /opt/environments/jwebbinar/mirage.pip
 mistune==0.8.4
     # via
@@ -664,7 +684,7 @@ nbconvert==6.5.0
     #   nbsphinx
     #   notebook
     #   voila
-nbformat==5.3.0
+nbformat==5.4.0
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   ipywidgets
@@ -678,7 +698,7 @@ nbgitpuller==1.1.0
     # via -r /opt/common-env/common.pip
 nbsphinx==0.8.8
     # via -r /opt/common-env/docs.pip
-ndcube==v2.0.0rc1
+ndcube==2.0.2
     # via specutils
 nest-asyncio==1.5.5
     # via
@@ -687,7 +707,7 @@ nest-asyncio==1.5.5
     #   jupyter-client
     #   nbclient
     #   notebook
-networkx==2.8
+networkx==2.8.2
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   scikit-image
@@ -695,7 +715,7 @@ nircam-gsim==1.60
     # via
     #   -r /opt/environments/jwebbinar/mirage.pip
     #   mirage
-notebook==6.4.10
+notebook==6.4.11
     # via
     #   -r /opt/common-env/jupyter.pip
     #   -r /opt/environments/jwebbinar/jdaviz.pip
@@ -706,7 +726,7 @@ notebook==6.4.10
     #   widgetsnbextension
 notebook-shim==0.1.0
     # via nbclassic
-numpy==1.22.3
+numpy==1.22.4
     # via
     #   -r /opt/common-env/common.pip
     #   -r /opt/environments/jwebbinar/jdaviz.pip
@@ -716,6 +736,7 @@ numpy==1.22.3
     #   astroquery
     #   astroscrappy
     #   batman-package
+    #   bayesicfitting
     #   bokeh
     #   bottleneck
     #   bqplot
@@ -745,6 +766,7 @@ numpy==1.22.3
     #   matplotlib
     #   mirage
     #   mpl-scatter-density
+    #   ndcube
     #   pandas
     #   pandeia-engine
     #   photutils
@@ -775,13 +797,13 @@ numpy==1.22.3
     #   tweakwcs
     #   vispy
     #   webbpsf
-numpydoc==1.2.1
+numpydoc==1.3.1
     # via
     #   pysiaf
     #   sphinx-astropy
 oauthlib==3.2.0
     # via jupyterhub
-openpyxl==3.0.9
+openpyxl==3.0.10
     # via
     #   glue-core
     #   pysiaf
@@ -797,6 +819,7 @@ packaging==21.3
     #   ipykernel
     #   jupyter-packaging
     #   jupyter-server
+    #   jupyterhub
     #   jupyterlab
     #   jupyterlab-server
     #   matplotlib
@@ -844,9 +867,10 @@ pexpect==4.8.0
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   ipython
-photutils==1.1.0
+photutils==1.4.0
     # via
     #   -r /opt/environments/jwebbinar/jwebbinar.pip
+    #   jdaviz
     #   jwst
     #   jwst-pancake
     #   mirage
@@ -856,7 +880,7 @@ pickleshare==0.7.5
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   ipython
-pillow==9.1.0
+pillow==9.1.1
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   bokeh
@@ -868,7 +892,7 @@ pillow==9.1.0
     #   matplotlib
     #   scikit-image
     #   sphinx-astropy
-pip-tools==6.6.0
+pip-tools==6.6.1
     # via -r /opt/common-env/common.pip
 pipdeptree==2.2.1
     # via -r /opt/common-env/common.pip
@@ -891,7 +915,7 @@ prompt-toolkit==3.0.29
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   ipython
     #   jupyter-console
-psutil==5.9.0
+psutil==5.9.1
     # via
     #   ipykernel
     #   jwst
@@ -904,6 +928,8 @@ ptyprocess==0.7.0
     #   terminado
 pure-eval==0.2.2
     # via stack-data
+pvextractor==0.3
+    # via glue-core
 py==1.11.0
     # via pytest
 pycodestyle==2.8.0
@@ -912,7 +938,7 @@ pycparser==2.21
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   cffi
-pydeps==1.10.14
+pydeps==1.10.18
     # via -r /opt/common-env/common.pip
 pyds9==1.8.1
     # via
@@ -926,7 +952,7 @@ pyfftw==0.13.0
     # via -r /opt/environments/jwebbinar/jwebbinar.pip
 pyflakes==2.4.0
     # via flake8
-pygments==2.11.2
+pygments==2.12.0
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   ipython
@@ -940,7 +966,7 @@ pyopengl==3.1.6
     #   glue-vispy-viewers
 pyopenssl==22.0.0
     # via certipy
-pyparsing==3.0.8
+pyparsing==3.0.9
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   jwst
@@ -959,7 +985,7 @@ pysynphot==2.0.0
     # via
     #   -r /opt/environments/jwebbinar/jwebbinar.pip
     #   jwst-pancake
-pytest==7.1.1
+pytest==7.1.2
     # via
     #   -r /opt/common-env/testing.pip
     #   ci-watson
@@ -1009,7 +1035,7 @@ pyyaml==6.0
     #   mirage
     #   papermill
     #   sphinx-asdf
-pyzmq==22.3.0
+pyzmq==23.0.0
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   jupyter-client
@@ -1021,19 +1047,20 @@ qtconsole==5.3.0
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   glue-core
     #   jupyter
-qtpy==2.0.1
+qtpy==2.1.0
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   echo
     #   ginga
     #   glue-core
     #   glue-vispy-viewers
+    #   pvextractor
     #   qtconsole
 radio-beam==0.3.3
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   spectral-cube
-regex==2022.3.15
+regex==2022.4.24
     # via black
 regions==0.6
     # via
@@ -1069,12 +1096,14 @@ scikit-image==0.19.2
     #   -r /opt/environments/jwebbinar/jwebbinar.pip
     #   glue-jupyter
     #   jdaviz
+    #   jwst
     #   jwst-pancake
-scikit-learn==1.0.2
+scikit-learn==1.1.1
     # via -r /opt/environments/jwebbinar/jwebbinar.pip
-scipy==1.8.0
+scipy==1.8.1
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
+    #   bayesicfitting
     #   dust-extinction
     #   glue-core
     #   glue-vispy-viewers
@@ -1087,16 +1116,18 @@ scipy==1.8.0
     #   mirage
     #   pandeia-engine
     #   poppy
+    #   pvextractor
     #   pysiaf
     #   radio-beam
     #   scikit-image
     #   scikit-learn
     #   specutils
+    #   stcal
     #   stsci-image
     #   stsynphot
     #   synphot
     #   webbpsf
-secretstorage==3.3.1
+secretstorage==3.3.2
     # via keyring
 semantic-version==2.9.0
     # via
@@ -1109,6 +1140,8 @@ send2trash==1.8.0
     #   notebook
 sep==1.2.0
     # via -r /opt/environments/jwebbinar/jwebbinar.pip
+sidecar==0.5.1
+    # via jdaviz
 simpervisor==0.4
     # via jupyter-server-proxy
 six==1.16.0
@@ -1138,8 +1171,8 @@ spectral-cube==0.6.0
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   glue-astronomy
-    #   jdaviz
-specutils==1.4.1
+    #   pvextractor
+specutils==1.7.0
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   glue-astronomy
@@ -1148,7 +1181,7 @@ spherical-geometry==1.2.22
     # via
     #   jwst
     #   tweakwcs
-sphinx==3.5.4
+sphinx==4.5.0
     # via
     #   -r /opt/common-env/docs.pip
     #   nbsphinx
@@ -1185,15 +1218,15 @@ sphinxcontrib-qthelp==1.0.3
     # via sphinx
 sphinxcontrib-serializinghtml==1.1.5
     # via sphinx
-sqlalchemy==1.4.35
+sqlalchemy==1.4.36
     # via
     #   alembic
     #   jupyterhub
 stack-data==0.2.0
     # via ipython
-stcal==0.6.2
+stcal==0.7.3
     # via jwst
-stdatamodels==0.2.4
+stdatamodels==0.4.2
     # via
     #   jwst
     #   stpipe
@@ -1204,7 +1237,9 @@ stpipe==0.3.3
 stsci-image==2.3.5
     # via jwst
 stsci-imagestats==1.6.3
-    # via tweakwcs
+    # via
+    #   jwst
+    #   tweakwcs
 stsci-rtd-theme==0.0.2
     # via -r /opt/common-env/docs.pip
 stsci-stimage==0.2.5
@@ -1223,7 +1258,7 @@ synphot==1.1.1
     #   webbpsf
 tenacity==8.0.1
     # via papermill
-terminado==0.13.3
+terminado==0.15.0
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   jupyter-server
@@ -1234,7 +1269,7 @@ textwrap3==0.9.2
     # via ansiwrap
 threadpoolctl==3.1.0
     # via scikit-learn
-tifffile==2022.4.8
+tifffile==2022.5.4
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   scikit-image
@@ -1245,7 +1280,7 @@ tomli==1.2.3
     #   black
     #   pep517
     #   pytest
-tomlkit==0.10.1
+tomlkit==0.10.2
     # via jupyter-packaging
 toolz==0.11.2
     # via
@@ -1268,7 +1303,7 @@ tqdm==4.64.0
     # via
     #   nircam-gsim
     #   papermill
-traitlets==5.1.1
+traitlets==5.2.1.post0
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   bqplot
@@ -1300,7 +1335,7 @@ traittypes==0.2.1
     #   ipyvolume
 tweakwcs==0.7.4
     # via jwst
-typing-extensions==4.1.1
+typing-extensions==4.2.0
     # via bokeh
 urllib3==1.26.9
     # via
@@ -1308,7 +1343,7 @@ urllib3==1.26.9
     #   -r /opt/environments/jwebbinar/jwebbinar.pip
     #   botocore
     #   requests
-vispy==0.9.6
+vispy==0.10.0
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   -r /opt/environments/jwebbinar/jwebbinar.pip
@@ -1335,7 +1370,7 @@ webencodings==0.5.1
     #   tinycss2
 websocket-client==1.3.2
     # via jupyter-server
-websockets==10.2
+websockets==10.3
     # via voila
 wheel==0.37.1
     # via

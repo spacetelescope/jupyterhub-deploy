@@ -27,6 +27,10 @@ USER root
 #
 # COPY common-scripts/apt-install  /opt/common-scripts/apt-install
 
+# Needed as of 05/19/2022 to address CVE-2022-25235, CVE-2022-25236
+#RUN apt-get update --yes --fix-missing \
+#    apt-get upgrade expat --yes
+
 # Misc system tools
 RUN /opt/common-scripts/apt-install \
         tree \
@@ -38,7 +42,8 @@ RUN /opt/common-scripts/apt-install \
         ssh \
         htop \
         sysstat \
-        net-tools
+        net-tools 
+#        libexpat1
 
 # S/W Development Tools
 RUN /opt/common-scripts/apt-install \
@@ -56,8 +61,8 @@ RUN /opt/common-scripts/apt-install \
         libxml2-dev \
         libxslt1.1 \
         libxslt1-dev \
-        python-libxml2 \
-        python-dev \
+        python3-libxml2 \
+        python-dev-is-python3 \
         python-setuptools \
         graphviz \
         libopenblas-dev
@@ -109,9 +114,9 @@ RUN /opt/common-scripts/fix-certs
 # ------------------------------------------------------------------------
 # Remove light-locker to prevent screen lock
 # BUG: get rid of --no-check-certificate
-RUN wget https://sourceforge.net/projects/turbovnc/files/2.2.6/turbovnc_2.2.6_amd64.deb --no-check-certificate && \
-    dpkg -i turbovnc_2.2.6_amd64.deb && \
-    rm turbovnc_2.2.6_amd64.deb && \
+RUN wget https://sourceforge.net/projects/turbovnc/files/3.0/turbovnc_3.0_amd64.deb --no-check-certificate && \
+    dpkg -i turbovnc_3.0_amd64.deb && \
+    rm turbovnc_3.0_amd64.deb && \
     apt-get remove -y -q light-locker
 
 # ------------------------------------------------------------------------

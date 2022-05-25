@@ -1,5 +1,6 @@
-jdaviz==2.5.0
-jwst==1.5.0
+#jdaviz==2.5.0
+git+https://github.com/spacetelescope/jdaviz.git
+#jwst==1.5.0
 anyio
 appnope
 argon2-cffi
