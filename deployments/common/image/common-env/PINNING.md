@@ -3,7 +3,7 @@ Currently this is typically done in two ways:
 
 1. Most environments install the specs from common-env using the pip-tools
 based framework.  Typically this means that common-env/*.conda are installed
-using conda during env-conda environment creation.  Laster common-env/*.pip are
+using conda during env-conda environment creation.  Later common-env/*.pip are
 installed as part of env-compile and env-sync.  Between saved frozen specs
 requirements.yml and requirements.txt, these environments are tightly spec'ed
 for frozen builds.

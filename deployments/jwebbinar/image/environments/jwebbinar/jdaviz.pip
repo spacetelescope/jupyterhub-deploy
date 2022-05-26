@@ -1,5 +1,6 @@
-jdaviz==2.0.0
-jwst
+#jdaviz==2.5.0
+git+https://github.com/spacetelescope/jdaviz.git
+#jwst==1.5.0
 anyio
 appnope
 argon2-cffi
@@ -24,7 +25,7 @@ echo
 entrypoints
 fast-histogram
 freetype-py
-glue-astronomy
+glue-astronomy>=0.4
 glue-core
 glue-jupyter
 glue-vispy-viewers
@@ -82,7 +83,7 @@ Send2Trash
 six
 sniffio
 spectral-cube
-specutils==1.4.1
+specutils
 terminado
 testpath
 tifffile
@@ -97,6 +98,17 @@ wcwidth
 webencodings
 widgetsnbextension
 xlrd
+
+bqplot>=0.12.33
+bqplot-image-gl>=1.4.6
+glue-core>=1.2.2
+glue-jupyter>=0.11.4
+ipyvue>=1.6
+ipyvuetify>=1.7.0
+ipysplitpanes>=0.1.0
+ipygoldenlayout>=0.3.0
+ipyvolume
+
 
 ##jupyter-client
 #ipysplitpanes

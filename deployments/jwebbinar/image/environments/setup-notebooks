@@ -4,9 +4,9 @@
 # notebook files using set-notebook-kernels.
 
 #/opt/common-scripts/git-sync https://github.com/gsnyder206/jwebbinar_prep main /home/jovyan/jwebbinar_prep_ceers
-/opt/common-scripts/git-sync https://github.com/spacetelescope/jwebbinar_prep current_webbinar /home/jovyan/jwebbinar_prep
+#/opt/common-scripts/git-sync https://github.com/spacetelescope/jwebbinar_prep current_webbinar /home/jovyan/jwebbinar_prep
 
-/opt/common-scripts/set-notebook-kernel jwebbinar jwebbinar_prep/ceers/*/*.ipynb || true
+#/opt/common-scripts/set-notebook-kernel jwebbinar jwebbinar_prep/ceers/*/*.ipynb || true
 #/opt/common-scripts/set-notebook-kernel jdaviz jwebbinar_prep/mos_session/Mosviz_solutions.ipynb
 
 # --- mkdir -p /opt/environments/jwebbinar/tests
