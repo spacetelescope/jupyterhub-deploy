@@ -8,11 +8,11 @@ if [[ "${CLEAR_PKG_CACHES}" == "1" ]]; then
     echo "===== Cleaning up conda env..."
     . /etc/profile.d/conda.sh
     ${CONDA_VER} clean -fya
-    ${CONDA_VER} build purge-all
+    # ${CONDA_VER} build purge-all
     rm -rf $HOME/.cache/pip
     echo "===== Clearing jupyterlab and npm caches..."
     jupyter lab clean -y
     npm cache clean --force
-    yarn cache clean --force 
+    yarn cache clean --force
     rm -rf "/home/${NB_USER}/.node-gyp"
 fi

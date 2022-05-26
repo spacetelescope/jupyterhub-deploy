@@ -1,0 +1,8 @@
+diff --git a/deployments/jwebbinar/image/env-frozen/jwebbinar/requirements.txt b/deployments/jwebbinar/image/env-frozen/jwebbinar/requirements.txt
+index c1602a7..429ba5e 100644
+--- a/deployments/jwebbinar/image/env-frozen/jwebbinar/requirements.txt
++++ b/deployments/jwebbinar/image/env-frozen/jwebbinar/requirements.txt
+@@ -230,7 +230,7 @@ cycler==0.11.0
+ cython==0.29.30
+-dask[array]==2022.5.1
++dask[array]==2022.5.2

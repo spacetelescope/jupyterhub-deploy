@@ -94,4 +94,5 @@ if [[ $USE_FROZEN == "0" ]]; then
   # echo "Clearing frozen image specs to avoid Docker cache busting."
   # echo "Add or commit them to git prior to unfrozen builds to avoid this clear."
   git checkout -- env-frozen
+  git checkout -- env-chilly
 fi

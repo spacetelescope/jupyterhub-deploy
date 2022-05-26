@@ -3,7 +3,7 @@ on:
   schedule:  # weekly
     - cron: '0 0 * * 0'
   workflow_dispatch:
-     
+
 
 jobs:
   docker:
@@ -67,9 +67,14 @@ jobs:
            tools/image-test
            df -h
 
-      - name: Git Diffs (Frozen Version Specs)
+      - name: Git Diffs (Frozen & Chilly Specs)
         shell: bash
-        run: git diff
+        run: |
+           git diff
+
+      - name: Clear setup-env
+        shell: bash
+        run: git checkout -- setup-env
 
       - name: Commit & Push
         uses: actions-js/push@master

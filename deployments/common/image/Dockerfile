@@ -38,8 +38,9 @@ RUN /opt/common-scripts/apt-install \
         ssh \
         htop \
         sysstat \
-        net-tools 
-#        libexpat1
+        net-tools \
+        rename
+	#        libexpat1
 
 # S/W Development Tools
 RUN /opt/common-scripts/apt-install \
