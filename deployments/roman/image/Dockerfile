@@ -59,6 +59,7 @@ RUN   /opt/common-scripts/install-common  base
 # CVT
 
 COPY --chown=${NB_UID}:${NB_GID} env-frozen/cvt/  /opt/env-frozen/cvt/
+COPY --chown=${NB_UID}:${NB_GID} env-chilly/cvt/  /opt/env-chilly/cvt/
 COPY --chown=${NB_UID}:${NB_GID} environments/cvt/*.yml  /opt/environments/cvt/
 RUN /opt/common-scripts/env-conda cvt
 
@@ -73,6 +74,7 @@ COPY --chown=${NB_UID}:${NB_GID} environments/cvt/ /opt/environments/cvt/
 # Roman CAL
 
 COPY --chown=${NB_UID}:${NB_GID} env-frozen/roman-cal/  /opt/env-frozen/roman-cal/
+COPY --chown=${NB_UID}:${NB_GID} env-chilly/roman-cal/  /opt/env-chilly/roman-cal/
 COPY --chown=${NB_UID}:${NB_GID} environments/roman-cal/*.yml  /opt/environments/roman-cal/
 RUN /opt/common-scripts/env-conda roman-cal
 
@@ -122,10 +124,10 @@ COPY --chown=${NB_UID}:${NB_GID} environments/    /opt/environments/
 # YYYY SEC
 
 USER root
-RUN  /opt/common-scripts/npm-audit  /usr/share/npm/node_modules/socks-proxy-agent  fix  && \
-     /opt/common-scripts/env-clean
+#RUN  /opt/common-scripts/npm-audit  /usr/share/npm/node_modules/socks-proxy-agent  fix  && \
+RUN   /opt/common-scripts/env-clean
 
-RUN  find /opt/conda -name yarn.lock | grep jupyterlab/staging | xargs rm -f || true
+#RUN  find /opt/conda -name yarn.lock | grep jupyterlab/staging | xargs rm -f || true
 
 # ----------------------------------------------------------------------
 # For standalone operation outside JupyterHub,  note that  /etc also includes

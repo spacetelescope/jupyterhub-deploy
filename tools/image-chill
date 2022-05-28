@@ -1,6 +1,24 @@
-# chill out mission specific pip reqs only to create a build with less security issues
-DIR=${1:-$IMAGE_DIR}
+#! /bin/bash
 
-cp -r $DIR/env-frozen $DIR/env-chilly
+set -u
 
-find $DIR/env-chilly -type f -name "requirements.txt" -exec sed -i 's/==/~=/g' {} +
+# pip-tools frozen requirements for use with USE_FROZEN=1 are stored at
+# /opt/envs-frozen in the image.  Copy /opt/envs-frozen to env-frozen in the
+# Docker sources mission dir.
+
+cd $IMAGE_DIR
+
+# Blow away old requirements in case any files were removed during this build
+rm -rf env-chilly
+
+# Chilly requirements are saved during compilation;  copy them out of the image, whatever they were
+image-cp /opt/env-chilly
+
+# Create simpler frozen diffs for debugging/monitoring chilly effects, remove incidental chilly copies
+for env in  $(image-envs); do
+    git diff env-frozen/${env}/requirements.txt  | grep -v '#' > env-frozen/${env}/requirements.diffs.txt
+    rm -f env-chilly/${env}/requirements.diffs.txt
+done
+
+
+

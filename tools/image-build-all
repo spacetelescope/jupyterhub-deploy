@@ -2,11 +2,13 @@
 
 # This is for doing parallel builds of all deployments using buildkit
 
+FREEZE_MODES=${1:-0}  # $1 or 0==floating
+
 export DOCKER_BUILDKIT=1
 
 set -eu
 
-for USE_FROZEN in 0; do
+for USE_FROZEN in $FREEZE_MODES; do
     for DEPLOYMENT_NAME in jwebbinar roman tike; do
         id="build-${DEPLOYMENT_NAME}-${USE_FROZEN}"
         echo "============ Starting ${id}"

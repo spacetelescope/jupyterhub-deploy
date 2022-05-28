@@ -59,6 +59,7 @@ RUN   /opt/common-scripts/install-common  base
 
 # BASE
 COPY --chown=${NB_UID}:${NB_GID} env-frozen/jwebbinar/ /opt/env-frozen/jwebbinar/
+COPY --chown=${NB_UID}:${NB_GID} env-chilly/jwebbinar/ /opt/env-chilly/jwebbinar/
 COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/*.yml /opt/environments/jwebbinar/
 RUN /opt/common-scripts/env-conda jwebbinar
 

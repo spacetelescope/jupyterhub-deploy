@@ -60,11 +60,11 @@ asdf-transform-schemas==0.2.2
     #   asdf-astropy
 asdf-wcs-schemas==0.1.1
     # via gwcs
-asteval==0.9.26
+asteval==0.9.27
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   jdaviz
-astropy==5.0.4
+astropy==5.1
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   -r /opt/environments/jwebbinar/jwebbinar.pip
@@ -162,9 +162,9 @@ bokeh==2.4.3
     #   ipywidgets-bokeh
     #   jupyter-bokeh
     #   mirage
-boto3==1.23.5
+boto3==1.23.9
     # via -r /opt/common-env/common.pip
-botocore==1.26.5
+botocore==1.26.9
     # via
     #   boto3
     #   s3transfer
@@ -230,7 +230,7 @@ cycler==0.11.0
     #   matplotlib
 cython==0.29.30
     # via jwst-pancake
-dask[array]==2022.5.0
+dask[array]==2022.5.2
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   casa-formats-io
@@ -277,7 +277,7 @@ et-xmlfile==1.1.0
     # via openpyxl
 executing==0.8.3
     # via stack-data
-fast-histogram==0.10
+fast-histogram==0.11
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   mpl-scatter-density
@@ -342,7 +342,7 @@ gwcs==0.18.1
     #   ndcube
     #   specutils
     #   tweakwcs
-h5py==3.6.0
+h5py==3.7.0
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   -r /opt/environments/jwebbinar/jwebbinar.pip
@@ -354,7 +354,7 @@ healpy==1.15.2
     #   jwst-backgrounds
 hotsoss==0.1.7
     # via mirage
-hsluv==5.0.2
+hsluv==5.0.3
     # via vispy
 html5lib==1.1
     # via astroquery
@@ -892,7 +892,7 @@ pillow==9.1.1
     #   matplotlib
     #   scikit-image
     #   sphinx-astropy
-pip-tools==6.6.1
+pip-tools==6.6.2
     # via -r /opt/common-env/common.pip
 pipdeptree==2.2.1
     # via -r /opt/common-env/common.pip
@@ -1129,7 +1129,7 @@ scipy==1.8.1
     #   webbpsf
 secretstorage==3.3.2
     # via keyring
-semantic-version==2.9.0
+semantic-version==2.10.0
     # via
     #   -r /opt/environments/jwebbinar/jdaviz.pip
     #   asdf
@@ -1280,7 +1280,7 @@ tomli==1.2.3
     #   black
     #   pep517
     #   pytest
-tomlkit==0.10.2
+tomlkit==0.11.0
     # via jupyter-packaging
 toolz==0.11.2
     # via

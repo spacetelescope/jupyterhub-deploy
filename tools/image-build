@@ -18,9 +18,6 @@ time (
 # Make automatic source adjustments including STScI cert update when on CI-nodes
 image-update
 
-# ..................................................................................
-# Chill any frozen reqs every time to make sure it's available if needed
-time image-chill
 
 # ..................................................................................
 # Build base image, e.g. our version of scipy-notebook including cert handling
@@ -47,6 +44,16 @@ time docker build --progress plain --tag ${IMAGE_ID} --build-arg BASE_IMAGE=${CO
 if [[ "$USE_FROZEN" == "0" ]] || [[ "$USE_FROZEN" == "2" ]]; then
     echo "========================= Freezing Requirements =========================="
     time image-freeze
+fi
+
+# Only chill for floating builds,  the first time frozen requirements are created since
+# re-chilling should not really change the frozen baseline used to determine the latest
+# chill... althought it might by accident due to the chilly changes to frozen if we do
+# this every time.
+
+if [[ "$USE_FROZEN" == "0" ]]; then
+    echo "========================= Chilling Requirements ========================="
+    time image-chill
 fi
 
 # Remove buildkit caching "enhanced" Dockerfile.x's.
