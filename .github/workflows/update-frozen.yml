@@ -59,15 +59,10 @@ jobs:
            docker image ls
            df -h
 
-      - name: Simplified Diffs
+      - name: Git Diffs (Frozen Specs)
         shell: bash
         run: |
-           find deployments/${{ matrix.DEPLOYMENT_NAME }} -name requirements.diffs.txt | xargs cat
-
-      - name: Git Diffs (Frozen & Chilly Specs)
-        shell: bash
-        run: |
-           git diff
+           git diff deployments/${{ matrix.DEPLOYMENT_NAME }}/image/env-frozen | grep -v '#' | grep -E '^[+-]'
 
       - name: Image Functional Tests
         shell: bash
