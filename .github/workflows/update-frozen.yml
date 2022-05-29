@@ -59,6 +59,16 @@ jobs:
            docker image ls
            df -h
 
+      - name: Simplified Diffs
+        shell: bash
+        run: |
+           find deployments/${{ matrix.DEPLOYMENT_NAME }} -name requirements.diffs.txt | xargs cat
+
+      - name: Git Diffs (Frozen & Chilly Specs)
+        shell: bash
+        run: |
+           git diff
+
       - name: Image Functional Tests
         shell: bash
         run: |
@@ -67,14 +77,10 @@ jobs:
            tools/image-test
            df -h
 
-      - name: Git Diffs (Frozen & Chilly Specs)
-        shell: bash
-        run: |
-           git diff
-
       - name: Clear setup-env
         shell: bash
-        run: git checkout -- setup-env
+        run: |
+           rm setup-env
 
       - name: Commit & Push
         uses: actions-js/push@master
