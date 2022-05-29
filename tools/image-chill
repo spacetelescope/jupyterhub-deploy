@@ -14,11 +14,3 @@ rm -rf env-chilly
 # Chilly requirements are saved during compilation;  copy them out of the image, whatever they were
 image-cp /opt/env-chilly
 
-# Create simpler frozen diffs for debugging/monitoring chilly effects, remove incidental chilly copies
-for env in  $(image-envs); do
-    git diff env-frozen/${env}/requirements.txt  | grep -v '#' > env-frozen/${env}/requirements.diffs.txt
-    rm -f env-chilly/${env}/requirements.diffs.txt
-done
-
-
-
