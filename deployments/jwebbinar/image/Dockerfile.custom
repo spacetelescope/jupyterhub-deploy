@@ -57,6 +57,11 @@ RUN   /opt/common-scripts/install-common  base
 
 # --------------------------- Jwebbinar -------------------------------------
 
+# Download Imviz notebook; remove after May 31 2022
+#RUN wget -O /home/jovyan/ImvizExample.ipynb https://raw.githubusercontent.com/spacetelescope/jdaviz/main/notebooks/ImvizExample.ipynb
+#COPY ImvizExample.ipynb /home/jovyan/ImvizExample.ipynb
+ADD https://raw.githubusercontent.com/spacetelescope/jdaviz/main/notebooks/ImvizExample.ipynb /home/jovyan/
+
 # BASE
 COPY --chown=${NB_UID}:${NB_GID} env-frozen/jwebbinar/ /opt/env-frozen/jwebbinar/
 COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/*.yml /opt/environments/jwebbinar/

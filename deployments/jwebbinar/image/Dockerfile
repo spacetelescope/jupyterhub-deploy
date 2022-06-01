@@ -57,6 +57,11 @@ RUN   /opt/common-scripts/install-common  base
 
 # --------------------------- Jwebbinar -------------------------------------
 
+# Download Imviz notebook; remove after May 31 2022
+#RUN wget -O /home/jovyan/ImvizExample.ipynb https://raw.githubusercontent.com/spacetelescope/jdaviz/main/notebooks/ImvizExample.ipynb
+#COPY ImvizExample.ipynb /home/jovyan/ImvizExample.ipynb
+ADD https://raw.githubusercontent.com/spacetelescope/jdaviz/main/notebooks/ImvizExample.ipynb /home/jovyan/
+
 # BASE
 COPY --chown=${NB_UID}:${NB_GID} env-frozen/jwebbinar/ /opt/env-frozen/jwebbinar/
 COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/*.yml /opt/environments/jwebbinar/
@@ -93,11 +98,12 @@ COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/ /opt/environments/jwebb
 # Needed for cleaning up existing/obsolete kernel (also now used for Mirisim)
 #COPY --chown=${NB_UID}:${NB_GID} environments/remove-kernel /opt/environments/
 
+
+# ----------
+
 # This should NOT be necessary, but as of 24 May 2022 it was needed to get the
 # lab extension working for Jdaviz
 RUN jupyter labextension install @jupyter-widgets/jupyterlab-sidecar
-
-
 # ========================= vvvvv Generic vvvvv  =========================
 
 # Fix JS encoding issue that prevents widgets from displaying properly in notebook mode

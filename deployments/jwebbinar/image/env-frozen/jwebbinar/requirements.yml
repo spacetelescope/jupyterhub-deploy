@@ -47,21 +47,21 @@ dependencies:
   - libuuid=2.32.1
   - libuv=1.43.0
   - libxml2=2.9.14
-  - libzlib=1.2.11
+  - libzlib=1.2.12
   - lz4-c=1.9.3
   - lzo=2.10
   - markupsafe=2.1.1
   - ncurses=6.3
   - networkx=2.8.2
   - nodejs=17.9.0
-  - numpy=1.22.3
+  - numpy=1.22.4
   - openblas=0.3.20
   - openssl=1.1.1o
   - packaging=21.3
   - patchelf=0.14.5
   - pep517=0.12.0
   - pip=21.3.1
-  - pip-tools=6.6.1
+  - pip-tools=6.6.2
   - pkginfo=1.8.2
   - psutil=5.9.1
   - py-lief=0.11.5
@@ -85,7 +85,7 @@ dependencies:
   - sqlite=3.38.5
   - tk=8.6.12
   - tomli=2.0.1
-  - tomlkit=0.10.2
+  - tomlkit=0.11.0
   - tqdm=4.64.0
   - typing=3.10.0.0
   - unixodbc=2.3.10
@@ -94,6 +94,6 @@ dependencies:
   - wheel=0.37.1
   - xz=5.2.5
   - yaml=0.2.5
-  - zlib=1.2.11
+  - zlib=1.2.12
   - zstd=1.5.2
 prefix: /opt/conda/envs/jwebbinar
