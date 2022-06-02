@@ -35,7 +35,9 @@ frozen_hash_spec="$env_frozen_dir/docker-stacks.hash"
 if [[ "$USE_FROZEN" == "1" ]]; then
     git checkout `cat $frozen_hash_spec`
 else
-    echo `git rev-parse HEAD` > $frozen_hash_spec
+    if [[ "$FREEZE_CHILL" == "1" ]]; then
+	echo `git rev-parse HEAD` > $frozen_hash_spec
+    fi
 fi
 
 # Taken from the docker-stacks Makefile to enable adding --build-arg's again

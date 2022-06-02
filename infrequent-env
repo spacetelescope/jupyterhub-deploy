@@ -2,6 +2,9 @@
 
 export PATH="`pwd`/tools":${PATH}
 
+# By default,  do not export frozen/chilly requirements from image. If already set, use that value.
+export FREEZE_CHILL=${FREEZE_CHILL:-0}
+
 # ----------------- vvvv less frequently changed inputs vvvv -------------------------------
 #
 
