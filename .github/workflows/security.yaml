@@ -4,7 +4,7 @@ on:
      - cron: '0 0 * * 0'
    push:
    pull_request:
-
+   workflow_dispatch:
 jobs:
   security-scanning:
     name: "${{ matrix.DEPLOYMENT_NAME }}  -- Security"

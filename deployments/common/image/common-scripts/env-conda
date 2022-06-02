@@ -34,7 +34,6 @@ echo "--------------------------------------------------------------------------
 case ${USE_FROZEN} in
     0) echo "===== Creating conda environment ${env} from floating constraints ${env_yml}"
        ${CONDA_VER} env create --quiet --name ${env} --file ${env_yml}
-       
        echo "===== Adding common conda packages to ${env}:"
        /opt/common-scripts/env-update ${env}  `find /opt/common-env -name '*.conda' | sort`
        ;;
@@ -48,12 +47,12 @@ esac
 
 echo "===== Saving frozen conda constraints for environment ${env} to ${env_frozen_yml}"
 ${CONDA_VER} env export --no-build -n ${env} > ${env_frozen_yml}  # must be saved after build outside Docker
-cat ${env_frozen_yml}
 cp  ${env_frozen_yml}  ${env_chilly_yml}
+# replace conda requirements = with ~=.  do not change pip requirements (line indent before -)
+perl -pi -e 's/^(  -.*)=/\1~=/g' ${env_chilly_yml}
 
 echo "===== Removing draft conda env ${env}"
 ${CONDA_VER} env remove -n ${env}
-
 echo "===== Creating conda environment ${env} from frozen constraints ${env_frozen_yml}"
 ${CONDA_VER} env create --quiet --name ${env} --file ${env_frozen_yml}
 
