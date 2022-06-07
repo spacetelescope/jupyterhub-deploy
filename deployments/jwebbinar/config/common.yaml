@@ -54,12 +54,18 @@ jupyterhub:
         - name:  preloaded-crds-volume
           persistentVolumeClaim:
             claimName: preloaded-crds
+        - name: mirage-data-volume
+          persistentVolumeClaim:
+            claimName: mirage-data
       extraVolumeMounts:
         - name:  preloaded-fits-volume
           mountPath: /home/shared/preloaded-fits
           readOnly: true
         - name:  preloaded-crds-volume
           mountPath: /home/shared/preloaded-crds
+          readOnly: true
+        - name: mirage-data-volume
+          mountPath: /home/shared/mirage-data
           readOnly: true
     extraEnv:
       CRDS_PATH:  /home/jovyan/crds_cache

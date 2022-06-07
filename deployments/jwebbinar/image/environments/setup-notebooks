@@ -8,6 +8,10 @@
 
 #/opt/common-scripts/set-notebook-kernel jwebbinar jwebbinar_prep/ceers/*/*.ipynb || true
 #/opt/common-scripts/set-notebook-kernel jdaviz jwebbinar_prep/mos_session/Mosviz_solutions.ipynb
+#/opt/common-scripts/set-notebook-kernel jwebbinar /home/$NB_USER/PDRs4All/*/*.ipynb || true 
+
+#Rsync data from PDRs4All into home directory and change owner to jovyan user
+/opt/common-scripts/prepare-data.sh && chown jovyan -R /home/jovyan/PDRs4All/ 
 
 # --- mkdir -p /opt/environments/jwebbinar/tests
 # --- mkdir -p /opt/environments/jdaviz/tests

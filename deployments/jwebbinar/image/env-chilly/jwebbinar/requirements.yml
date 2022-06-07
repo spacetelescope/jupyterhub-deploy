@@ -28,7 +28,7 @@ dependencies:
   - libstdcxx-ng=12.1.0
   - libuuid=2.32.1
   - libuv=1.43.0
-  - libzlib=1.2.11
+  - libzlib=1.2.12
   - ncurses=6.3
   - nodejs=17.9.0
   - numpy=1.22.4
@@ -39,8 +39,8 @@ dependencies:
   - pip=22.0.4
   - pip-tools=6.6.2
   - pyparsing=3.0.9
-  - python=3.8.13
-  - python_abi=3.8
+  - python=3.9.13
+  - python_abi=3.9
   - readline=8.1
   - setuptools=62.3.2
   - sqlite=3.38.5
@@ -48,9 +48,10 @@ dependencies:
   - tomli=2.0.1
   - tomlkit=0.11.0
   - typing=3.10.0.0
+  - tzdata=2022a
   - unixodbc=2.3.10
   - websockify=0.10.0
   - wheel=0.37.1
   - xz=5.2.5
-  - zlib=1.2.11
+  - zlib=1.2.12
 prefix: /opt/conda/envs/jwebbinar
