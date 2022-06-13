@@ -41,8 +41,8 @@ dependencies:
   - pyparsing=3.0.9
   - python=3.9.13
   - python_abi=3.9
-  - readline=8.1
-  - setuptools=62.3.2
+  - readline=8.1.2
+  - setuptools=62.3.3
   - sqlite=3.38.5
   - tk=8.6.12
   - tomli=2.0.1
