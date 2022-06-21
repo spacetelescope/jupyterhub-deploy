@@ -26,7 +26,6 @@ jupyterhub:
       enabled: true
       pdb:
         enabled: true
-        minAvailable: 0
     corePods:
       nodeAffinity:
         matchNodePurpose: require
