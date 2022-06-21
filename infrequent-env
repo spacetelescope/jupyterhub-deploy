@@ -102,7 +102,7 @@ export IMAGE_ID=${ECR_REGISTRY}/${IMAGE_REPO}:${IMAGE_TAG}
 
 # -------------------- FUSE S3 settings -----------------------------------------------
 
-export FUSE_S3_BUCKETS="stpubdata"  # space separated
+export FUSE_S3_BUCKETS="stpubdata nishapur"  # space separated
 export FUSE_REPO=${IMAGE_REPO}
 export FUSE_ID=${ECR_REGISTRY}/${FUSE_REPO}:${FUSE_TAG}
 
