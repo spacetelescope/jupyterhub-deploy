@@ -1,0 +1,15 @@
+#! /bin/bash -eu
+
+cd ${JUPYTERHUB_DIR}
+
+helm repo add jupyterhub https://jupyterhub.github.io/helm-chart/
+helm repo update
+
+helm upgrade --debug --output yaml --render-subchart-notes --install jupyterhub jupyterhub/jupyterhub --values values.yaml --version 1.2.0
+
+sleep 5
+
+echo "https://$(private-jh-host)"
+
+
+

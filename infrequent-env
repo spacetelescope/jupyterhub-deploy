@@ -1,6 +1,6 @@
 #! /bin/bash -eu
 
-export PATH="`pwd`/tools":${PATH}
+export PATH=`pwd`/tools:`pwd`/fs-support/efs-quota/bin:${PATH}
 
 # By default,  do not export frozen/chilly requirements from image. If already set, use that value.
 export FREEZE_CHILL=${FREEZE_CHILL:-0}
@@ -101,6 +101,9 @@ export COMMON_CONFIG_DIR=`pwd`/deployments/common/config
 
 export COMMON_ID=${ECR_REGISTRY}/${COMMON_REPO}:${COMMON_TAG}
 export IMAGE_ID=${ECR_REGISTRY}/${IMAGE_REPO}:${IMAGE_TAG}
+
+export EFSQUOTA_REPO=${IMAGE_REPO}
+export EFSQUOTA_ID=${ECR_REGISTRY}/${EFSQUOTA_REPO}:${EFSQUOTA_TAG}
 
 # --------------- vvvvv misc env settings vvvvv ---------------------------------
 

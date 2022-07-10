@@ -1,0 +1,31 @@
+#! /bin/bash
+
+set -eu
+
+cd $JUPYTERHUB_DIR
+
+case "${ENVIRONMENT}" in
+    dev | test | prod) 
+	export EFSQ_SECRETS=$(secrets-cat)
+       python - <<FILTER
+import os      
+import yaml    
+       
+x = yaml.safe_load(os.environ["EFSQ_SECRETS"])
+
+print(x["jupyterhub"]["hub"]["extraConfig"]["efsquota"].splitlines()[3].split('"')[3])
+FILTER
+	;;
+    *)
+	export EFSQ_SECRETS=$(cat values.yaml)
+       python - <<FILTER
+import os      
+import yaml    
+       
+x = yaml.safe_load(os.environ["EFSQ_SECRETS"])
+
+print(x["hub"]["extraConfig"]["efsquota"].splitlines()[3].split('"')[3])
+FILTER
+	;;
+esac
+

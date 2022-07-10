@@ -1,0 +1,17 @@
+image:
+  repository: <efsq-repository-name>
+  pullPolicy: Always
+  tag: <efsq-image-tag>
+
+nameOverride: ""
+fullnameOverride: ""
+
+region: us-east-1
+
+efs_dns_home_path: <EFS FS DNS + PATH>
+api_token: "< openssl rand -hex 32>"
+hub_url:  "< https://xxxx.science.stsci.edu >"
+
+environment: "<ENVIRONMENT>"
+deployment_name: "<DEPLOYMENT_NAME>"
+

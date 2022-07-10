@@ -25,6 +25,7 @@ export DATADOG_API_KEY_ID=look-in-aws-sm
 # virtue of passing ECR scanning.
 export IMAGE_TAG=unscanned-latest-${ENVIRONMENT}
 export COMMON_TAG=unscanned-common-latest-${ENVIRONMENT}
+export EFSQUOTA_TAG=unscanned-latest-efsquota-${ENVIRONMENT}
 
 # ----------------- vvvv less frequently changed vvvv -------------------------------
 

@@ -1,0 +1,12 @@
+#! /bin/bash -eu
+
+pod_substring=${1:-monitor}
+
+pod=$(kubectl get pods -n efs-quota | grep ${pod_substring} | awk 'NR == 1 {print $1;}')
+
+if [[ $pod == "" ]]; then
+    echo no-pod-found
+else
+    echo $pod
+fi
+

@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: efs-quota-reaper
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: efs-quota-reaper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: efs-quota-reaper
+  template:
+    metadata:
+      labels:
+        app: efs-quota-reaper
+    spec:
+      containers:
+      - name: efs-quota-reaper
+        image: "{{ .Values.image.repository }}:{{.Values.image.tag}}"
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "100Mi"
+            cpu: "0.1"
+          limits:
+            memory: "200Mi"
+            cpu: "0.25"
+        command: [ "python",
+                   "/efs-quota/efs_quota_monitor.py",
+                   "--reaper-mode",
+                   "--hub-url", "{{ .Values.hub_url }}",
+                   "--api-token", "{{ .Values.api_token }}",
+                   "--api-cert", "False",
+                   "--efs-quota-control", "/efs/quota-control",
+                   "--home-root", "/efs/users",
+                   "--period-secs", "300",
+                 ]
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: DEPLOYMENT_NAME
+          value: {{ .Values.deployment_name }}
+        - name: ENVIRONMENT
+          value: {{ .Values.environment }}
+        volumeMounts:
+        - name: users
+          mountPath: /efs/users
+          readOnly: true
+        - name: quota-control
+          mountPath: /efs/quota-control
+      volumes:
+      - name: users
+        persistentVolumeClaim:
+          claimName: users-efsq-pvc
+      - name: quota-control
+        persistentVolumeClaim:
+          claimName: quota-control-efsq-pvc

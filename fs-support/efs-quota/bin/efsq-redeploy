@@ -1,0 +1,12 @@
+#! /bin/bash -eu
+
+efsq-undeploy
+
+efsq-build
+
+efsq-push
+
+efsq-deploy
+
+efsq-logs
+

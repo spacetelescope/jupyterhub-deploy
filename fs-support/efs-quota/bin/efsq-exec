@@ -1,0 +1,16 @@
+#! /bin/bash -eu
+
+substring=${1:-monitor}
+if [ $# -ge 1 ]; then
+    shift;
+fi
+
+command=${*:-/bin/sh}
+
+pod=$(efsq-first-pod ${substring})
+
+echo =============================== exec ${command} into ${pod} ================================
+kubectl exec -it -n efs-quota ${pod} -- ${command}
+
+
+

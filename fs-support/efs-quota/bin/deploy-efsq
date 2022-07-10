@@ -1,0 +1,13 @@
+#! /bin/bash
+
+# This script (deploy-efsq) completes all steps required to deploy the EFS User Quota Resources
+
+echo "================================== Building Docker Image ${EFSQUOTA_ID} =============================="
+efsq-build
+
+echo "================================== Pushing Docker Image ${EFSQUOTA_ID} =============================="
+efsq-push
+
+
+echo "================================== Deploying Helm Release efsqouta:${DEPLOYMENT_NAME}-efsquota-${ENVIRONMENT} =============================="
+efsq-deploy # unlike efsq-deploy, just install the Helm chart

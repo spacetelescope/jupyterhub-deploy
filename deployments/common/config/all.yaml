@@ -18,8 +18,19 @@ jupyterhub:
         minAvailable: 0
   singleuser:
     storage:
-      dynamic:
-        storageClass: "aws-efs"
+      type: "static"
+      static:
+        pvcName: "users-jh-pvc"
+        subPath: "{username}"
+      extraVolumes:
+        - name: quota-control
+          persistentVolumeClaim:
+            claimName: quota-control-jh-pvc
+      extraVolumeMounts:
+        - name: quota-control
+          mountPath: "/quota-control"
+          subPath: "{username}"
+          readOnly: true
     defaultUrl: "/lab"
   scheduling:
     userScheduler:

@@ -1,0 +1,31 @@
+#! /bin/bash
+
+set -eu
+
+cd ${JUPYTERHUB_DIR}
+
+
+case ${ENVIRONMENT} in
+    dev | test | prod)
+	image-login
+	;;
+    sandbox)
+	export JH_HOSTNAME=$(private-jh-host)
+	;;
+esac
+
+helm upgrade --debug --wait --install ${DEPLOYMENT_NAME}-efsquota-${ENVIRONMENT} fs-support/efs-quota/helm \
+     --namespace efs-quota --create-namespace \
+     --values fs-support/efs-quota/helm/values.yaml \
+     --set-string hub_url=https://${JH_HOSTNAME} \
+     --set-string api_token=$(efsq-api-token) \
+     --set-string region=us-east-1 \
+     --set-string image.repository=${ECR_REGISTRY}/${EFSQUOTA_REPO} \
+     --set-string image.tag=$(echo ${EFSQUOTA_TAG} | sed -e 's/unscanned-//g') \
+     --set-string environment=${ENVIRONMENT} \
+     --set-string deployment_name=${DEPLOYMENT_NAME}
+#     --set-string efs_dns_home_path=${EFS_DNS_HOME_PATH} \   # for prototyping using mount
+
+sleep 10
+efsq-status
+
