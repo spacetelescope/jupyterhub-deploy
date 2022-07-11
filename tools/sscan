@@ -20,11 +20,11 @@ echo "====================================================="
 sscan-bandit
 bandit_status=$?
 
-echo "====================================================="
-echo "Scanning environment dependencies using safety       "
-echo "====================================================="
-sscan-safety
-safety_status=$?
+# echo "====================================================="
+# echo "Scanning environment dependencies using safety       "
+# echo "====================================================="
+# sscan-safety
+# safety_status=$?
 
 echo
 echo "----------------------------- sscan overall summary ----------------------------"
@@ -47,11 +47,11 @@ else
     echo "OK - Bandit source code security scanning."
 fi
 
-if [[ "$safety_status" == "1" ]]; then
-    echo "ERROR - Safety dependency scans found vulnerabilities."
-else
-    echo "OK - Safety dependency scans."    
-fi
+# if [[ "$safety_status" == "1" ]]; then
+#     echo "ERROR - Safety dependency scans found vulnerabilities."
+# else
+#     echo "OK - Safety dependency scans."
+# fi
 
-fail=`expr $yaml_status + $flake8_status + $bandit_status + $safety_status`
+fail=`expr $yaml_status + $flake8_status + $bandit_status ` # + $safety_status`
 exit $fail

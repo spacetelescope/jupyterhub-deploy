@@ -49,9 +49,9 @@ jobs:
            source setup-env
            tools/sscan-bandit
 
-      - name: Safety Dependencies Scan
-        continue-on-error: false
-        shell: bash
-        run: |
-           source setup-env
-           tools/sscan-safety
+      # ---- - name: Safety Dependencies Scan
+      # ----   continue-on-error: false
+      # ----   shell: bash
+      # ----   run: |
+      # ----      source setup-env
+      # ----      tools/sscan-safety
