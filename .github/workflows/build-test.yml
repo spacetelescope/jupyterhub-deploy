@@ -3,12 +3,10 @@ on:
    push:
       branches:
         - main
-        - test
    pull_request:
       branches:
         - main
-        - test
-
+   workflow_dispatch:
 jobs:
   docker:
     name: "${{ matrix.DEPLOYMENT_NAME }}  USE_FROZEN=${{ matrix.USE_FROZEN }} -- Image Build, Test"
