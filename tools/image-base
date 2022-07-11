@@ -24,7 +24,7 @@ if [[ ! -d docker-stacks ]]; then
 else
     cd docker-stacks
     git fetch origin
-    git rebase origin/master
+    git rebase origin/main
 fi
 
 # checkout the appropriate docker-stacks revision if using frozen specs;
@@ -36,7 +36,7 @@ if [[ "$USE_FROZEN" == "1" ]]; then
     git checkout `cat $frozen_hash_spec`
 else
     if [[ "$FREEZE_CHILL" == "1" ]]; then
-	echo `git rev-parse HEAD` > $frozen_hash_spec
+        echo `git rev-parse HEAD` > $frozen_hash_spec
     fi
 fi
 
