@@ -6,16 +6,16 @@ cd ${JUPYTERHUB_DIR}
 
 image-login
 
-for bucket in ${FUSE_S3_BUCKETS}; do
+buckets="${FUSE_S3_BUCKETS[@]}"
+bucketArray={$(echo ${buckets// /,})}
 
-    helm upgrade --debug --wait --install ${DEPLOYMENT_NAME}-fuse-${ENVIRONMENT} fuse/helm \
-	 --namespace fuse \
-	 --values fuse/helm/values.yaml \
-	 --set-string bucketName=${bucket} \
-	 --set-string region=us-east-1 \
-	 --set-string image.repository=${ECR_REGISTRY}/${FUSE_REPO} \
-	 --set-string image.tag=$(echo ${FUSE_TAG} | sed -e 's/unscanned-//g')
-done
+helm upgrade --debug --wait --install ${DEPLOYMENT_NAME}-fuse-${ENVIRONMENT} fuse/helm \
+	--namespace fuse \
+	--values fuse/helm/values.yaml \
+	--set-string bucketNames=${bucketArray} \
+	--set-string region=us-east-1 \
+	--set-string image.repository=${ECR_REGISTRY}/${FUSE_REPO} \
+	--set-string image.tag=$(echo ${FUSE_TAG} | sed -e 's/unscanned-//g')
 
 sleep 10
 fuse-status
