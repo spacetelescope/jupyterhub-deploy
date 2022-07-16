@@ -43,6 +43,15 @@ RUN cd /tmp && \
     make && \
     make install
 
+# Download and unzip PDRs4All dataset from Box
+# This is for the PDRs4ALL Jwebbinar June 2022
+
+
+RUN echo -e "cd /tmp\ncurl -L -v "https://stsci.box.com/shared/static/jpz5eysq5073og2q5g0vgnzw9tdhmw8u.zip" -o PDRs4All.zip\nunzip -o PDRs4All.zip -d PDRs4All/\nrm PDRs4All.zip \nrsync --ignore-existing -ahv --no-perms -O --no-o  --no-g --exclude='*__MACOSX*' /tmp/PDRs4All /home/jovyan/\n/opt/common-scripts/set-notebook-kernel jwebbinar /home/jovyan/PDRs4All/*/*.ipynb || true"  > /opt/common-scripts/prepare-data.sh
+
+RUN chmod +x /opt/common-scripts/prepare-data.sh
+
+
 
 
 # ----------------------------------------------------------------------

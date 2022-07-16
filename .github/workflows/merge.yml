@@ -1,21 +1,18 @@
-name: Update Frozen Requirements
+name: Update Frozen + Chilly Requirements
 on:
-  schedule:  # weekly
-    - cron: '0 0 * * 0'
-  workflow_dispatch:
-
-
+   pull_request:
+      branches:
+        - main
 jobs:
   docker:
-    name: "${{ matrix.DEPLOYMENT_NAME }} -- Image Build, Test"
+    name: "${{ matrix.DEPLOYMENT_NAME }} -- Update Frozen + Chilly Requirements"
     runs-on: ubuntu-18.04
-
     strategy:
       max-parallel: 3
       fail-fast: false
       matrix:
         DEPLOYMENT_NAME: [ tike, jwebbinar, roman ]
-        USE_FROZEN: [ 2 ]
+        USE_FROZEN: [ 0 ]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -83,8 +80,8 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           author_email: mrfreeze@nowhere.com
           author_name: Mr. Freeze
-          message: Automatic requirements update
-          branch: update-frozen-${{ matrix.DEPLOYMENT_NAME }}
-          directory: deployments/${{ matrix.DEPLOYMENT_NAME }}/image/env-frozen
-          force: true
+          message: {{ matrix.DEPLOYMENT_NAME }} : Automatic frozen + chilly requirements generation
+          branch: main
+          directory: deployments/${{ matrix.DEPLOYMENT_NAME }}/image
+          force: false
           tags: false
