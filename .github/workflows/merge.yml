@@ -1,8 +1,8 @@
 name: Update Frozen + Chilly Requirements
 on:
-   pull_request:
-      branches:
-        - main
+  push:
+    branches:
+      - main
 jobs:
   docker:
     name: "${{ matrix.DEPLOYMENT_NAME }} -- Update Frozen + Chilly Requirements"
