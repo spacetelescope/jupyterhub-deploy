@@ -8,7 +8,7 @@ jobs:
     name: "${{ matrix.DEPLOYMENT_NAME }} -- Update Frozen + Chilly Requirements"
     runs-on: ubuntu-18.04
     strategy:
-      max-parallel: 3
+      max-parallel: 1
       fail-fast: false
       matrix:
         DEPLOYMENT_NAME: [ tike, jwebbinar, roman ]
