@@ -80,7 +80,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           author_email: mrfreeze@nowhere.com
           author_name: Mr. Freeze
-          message: "{{ matrix.DEPLOYMENT_NAME }} : Automatic frozen + chilly requirements generation"
+          message: "${{ matrix.DEPLOYMENT_NAME }} : Automatic frozen + chilly requirements generation"
           branch: main
           directory: deployments/${{ matrix.DEPLOYMENT_NAME }}/image
           force: false
