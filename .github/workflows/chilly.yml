@@ -84,5 +84,5 @@ jobs:
           message: Automatic requirements update
           branch: update-frozen-${{ matrix.DEPLOYMENT_NAME }}
           directory: deployments/${{ matrix.DEPLOYMENT_NAME }}/image/env-frozen
-          force: true
+          force: false
           tags: false
