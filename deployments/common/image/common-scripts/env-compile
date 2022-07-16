@@ -40,6 +40,17 @@ NOTE: it is possible to specify different versions of a package requirement
   This approach can be used to first specify a package in the <env>.yml when
   required,  and then later specify it in the env-compile lists so that it
   is not automatically removed.
+
+NOTE: sometimes it is necessary to pin packages to particular versions (or
+approximate versions) in order to create a working build.  Basically, there are
+dependency solutions that pip/pip-tools will not ordinarily find w/o hints.
+When these tweaks are required, they should be added to the special file
+"build-hints.pip".  build-hints.pip is used to define pip constraints which are
+always honored verbatim, whether a build is floating, frozen, or chilly.  Only
+requirements absolutely needed to create a working build should be included in
+build-hints.pip since they will also be enforced, exactly, during chilly
+builds.
+
 EOF
     exit 2
 fi
@@ -54,17 +65,22 @@ source /opt/common-scripts/env-activate ${env}
 
 extra_pkgs=${*:-/opt/common-env/*.pip}
 env_pip="/opt/environments/${env}/*.pip"
+hints="/opt/environments/${env}/build-hints.pip"
 
 case ${USE_FROZEN} in
 
     # Original floating requirements,  some of which may be tightly constrained:
     # 1. From common-env (default) or the env-compile command line
     # 2. From the environments directory for ${env}
-    # Stash the floating requirements needed for chilly builds here since these
+    # Stash the floating build-hints requirements needed for chilly builds here since these
     # are the ones used to compute the frozen build.
     0) all_constraints="${env_pip} ${extra_pkgs}"
        rm -f /opt/env-chilly/${env}/*.pip
-       cp ${all_constraints}  /opt/env-chilly/${env}
+       if [ -f ${hints} ]; then
+           cp ${hints}  /opt/env-chilly/${env}
+       else
+           echo >/opt/env-chilly/${env}/build-hints.pip
+       fi
        ;;
 
     # Only floating and chilly builds compute a new versions soluton,  the frozen
@@ -76,7 +92,7 @@ case ${USE_FROZEN} in
     # The chilly build honors both the ~= fuzzed frozen requirements as well as the
     # original floating requirements,  some of which may be stricter than ~=x.y.z
     # and required to make the build work at all.
-    2) all_constraints=$(ls /opt/env-chilly/${env}/{requirements.txt,*.pip})
+    2) all_constraints=$(ls /opt/env-chilly/${env}/{requirements.txt,build-hints.pip})
        ;;
 esac
 
@@ -85,7 +101,7 @@ for pip in ${all_constraints}; do
     echo ${pip}   # show one per line.
 done
 
-# If pip-compile finds an existing requirements.txt file that fulfils the
+# If pip-compile finds an existing requirements.txt file that fulfills the
 # dependencies then no changes will be made, even if updates are available.
 rm -f ${env_reqs}  # ... hence this delete is REQUIRED
 
