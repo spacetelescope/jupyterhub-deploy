@@ -6,6 +6,15 @@ jupyterhub:
   singleuser:
     image:
       tag: latest-dev
+    storage:
+      extraVolumes:
+        - name: dshm
+          emptyDir:
+            medium: Memory
+      extraVolumeMounts:
+        - name: dshm
+          mountPath: /dev/shm
   prePuller:
     continuous:
       enabled: true
+
