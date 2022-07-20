@@ -48,8 +48,11 @@ esac
 echo "===== Saving frozen conda constraints for environment ${env} to ${env_frozen_yml}"
 ${CONDA_VER} env export --no-build -n ${env} > ${env_frozen_yml}  # must be saved after build outside Docker
 cp  ${env_frozen_yml}  ${env_chilly_yml}
-# replace conda requirements = with ~=.  do not change pip requirements (line indent before -)
-perl -pi -e 's/^(  -.*)=/\1~=/g' ${env_chilly_yml}
+
+# replace conda requirements = with ~=.
+# do not change pip requirements (line indent before -)
+# do not change funky versions like 2022a
+perl -pi -e 's/^(  -.*)==(\d+\.\d+\.\d+)/\1~=\2/g' ${env_chilly_yml}
 
 echo "===== Removing draft conda env ${env}"
 ${CONDA_VER} env remove -n ${env}

@@ -112,6 +112,6 @@ pip-compile  -v  --output-file ${env_reqs} --pip-args "${PIP_SWITCHES}"  ${all_c
 # The pip requirements saved for future chilly builds include both ~= converted
 # frozen requirements.txt and all the original floating *.pip requirements
 cp /opt/env-frozen/${env}/requirements.txt /opt/env-chilly/${env}/requirements.txt
-perl -pi -e 's/==/~=/g' /opt/env-chilly/${env}/requirements.txt
+perl -pi -e 's/==(\d+\.\d+\.\d+)/~=\1/g' /opt/env-chilly/${env}/requirements.txt
 
 /opt/common-scripts/env-clean
