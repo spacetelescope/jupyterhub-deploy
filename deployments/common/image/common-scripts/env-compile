@@ -108,10 +108,4 @@ rm -f ${env_reqs}  # ... hence this delete is REQUIRED
 # The real work of determining the version solution...  outputs FROZEN pip reqs
 pip-compile  -v  --output-file ${env_reqs} --pip-args "${PIP_SWITCHES}"  ${all_constraints}
 
-# Create chilly requirements by saving tweaked frozen requirements.
-# The pip requirements saved for future chilly builds include both ~= converted
-# frozen requirements.txt and all the original floating *.pip requirements
-cp /opt/env-frozen/${env}/requirements.txt /opt/env-chilly/${env}/requirements.txt
-perl -pi -e 's/==(\d+\.\d+\.\d+)/~=\1/g' /opt/env-chilly/${env}/requirements.txt
-
 /opt/common-scripts/env-clean

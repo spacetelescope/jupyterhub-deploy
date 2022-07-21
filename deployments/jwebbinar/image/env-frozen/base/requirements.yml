@@ -4,7 +4,7 @@ channels:
 dependencies:
   - _libgcc_mutex=0.1
   - _openmp_mutex=4.5
-  - alembic=1.8.0
+  - alembic=1.8.1
   - altair=4.2.0
   - anyio=3.6.1
   - aom=3.3.0
@@ -89,7 +89,7 @@ dependencies:
   - joblib=1.1.0
   - jpeg=9e
   - json5=0.9.5
-  - jsonschema=4.6.2
+  - jsonschema=4.7.2
   - jupyter-packaging=0.12.2
   - jupyter_client=7.3.4
   - jupyter_core=4.10.0
@@ -103,7 +103,7 @@ dependencies:
   - jupyterlab_widgets=1.1.1
   - jxrlib=1.1
   - keyutils=1.6.1
-  - kiwisolver=1.4.3
+  - kiwisolver=1.4.4
   - krb5=1.19.3
   - lcms2=2.12
   - ld_impl_linux-64=2.36.1
@@ -166,7 +166,7 @@ dependencies:
   - mpmath=1.2.1
   - msgpack-python=1.0.4
   - munkres=1.1.4
-  - nbclassic=0.3.7
+  - nbclassic=0.4.3
   - nbclient=0.6.6
   - nbconvert=6.5.0
   - nbconvert-core=6.5.0
@@ -180,7 +180,7 @@ dependencies:
   - notebook=6.4.12
   - notebook-shim=0.1.0
   - numba=0.55.2
-  - numexpr=2.8.0
+  - numexpr=2.8.3
   - numpy=1.22.4
   - oauthlib=3.2.0
   - openblas=0.3.20
@@ -220,7 +220,7 @@ dependencies:
   - pytables=3.7.0
   - python=3.10.5
   - python-dateutil=2.8.2
-  - python-fastjsonschema=2.15.3
+  - python-fastjsonschema=2.16.1
   - python-json-logger=2.0.1
   - python_abi=3.10
   - pytz=2022.1
@@ -240,14 +240,14 @@ dependencies:
   - seaborn=0.11.2
   - seaborn-base=0.11.2
   - send2trash=1.8.0
-  - setuptools=63.1.0
+  - setuptools=63.2.0
   - six=1.16.0
   - snappy=1.1.9
   - sniffio=1.2.0
   - sortedcontainers=2.4.0
   - soupsieve=2.3.1
   - sqlalchemy=1.4.39
-  - sqlite=3.39.0
+  - sqlite=3.39.1
   - stack_data=0.3.0
   - statsmodels=0.13.2
   - sympy=1.10.1
@@ -299,13 +299,13 @@ dependencies:
     - astropy-sphinx-theme==1.1
     - async-timeout==4.0.2
     - black==22.6.0
-    - boto3==1.24.31
-    - botocore==1.27.31
+    - boto3==1.24.34
+    - botocore==1.27.34
     - bqplot==0.12.33
     - bqplot-image-gl==1.4.10
     - casa-formats-io==0.1
     - ci-watson==0.6.1
-    - crds==11.16.5
+    - crds==11.16.6
     - docutils==0.17.1
     - echo==0.6
     - et-xmlfile==1.1.0
@@ -355,7 +355,7 @@ dependencies:
     - pvextractor==0.3
     - py==1.11.0
     - pycodestyle==2.8.0
-    - pydeps==1.10.19
+    - pydeps==1.10.22
     - pyds9==1.8.1
     - pyerfa==2.0.0.1
     - pyflakes==2.4.0

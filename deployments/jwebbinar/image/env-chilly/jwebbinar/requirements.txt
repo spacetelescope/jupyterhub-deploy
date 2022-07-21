@@ -55,7 +55,7 @@ asdf-wcs-schemas~=0.1.1
     # via
     #   -r /opt/environments/jwebbinar/jwebbinar.pip
     #   gwcs
-astropy~=5.0
+astropy==5.0
     # via
     #   -r /opt/environments/jwebbinar/jwebbinar.pip
     #   asdf-astropy
@@ -85,13 +85,13 @@ astropy~=5.0
     #   synphot
     #   tweakwcs
     #   webbpsf
-astropy-sphinx-theme~=1.1
+astropy-sphinx-theme==1.1
     # via sphinx-astropy
 astroquery~=0.4.6
     # via mirage
 asttokens~=2.0.5
     # via stack-data
-async-generator~=1.10
+async-generator==1.10
     # via jupyterhub
 async-timeout~=4.0.2
     # via aiohttp
@@ -128,9 +128,9 @@ bokeh~=2.4.3
     #   ipywidgets-bokeh
     #   jupyter-bokeh
     #   mirage
-boto3~=1.24.31
+boto3~=1.24.34
     # via -r /opt/common-env/common.pip
-botocore~=1.27.31
+botocore~=1.27.34
     # via
     #   boto3
     #   s3transfer
@@ -145,7 +145,7 @@ bqplot-image-gl~=1.4.10
     #   glue-jupyter
 build~=0.8.0
     # via pip-tools
-casa-formats-io~=0.1
+casa-formats-io==0.1
     # via spectral-cube
 certifi~=2021.10.8
     # via
@@ -162,7 +162,7 @@ charset-normalizer~=2.0.10
     #   -r /opt/environments/jwebbinar/jwebbinar.pip
     #   aiohttp
     #   requests
-ci-watson~=0.5
+ci-watson==0.5
     # via
     #   -r /opt/common-env/testing.pip
     #   -r /opt/environments/jwebbinar/jwebbinar.pip
@@ -177,7 +177,7 @@ codecov~=2.1.12
     # via -r /opt/environments/jwebbinar/jwebbinar.pip
 colorama~=0.4.4
     # via -r /opt/environments/jwebbinar/jwebbinar.pip
-coverage[toml]~=6.2
+coverage[toml]==6.2
     # via
     #   -r /opt/environments/jwebbinar/jwebbinar.pip
     #   codecov
@@ -220,9 +220,9 @@ drizzle~=1.13.4
     # via
     #   -r /opt/environments/jwebbinar/jwebbinar.pip
     #   jwst
-echo~=0.6
+echo==0.6
     # via glue-core
-entrypoints~=0.4
+entrypoints==0.4
     # via
     #   jupyter-client
     #   jupyterhub
@@ -238,9 +238,9 @@ execnet~=1.9.0
     #   pytest-xdist
 executing~=0.8.3
     # via stack-data
-fast-histogram~=0.11
+fast-histogram==0.11
     # via mpl-scatter-density
-fastjsonschema~=2.15.3
+fastjsonschema~=2.16.1
     # via nbformat
 filelock~=3.4.2
     # via
@@ -266,7 +266,7 @@ future~=0.18.2
     # via
     #   -r /opt/environments/jwebbinar/jwebbinar.pip
     #   bayesicfitting
-getch~=1.0
+getch==1.0
     # via -r /opt/environments/jwebbinar/jwebbinar.pip
 glue-core~=1.5.0
     # via
@@ -278,7 +278,7 @@ glue-vispy-viewers~=1.0.5
     # via glue-jupyter
 greenlet~=1.1.2
     # via sqlalchemy
-grismconf~=1.32
+grismconf==1.32
     # via
     #   -r /opt/environments/jwebbinar/mirage.pip
     #   mirage
@@ -292,7 +292,7 @@ h5py~=3.7.0
     # via
     #   glue-core
     #   mirage
-healpy~=1.15.2
+healpy~=1.16.0
     # via
     #   -r /opt/environments/jwebbinar/mirage.pip
     #   jwst-backgrounds
@@ -300,15 +300,15 @@ hotsoss~=0.1.7
     # via mirage
 hsluv~=5.0.3
     # via vispy
-html5lib~=1.1
+html5lib==1.1
     # via astroquery
-idna~=3.3
+idna==3.3
     # via
     #   -r /opt/environments/jwebbinar/jwebbinar.pip
     #   anyio
     #   requests
     #   yarl
-imageio~=2.19.3
+imageio~=2.19.5
     # via scikit-image
 imagesize~=1.3.0
     # via
@@ -431,7 +431,7 @@ jmespath~=0.10.0
     #   botocore
 joblib~=1.1.0
     # via spectral-cube
-jplephem~=2.17
+jplephem==2.17
     # via -r /opt/environments/jwebbinar/jwebbinar.pip
 json5~=0.9.8
     # via jupyterlab-server
@@ -562,7 +562,7 @@ mistune~=0.8.4
     # via
     #   nbconvert
     #   sphinx-asdf
-mpl-scatter-density~=0.7
+mpl-scatter-density==0.7
     # via glue-core
 multidict~=6.0.2
     # via
@@ -604,9 +604,9 @@ nest-asyncio~=1.5.5
     #   nbclassic
     #   nbclient
     #   notebook
-networkx~=2.8.4
+networkx~=2.8.5
     # via scikit-image
-nircam-gsim~=1.60
+nircam-gsim==1.60
     # via
     #   -r /opt/environments/jwebbinar/mirage.pip
     #   mirage
@@ -674,7 +674,7 @@ numpy~=1.22.1
     #   tweakwcs
     #   vispy
     #   webbpsf
-numpydoc~=1.2
+numpydoc==1.2
     # via
     #   -r /opt/environments/jwebbinar/jwebbinar.pip
     #   pysiaf
@@ -686,7 +686,7 @@ openpyxl~=3.0.9
     #   -r /opt/environments/jwebbinar/jwebbinar.pip
     #   glue-core
     #   pysiaf
-packaging~=21.3
+packaging==21.3
     # via
     #   -r /opt/environments/jwebbinar/jwebbinar.pip
     #   asdf
@@ -720,7 +720,7 @@ pandocfilters~=1.5.0
     # via nbconvert
 papermill~=2.3.4
     # via -r /opt/common-env/common.pip
-parsley~=1.3
+parsley==1.3
     # via
     #   -r /opt/environments/jwebbinar/jwebbinar.pip
     #   crds
@@ -791,7 +791,7 @@ ptyprocess~=0.7.0
     #   terminado
 pure-eval~=0.2.2
     # via stack-data
-pvextractor~=0.3
+pvextractor==0.3
     # via glue-core
 py~=1.11.0
     # via
@@ -802,9 +802,9 @@ pycodestyle~=2.8.0
     # via
     #   -r /opt/environments/jwebbinar/jwebbinar.pip
     #   flake8
-pycparser~=2.21
+pycparser==2.21
     # via cffi
-pydeps~=1.10.19
+pydeps~=1.10.22
     # via -r /opt/common-env/common.pip
 pyds9~=1.8.1
     # via -r /opt/common-env/common.pip
@@ -884,16 +884,16 @@ python-json-logger~=2.0.4
     # via jupyter-telemetry
 pythreejs~=2.3.0
     # via ipyvolume
-pytz~=2022.1
+pytz==2022.1
     # via
     #   -r /opt/environments/jwebbinar/jwebbinar.pip
     #   babel
     #   pandas
-pyvo~=1.3
+pyvo==1.3
     # via astroquery
 pywavelets~=1.3.0
     # via scikit-image
-pyyaml~=6.0
+pyyaml==6.0
     # via
     #   -r /opt/environments/jwebbinar/jwebbinar.pip
     #   asdf
@@ -982,7 +982,7 @@ send2trash~=1.8.0
     #   jupyter-server
     #   nbclassic
     #   notebook
-simpervisor~=0.4
+simpervisor==0.4
     # via jupyter-server-proxy
 six~=1.16.0
     # via
@@ -1136,7 +1136,7 @@ toolz~=0.12.0
     # via
     #   dask
     #   partd
-tornado~=6.2
+tornado==6.2
     # via
     #   bokeh
     #   ipykernel

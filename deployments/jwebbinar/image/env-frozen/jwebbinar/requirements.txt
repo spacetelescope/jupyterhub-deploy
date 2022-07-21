@@ -128,9 +128,9 @@ bokeh==2.4.3
     #   ipywidgets-bokeh
     #   jupyter-bokeh
     #   mirage
-boto3==1.24.31
+boto3==1.24.34
     # via -r /opt/common-env/common.pip
-botocore==1.27.31
+botocore==1.27.34
     # via
     #   boto3
     #   s3transfer
@@ -240,7 +240,7 @@ executing==0.8.3
     # via stack-data
 fast-histogram==0.11
     # via mpl-scatter-density
-fastjsonschema==2.15.3
+fastjsonschema==2.16.1
     # via nbformat
 filelock==3.4.2
     # via
@@ -292,7 +292,7 @@ h5py==3.7.0
     # via
     #   glue-core
     #   mirage
-healpy==1.15.2
+healpy==1.16.0
     # via
     #   -r /opt/environments/jwebbinar/mirage.pip
     #   jwst-backgrounds
@@ -308,7 +308,7 @@ idna==3.3
     #   anyio
     #   requests
     #   yarl
-imageio==2.19.3
+imageio==2.19.5
     # via scikit-image
 imagesize==1.3.0
     # via
@@ -604,7 +604,7 @@ nest-asyncio==1.5.5
     #   nbclassic
     #   nbclient
     #   notebook
-networkx==2.8.4
+networkx==2.8.5
     # via scikit-image
 nircam-gsim==1.60
     # via
@@ -804,7 +804,7 @@ pycodestyle==2.8.0
     #   flake8
 pycparser==2.21
     # via cffi
-pydeps==1.10.19
+pydeps==1.10.22
     # via -r /opt/common-env/common.pip
 pyds9==1.8.1
     # via -r /opt/common-env/common.pip

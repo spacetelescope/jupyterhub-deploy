@@ -27,10 +27,10 @@ dependencies:
   - libopenblas=0.3.20
   - libstdcxx-ng=12.1.0
   - libuuid=2.32.1
-  - libuv=1.43.0
+  - libuv=1.44.2
   - libzlib=1.2.12
   - ncurses=6.3
-  - nodejs=18.5.0
+  - nodejs=18.6.0
   - numpy=1.23.1
   - openssl=3.0.5
   - packaging=21.3
@@ -42,8 +42,8 @@ dependencies:
   - python=3.8.13
   - python_abi=3.8
   - readline=8.1.2
-  - setuptools=63.1.0
-  - sqlite=3.39.0
+  - setuptools=63.2.0
+  - sqlite=3.39.1
   - tk=8.6.12
   - tomli=2.0.1
   - tomlkit=0.11.1
