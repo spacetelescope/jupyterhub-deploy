@@ -4,7 +4,7 @@ asdf-astropy==0.1.2
 asdf-coordinates-schemas==0.1.0
 asdf-transform-schemas==0.2.0
 asdf-wcs-schemas==0.1.1
-astropy==5.0
+astropy==5.0.1
 attrs==21.4.0
 Babel==2.9.1
 BayesicFitting==2.8.1

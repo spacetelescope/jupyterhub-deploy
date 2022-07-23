@@ -92,12 +92,12 @@ dependencies:
   - jsonschema=4.7.2
   - jupyter-packaging=0.12.2
   - jupyter_client=7.3.4
-  - jupyter_core=4.10.0
+  - jupyter_core=4.11.1
   - jupyter_server=1.18.1
   - jupyter_telemetry=0.1.0
   - jupyterhub=2.3.1
   - jupyterhub-base=2.3.1
-  - jupyterlab=3.4.3
+  - jupyterlab=3.4.4
   - jupyterlab_pygments=0.2.2
   - jupyterlab_server=2.15.0
   - jupyterlab_widgets=1.1.1
@@ -143,8 +143,8 @@ dependencies:
   - libtiff=4.4.0
   - libuuid=2.32.1
   - libuv=1.43.0
-  - libwebp=1.2.2
-  - libwebp-base=1.2.2
+  - libwebp=1.2.3
+  - libwebp-base=1.2.3
   - libxcb=1.13
   - libxml2=2.9.14
   - libzlib=1.2.12
@@ -174,7 +174,7 @@ dependencies:
   - nbformat=5.4.0
   - ncurses=6.3
   - nest-asyncio=1.5.5
-  - networkx=2.8.4
+  - networkx=2.8.5
   - nodejs=17.9.0
   - nomkl=1.0
   - notebook=6.4.12
@@ -245,7 +245,7 @@ dependencies:
   - snappy=1.1.9
   - sniffio=1.2.0
   - sortedcontainers=2.4.0
-  - soupsieve=2.3.1
+  - soupsieve=2.3.2.post1
   - sqlalchemy=1.4.39
   - sqlite=3.39.1
   - stack_data=0.3.0
@@ -299,8 +299,8 @@ dependencies:
     - astropy-sphinx-theme==1.1
     - async-timeout==4.0.2
     - black==22.6.0
-    - boto3==1.24.34
-    - botocore==1.27.34
+    - boto3==1.24.35
+    - botocore==1.27.35
     - bqplot==0.12.33
     - bqplot-image-gl==1.4.10
     - casa-formats-io==0.1
