@@ -24,10 +24,19 @@ for env in $(image-envs); do
     frozen_pip="env-frozen/${env}/requirements.txt"
     chilly_pip="env-chilly/${env}/requirements.txt"
     hints="environments/${env}/build-hints.pip"
+
+    # chilly builds include requirements from the build-hints file
+    # verbatim.  this enables specifying requirements which would
+    # otherwise be chilled in a way which would break the build; IOW,
+    # there are situations in which a dependency solution exists but
+    # pip cannot find it without hints.  Hints restrict floating updates
+    # as well as the chilly builds they exist to enable.  Hence they
+    # should be minimized and periodically revisited.
     cp ${hints} ${frozen_pip} env-chilly/${env}
 
-    # Create chilly requirements by saving tweaked frozen requirements.
-    # The pip requirements saved for future chilly builds include both ~= converted
-    # frozen requirements.txt and build-hints.pip
+    # Create chilly requirements by saving tweaked frozen
+    # requirements.  The pip requirements saved for future chilly
+    # builds include both ~= converted frozen requirements.txt and
+    # unmodified build-hints.pip
     perl -pi -e 's/==(\d+\.\d+\.\d+)/~=\1/g' ${chilly_pip}
 done
