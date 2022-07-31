@@ -11,9 +11,15 @@ jupyterhub:
         - name: dshm
           emptyDir:
             medium: Memory
+        - name: s3-pvc
+          persistentVolumeClaim:
+            claimName: s3-pvc
       extraVolumeMounts:
         - name: dshm
           mountPath: /dev/shm
+        - name: s3-pvc
+          mountPath: /s3
+          readOnly: true
   prePuller:
     continuous:
       enabled: true
