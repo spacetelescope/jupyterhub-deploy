@@ -160,9 +160,9 @@ bokeh==2.4.3
     #   ipywidgets-bokeh
     #   jupyter-bokeh
     #   mirage
-boto3==1.24.36
+boto3==1.24.42
     # via -r /opt/env-chilly/jwebbinar/requirements.txt
-botocore==1.27.36
+botocore==1.27.42
     # via
     #   -r /opt/env-chilly/jwebbinar/requirements.txt
     #   boto3
@@ -238,7 +238,7 @@ cycler==0.11.0
     # via
     #   -r /opt/env-chilly/jwebbinar/requirements.txt
     #   matplotlib
-dask[array]==2022.7.0
+dask[array]==2022.7.1
     # via
     #   -r /opt/env-chilly/jwebbinar/requirements.txt
     #   casa-formats-io
@@ -338,7 +338,7 @@ glue-core==1.5.0
     #   -r /opt/env-chilly/jwebbinar/requirements.txt
     #   glue-jupyter
     #   glue-vispy-viewers
-glue-jupyter==0.12.0
+glue-jupyter==0.12.1
     # via -r /opt/env-chilly/jwebbinar/requirements.txt
 glue-vispy-viewers==1.0.5
     # via
@@ -365,7 +365,7 @@ h5py==3.7.0
     #   -r /opt/env-chilly/jwebbinar/requirements.txt
     #   glue-core
     #   mirage
-healpy==1.16.0
+healpy==1.16.1
     # via
     #   -r /opt/env-chilly/jwebbinar/requirements.txt
     #   jwst-backgrounds
@@ -1394,7 +1394,7 @@ typing-extensions==4.3.0
     #   -r /opt/env-chilly/jwebbinar/requirements.txt
     #   black
     #   bokeh
-urllib3==1.26.10
+urllib3==1.26.11
     # via
     #   -r /opt/env-chilly/jwebbinar/requirements.txt
     #   botocore
