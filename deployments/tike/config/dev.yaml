@@ -1,4 +1,7 @@
 jupyterhub:
+  hub:
+    containerSecurityContext:
+      procMount: Unmasked
   scheduling:
     userPlaceholder:
       enabled: true
@@ -6,6 +9,9 @@ jupyterhub:
   singleuser:
     image:
       tag: latest-dev
+    securityContext:
+      allowedProcMountTypes: UnmaskedProcMount
+      procMount: Unmasked
     storage:
       extraVolumes:
         - name: dshm
@@ -14,11 +20,17 @@ jupyterhub:
         - name: s3-pvc
           persistentVolumeClaim:
             claimName: s3-pvc
+        - name: proc-pvc
+          persistentVolumeClaim:
+            claimName: proc-pvc
       extraVolumeMounts:
         - name: dshm
           mountPath: /dev/shm
         - name: s3-pvc
           mountPath: /s3
+          readOnly: true
+        - name: proc-pvc
+          mountPath: /h-proc/net/dev
           readOnly: true
   prePuller:
     continuous:

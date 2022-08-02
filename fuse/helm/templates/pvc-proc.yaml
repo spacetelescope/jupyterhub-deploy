@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: proc-pvc
+  labels:
+    type: proc
+  namespace: default
+spec:
+  storageClassName: local-storage
+  selector:
+    matchLabels:
+      type: proc
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 1M

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: proc-pv
+  labels:
+    type: proc
+spec:
+  storageClassName: local-storage
+  accessModes:
+    - ReadOnlyMany
+  capacity:
+    storage: 1M
+  hostPath:
+    path: /proc/net/dev
+
