@@ -49,11 +49,16 @@ to shut down notebook sessions.
 Deploying the efs-quota system should be done in the following order:
 
 0. source setup-env
-1. Deploy JupyterHub (deploy-jupyterhub)
-2. Deploy DataDog    (deploy-datadog)
-3. Deploy EFS Quota Monitoring  (efsq-build, efsq-push,  efsq-deploy)
-4. Check EFS Quota Logging (efsq-logs;  random monitor pod)
+1. Deploy JupyterHub (deploy-jupyterhub,  etc.)
+2. Deploy DataDog    (deploy-datadog, etc.)
+3. Deploy EFS Quota Monitoring  (deploy-efsq)
+4. Check EFS Quota Logging (efsq-logs;  shows random monitor pod log)
 5. Check EFS Quota Status (efsq-status; dump pod, pv, pvc status)
+
+This order is important because the quota s/w relies on polling the JupyterHub API to determine the list of usernames and their last activity,  as well as to evict quota violators.  DataDog plays a key role monitoring EFS Quota operations and/or issuing alerts.
+
+NOTE: if JupyterHub is restarted,  it will not typically restart notebook
+servers.
 
 ## EFS Quota System Components
 
@@ -63,27 +68,69 @@ The EFS Quota system has the following broad elements:
 
 2. An `efs_quota_monitor.py` program which implements both quota monitoring and reaping using common elements like interacting with the hub API.
 
-3. A `Monitor deployment` which runs du for active users and stale quotas.  As shipped,  it runs 5 pods enabling it to execute 5 du's in parallel which are
+3. A Helm chart which configures and defines two pod deployments.
+
+4. A `Monitor deployment` which runs du for active users and stale quotas.  As shipped,  it runs 5 pods enabling it to execute 5 du's in parallel which are
 coordinated using EFS file locking.  5 copies are used to avoid starving measurements of smaller quotas due to a few large quotas with long running du.
 As shipped these try to run every 4 hours and update quotas once a week whether
 a user is active or not...  unless quotas are disabled for them.
 
-4. A `Reaper deployment` running one pod which reacts to measurements recorded by
+5. A `Reaper deployment` running one pod which reacts to measurements recorded by
 the monitor pods issuing log messages and/or alerts,  and by default killing the server of users in violation of their quota.  The reaper runs every 5 minutes to
 ensure timely notebook session kills if login blocking fails for some reason.  Quota events also track user activity on the same 5 minute basis as another metric on user resource consumption.
 
-5. A `/opt/common-scripts/check-quota` program which is run by roman and tike post-startp-hooks to block users who have violated their quota, or by compliant
-users to examine their quota status from a terminal window as one way of seeing warnings, unblocked violations, etc.   Blocked users can see their block status in the JH notebook server spawn log.
+6. A `/opt/common-scripts/check-quota` program which is run by roman and tike post-startp-hooks during JH notebook server spawning to block users who have violated their quota.  It can also be used by compliant users to examine their quota status from a terminal window as one way of seeing warnings, unblocked violations, etc.   Blocked users can see their block status in the JH notebook server spawn log.
 
-6. `/efs/users PV and PVC's` make a point at which the EFS quota status can be measured for each user and/or provide a claim under which user $HOME subdirectories can be mounted into notebook pods.  Created by terraform-deploy
+7. `/efs/users PV and PVC's` make a point at which the EFS quota status can be measured for each user and/or provide a claim under which user $HOME subdirectories can be mounted into notebook pods.  Created by terraform-deploy
 
-7. `/efs/quota-control PV and PVC's` enable the storage, management, and retrieval of EFS quota status files which serve as a poor man's database.  Created by terraform-deploy
+8. `/efs/quota-control PV and PVC's` enable the storage, management, and retrieval of EFS quota status files which serve as a poor man's database.  Created by terraform-deploy
 
-8. `DataDog Logging` as-built we have a DataDog log view `EFS Quota Monitors` which is used to view the log output from the Monitor and Reaper pods.  This includes messages for key events which include all the information of the quota control file in a JSON event format.
+9. `DataDog Logging` as-built we have a DataDog log view `EFS Quota Monitors` which is used to view the log output from the Monitor and Reaper pods.  This includes messages for key events which include all the information of the quota control file in a JSON event format.
+
+10. `Maintenance Scripts` facilitate deploying, undeploying, redeploying, more generally working with EFS quotas by providing short cuts for common operations and easing the use
+of the EFS quota namespace:
+
+        deploy-efsq        builds, pushes, and deploys EFS Quota Monitoring
+        efsq-build         build the efsq Docker image
+        efsq-push          push the efsq container image
+        efsq-deploy        install the efsq Helm release starting the system
+        efsq-redeploy      tear down, standup the efsq system,  useful for iterative development
+        efsq-first-pod     print the name of the first efs quota pod found
+        efsq-exec          exec into the specified/first EFS pod for debug, e.g. check EFS dirs
+        efsq-logs          print logs from the specified/first quota pod
+        efsq-status        print status of various efsq-related k8s objects,  etc
+        efsq-undeploy      uninstall any efsq Helm release
+        efsq-api-token     prints the EFS quota JH API token to stdout
+
+Most or all scripts can be called with no parameters.
+
+11. Timing and System Constants
+
+The current parametrizations of the system are fairly arbitrary and may be adjusted as a result of experience and/or requirements definitions:
+
+        DEFAULT_QUOTA_G = 200                      default user quota of 200G bytes
+        WARN_FRACTION = 0.8                        default fraction to warn user about quota
+        MONITOR_PERIOD_SECS = 3600 * 4             4 hours,  to limit du costs
+        REAPER_PERIOD_SECS = 300                   5 min for notebook logouts, record activity
+        DU_TIMEOUT_SECS = 3600                     1 hour : 1-1.5T measured before timeout?
+        STALE_QUOTA_SECS = 3600 * 24 * 7           7 days
+        API_TIMEOUT = 10                           secs for slow JH last activity queries
+        NULL_TIME = "0001-01-01T01:01"             empty timestamps
+        UNDEFINED_BYTES = -1                       empty quota counts
+        TOP_LEVEL_FAIL_WAIT = 60                   1 minute wait between e.g. API fail
+
+These are correct at the time of this writing but the source code, helm charts, and deploy
+scripts should be reviewed if/when there is an issue.   Some parameters are hard coded in
+helm templates potentially overriding the above as time goes on.
+
 
 ### User Notification & Lockout
 
-### Maintenance Scripts
+* `Lockout` occurs during notebook spawning and may be observed in the spawn log
+
+* `User query quota status` run /opt/common-scripts/check-quota in notebook terminal
+
+* `Alerts` check DataDog,  TBD
 
 ## Kubernetes Namespaces
 
@@ -95,10 +142,10 @@ users to examine their quota status from a terminal window as one way of seeing 
 
 ## EFS File System Access
 
-EFS quotas relies on the following directory paths and permissions:
+EFS quotas relies on the following directory paths and permissions which are a function of Terraform, CI-node, EFS Quota Helm, and JupyterHub Helm configurations:
 
-    /efs                A mount of the root of the EFS file system associated with
-                         $HOME on the CI-node.
+
+    /efs                 Root of the JH EFS file system.                  (r/w)    CI-node
 		     
     /efs/users           Subdirectory for user $HOME claims.              (r/w)    CI-node
     /efs/users           Subdirectory for user $HOME claims.              (r/o)    Quota pods
@@ -150,3 +197,23 @@ An example of the current quota control file is shown below:
     user: jmiller@stsci.edu
     warn_fraction: 0.8
 
+The quota file is used to record, communicate, and manage EFS quota monitoring.
+
+        actual_bytes        total bytes of files in a user's $HOME
+        fraction_used       fraction of a user's quota already used, actual_bytes/quota_bytes
+        last_activity       time reported by JH API of a user's last activity
+        lockout_enabled     if `false`,  violations do not result in lockouts
+        quota_bytes         total bytes a user can allocate under $HOME
+        quota_enabled       if `false`, user is exempt from monitoring and lockout
+        quota_state
+            ok              user's $HOME allocations are fine
+            nearing-limit   user's $HOME allocations have exceeded their warning threshold
+            violation       user's $HOME allocations exceed quota, lockout_enabled=false
+            lockout         user's $HOME allocations exceed quota, lockout_enabled=true
+            timed-out       du ran too long and was aborted for user, currently warning only
+        reaper_time         timestamp Reaper last evaluated user's quota for lockout / reporting
+        started             start time for du for user
+        stopped             stop time for du for user
+        timed_out           if `true`,  last run of du timed_out so quota is stale,  warning
+        user                JH user this quota applies to
+        warn_fraction       fraction of quota usage at which to warn user,  0 <= x <= 1
