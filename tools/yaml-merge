@@ -1,0 +1,57 @@
+#! /usr/bin/env python
+
+"""Quick and dirty script that performs a "Helm-like" merge and points out
+areas where a file in a series of files will overwrite content from a previous
+file rather than add to it.
+"""
+
+import sys
+import yaml
+import copy
+
+
+def log(*args):
+    print(*args, file=sys.stderr)
+
+
+def deep_merge(f, m1, m2, path=[]):
+    m1 = copy.deepcopy(m1)
+    for key in m2:
+        if key in m1:
+            if isinstance(m1[key], dict) and isinstance(m2[key], dict):
+                m1[key] = deep_merge(f, m1[key], m2[key], path + [key])  # combination
+            else:
+                if m1[key] != m2[key]:
+                    log("WARNING: merging file", f, "at", path)
+                    log()
+                    log("------- results in replacing:")
+                    log()
+                    log(yaml.dump(m1[key]))
+                    log("------- with:")
+                    log()
+                    log(yaml.dump(m2[key]))
+                    log("-------")
+                m1[key] = m2[key]  # replacement
+        else:
+            m1[key] = m2[key]  # insertion
+    return m1
+
+
+def merge_file(merger, file_n):
+    with open(file_n) as f:
+        new_merger = yaml.safe_load(f)
+    assert isinstance(merger, dict)
+    assert isinstance(new_merger, dict)
+    return deep_merge(file_n, merger, new_merger)
+
+
+def main():
+    files = sys.argv[1:]
+    merger = {}
+    for i in range(len(files)):
+        merger = merge_file(merger, files[i])
+    print(yaml.dump(merger))
+
+
+if __name__ == "__main__":
+    main()

@@ -35,4 +35,8 @@ rm ${tmp_decrypted}
 # Only use 1 more IP address than is needed at all times
 kubectl set env ds aws-node -n kube-system WARM_IP_TARGET=1
 
+echo ======================= Combined Helm Config Files =======================
+helm get values ${DEPLOYMENT_NAME}-${ENVIRONMENT}
+echo ==========================================================================
+
 kubectl get svc proxy-public
