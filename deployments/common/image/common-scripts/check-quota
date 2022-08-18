@@ -51,7 +51,7 @@ def main():
     logger.addHandler(consoleHandler)
 
     if not os.path.exists(QUOTA_FILE):
-        logger.info("No quota control file found:". QUOTA_FILE)
+        logger.info(f"No quota control file found: {QUOTA_FILE}")
         sys.exit(0)
 
     with open(QUOTA_FILE) as qfile:
