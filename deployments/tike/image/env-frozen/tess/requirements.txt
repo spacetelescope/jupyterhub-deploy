@@ -13,7 +13,7 @@ absl-py==1.2.0
     #   jaxlib
     #   tensorboard
     #   tensorflow-cpu
-aesara==2.7.9
+aesara==2.7.10
     # via -r /opt/env-chilly/tess/requirements.txt
 aesara-theano-fallback==0.1.0
     # via
@@ -76,12 +76,12 @@ arviz==0.12.1
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   pymc3
-asdf==2.12.0
+asdf==2.12.1
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   crds
     #   sphinx-asdf
-asdf-standard==1.0.2
+asdf-standard==1.0.3
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   asdf
@@ -140,7 +140,7 @@ astroquery==0.4.5
     #   -r /opt/env-chilly/tess/requirements.txt
     #   lightkurve
     #   transitleastsquares
-asttokens==2.0.5
+asttokens==2.0.8
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   stack-data
@@ -227,7 +227,7 @@ bqplot==0.12.33
     #   -r /opt/env-chilly/tess/requirements.txt
     #   bqplot-image-gl
     #   glue-jupyter
-bqplot-image-gl==1.4.10
+bqplot-image-gl==1.4.11
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   glue-jupyter
@@ -265,7 +265,7 @@ cftime==1.6.1
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   netcdf4
-charset-normalizer==2.1.0
+charset-normalizer==2.1.1
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   aiohttp
@@ -302,7 +302,7 @@ corner==2.2.1
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   ultranest
-crds==11.16.6
+crds==11.16.9
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   ci-watson
@@ -327,7 +327,7 @@ dask[array]==2022.7.1
     #   casa-formats-io
     #   distributed
     #   spectral-cube
-debugpy==1.6.2
+debugpy==1.6.3
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   ipykernel
@@ -448,7 +448,7 @@ freetype-py==2.3.0
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   vispy
-frozenlist==1.3.0
+frozenlist==1.3.1
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   aiohttp
@@ -641,7 +641,7 @@ ipywebrtc==0.6.0
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   ipyvolume
-ipywidgets==7.7.1
+ipywidgets==7.7.2
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   bqplot
@@ -658,7 +658,7 @@ ipywidgets==7.7.1
     #   pythreejs
 ipywidgets-bokeh==1.2.1
     # via -r /opt/env-chilly/tess/requirements.txt
-jax==0.3.15
+jax==0.3.16
     # via -r /opt/env-chilly/tess/requirements.txt
 jaxlib==0.3.15
     # via -r /opt/env-chilly/tess/requirements.txt
@@ -703,7 +703,7 @@ jplephem==2.17
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   astrobase
-json5==0.9.8
+json5==0.9.10
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   jupyterlab-server
@@ -763,7 +763,7 @@ jupyter-telemetry==0.1.0
     #   jupyterhub
 jupyterhub==2.3.1
     # via -r /opt/env-chilly/tess/requirements.txt
-jupyterlab==3.4.4
+jupyterlab==3.4.5
     # via -r /opt/env-chilly/tess/requirements.txt
 jupyterlab-pygments==0.2.2
     # via
@@ -800,7 +800,7 @@ kiwisolver==1.4.4
     #   -r /opt/env-chilly/tess/requirements.txt
     #   matplotlib
     #   vispy
-libclang==14.0.1
+libclang==14.0.6
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   tensorflow-cpu
@@ -825,6 +825,7 @@ lxml==4.9.1
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   crds
+    #   nbconvert
 mako==1.2.1
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
@@ -846,7 +847,7 @@ markupsafe==2.1.1
     #   jinja2
     #   mako
     #   nbconvert
-matplotlib==3.5.2
+matplotlib==3.5.3
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   aas-timeseries
@@ -869,7 +870,7 @@ matplotlib==3.5.2
     #   sphinx-asdf
     #   starry
     #   ultranest
-matplotlib-inline==0.1.3
+matplotlib-inline==0.1.6
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   ipykernel
@@ -882,7 +883,7 @@ mdit-py-plugins==0.3.0
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   myst-parser
-mdurl==0.1.1
+mdurl==0.1.2
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   markdown-it-py
@@ -946,7 +947,7 @@ nbclient==0.6.6
     #   -r /opt/env-chilly/tess/requirements.txt
     #   nbconvert
     #   papermill
-nbconvert==6.5.0
+nbconvert==6.5.3
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   jupyter-server
@@ -1392,7 +1393,7 @@ pytz==2022.1
     #   -r /opt/env-chilly/tess/requirements.txt
     #   babel
     #   pandas
-pyviz-comms==2.2.0
+pyviz-comms==2.2.1
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   panel
@@ -1414,7 +1415,7 @@ pyyaml==6.0
     #   distributed
     #   myst-parser
     #   papermill
-pyzmq==23.2.0
+pyzmq==23.2.1
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   ipykernel
@@ -1443,7 +1444,7 @@ radio-beam==0.3.3
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   spectral-cube
-rebound==3.19.4
+rebound==3.19.9
     # via -r /opt/env-chilly/tess/requirements.txt
 reproject==0.8
     # via -r /opt/env-chilly/tess/requirements.txt
@@ -1497,7 +1498,7 @@ scikit-image==0.19.3
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   glue-jupyter
-scikit-learn==1.1.1
+scikit-learn==1.1.2
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   astrobase
@@ -1538,7 +1539,7 @@ scipy==1.7.3
     #   xarray-einstats
 seaborn==0.11.2
     # via -r /opt/env-chilly/tess/requirements.txt
-secretstorage==3.3.2
+secretstorage==3.3.3
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   keyring
@@ -1673,7 +1674,7 @@ sphinxcontrib-serializinghtml==1.1.5
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   sphinx
-sqlalchemy==1.4.39
+sqlalchemy==1.4.40
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   alembic
@@ -1771,7 +1772,7 @@ tomli==2.0.1
     #   pep517
     #   pytest
     #   setuptools-scm
-tomlkit==0.11.1
+tomlkit==0.11.4
     # via
     #   -r /opt/env-chilly/tess/requirements.txt
     #   jupyter-packaging
@@ -1783,7 +1784,7 @@ toolz==0.12.0
     #   logical-unification
     #   minikanren
     #   partd
-torch==1.12.0
+torch==1.12.1
     # via -r /opt/env-chilly/tess/requirements.txt
 tornado==6.1
     # via

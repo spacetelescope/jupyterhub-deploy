@@ -10,7 +10,7 @@ dependencies:
   - aom=3.4.0
   - argon2-cffi=21.3.0
   - argon2-cffi-bindings=21.2.0
-  - asttokens=2.0.5
+  - asttokens=2.0.8
   - async_generator=1.10
   - attrs=22.1.0
   - babel=2.10.3
@@ -18,7 +18,7 @@ dependencies:
   - backports=1.0
   - backports.functools_lru_cache=1.6.4
   - beautifulsoup4=4.11.1
-  - blas=2.115
+  - blas=2.116
   - blas-devel=3.9.0
   - bleach=5.0.1
   - blinker=1.4
@@ -31,7 +31,7 @@ dependencies:
   - brunsli=0.1
   - bzip2=1.0.8
   - c-ares=1.18.1
-  - c-blosc2=2.2.0
+  - c-blosc2=2.3.0
   - ca-certificates=2022.6.15
   - cached-property=1.5.2
   - cached_property=1.5.2
@@ -44,39 +44,39 @@ dependencies:
   - click=8.1.3
   - cloudpickle=2.1.0
   - colorama=0.4.5
-  - conda=4.13.0
+  - conda=4.14.0
   - conda-package-handling=1.8.1
   - configurable-http-proxy=4.5.1
   - cryptography=37.0.4
   - cycler=0.11.0
   - cython=0.29.32
   - cytoolz=0.12.0
-  - dask=2022.7.1
-  - dask-core=2022.7.1
+  - dask=2022.8.1
+  - dask-core=2022.8.1
   - dav1d=1.0.0
-  - debugpy=1.6.0
+  - debugpy=1.6.3
   - decorator=5.1.1
   - defusedxml=0.7.1
   - deprecation=2.1.0
   - dill=0.3.5.1
-  - distributed=2022.7.1
+  - distributed=2022.8.1
   - entrypoints=0.4
-  - executing=0.9.1
+  - executing=0.10.0
   - flit-core=3.7.1
-  - fonttools=4.34.4
-  - freetype=2.10.4
+  - fonttools=4.36.0
+  - freetype=2.12.1
   - fsspec=2022.7.1
   - giflib=5.2.1
   - gmp=6.2.1
   - gmpy2=2.1.2
   - greenlet=1.1.2
   - h5py=3.7.0
-  - hdf5=1.12.1
+  - hdf5=1.12.2
   - heapdict=1.0.1
   - icu=70.1
   - idna=3.3
-  - imagecodecs=2022.7.27
-  - imageio=2.19.3
+  - imagecodecs=2022.8.8
+  - imageio=2.21.1
   - importlib-metadata=4.11.4
   - importlib_metadata=4.11.4
   - importlib_resources=5.9.0
@@ -84,13 +84,13 @@ dependencies:
   - ipympl=0.9.1
   - ipython=8.4.0
   - ipython_genutils=0.2.0
-  - ipywidgets=7.7.1
+  - ipywidgets=7.7.2
   - jedi=0.18.1
   - jinja2=3.1.2
   - joblib=1.1.0
   - jpeg=9e
   - json5=0.9.5
-  - jsonschema=4.8.0
+  - jsonschema=4.9.1
   - jupyter-packaging=0.12.2
   - jupyter_client=7.3.4
   - jupyter_core=4.11.1
@@ -98,7 +98,7 @@ dependencies:
   - jupyter_telemetry=0.1.0
   - jupyterhub=2.3.1
   - jupyterhub-base=2.3.1
-  - jupyterlab=3.4.4
+  - jupyterlab=3.4.5
   - jupyterlab_pygments=0.2.2
   - jupyterlab_server=2.15.0
   - jupyterlab_widgets=1.1.1
@@ -118,7 +118,7 @@ dependencies:
   - libbrotlienc=1.0.9
   - libcblas=3.9.0
   - libcurl=7.83.1
-  - libdeflate=1.12
+  - libdeflate=1.13
   - libedit=3.1.20191231
   - libev=4.33
   - libffi=3.4.2
@@ -134,33 +134,35 @@ dependencies:
   - libmambapy=0.25.0
   - libnghttp2=1.47.0
   - libnsl=2.0.0
-  - libopenblas=0.3.20
+  - libopenblas=0.3.21
   - libpng=1.6.37
   - libprotobuf=3.20.1
   - libsodium=1.0.18
   - libsolv=0.7.22
+  - libsqlite=3.39.2
   - libssh2=1.10.0
   - libstdcxx-ng=12.1.0
   - libtiff=4.4.0
   - libuuid=2.32.1
   - libuv=1.43.0
-  - libwebp=1.2.3
-  - libwebp-base=1.2.3
+  - libwebp-base=1.2.4
   - libxcb=1.13
   - libxml2=2.9.14
+  - libxslt=1.1.35
   - libzlib=1.2.12
   - libzopfli=1.0.3
   - llvm-openmp=14.0.4
   - llvmlite=0.38.1
   - locket=1.0.0
+  - lxml=4.9.1
   - lz4=4.0.0
   - lz4-c=1.9.3
   - lzo=2.10
   - mako=1.2.1
   - mamba=0.25.0
   - markupsafe=2.1.1
-  - matplotlib-base=3.5.2
-  - matplotlib-inline=0.1.3
+  - matplotlib-base=3.5.3
+  - matplotlib-inline=0.1.6
   - mistune=0.8.4
   - mpc=1.2.1
   - mpfr=4.1.0
@@ -169,9 +171,9 @@ dependencies:
   - munkres=1.1.4
   - nbclassic=0.4.3
   - nbclient=0.6.6
-  - nbconvert=6.5.0
-  - nbconvert-core=6.5.0
-  - nbconvert-pandoc=6.5.0
+  - nbconvert=6.5.3
+  - nbconvert-core=6.5.3
+  - nbconvert-pandoc=6.5.3
   - nbformat=5.4.0
   - ncurses=6.3
   - nest-asyncio=1.5.5
@@ -184,16 +186,16 @@ dependencies:
   - numexpr=2.8.3
   - numpy=1.22.4
   - oauthlib=3.2.0
-  - openblas=0.3.20
-  - openjpeg=2.4.0
+  - openblas=0.3.21
+  - openjpeg=2.5.0
   - openssl=1.1.1q
   - packaging=21.3
   - pamela=1.0.0
   - pandas=1.4.3
-  - pandoc=2.18
+  - pandoc=2.19.1
   - pandocfilters=1.5.0
   - parso=0.8.3
-  - partd=1.2.0
+  - partd=1.3.0
   - patsy=0.5.2
   - pep517=0.12.0
   - pexpect=4.8.0
@@ -201,6 +203,7 @@ dependencies:
   - pillow=9.2.0
   - pip=22.0.4
   - pip-tools=6.6.2
+  - pkgutil-resolve-name=1.3.10
   - prometheus_client=0.14.1
   - prompt-toolkit=3.0.30
   - protobuf=3.20.1
@@ -212,7 +215,7 @@ dependencies:
   - pycosat=0.6.3
   - pycparser=2.21
   - pycurl=7.45.1
-  - pygments=2.12.0
+  - pygments=2.13.0
   - pyjwt=2.4.0
   - pyopenssl=22.0.0
   - pyparsing=3.0.9
@@ -224,10 +227,10 @@ dependencies:
   - python-fastjsonschema=2.16.1
   - python-json-logger=2.0.1
   - python_abi=3.10
-  - pytz=2022.1
+  - pytz=2022.2.1
   - pywavelets=1.3.0
   - pyyaml=6.0
-  - pyzmq=23.2.0
+  - pyzmq=23.2.1
   - readline=8.1.2
   - reproc=14.2.3
   - reproc-cpp=14.2.3
@@ -236,37 +239,37 @@ dependencies:
   - ruamel.yaml.clib=0.2.6
   - ruamel_yaml=0.15.80
   - scikit-image=0.19.3
-  - scikit-learn=1.1.1
+  - scikit-learn=1.1.2
   - scipy=1.9.0
   - seaborn=0.11.2
   - seaborn-base=0.11.2
   - send2trash=1.8.0
-  - setuptools=63.2.0
+  - setuptools=65.1.0
   - six=1.16.0
   - snappy=1.1.9
   - sniffio=1.2.0
   - sortedcontainers=2.4.0
   - soupsieve=2.3.2.post1
-  - sqlalchemy=1.4.39
+  - sqlalchemy=1.4.40
   - sqlite=3.39.2
-  - stack_data=0.3.0
+  - stack_data=0.4.0
   - statsmodels=0.13.2
   - sympy=1.10.1
   - tblib=1.7.0
   - terminado=0.15.0
   - threadpoolctl=3.1.0
-  - tifffile=2022.7.28
+  - tifffile=2022.8.12
   - tinycss2=1.1.1
   - tk=8.6.12
   - tomli=2.0.1
-  - tomlkit=0.11.1
+  - tomlkit=0.11.4
   - toolz=0.12.0
   - tornado=6.1
   - tqdm=4.64.0
   - traitlets=5.3.0
   - typing=3.10.0.0
   - typing_extensions=4.3.0
-  - tzdata=2022a
+  - tzdata=2022c
   - unicodedata2=14.0.0
   - urllib3=1.26.11
   - wcwidth=0.2.5
@@ -278,13 +281,13 @@ dependencies:
   - xlrd=2.0.1
   - xorg-libxau=1.0.9
   - xorg-libxdmcp=1.1.3
-  - xz=5.2.5
+  - xz=5.2.6
   - yaml=0.2.5
   - yaml-cpp=0.7.0
   - zeromq=4.3.4
-  - zfp=0.5.5
+  - zfp=1.0.0
   - zict=2.2.0
-  - zipp=3.8.0
+  - zipp=3.8.1
   - zlib=1.2.12
   - zlib-ng=2.0.6
   - zstd=1.5.2
@@ -293,28 +296,28 @@ dependencies:
     - aiosignal==1.2.0
     - alabaster==0.7.12
     - ansiwrap==0.8.4
-    - asdf==2.12.0
-    - asdf-standard==1.0.2
+    - asdf==2.13.0
+    - asdf-standard==1.0.3
     - asdf-transform-schemas==0.2.2
     - astropy==5.1
     - astropy-sphinx-theme==1.1
     - async-timeout==4.0.2
     - black==22.6.0
-    - boto3==1.24.42
-    - botocore==1.27.42
+    - boto3==1.24.56
+    - botocore==1.27.56
     - bqplot==0.12.33
-    - bqplot-image-gl==1.4.10
+    - bqplot-image-gl==1.4.11
     - casa-formats-io==0.1
     - ci-watson==0.6.1
-    - crds==11.16.6
+    - crds==11.16.9
     - docutils==0.17.1
     - echo==0.6
     - et-xmlfile==1.1.0
     - fast-histogram==0.11
-    - filelock==3.7.1
-    - flake8==5.0.0
+    - filelock==3.8.0
+    - flake8==5.0.4
     - freetype-py==2.3.0
-    - frozenlist==1.3.0
+    - frozenlist==1.3.1
     - glue-core==1.5.0
     - glue-jupyter==0.12.1
     - glue-vispy-viewers==1.0.5
@@ -334,11 +337,10 @@ dependencies:
     - jupyter-bokeh==3.0.4
     - jupyter-desktop-server==0.1.3
     - jupyter-server-proxy==3.2.1
-    - lxml==4.9.1
     - markdown-it-py==2.1.0
     - mccabe==0.7.0
     - mdit-py-plugins==0.3.0
-    - mdurl==0.1.1
+    - mdurl==0.1.2
     - mpl-scatter-density==0.7
     - multidict==6.0.2
     - mypy-extensions==0.4.3
@@ -347,7 +349,7 @@ dependencies:
     - nbsphinx==0.8.9
     - numpydoc==1.4.0
     - openpyxl==3.0.10
-    - papermill==2.3.4
+    - papermill==2.4.0
     - parsley==1.3
     - pathspec==0.9.0
     - pipdeptree==2.2.1
@@ -355,7 +357,7 @@ dependencies:
     - pluggy==1.0.0
     - pvextractor==0.3
     - py==1.11.0
-    - pycodestyle==2.9.0
+    - pycodestyle==2.9.1
     - pydeps==1.10.22
     - pyds9==1.8.1
     - pyerfa==2.0.0.1
@@ -367,7 +369,7 @@ dependencies:
     - python-graphviz==0.20.1
     - pythreejs==2.3.0
     - qtconsole==5.3.1
-    - qtpy==2.1.0
+    - qtpy==2.2.0
     - radio-beam==0.3.3
     - requests-mock==1.9.3
     - s3transfer==0.6.0
@@ -380,7 +382,7 @@ dependencies:
     - sphinx-astropy==1.7.0
     - sphinx-automodapi==0.14.1
     - sphinx-bootstrap-theme==0.8.1
-    - sphinx-gallery==0.11.0
+    - sphinx-gallery==0.11.1
     - sphinx-inline-tabs==2022.1.2b11
     - sphinx-rtd-theme==1.0.0
     - sphinxcontrib-applehelp==1.0.2
@@ -396,5 +398,5 @@ dependencies:
     - toml==0.10.2
     - traittypes==0.2.1
     - vispy==0.11.0
-    - yarl==1.7.2
+    - yarl==1.8.1
 prefix: /opt/conda
