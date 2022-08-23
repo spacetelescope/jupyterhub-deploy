@@ -12,5 +12,5 @@ numpy
 black
 # git+https://github.com/yuvipanda/jupyter-desktop-server
 jupyter-desktop-server
-jupyterhub~=1.0
+jupyterhub
 nbgitpuller
