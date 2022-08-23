@@ -226,6 +226,7 @@ class QuotaData:
         self.lockout_enabled = True
         self.last_activity = NULL_TIME
         self.reaper_time = NULL_TIME
+        self.active_at_reap = 0
         self.started = NULL_TIME
         self.stopped = NULL_TIME
         self.quota_state = "ok"  # nearing-limit, violation, timed-out, lockout
@@ -424,6 +425,12 @@ class QuotaReaperDaemon(QuotaDaemon):
         quota = footprint.load()
         quota.last_activity = last_activity
         quota.reaper_time = now()
+        if (
+            dt_from_iso(quota.reaper_time) - dt_from_iso(quota.last_activity)
+        ).seconds < self.period_secs:
+            quota.active_at_reap = 1
+        else:
+            quota.active_at_reap = 0
         footprint.save(quota)
         if quota.quota_state == "lockout":
             self.lockout(user, quota)
@@ -508,7 +515,9 @@ def run(cmd, cwd=".", timeout=10):
 
 
 def du(path, timeout):
-    output = run(f"/usr/bin/sudo /usr/bin/du --bytes --max-depth 0 {path}", timeout=timeout)
+    output = run(
+        f"/usr/bin/sudo /usr/bin/du --bytes --max-depth 0 {path}", timeout=timeout
+    )
     bytes, path = output.strip().split()
     return int(bytes)
 
@@ -566,7 +575,7 @@ def parse_args():
         "--api-cert",
         dest="api_cert",
         action="store",
-        help="Path for JupyterHub's public SSL cert for REST API calls.",
+        help="Path for EFS Quota cert for calls to JupyterHub REST API.",
     )
     parser.add_argument(
         "--efs-quota-control",
