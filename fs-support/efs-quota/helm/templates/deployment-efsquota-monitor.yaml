@@ -30,10 +30,12 @@ spec:
                   "/efs-quota/efs_quota_monitor.py",
                   "--hub-url", "{{ .Values.hub_url }}",
                   "--api-token", "{{ .Values.api_token }}",
-                  "--api-cert", "False",
+                  # "--api-cert", "False",      # XXXX testing / demo only
+                  "--api-cert", "/etc/ssl/jh-intermediates.pem",
                   "--efs-quota-control", "/efs/quota-control",
                   "--home-root", "/efs/users",
-                  "--period-secs", "14400",
+                  "--period-secs", "14400",      # XXXX testing / demo only
+                  # "--stale-quota-secs", "60",  # XXXX testing / demo only
                   ]
         env:
         - name: POD_NAME

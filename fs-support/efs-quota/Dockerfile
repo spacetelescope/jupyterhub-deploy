@@ -5,6 +5,8 @@ COPY tls-ca-bundle.pem  /tmp/cert.pem
 RUN mv /etc/ssl/cert.pem /etc/ssl/cert.pem.org  && \
     mv /tmp/cert.pem  /etc/ssl
 
+COPY jh-intermediates.pem /etc/ssl/jh-intermediates.pem
+
 RUN SSL_CERT_FILE=/etc/ssl/cert.pem apk add ca-certificates && \
     update-ca-certificates && \
     apk update && \
@@ -17,7 +19,10 @@ RUN apk add --no-cache -U git  && \
     pip config set global.cert /etc/ssl/cert.pem
 
 RUN apk add --no-cache -U tini nfs-utils sudo coreutils
-RUN pip install --no-cache pyyaml filelock requests
+RUN pip install --no-cache pyyaml filelock requests certifi
+
+ENV REQUESTS_CA_BUNDLE=/etc/ssl/cert.pem
+ENV CURL_CA_BUNDLE=/etc/ssl/cert.pem
 
 RUN adduser -u 1000 -G users -D -H efs-quota
 RUN echo "efs-quota ALL=NOPASSWD:/usr/bin/du,/bin/ls" >> /etc/sudoers
