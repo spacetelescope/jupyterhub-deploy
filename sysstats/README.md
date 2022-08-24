@@ -14,8 +14,7 @@ It works by using the tool **sar** to start collecting system metrics in a tempo
 
 
 ### PV/PVC mount
-- A PV/PVC to mount the volume with the collected metrics to the pods
-- 
+- A PV/PVC to mount the volume with the collected metrics to the pods 
 
 ### Worker node
 - The [sysstats](https://github.com/sysstat/sysstat) package installed 
@@ -73,7 +72,7 @@ crontab -l | { cat; echo "$crontask"; } | crontab -
 ...
 ```
 
-After this the nodes will need to be re-instantiated so the launch template scripts are run. There are multiple ways to do this, but setting the EKS desired active worker node group size to 0, then wait for a cuple minutes, and then revert it back to whatever the desired size was seems to work.
+After this the nodes will need to be re-instantiated so the launch template scripts are executed. There are multiple ways to do this, but setting the EKS desired active worker node group size to 0, then wait for a cuple minutes, and then revert it back to whatever the desired size was seems to work.
 
 ## Usage
 
@@ -81,7 +80,7 @@ Login into the notebook pod, and open a terminal session.
 
 The collected metrics are available at the folder **/sysstats/**
 
-To check the node stats from the pod, first convert the file from old sar version to a newer format. There should be a sar file per day, starting with the date the worker node was instantiated. It will maintain files for the last 7 days given that the worker runs for that long. 
+To check the node stats from the pod, first convert the file from old sar version to a newer format. There is a sar file per day, starting with the date the worker node was instantiated. It will maintain files for the last 7 days given that the worker runs for that long. 
 
 ```bash
 sadf -c /sysstats/[file].sar > stats
@@ -159,7 +158,7 @@ Average:     15032075         0    359740      2.24      2704    639289   109668
 ```
  
 
-- To generate a network interface graphi in SVG format
+- To generate a network interface graphic in SVG format
 ```bash
 sadf -g stats -- -n DEV > index.svg 
 ```
