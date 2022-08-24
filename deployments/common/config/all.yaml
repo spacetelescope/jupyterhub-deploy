@@ -5,7 +5,7 @@ jupyterhub:
       minAvailable: 0
     extraConfig:
       spawning: |
-        c.KubeSpawner.start_timeout = 10 * 60  # Up to 10 minutes
+        c.KubeSpawner.start_timeout = 15 * 60  # Up to 15 minutes
       get_email: |
         def get_email(response):
             return response['attrib']['email']
