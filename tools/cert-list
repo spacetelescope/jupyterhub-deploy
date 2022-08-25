@@ -28,6 +28,7 @@ issuer=C = GB, ST = Greater Manchester, L = Salford, O = Comodo CA Limited, CN =
 
 import sys
 import subprocess
+import tempfile
 
 
 def run(cmd, cwd=".", timeout=10):
@@ -49,10 +50,9 @@ def run(cmd, cwd=".", timeout=10):
 
 
 def decode(lines):
-    cert = "/tmp/cert-list.cert"
-    with open(cert, "w+") as cert_file:
-        cert_file.write("".join(lines))
-    return run(f"openssl x509 -subject -issuer -nocert -in {cert}")
+    with tempfile.NamedTemporaryFile(mode='w+', delete=False) as tmpf:
+        tmpf.write("".join(lines))
+    return run(f"openssl x509 -subject -issuer -nocert -in {tmpf.name}")
 
 
 def main():
