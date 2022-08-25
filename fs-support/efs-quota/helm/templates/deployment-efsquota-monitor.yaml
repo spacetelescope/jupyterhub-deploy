@@ -34,8 +34,10 @@ spec:
                   "--api-cert", "/etc/ssl/jh-intermediates.pem",
                   "--efs-quota-control", "/efs/quota-control",
                   "--home-root", "/efs/users",
-                  "--period-secs", "14400",      # XXXX testing / demo only
-                  # "--stale-quota-secs", "60",  # XXXX testing / demo only
+                  # "--period-secs", "120",       # XXXX testing / demo only
+                  "--period-secs", "14400",       # 4 hours
+                  # "--stale-quota-secs", "60",   # XXXX testing / demo only
+                  "--stale-quota-secs", "604800", # 1 week
                   ]
         env:
         - name: POD_NAME
