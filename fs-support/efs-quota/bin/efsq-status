@@ -1,0 +1,18 @@
+#! /bin/bash
+
+set -eu
+
+echo "====================== DEPLOYMENTS ==========================="
+kubectl get deployments -n efs-quota
+
+echo "====================== PODS ==========================="
+kubectl get pods -n efs-quota
+
+echo "====================== PV ==========================="
+kubectl get pv -n efs-quota
+
+echo "====================== PVC ==========================="
+kubectl get pvc -n efs-quota
+
+
+

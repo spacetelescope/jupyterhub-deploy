@@ -28,13 +28,13 @@ image-base
 # Build STScI shared layer for all deployments
 cd ${COMMON_IMAGE_DIR}
 echo "========================= Building Common Image ========================"
-time docker build --progress plain --tag ${COMMON_ID} --build-arg BASE_IMAGE=stsci-jh/scipy-notebook .  --file Dockerfile.x
+time docker build --progress plain --tag ${COMMON_ID} --tag notebook-common --build-arg BASE_IMAGE=stsci-jh/scipy-notebook .  --file Dockerfile.x
 
 # ..................................................................................
 # Build custom layers for this deployment
 cd ${IMAGE_DIR}
 echo "========================= Building $IMAGE_ID USE_FROZEN=${USE_FROZEN} =========================="
-time docker build --progress plain --tag ${IMAGE_ID} --build-arg BASE_IMAGE=${COMMON_ID} . --file Dockerfile.x
+time docker build --progress plain --tag ${IMAGE_ID} --tag "notebook-${DEPLOYMENT_NAME}" --build-arg BASE_IMAGE=${COMMON_ID} . --file Dockerfile.x
 
 # ..................................................................................
 # Optionally update requirements used by frozen and chilly builds.

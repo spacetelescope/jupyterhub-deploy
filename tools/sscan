@@ -5,7 +5,15 @@ cd $JUPYTERHUB_DIR
 echo "====================================================="
 echo "Checking YAML files for loadability                  "
 echo "====================================================="
-sscan-yaml `find deployments tools -name '*.yaml' -o -name '*.yml'`
+raw_files=$(find . -name '*.yaml' -o -name '*.yml')
+yaml_files=""
+for file in $raw_files; do
+    if ! grep -q '\}\}' $file; then
+	yaml_files="$yaml_files $file"
+    fi
+done
+#echo $yaml_files
+sscan-yaml $yaml_files
 yaml_status=$?
 
 echo "====================================================="

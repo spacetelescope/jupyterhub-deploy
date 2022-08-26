@@ -1,0 +1,8 @@
+#! /bin/bash
+
+set -eu
+
+image-login
+
+echo "================================== Pushing ${EFSQUOTA_ID} =============================="
+docker push $EFSQUOTA_ID

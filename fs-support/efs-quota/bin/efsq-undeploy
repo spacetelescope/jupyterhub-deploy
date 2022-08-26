@@ -1,0 +1,19 @@
+#! /bin/bash
+
+set -u
+
+cd ${JUPYTERHUB_DIR}
+
+helm uninstall -n efs-quota ${DEPLOYMENT_NAME}-efsquota-${ENVIRONMENT}
+
+#kubectl delete   --force  --wait=false  pvc s3-pvc
+#kubectl delete   --force  --wait=false  pv s3-pv
+
+efsq-status
+
+
+
+
+
+
+

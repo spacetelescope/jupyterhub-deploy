@@ -1,0 +1,38 @@
+proxy:
+    secretToken: "<generate token: openssl random --hex 32>"
+    https:
+        enabled: true
+        type: offload
+    service:
+        annotations:
+            service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:us-east-1:114882298157:certificate/xxxxyyyy-xxxx-xxxx-xxxx-xxxxyyyyzzzz
+            service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
+            service.beta.kubernetes.io/aws-load-balancer-ssl-ports: https
+            service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "3600"
+singleuser:
+  storage:
+    type: "static"
+    static:
+      pvcName: "preloaded-astropy-pvc"
+      subPath: "{username}"
+    extraVolumes:
+      - name: quota-control-jh
+        persistentVolumeClaim:
+          claimName: quota-control-jh-pvc
+          subPath: "{username}"
+    extraVolumeMounts:
+      - name: quota-control-jh
+        mountPath: "/quota-control"
+        readOnly: true
+  defaultUrl: "/lab"
+
+hub:
+  extraConfig:
+    efsquota: |
+      c.JupyterHub.services = [
+        {
+            "name" : "efsquota-admin",
+            "api_token" : "<generate token: openssl random --hex 32>"
+            "admin" : True,   # for JupyterHub 1.x
+        },
+      ]

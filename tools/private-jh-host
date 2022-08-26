@@ -1,0 +1,8 @@
+#! /bin/bash -eu
+
+# Returns the k8s service hostname assigned to Route 53
+# in DEV, TEST, OPS SDLC accounts for direct use in
+# sandbox
+
+kubectl get services | awk '/proxy-public/ { print $4; }'
+

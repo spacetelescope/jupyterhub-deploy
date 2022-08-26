@@ -1,0 +1,12 @@
+#! /bin/bash
+
+first_pod=${1:-$(efsq-first-pod monitor)}
+if [ $# -ge 1 ]; then
+    shift;
+fi
+
+
+echo =============================== logs for ${first_pod} ======================================
+if [[ $first_pod != "no-pod-found" ]]; then
+    kubectl logs -n efs-quota ${first_pod} $*
+fi
