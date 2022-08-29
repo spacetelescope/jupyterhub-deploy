@@ -55,7 +55,7 @@ from requests.packages.urllib3.util.retry import Retry
 
 
 DEFAULT_QUOTA_G = 200
-WARN_FRACTION = 0.8
+WARN_FRACTION = 0.9
 PERIOD_SECS = 3600 * 4
 DU_TIMEOUT_SECS = 3600
 STALE_QUOTA_SECS = 3600 * 24 * 7

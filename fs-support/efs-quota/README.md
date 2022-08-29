@@ -109,7 +109,7 @@ Most or all scripts can be called with no parameters.
 The current parametrizations of the system are fairly arbitrary and may be adjusted as a result of experience and/or requirements definitions:
 
         DEFAULT_QUOTA_G = 200                      default user quota of 200G bytes
-        WARN_FRACTION = 0.8                        default fraction to warn user about quota
+        WARN_FRACTION = 0.9                        default fraction to warn user about quota
         MONITOR_PERIOD_SECS = 3600 * 4             4 hours,  to limit du costs
         REAPER_PERIOD_SECS = 300                   5 min for notebook logouts, record activity
         DU_TIMEOUT_SECS = 3600                     1 hour : 1-1.5T measured before timeout?
@@ -195,7 +195,7 @@ An example of the current quota control file is shown below:
     stopped: '2022-08-15T20:27:57.527531'
     timed_out: false
     user: jmiller@stsci.edu
-    warn_fraction: 0.8
+    warn_fraction: 0.9
 
 The quota file is used to record, communicate, and manage EFS quota monitoring.
 
