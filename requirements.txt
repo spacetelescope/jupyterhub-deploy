@@ -13,3 +13,4 @@ keyring
 tqdm
 docutils
 webencodings
+filelock
