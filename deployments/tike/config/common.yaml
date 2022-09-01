@@ -27,9 +27,6 @@ jupyterhub:
     profileList:
       - display_name: "TIKE Science Platform"
         default: true
-    storage:
-      dynamic:
-        storageClass: "aws-efs"
     lifecycleHooks:
       postStart:
         exec:
