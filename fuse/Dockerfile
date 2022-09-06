@@ -33,6 +33,8 @@ RUN git clone  https://github.com/s3fs-fuse/s3fs-fuse.git && \
     make && \
     make install  && \
     cp /usr/local/bin/s3fs /build
+COPY s3-fuse-mount.sh s3-fuse-mount.sh
+RUN chmod +x s3-fuse-mount.sh
 
 # -------------------------------------------------------------------
 
