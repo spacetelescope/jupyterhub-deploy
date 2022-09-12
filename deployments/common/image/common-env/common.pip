@@ -1,5 +1,5 @@
 papermill
-nbconvert
+#nbconvert
 ipykernel
 ipython
 boto3
@@ -11,6 +11,6 @@ numpy
 #black==21.7b0
 black
 # git+https://github.com/yuvipanda/jupyter-desktop-server
-jupyter-desktop-server
+#jupyter-desktop-server
 jupyterhub
 nbgitpuller
