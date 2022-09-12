@@ -73,6 +73,10 @@ def get_pod_id():
 
 
 class Log:
+
+    dd_mode = True
+    debug_mode = False
+
     def __init__(self, name):
         self.name = name
         self.pod_id = get_pod_id()
@@ -89,12 +93,15 @@ class Log:
         d["service"] = self.deployment  # e.g. roman
         d["env"] = "dmd-" + self.environment  # e.g. dev, test, ops
         d.update(keys)
-        print(json.dumps(d))
+        if self.dd_mode:
+            print(json.dumps(d))
+        else:
+            print(d["timestamp"], kind, ":", d["message"])
         sys.stdout.flush()
 
     def debug(self, *args, **keys):
-        return
-        self.log("DEBUG", *args, **keys)
+        if self.debug_mode:
+            self.log("DEBUG", *args, **keys)
 
     def info(self, *args, **keys):
         self.log("INFO", *args, **keys)
@@ -267,6 +274,8 @@ class QuotaData:
         if self.actual_bytes > self.quota_bytes:
             self.quota_state = "lockout" if self.lockout_enabled else "violation"
         elif self.timed_out:
+            # XXX not necessarily set if in lockout or violation
+            # more important when valid quota can't be measured in time.
             self.quota_state = "timed-out"
         elif self.actual_bytes > self.quota_bytes * self.warn_fraction:
             self.quota_state = "nearing-limit"
@@ -425,6 +434,7 @@ class QuotaReaperDaemon(QuotaDaemon):
         quota = footprint.load()
         quota.last_activity = last_activity
         quota.reaper_time = now()
+        quota.check()  # re-evaluate quota measurements in case quota.yaml was edited,  do not measure.
         if (
             dt_from_iso(quota.reaper_time) - dt_from_iso(quota.last_activity)
         ).seconds < self.period_secs:
@@ -549,7 +559,7 @@ def human_format_number(number):
 # ========================================================================================
 
 
-def parse_args():
+def parse_args(argv):
     parser = argparse.ArgumentParser(
         description="Periodically compute/check quotas for active users or take actions based on quota state."
     )
@@ -615,15 +625,15 @@ def parse_args():
         default=DU_TIMEOUT_SECS,
         help="Seconds until du will time out resulting in no measurement.",
     )
-    return parser.parse_args()
+    return parser.parse_args(argv)
 
 
-def main():
+def main(argv):
     """Parse command line arguments and run the test spec.
 
     Return the number of failing tests or 0 if all tests pass.
     """
-    args = parse_args()
+    args = parse_args(argv)
     if args.reaper_mode:
         daemon_class = QuotaReaperDaemon
     else:
@@ -638,8 +648,8 @@ def main():
         args.stale_quota_secs,
         args.du_timeout_secs,
     )
-    return daemon.main()
+    return daemon
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main(sys.argv[1:])())

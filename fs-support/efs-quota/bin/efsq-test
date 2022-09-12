@@ -1,0 +1,11 @@
+#! /bin/bash -eu
+
+cd $JUPYTERHUB_DIR/fs-support/efs-quota
+
+python -m pytest -v -v -v  \
+       --tb=short \
+       --capture=no \
+       --log-level INFO --log-cli-level INFO \
+       --doctest-modules \
+       --cov=efs_quota_monitor --cov=check_quota --cov-report=html:htmlcov  \
+       tests.py tests.txt $*
