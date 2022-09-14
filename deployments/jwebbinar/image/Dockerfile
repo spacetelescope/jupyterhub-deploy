@@ -152,5 +152,5 @@ RUN   /opt/common-scripts/env-clean
 
 USER $NB_USER
 WORKDIR /home/$NB_USER
-RUN /opt/environments/post-start-hook
+RUN /opt/environments/post-start-hook  docker   # docker == do not run hub-specific functions of hook
 CMD [ "start-notebook.sh" ]

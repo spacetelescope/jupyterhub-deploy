@@ -64,23 +64,6 @@ RUN /opt/common-scripts/apt-install \
         graphviz \
         libopenblas-dev
 
-# X11 and DS9
-RUN /opt/common-scripts/apt-install \
-        dbus-x11 \
-        xfce4 \
-        xfce4-panel \
-        xfce4-session \
-        xfce4-settings \
-        xorg \
-        xubuntu-icon-theme \
-        imagemagick \
-        gedit \
-        saods9
-
-# Firefox ???
-RUN /opt/common-scripts/apt-install \
-        firefox
-
 # Libraries for FITS, DS9, ML
 RUN /opt/common-scripts/apt-install \
         file \
@@ -109,14 +92,6 @@ RUN /opt/common-scripts/apt-install \
 RUN /opt/common-scripts/fix-certs
 
 # ------------------------------------------------------------------------
-# Remove light-locker to prevent screen lock
-# BUG: get rid of --no-check-certificate
-RUN wget https://sourceforge.net/projects/turbovnc/files/3.0/turbovnc_3.0_amd64.deb --no-check-certificate && \
-    dpkg -i turbovnc_3.0_amd64.deb && \
-    rm turbovnc_3.0_amd64.deb && \
-    apt-get remove -y -q light-locker
-
-# ------------------------------------------------------------------------
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
     unzip awscliv2.zip && \
     ./aws/install && \
@@ -141,8 +116,8 @@ RUN cat /opt/common-scripts/global_bashrc >> /etc/bash.bashrc
 
 # ----------------------------------------------------------------------
 # Common conda environments
-# USER ${NB_UID}
-# COPY environments/ /opt/environments/
+#USER ${NB_UID}
+#COPY environments/ /opt/environments/
 
 # ----------------------------------------------------------------------
 # Set up astroquery and ds9 desktop short-cut, will be further
@@ -161,6 +136,3 @@ RUN npm install -g --prod yarn             && \
     yarn config set cafile /etc/ssl/certs/stsci-tls-ca-bundle.pem && \
     npm cache clean --force && \
     yarn cache clean --force
-    
-
-
