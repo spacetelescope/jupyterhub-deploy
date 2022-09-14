@@ -28,8 +28,6 @@ jupyterhub:
       - display_name: "TIKE Science Platform"
         default: true
     storage:
-      dynamic:
-        storageClass: "aws-efs"
       extraVolumes:
         - name: s3-pvc
           persistentVolumeClaim:
@@ -49,7 +47,3 @@ jupyterhub:
     memory:
       guarantee: 14G
       limit: 15G
-  cull:
-    enabled: true
-    timeout: 1800
-    every: 60

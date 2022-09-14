@@ -18,8 +18,10 @@ jupyterhub:
         minAvailable: 0
   singleuser:
     storage:
-      dynamic:
-        storageClass: "aws-efs"
+      type: "static"
+      static:
+        pvcName: "users-jh-pvc"
+        subPath: "{username}"
     defaultUrl: "/lab"
   scheduling:
     userScheduler:
