@@ -6,6 +6,15 @@ jupyterhub:
   singleuser:
     image:
       tag: latest-dev
+    storage:
+      extraVolumes:
+        - name: systats
+          persistentVolumeClaim:
+            claimName: task-pv-claim
+      extraVolumeMounts:
+        - name: systats
+          mountPath: /sysstats
+          readOnly: true
   prePuller:
     continuous:
       enabled: true
