@@ -31,6 +31,13 @@ if [[ -d ${kernel_test_dir} ]]; then
     # Run every notebook (*.ipynb) in the environment tests directory
     /opt/common-scripts/test-notebooks  --jobs ${jobs}  $kernel  `find ${kernel_test_dir} -name '*.ipynb'`
 
+    # Run any executable (shell script) named "test" defined in the environments tests directory
+    if [[ -f ${kernel_test_dir}/test ]]; then
+        echo "------------------------- Running ${kernel} Test Script --------------------------"
+        cd ${kernel_test_dir}
+        ./test
+    fi
+
     source /opt/common-scripts/env-deactivate ${kernel}
 
 else
