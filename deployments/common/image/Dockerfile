@@ -108,7 +108,7 @@ RUN ln -s ${CONDA_DIR}/etc/profile.d/conda.sh /etc/profile.d/conda.sh
 USER root
 
 # Keep Xfce directories out of home and set up shortcuts for DS9.
-COPY user-dirs.defaults /etc/xdg/user-dirs.defaults
+#COPY user-dirs.defaults /etc/xdg/user-dirs.defaults
 
 COPY --chown=${NB_UID}:${NB_GID}  common-scripts/ /opt/common-scripts
 COPY --chown=${NB_UID}:${NB_GID}  common-env/ /opt/common-env

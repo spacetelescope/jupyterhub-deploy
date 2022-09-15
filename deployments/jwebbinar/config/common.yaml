@@ -17,14 +17,6 @@ jupyterhub:
       templates: |
         ## Configure JupyterHub to look for the templates we inject with a ConfigMap
         c.JupyterHub.template_paths.insert(0, "/etc/jupyterhub/templates")
-      postStart: |
-        c.KubeSpawner.lifecycle_hooks = {
-            "postStart": {
-                "exec": {
-                    "command": ["/bin/sh", "-c", "rsync -r /etc/default-home-contents/ /home/jovyan; /opt/environments/setup-notebooks; chmod +x /home/jovyan/Desktop/*.desktop; /opt/common-scripts/symlink-crds; /opt/environments/remove-kernel jdaviz; rm -rf /home/jovyan/.user-dirs/Desktop"]
-                }
-            }
-        }
     extraVolumes:
       ## Make the hub pod be able to access a ConfigMap volume
       - name: hub-templates
@@ -67,6 +59,10 @@ jupyterhub:
           #        - name: mirage-data-volume
           #mountPath: /home/shared/mirage-data
           #readOnly: true
+    lifecycleHooks:
+      postStart:
+        exec:
+          command: ["/opt/environments/post-start-hook"]
     extraEnv:
       CRDS_PATH:  /home/jovyan/crds_cache
       CRDS_SERVER_URL: https://jwst-crds.stsci.edu

@@ -45,3 +45,8 @@ rsync -r  /etc/default-home-contents/ /home/jovyan
 
 # needs update from romancal_datamodels to new package arrangement
 # echo ${ROMANCAL_ALL_NOTEBOOKS} >/opt/environments/roman-cal/tests/notebooks
+
+# .............................................................................................
+# Remove VNC Desktop from Launcher
+rm -rf /home/jovyan/.user-dirs/Desktop
+rm -rf /home/jovyan/Desktop
