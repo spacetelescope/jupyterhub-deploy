@@ -12,8 +12,6 @@ rsync -r /etc/default-home-contents/ /home/jovyan
 
 /opt/environments/setup-notebooks
 
-chmod +x /home/jovyan/Desktop/*.desktop
-
 /opt/common-scripts/symlink-crds 
 
 /opt/environments/remove-kernel jdaviz 
