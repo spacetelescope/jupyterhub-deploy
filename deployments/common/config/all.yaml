@@ -11,6 +11,8 @@ jupyterhub:
             return response['attrib']['email']
       set_username_key: |
           c.GenericOAuthenticator.username_key = get_email
+      fast_fail_bad_spawn: |
+        c.JupyterHub.spawner_class = CustomSpawner
   proxy:
     chp:
       pdb:
