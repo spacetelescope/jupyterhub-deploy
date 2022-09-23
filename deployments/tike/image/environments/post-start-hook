@@ -127,3 +127,8 @@ EOF
 
 # /opt/common-scripts/set-notebook-kernel tess  `cat /opt/environments/tess/tests/long-notebooks`
 # /opt/common-scripts/set-notebook-kernel tess  `cat /opt/environments/tess/tests/long-notebooks-failing`
+
+# .............................................................................................
+# Remove VNC Desktop from Launcher
+rm -rf /home/jovyan/.user-dirs/Desktop
+rm -rf /home/jovyan/Desktop

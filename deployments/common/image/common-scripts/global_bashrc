@@ -6,6 +6,6 @@ export PS1="${debian_chroot:+($debian_chroot)}\u@notebook:\w\$ "
 # Activate base by default
 conda activate base
 
-export PATH="/opt/TurboVNC/bin:$PATH"
+#export PATH="/opt/TurboVNC/bin:$PATH"
 
 alias ls="ls --color=auto"
