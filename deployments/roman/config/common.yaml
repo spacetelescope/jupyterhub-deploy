@@ -24,4 +24,5 @@ jupyterhub:
           command: ["/opt/environments/post-start-hook"]
     extraEnv:
         CRDS_PATH:  /home/jovyan/crds_cache
-        CRDS_SERVER_URL: https://jwst-crds.stsci.edu
+        CRDS_SERVER_URL: https://roman-crds-test.stsci.edu
+        TEST_BIGDATA: https://bytesalad.stsci.edu/artifactory

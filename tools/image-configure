@@ -13,5 +13,7 @@ perl -pi -e "s/USE_FROZEN=[\d]/USE_FROZEN=$USE_FROZEN/g" setup-env
 FREEZE_CHILL=${3:-1}
 perl -pi -e "s/FREEZE_CHILL=[\d]/FREEZE_CHILL=$FREEZE_CHILL/g" setup-env
 
-cat  setup-env
+CAL_VERSION=${4:-latest}
+perl -pi -e "s/CAL_VERSION=latest/CAL_VERSION=$CAL_VERSION/g" setup-env
 
+cat  setup-env
