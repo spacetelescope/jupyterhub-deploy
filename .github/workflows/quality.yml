@@ -47,3 +47,12 @@ jobs:
         run: |
            source setup-env
            tools/sscan-flake8
+
+      - name: EFS quota testing
+        shell: bash
+        continue-on-error: false
+        run: |
+           source setup-env
+           efsq-test
+
+      

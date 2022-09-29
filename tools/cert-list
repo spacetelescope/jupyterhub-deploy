@@ -52,16 +52,18 @@ def run(cmd, cwd=".", timeout=10):
 def decode(lines):
     with tempfile.NamedTemporaryFile(mode='w+', delete=False) as tmpf:
         tmpf.write("".join(lines))
-    return run(f"openssl x509 -subject -issuer -nocert -in {tmpf.name}")
+    return run(f"openssl x509 -subject -issuer -subject_hash -issuer_hash -serial --nocert -in {tmpf.name}")
 
 
 def main():
     with open(sys.argv[1]) as chain:
         for line in chain.readlines():
-            if "BEGIN" in line:
+            if not line or line.startswith("#"):
+                continue
+            if "---BEGIN" in line:
                 lines = []
             lines.append(line)
-            if "END" in line:
+            if "---END" in line:
                 print(decode(lines))
 
 
