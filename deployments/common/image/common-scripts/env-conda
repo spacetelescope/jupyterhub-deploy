@@ -56,7 +56,7 @@ case ${USE_FROZEN} in
        env_create ${env_frozen_yml}
        ;;
     2) echo "===== Creating conda environment ${env} from chilly constraints ${env_chilly_yml}"
-       env create ${env_chilly_yml}
+       env_create ${env_chilly_yml}
        ;;
 esac
 
