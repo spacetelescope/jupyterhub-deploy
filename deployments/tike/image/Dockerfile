@@ -49,7 +49,7 @@ COPY --chown=${NB_UID}:${NB_GID} environments/tess/ /opt/environments/tess/
 
 RUN /opt/common-scripts/env-src-install  tess  batman-package
 
-RUN /opt/common-scripts/env-src-install  tess  radvel
+# RUN /opt/common-scripts/env-src-install  tess  radvel
 
 RUN /opt/common-scripts/env-src-install  tess  juliet
 
@@ -117,5 +117,5 @@ RUN   /opt/common-scripts/env-clean
 
 USER $NB_USER
 WORKDIR /home/$NB_USER
-RUN /opt/environments/post-start-hook
+RUN /opt/environments/post-start-hook  docker   # docker == do not run hub-specific functions of hook
 CMD [ "start-notebook.sh" ]
