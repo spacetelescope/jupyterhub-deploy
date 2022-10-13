@@ -10,10 +10,9 @@ from kubespawner.objects import (
     make_secret,
     make_service,
 )
-from traitlets import (
-    Bool
-)
+from traitlets import Bool
 import asyncio
+
 
 class CustomSpawner(KubeSpawner):
     def __init__(self, *args, **kwargs):
@@ -25,18 +24,28 @@ class CustomSpawner(KubeSpawner):
         pod must be a dictionary representing a Pod kubernetes API object.
         """
         is_running = (
-          pod is not None
-          and pod["status"]["phase"] == 'Running'
-          and pod["status"]["podIP"] is not None
-          and "deletionTimestamp" not in pod["metadata"]
-          and all([cs["ready"] for cs in pod["status"]["containerStatuses"]])
+            pod is not None
+            and pod["status"]["phase"] == "Running"
+            and pod["status"]["podIP"] is not None
+            and "deletionTimestamp" not in pod["metadata"]
+            and all([cs["ready"] for cs in pod["status"]["containerStatuses"]])
         )
         # Raise error and stop the spawning process if the pod failed or if one or more of its containers are stuck in a crash loop
-        if pod["status"]["phase"] == 'Failed':
+        if pod["status"]["phase"] == "Failed":
             raise Exception("Pod status = Failed")
         try:
-            if any([(cs['state']['waiting']['reason'] == 'CrashLoopBackOff' and cs['restartCount'] > 3) for cs in pod["status"]["containerStatuses"]]):
-                raise Exception("One or more containers crashed more than three times in a crash loop")
+            if any(
+                [
+                    (
+                        cs["state"]["waiting"]["reason"] == "CrashLoopBackOff"
+                        and cs["restartCount"] > 3
+                    )
+                    for cs in pod["status"]["containerStatuses"]
+                ]
+            ):
+                raise Exception(
+                    "One or more containers crashed more than three times in a crash loop"
+                )
         except KeyError:
             pass
         return is_running
@@ -69,7 +78,7 @@ class CustomSpawner(KubeSpawner):
                 partial(
                     self._make_create_pvc_request, pvc, self.k8s_api_request_timeout
                 ),
-                f'Could not create PVC {self.pvc_name}',
+                f"Could not create PVC {self.pvc_name}",
                 # Each req should be given k8s_api_request_timeout seconds.
                 timeout=self.k8s_api_request_retry_timeout,
             )
@@ -85,7 +94,7 @@ class CustomSpawner(KubeSpawner):
         # If there's a timeout, just let it propagate
         await exponential_backoff(
             partial(self._make_create_pod_request, pod, self.k8s_api_request_timeout),
-            f'Could not create pod {ref_key}',
+            f"Could not create pod {ref_key}",
             timeout=self.k8s_api_request_retry_timeout,
         )
 
@@ -148,8 +157,10 @@ class CustomSpawner(KubeSpawner):
         # start_timeout, starting from a slightly earlier point.
         try:
             await exponential_backoff(
-                lambda: self.is_pod_running_or_failed(self.pod_reflector.pods.get(ref_key, None)),
-                'pod %s did not start in %s seconds!' % (ref_key, self.start_timeout),
+                lambda: self.is_pod_running_or_failed(
+                    self.pod_reflector.pods.get(ref_key, None)
+                ),
+                "pod %s did not start in %s seconds!" % (ref_key, self.start_timeout),
                 timeout=self.start_timeout,
             )
         except TimeoutError:
@@ -168,7 +179,7 @@ class CustomSpawner(KubeSpawner):
         self.pod_id = pod["metadata"]["uid"]
         if self.event_reflector:
             self.log.debug(
-                'pod %s events before launch: %s',
+                "pod %s events before launch: %s",
                 ref_key,
                 "\n".join(
                     [
@@ -184,5 +195,6 @@ class CustomSpawner(KubeSpawner):
             )
 
         return self._get_pod_url(pod)
+
 
 c.JupyterHub.spawner_class = CustomSpawner
