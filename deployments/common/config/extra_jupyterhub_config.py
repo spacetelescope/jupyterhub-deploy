@@ -4,7 +4,7 @@ from functools import partial
 from tornado import gen
 from kubespawner.objects import make_owner_reference
 
-
+# Based on kubespawner 1.1.0
 class CustomSpawner(KubeSpawner):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
