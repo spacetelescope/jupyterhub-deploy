@@ -1,17 +1,8 @@
 from kubespawner import KubeSpawner
 from jupyterhub.utils import exponential_backoff
-from functools import partial, wraps
+from functools import partial
 from tornado import gen
-from kubespawner.objects import (
-    make_namespace,
-    make_owner_reference,
-    make_pod,
-    make_pvc,
-    make_secret,
-    make_service,
-)
-from traitlets import Bool
-import asyncio
+from kubespawner.objects import make_owner_reference
 
 
 class CustomSpawner(KubeSpawner):
@@ -30,7 +21,8 @@ class CustomSpawner(KubeSpawner):
             and "deletionTimestamp" not in pod["metadata"]
             and all([cs["ready"] for cs in pod["status"]["containerStatuses"]])
         )
-        # Raise error and stop the spawning process if the pod failed or if one or more of its containers are stuck in a crash loop
+        # Raise error and stop the spawning process if the pod failed
+        # or if one or more of its containers are stuck in a crash loop
         if pod["status"]["phase"] == "Failed":
             raise Exception("Pod status = Failed")
         try:
@@ -195,6 +187,3 @@ class CustomSpawner(KubeSpawner):
             )
 
         return self._get_pod_url(pod)
-
-
-c.JupyterHub.spawner_class = CustomSpawner

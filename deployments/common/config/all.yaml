@@ -6,6 +6,7 @@ jupyterhub:
     extraConfig:
       spawning: |
         c.KubeSpawner.start_timeout = 15 * 60  # Up to 15 minutes
+        c.JupyterHub.spawner_class = CustomSpawner
       get_email: |
         def get_email(response):
             return response['attrib']['email']
