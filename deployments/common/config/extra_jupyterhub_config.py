@@ -1,26 +1,48 @@
 from kubespawner import KubeSpawner
+from jupyterhub.utils import exponential_backoff
+from functools import partial, wraps
+from tornado import gen
+from kubespawner.objects import (
+    make_namespace,
+    make_owner_reference,
+    make_pod,
+    make_pvc,
+    make_secret,
+    make_service,
+)
+from traitlets import (
+    Bool
+)
+import asyncio
 
 class CustomSpawner(KubeSpawner):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     def is_pod_running_or_failed(self, pod):
         """
         Check if the given pod is running or failed
         pod must be a dictionary representing a Pod kubernetes API object.
         """
-        is_running_or_failed = (
-          (pod is not None
+        is_running = (
+          pod is not None
           and pod["status"]["phase"] == 'Running'
           and pod["status"]["podIP"] is not None
           and "deletionTimestamp" not in pod["metadata"]
-          and all([cs["ready"] for cs in pod["status"]["containerStatuses"]]))
-          or pod["status"]["phase"] == 'Failed'
+          and all([cs["ready"] for cs in pod["status"]["containerStatuses"]])
         )
-        return is_running_or_failed
-    
+        # Raise error and stop the spawning process if the pod failed or if one or more of its containers are stuck in a crash loop
+        if pod["status"]["phase"] == 'Failed':
+            raise Exception("Pod status = Failed")
+        try:
+            if any([(cs['state']['waiting']['reason'] == 'CrashLoopBackOff' and cs['restartCount'] > 3) for cs in pod["status"]["containerStatuses"]]):
+                raise Exception("One or more containers crashed more than three times in a crash loop")
+        except KeyError:
+            pass
+        return is_running
+
     async def _start(self):
         """Start the user's pod"""
-
-        print("Making a Custom KubeSpawner")
 
         # load user options (including profile)
         await self.load_user_options()
@@ -59,7 +81,7 @@ class CustomSpawner(KubeSpawner):
         if self.modify_pod_hook:
             pod = await gen.maybe_future(self.modify_pod_hook(self, pod))
 
-        ref_key = f"{self.namespace}/{self.pod_name}"
+        ref_key = "{}/{}".format(self.namespace, self.pod_name)
         # If there's a timeout, just let it propagate
         await exponential_backoff(
             partial(self._make_create_pod_request, pod, self.k8s_api_request_timeout),
@@ -67,7 +89,7 @@ class CustomSpawner(KubeSpawner):
             timeout=self.k8s_api_request_retry_timeout,
         )
 
-        if self.internal_ssl or self.services_enabled:
+        if self.internal_ssl:
             try:
                 # wait for pod to have uid,
                 # required for creating owner reference
@@ -83,25 +105,20 @@ class CustomSpawner(KubeSpawner):
                     self.pod_name, pod["metadata"]["uid"]
                 )
 
-                if self.internal_ssl:
-                    # internal ssl, create secret object
-                    secret_manifest = self.get_secret_manifest(owner_reference)
-                    await exponential_backoff(
-                        partial(
-                            self._ensure_not_exists,
-                            "secret",
-                            secret_manifest.metadata.name,
-                        ),
-                        f"Failed to delete secret {secret_manifest.metadata.name}",
-                    )
-                    await exponential_backoff(
-                        partial(
-                            self._make_create_resource_request,
-                            "secret",
-                            secret_manifest,
-                        ),
-                        f"Failed to create secret {secret_manifest.metadata.name}",
-                    )
+                # internal ssl, create secret object
+                secret_manifest = self.get_secret_manifest(owner_reference)
+                await exponential_backoff(
+                    partial(
+                        self._ensure_not_exists, "secret", secret_manifest.metadata.name
+                    ),
+                    f"Failed to delete secret {secret_manifest.metadata.name}",
+                )
+                await exponential_backoff(
+                    partial(
+                        self._make_create_resource_request, "secret", secret_manifest
+                    ),
+                    f"Failed to create secret {secret_manifest.metadata.name}",
+                )
 
                 service_manifest = self.get_service_manifest(owner_reference)
                 await exponential_backoff(
@@ -132,7 +149,7 @@ class CustomSpawner(KubeSpawner):
         try:
             await exponential_backoff(
                 lambda: self.is_pod_running_or_failed(self.pod_reflector.pods.get(ref_key, None)),
-                f'pod {ref_key} did not start in {self.start_timeout} seconds!',
+                'pod %s did not start in %s seconds!' % (ref_key, self.start_timeout),
                 timeout=self.start_timeout,
             )
         except TimeoutError:
@@ -143,7 +160,7 @@ class CustomSpawner(KubeSpawner):
                     "Pod %s never showed up in reflector, restarting pod reflector",
                     ref_key,
                 )
-                self.log.error(f"Pods: {self.pod_reflector.pods}")
+                self.log.error("Pods: {}".format(self.pod_reflector.pods))
                 self._start_watching_pods(replace=True)
             raise
 
@@ -167,3 +184,5 @@ class CustomSpawner(KubeSpawner):
             )
 
         return self._get_pod_url(pod)
+
+c.JupyterHub.spawner_class = CustomSpawner

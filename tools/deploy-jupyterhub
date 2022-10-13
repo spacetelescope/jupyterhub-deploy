@@ -28,7 +28,7 @@ pushd $(dirname ${secrets_yaml})
 awsudo $ADMIN_ARN sops --decrypt $(basename ${secrets_yaml}) > $tmp_decrypted
 popd
 
-helm upgrade --debug --wait --install ${DEPLOYMENT_NAME}-${ENVIRONMENT} hub -f ${COMMON_CONFIG_DIR}/all.yaml -f ${CONFIG_DIR}/common.yaml -f ${CONFIG_DIR}/${ENVIRONMENT}.yaml -f ${tmp_decrypted} --set-string jupyterhub.singleuser.image.name=${ECR_REGISTRY}/${IMAGE_REPO} --set-string jupyterhub.singleuser.image.tag="latest-${ENVIRONMENT}" --set-file jupyterhub.hub.extraFiles.my_config.stringData=${COMMON_CONFIG_DIR}/my_jupyterhub_config.py
+helm upgrade --debug --wait --install ${DEPLOYMENT_NAME}-${ENVIRONMENT} hub -f ${COMMON_CONFIG_DIR}/all.yaml -f ${CONFIG_DIR}/common.yaml -f ${CONFIG_DIR}/${ENVIRONMENT}.yaml -f ${tmp_decrypted} --set-string jupyterhub.singleuser.image.name=${ECR_REGISTRY}/${IMAGE_REPO} --set-string jupyterhub.singleuser.image.tag="latest-${ENVIRONMENT}" --set-file jupyterhub.hub.extraFiles.my_config.stringData=${COMMON_CONFIG_DIR}/extra_jupyterhub_config.py
 
 rm ${tmp_decrypted}
 
