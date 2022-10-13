@@ -9,15 +9,21 @@ on:
    workflow_dispatch:
 jobs:
   docker:
-    name: "${{ matrix.DEPLOYMENT_NAME }}  USE_FROZEN=${{ matrix.USE_FROZEN }} -- Image Build, Test"
+    name: "${{ matrix.DEPLOYMENT_NAME }}  USE_FROZEN=${{ matrix.USE_FROZEN }} ${{ matrix.CAL_VERSION }} -- Image Build, Test"
     runs-on: ubuntu-18.04
 
     strategy:
-      max-parallel: 3
+      max-parallel: 4
       fail-fast: false
       matrix:
         DEPLOYMENT_NAME: [ jwebbinar, roman, tike]
-        USE_FROZEN: [ 0, 1, 2 ]
+        USE_FROZEN: [ 0 ]
+        CAL_VERSION: [ latest ]
+        include:
+        - DEPLOYMENT_NAME: roman
+          USE_FROZEN: 0
+          CAL_VERSION: none
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -45,7 +51,7 @@ jobs:
       - name: Set Up Environment
         shell: bash
         run: |
-           tools/image-configure ${{ matrix.DEPLOYMENT_NAME }}  ${{ matrix.USE_FROZEN }}
+           tools/image-configure ${{ matrix.DEPLOYMENT_NAME }}  ${{ matrix.USE_FROZEN }} 1  ${{ matrix.CAL_VERSION }}
            df -h
 
       - name: Image Build

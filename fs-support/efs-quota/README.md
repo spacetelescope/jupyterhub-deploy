@@ -24,15 +24,11 @@ The EFS quota system requires a small block of extra configuration in
 the hub's secrets file to define a JH service and it's API token:
 
     hub:
-      extraConfig:
-          efsquota: |
-              c.JupyterHub.services = [
-                  {
-                  "name" : "efsquota-admin",
-                  "api_token" : "<generate with 'openssl rand -hex 32'>"
-                  "admin" : True,   # for JupyterHub 1.x
-                  },
-              ]
+        services:
+          efs-quota:
+            admin: True
+            name: efs-quota
+            api_token: "<generate token: openssl random --hex 32>"
 
 The `api_token` field of the config should be generated using using the
 UNIX command:

@@ -20,6 +20,41 @@ if [ -f "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem" ]; then
    cp -f /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem ../../common/image
 fi
 
+# ------------------------------------------------------------------------ This
+# dynamically updates requirements for any kernel that defines an
+# update-requirements script.  CAL_VERSION depends on mission but is nominally
+# a github tag, e.g. x.y.z or "latest", where latest nominally means
+# master/main but behavior is truly defined by the update-requirements script
+# which may vary by mission and kernel.
+#
+# Note that the update below runs uncondtionally if update-requirememts is
+# implemented and potentially overwrites the floating requirements which are in
+# the repo; in the context of CI/CD this is important because the actual
+# installed requirements may/will be in the image but not the repo unless they
+# are explicitly committed after this script runs.  This is particularly true
+# for "latest" where requirements are nominally copied directly from
+# e.g. github whereas x.y.z vesions generally have static requirements lists in
+# github or artifactory once they exist.
+#
+# This approach enables a 1 kernel image to be built with either tagged
+# or floating requirements.  To start with only latest updates automatically
+# with the expectation that the release version is CM'ed as the floating
+# requirements but then replaced below by latest.  Eventually,  both forms
+# should work dynamically from github.
+#
+if [[ ${CAL_VERSION} != none ]]; then
+    for env in `image-envs`; do
+        (
+            cd environments/${env};
+            if [ -f update-requirements ]; then
+                echo "Updating requirements for environment ${env} to ${CAL_VERSION}"
+                ./update-requirements ${CAL_VERSION}
+            fi
+        )
+    done
+fi
+
+
 # -------------------------------------------------------------------------
 # Substitute RUN commands in Dockerfiles with RUN ${BUILDKIT} to enable package
 #   caching to reduce network package downloads.

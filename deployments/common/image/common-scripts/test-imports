@@ -32,13 +32,13 @@ for pkg in import_list:
         fprint("Importing", pkg, "... ", end="")
         __import__(pkg)
         fprint("ok")
-    except ImportError:
+    except Exception:
         traceback.print_exc()
         fprint("FAIL")
         errs.append(pkg)
     flush()
 fprint("=" * 80)
 fprint(
-    f" Failing packages: {len(errs)} ".center(80, "=") + "\n", "\n".join(errs), sep=""
+    f" Failing imports: {len(errs)} ".center(80, "=") + "\n", "\n".join(errs), sep=""
 )
 sys.exit(int(len(errs) != 0))

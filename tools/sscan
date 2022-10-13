@@ -9,7 +9,7 @@ raw_files=$(find . -name '*.yaml' -o -name '*.yml')
 yaml_files=""
 for file in $raw_files; do
     if ! grep -q '\}\}' $file; then
-	yaml_files="$yaml_files $file"
+        yaml_files="$yaml_files $file"
     fi
 done
 #echo $yaml_files
@@ -27,12 +27,6 @@ echo "Scanning source code for vulnerabilities using bandit"
 echo "====================================================="
 sscan-bandit
 bandit_status=$?
-
-# echo "====================================================="
-# echo "Scanning environment dependencies using safety       "
-# echo "====================================================="
-# sscan-safety
-# safety_status=$?
 
 echo
 echo "----------------------------- sscan overall summary ----------------------------"
@@ -55,11 +49,5 @@ else
     echo "OK - Bandit source code security scanning."
 fi
 
-# if [[ "$safety_status" == "1" ]]; then
-#     echo "ERROR - Safety dependency scans found vulnerabilities."
-# else
-#     echo "OK - Safety dependency scans."
-# fi
-
-fail=`expr $yaml_status + $flake8_status + $bandit_status ` # + $safety_status`
+fail=`expr $yaml_status + $flake8_status + $bandit_status `
 exit $fail
