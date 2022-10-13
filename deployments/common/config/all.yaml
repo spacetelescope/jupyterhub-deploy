@@ -6,11 +6,15 @@ jupyterhub:
     extraConfig:
       spawning: |
         c.KubeSpawner.start_timeout = 15 * 60  # Up to 15 minutes
+        c.JupyterHub.spawner_class = CustomSpawner
       get_email: |
         def get_email(response):
             return response['attrib']['email']
       set_username_key: |
           c.GenericOAuthenticator.username_key = get_email
+    extraFiles:
+      my_config:
+        mountPath: /usr/local/etc/jupyterhub/jupyterhub_config.d/extra_jupyterhub_config.py
   proxy:
     chp:
       pdb:
