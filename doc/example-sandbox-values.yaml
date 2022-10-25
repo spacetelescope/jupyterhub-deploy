@@ -26,6 +26,11 @@ singleuser:
         readOnly: true
   defaultUrl: "/lab"
 hub:
+  config:
+    DummyAuthenticator:
+      password: <make anything you wish>
+    Jupyterhub:
+      authenticator_class: dummy
   services:
     efs-quota:
       admin: True
