@@ -1,0 +1,9 @@
+# if you want to make a quick jupyterhub from one of the helm charts this is the minimum config to get working and ensure a global password (so bitcoin miner bots don't get in)
+hub:
+  config:
+    DummyAuthenticator:
+      password: "<REDACTED - make any password you wish>"
+    Jupyterhub:
+      authenticator_class: dummy
+proxy:
+  secretToken: "<REDACTED - openssl rand -hex 32>"
