@@ -1,3 +1,4 @@
+jupyterlab_widgets==1.0.2
 jupyterhub
 jupyterlab
 notebook

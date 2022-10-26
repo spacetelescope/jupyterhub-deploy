@@ -101,7 +101,7 @@ COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/ /opt/environments/jwebb
 
 # This should NOT be necessary, but as of 24 May 2022 it was needed to get the
 # lab extension working for Jdaviz
-RUN jupyter labextension install @jupyter-widgets/jupyterlab-sidecar
+#RUN jupyter labextension install @jupyter-widgets/jupyterlab-sidecar
 # ========================= vvvvv Generic vvvvv  =========================
 
 # Fix JS encoding issue that prevents widgets from displaying properly in notebook mode

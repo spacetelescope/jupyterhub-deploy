@@ -18,6 +18,7 @@ export JH_HOSTNAME=`echo ${JH_HOSTNAME} | sed -e's/tike/timeseries/g'`
 #   mamba is largely a drop-in replacement for mamba with improved dependency resolution,
 #   parallel downloads, and C++ implementation.
 export CONDA_VER=mamba
+#export CONDA_VER=conda
 
 # Additional parameters for image-exec Docker run command, e.g. add mounts here
 export IMAGE_RUN_PARS="--rm -e JUPYTER_ENABLE_LAB=yes"
@@ -49,7 +50,7 @@ export BUILDKIT_STEP_LOG_MAX_SPEED=10000000
 # useful during iterative dependency debug builds where pip environments are
 # being rebuilt repeatedly.
 
-export USE_BUILDKIT_CACHING=0
+export USE_BUILDKIT_CACHING=1
 
 # ----------------------------------------------------------------------------
 
@@ -66,7 +67,7 @@ export USE_BUILDKIT_CACHING=0
 # Set CLEAR_PKG_CACHES=1 to prevent growth in image size due to package
 # downloads.  This is classic behavior.
 
-export CLEAR_PKG_CACHES=1
+export CLEAR_PKG_CACHES=0
 
 if [[ "${USE_BUILDKIT_CACHING}" == 1 && "${CLEAR_PKG_CACHES}" == 1 ]]; then
     echo "WARNING: Effective buildkit caching requires turning off package clearing."
