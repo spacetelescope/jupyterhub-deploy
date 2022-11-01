@@ -60,10 +60,8 @@ cat <<EOF >/opt/environments/tess/tests/notebooks
     ${SN}/notebooks/MAST/TESS/beginner_tic_search_hd209458/beginner_tic_search_hd209458.ipynb
     ${SN}/notebooks/MAST/TESS/interm_gi_query/interm_gi_query.ipynb
     ${SN}/notebooks/MAST/TESS/beginner_astroquery_dv/beginner_astroquery_dv.ipynb
-    ${SN}/notebooks/MAST/TESS/beginner_how_to_use_ffi/beginner_how_to_use_ffi.ipynb
     ${SN}/notebooks/MAST/TESS/beginner_how_to_use_tp/beginner_how_to_use_tp.ipynb
 
-    ${SN}/notebooks/MAST/TESS/interm_tesscut_dss_overlay/interm_tesscut_dss_overlay.ipynb
     ${SN}/notebooks/MAST/TESS/interm_tesscut_requests/interm_tesscut_requests.ipynb
 EOF
 
@@ -84,6 +82,10 @@ cat <<EOF >/opt/environments/tess/tests/notebooks-failing
     ${SN}/notebooks/MAST/Kepler/kepler_instrumental_noise_2_spurious_signals_and_time_sampling_effects/kepler_instrumental_noise_2_spurious_signals_and_time_sampling_effects.ipynb
     ${SN}/notebooks/MAST/Kepler/kepler_instrumental_noise_3_seasonal_and_detector_effects/kepler_instrumental_noise_3_seasonal_and_detector_effects.ipynb
     ${SN}/notebooks/MAST/Kepler/kepler_creating_your_own_light_curves/kepler_creating_your_own_light_curves.ipynb
+
+    ${SN}/notebooks/MAST/TESS/interm_tesscut_dss_overlay/interm_tesscut_dss_overlay.ipynb
+    ${SN}/notebooks/MAST/TESS/beginner_how_to_use_ffi/beginner_how_to_use_ffi.ipynb
+
 EOF
 
 # .............................................................................................
