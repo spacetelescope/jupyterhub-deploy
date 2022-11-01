@@ -47,7 +47,8 @@ iniconfig
 ipyvue
 ipywidgets==7.7.1
 jinja2==3.0.3
-jdaviz==3.0.2
+#jdaviz==3.0.2
+jdaviz==3.1
 jmespath
 joblib
 jplephem
