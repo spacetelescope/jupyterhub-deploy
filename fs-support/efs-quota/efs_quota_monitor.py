@@ -225,13 +225,14 @@ class AnnouncementRestApi(RestApi):
 
     prefix = "/services/announcement/latest"
 
-    def send_message(self, level, message, timestamp=None, username=None):
+    def send_message(self, level, message, timestamp=None, username=None, replace=None):
         """Post a message to the announment service and return."""
         return self.post(
             level=level,
             announcement=message,
             username=username or "efs-quota",
             timestamp=timestamp or now(),
+            replace=replace,
         )
 
     def clear_announcements(self, username="all"):
@@ -421,9 +422,9 @@ class QuotaDaemon:
             )
             # no extra wait here
 
-    def announce(self, level, message, timestamp=None, username="efs-quota"):
+    def announce(self, level, message, timestamp, username, replace=None):
         try:
-            self.announcement_api.send_message(level, message, timestamp, username)
+            self.announcement_api.send_message(level, message, timestamp, username, replace)
         except Exception as exc:
             self.log.exception(
                 exc, "EXCEPTION: Announcement messge send failed."
@@ -514,7 +515,7 @@ class QuotaReaperDaemon(QuotaDaemon):
             actual_b, quota_b = quota.f_actual_bytes, quota.f_quota_bytes
             message = f"Quota for {user} using {actual_b} of {quota_b} bytes.  OK."
             self.log.info(message, **quota.attrs)
-            self.announce("info", message, quota.stopped, user)
+            self.announce("info", message, quota.stopped, user, message[:10])
 
     def lockout(self, user, quota):
         actual_b, quota_b = quota.f_actual_bytes, quota.f_quota_bytes
