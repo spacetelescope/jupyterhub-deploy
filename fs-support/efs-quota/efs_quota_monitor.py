@@ -147,45 +147,96 @@ def requests_config():
     return http
 
 
-class HubRestApi:
+class RestApi:
+    """Abstract API to simplify/standardize making requests to hub services."""
+
+    prefix = ""
+
+    def __init__(self, hub_url, api_token, api_cert):
+        self.api_url = hub_url + self.prefix
+        self.api_token = api_token
+        self.api_cert = api_cert if api_cert.capitalize() != "False" else False
+        self.requests = requests_config()
+
+    def get(self, suffix=""):
+        r = self.requests.get(
+            self.api_url + suffix,
+            headers={
+                "Authorization": f"token {self.api_token}",
+            },
+            verify=self.api_cert,
+            timeout=API_TIMEOUT,
+        )
+        r.raise_for_status()
+        return r.json()
+
+    def post(self, suffix="", **data):
+        """Post dict `data` using json encoding and return."""
+        r = self.requests.post(
+            self.api_url + suffix,
+            headers={
+                "Authorization": f"token {self.api_token}",
+            },
+            verify=self.api_cert,
+            timeout=API_TIMEOUT,
+            json=data,
+        )
+        r.raise_for_status()
+        return r.json()
+
+    def delete(self, suffix):
+        """Delete user's notebook server,  not account."""
+        r = self.requests.delete(
+            self.api_url + suffix,
+            headers={
+                "Authorization": f"token {self.api_token}",
+            },
+            verify=self.api_cert,
+            timeout=API_TIMEOUT,
+        )
+        r.raise_for_status()
+        return r.json()
+
+
+class HubRestApi(RestApi):
     """Interface for making API requests to the hub to obtain information
     about and to control users.
     """
 
-    def __init__(self, hub_url, api_token, api_cert):
-        self.api_url = hub_url + "/hub/api"
-        self.api_token = api_token
-        self.api_cert = api_cert if api_cert.capitalize() != "False" else False
-        self.requests = requests_config()
+    prefix = "/hub/api"
 
     def last_activity(self):
         """Query JH REST API and return:
 
         { username : last_activity_timestamp, ... }
         """
-        r = self.requests.get(
-            self.api_url + "/users",
-            headers={
-                "Authorization": f"token {self.api_token}",
-            },
-            verify=self.api_cert,
-            timeout=API_TIMEOUT,
-        )
-        r.raise_for_status()
-        return {user["name"]: trim_time(user["last_activity"]) for user in r.json()}
+        return {
+            user["name"]: trim_time(user["last_activity"])
+            for user in self.get("/users")
+        }
 
     def delete_user_server(self, user):
         """Delete user's notebook server,  not account."""
-        # user = k8s_encode(user)
-        r = self.requests.delete(
-            self.api_url + f"/users/{user}/server",
-            headers={
-                "Authorization": f"token {self.api_token}",
-            },
-            verify=self.api_cert,
-            timeout=API_TIMEOUT,
+        return self.delete(f"/users/{user}/server")
+
+
+class AnnouncementRestApi(RestApi):
+    """Interface for making API requests to the hub announcements service."""
+
+    prefix = "/services/announcement/latest"
+
+    def send_message(self, level, message, timestamp=None, username=None):
+        """Post a message to the announment service and return."""
+        return self.post(
+            level=level,
+            announcement=message,
+            username=username or "efs-quota",
+            timestamp=timestamp or now(),
         )
-        r.raise_for_status()
+
+    def clear_announcements(self, username="all"):
+        """Delete announcements for `username`."""
+        self.delete(f"/{username}")
 
 
 # ========================================================================================
@@ -310,6 +361,7 @@ class QuotaDaemon:
         du_timeout_secs,
     ):
         self.hub_api = HubRestApi(hub_url, api_token, api_cert)
+        self.announcement_api = AnnouncementRestApi(hub_url, api_token, api_cert)
         self.log = Log(self.name)
         self.control_root = control_root
         self.home_root = home_root if not home_root.startswith("'") else home_root[1:-1]
@@ -368,6 +420,14 @@ class QuotaDaemon:
                 exc, f"EXCEPTION: Quota processing failed for user {user}."
             )
             # no extra wait here
+
+    def announce(self, level, message, timestamp=None, username="efs-quota"):
+        try:
+            self.announcement_api.send_message(level, message, timestamp, username)
+        except Exception as exc:
+            self.log.exception(
+                exc, "EXCEPTION: Announcement messge send failed."
+            )
 
 
 class QuotaMonitorDaemon(QuotaDaemon):
@@ -452,10 +512,9 @@ class QuotaReaperDaemon(QuotaDaemon):
             self.nearing_limit(user, quota)
         else:
             actual_b, quota_b = quota.f_actual_bytes, quota.f_quota_bytes
-            self.log.info(
-                f"Quota for {user} using {actual_b} of {quota_b} bytes.  OK.",
-                **quota.attrs,
-            )
+            message = f"Quota for {user} using {actual_b} of {quota_b} bytes.  OK."
+            self.log.info(message, **quota.attrs)
+            self.announce("info", message, quota.stopped, user)
 
     def lockout(self, user, quota):
         actual_b, quota_b = quota.f_actual_bytes, quota.f_quota_bytes
@@ -463,11 +522,13 @@ class QuotaReaperDaemon(QuotaDaemon):
         self.log.critical(message, **quota.attrs)
         self.log.critical("Deleting notebook server for", user)
         self.hub_api.delete_user_server(user)
+        self.announce("critical", message, quota.stopped, user)  # irrelevant due to deletion?
 
     def violation(self, user, quota):
         actual_b, quota_b = quota.f_actual_bytes, quota.f_quota_bytes
         message = f"User {user} is using {actual_b} bytes exceeding quota {quota_b} bytes.  Lockout disabled."
         self.log.error(message, **quota.attrs)
+        self.announce("error", message, quota.stopped, user)
 
     def timed_out(self, user, quota):
         message = (
@@ -475,6 +536,7 @@ class QuotaReaperDaemon(QuotaDaemon):
             f"timeout {self.du_timeout_secs} secs.  Usage unknown,  potentially high."
         )
         self.log.warning(message, **quota.attrs)
+        self.announce("warning", message, quota.stopped, user)
 
     def nearing_limit(self, user, quota):
         actual_b, quota_b = quota.f_actual_bytes, quota.f_quota_bytes
@@ -483,6 +545,7 @@ class QuotaReaperDaemon(QuotaDaemon):
             f"  Fraction used: {quota.fraction_used}"
         )
         self.log.warning(message, **quota.attrs)
+        self.announce("warning", message, quota.stopped, user)
 
 
 # ========================================================================================

@@ -106,7 +106,7 @@ warn_fraction: 0.5
 <BLANKLINE>
 
 >>> print(data.json())
-    {"user": "homer@stsci.edu", "quota_bytes": 10737418, "actual_bytes": -1, "fraction_used": 0, "warn_fraction": 0.5, "quota_enabled": true, "lockout_enabled": true, "last_activity": "0001-01-01T01:01", "reaper_time": "0001-01-01T01:01", "active_at_reap": 0, "started": "0001-01-01T01:01", "stopped": "0001-01-01T01:01", "quota_state": "ok", "timed_out": false}
+{"user": "homer@stsci.edu", "quota_bytes": 10737418, "actual_bytes": -1, "fraction_used": 0, "warn_fraction": 0.5, "quota_enabled": true, "lockout_enabled": true, "last_activity": "0001-01-01T01:01", "reaper_time": "0001-01-01T01:01", "active_at_reap": 0, "started": "0001-01-01T01:01", "stopped": "0001-01-01T01:01", "quota_state": "ok", "timed_out": false}
 
 >>> pprint(data.attrs)
 {'active_at_reap': 0,
@@ -391,8 +391,8 @@ Start over for Reaper
 If $HOME doesn't exist,  skip:
 
 >>> tests.quota_reaper_main()
-    {"status": "WARN", "subsystem": "Reaper", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "2022-01-01T00:00:00.125000", "message": "User homer@stsci.edu home dir efs/users/homer-40stsci-2eedu does not exist. Skipping.", "service": "roman", "env": "dmd-dev"}
-    {"status": "INFO", "subsystem": "Reaper", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "2022-01-01T00:00:00.125000", "message": "Waiting 10.0 seconds for next Reaper cycle.", "service": "roman", "env": "dmd-dev"}
+{"status": "WARN", "subsystem": "Reaper", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "2022-01-01T00:00:00.125000", "message": "User homer@stsci.edu home dir efs/users/homer-40stsci-2eedu does not exist. Skipping.", "service": "roman", "env": "dmd-dev"}
+{"status": "INFO", "subsystem": "Reaper", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "2022-01-01T00:00:00.125000", "message": "Waiting 10.0 seconds for next Reaper cycle.", "service": "roman", "env": "dmd-dev"}
 
 Create $HOME but not quota control:
 
@@ -424,9 +424,7 @@ The quota is currently OK:
 
 >>> tests.quota_reaper_main()
 {"user": "homer@stsci.edu", "quota_bytes": 214748364800, "actual_bytes": 3000000, "fraction_used": 1.3969838619232178e-05, "warn_fraction": 0.9, "quota_enabled": true, "lockout_enabled": true, "last_activity": "2022-01-01T00:00:01.500000", "reaper_time": "2022-01-01T00:00:00.125000", "active_at_reap": 0, "started": "2022-01-01T00:00:00", "stopped": "2022-01-01T00:00:00.125000", "quota_state": "ok", "timed_out": false, "status": "INFO", "subsystem": "Reaper", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "2022-01-01T00:00:00", "message": "Quota for homer@stsci.edu using    2.9M of  200.0G bytes.  OK.", "service": "roman", "env": "dmd-dev"}
-{"status": "INFO", "subsystem": "Reaper", "pod_id": "6d4978cb5c-6vqdm",
-"timestamp": "2022-01-01T00:00:00", "message": "Waiting 10.0 seconds for next
-Reaper cycle.", "service": "roman", "env": "dmd-dev"}
+{"status": "INFO", "subsystem": "Reaper", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "2022-01-01T00:00:00", "message": "Waiting 10.0 seconds for next Reaper cycle.", "service": "roman", "env": "dmd-dev"}
 
 >>> tests.test_checker()
 INFO - You are using    2.9M bytes of  200.0G permitted bytes of $HOME storage.  Usage OK.
@@ -536,8 +534,8 @@ This field can be potentially integrated to get cummulative login time in units 
 ... )
 >>> LA_DICTS = ({"homer@stsci.edu": "2022-01-01T00:00:00"},)
 >>> tests.quota_reaper_main(now_stamps=NOW_STAMPS, la_dicts=LA_DICTS)
-    {"user": "homer@stsci.edu", "quota_bytes": 214748364800, "actual_bytes": 10, "fraction_used": 4.656612873077393e-11, "warn_fraction": 0.9, "quota_enabled": true, "lockout_enabled": true, "last_activity": "2022-01-01T00:00:00", "reaper_time": "2022-01-01T00:00:25", "active_at_reap": 0, "started": "2022-01-01T00:00:00", "stopped": "2022-01-01T00:00:00.125000", "quota_state": "ok", "timed_out": false, "status": "INFO", "subsystem": "Reaper", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "2022-01-01T00:00:26", "message": "Quota for homer@stsci.edu using      10 of  200.0G bytes.  OK.", "service": "roman", "env": "dmd-dev"}
-    {"status": "WARN", "subsystem": "Reaper", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "2022-01-01T00:00:28", "message": "Monitor cycle is 17.0 seconds too slow to sample every 10.0.  Slow sampling may be mitigated by multiple monitors or few outlying users.", "service": "roman", "env": "dmd-dev"}
+{"user": "homer@stsci.edu", "quota_bytes": 214748364800, "actual_bytes": 10, "fraction_used": 4.656612873077393e-11, "warn_fraction": 0.9, "quota_enabled": true, "lockout_enabled": true, "last_activity": "2022-01-01T00:00:00", "reaper_time": "2022-01-01T00:00:25", "active_at_reap": 0, "started": "2022-01-01T00:00:00", "stopped": "2022-01-01T00:00:00.125000", "quota_state": "ok", "timed_out": false, "status": "INFO", "subsystem": "Reaper", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "2022-01-01T00:00:26", "message": "Quota for homer@stsci.edu using      10 of  200.0G bytes.  OK.", "service": "roman", "env": "dmd-dev"}
+{"status": "WARN", "subsystem": "Reaper", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "2022-01-01T00:00:28", "message": "Monitor cycle is 17.0 seconds too slow to sample every 10.0.  Slow sampling may be mitigated by multiple monitors or few outlying users.", "service": "roman", "env": "dmd-dev"}
 
 >>> data = fp.load()
 >>> assert not data.active_at_reap

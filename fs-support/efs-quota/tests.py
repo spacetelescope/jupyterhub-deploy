@@ -148,22 +148,23 @@ def quota_daemon_main(
     mock_now.side_effect = now_stamps
     mock_du.side_effect = du_values
     with patch.object(efqm.HubRestApi, "last_activity") as last_activity:
-        daemon = get_daemon()
-        last_activity.side_effect = list(la_dicts) + [BaseException]
+        with patch.object(efqm.AnnouncementRestApi, "send_message"):
+            daemon = get_daemon()
+            last_activity.side_effect = list(la_dicts) + [BaseException]
 
-        def reraise(exc, *args, **keys):
-            if not isinstance(exc, StopIteration):
-                traceback.print_exc()
-                daemon.log.error(*args, **keys)
-                raise
+            def reraise(exc, *args, **keys):
+                if not isinstance(exc, StopIteration):
+                    traceback.print_exc()
+                    daemon.log.error(*args, **keys)
+                    raise
 
-        daemon.log.dd_mode = True
-        daemon.log.debug_mode = False
-        daemon.log.exception = reraise
-        try:
-            daemon.main()
-        except BaseException:
-            pass
+            daemon.log.dd_mode = True
+            daemon.log.debug_mode = False
+            daemon.log.exception = reraise
+            try:
+                daemon.main()
+            except BaseException:
+                pass
 
 
 NOW_STAMPS = (

@@ -65,6 +65,12 @@ RUN /opt/common-scripts/env-sync roman-cal
 # like potentially all roman-cal-specific requirements have changed.
 COPY --chown=${NB_UID}:${NB_GID} environments/roman-cal/ /opt/environments/roman-cal/
 
+# ----- COPY --chown=${NB_UID}:${NB_GID} nersc-refresh-announcements/ nersc-refresh-announcements/
+# ----- RUN cd nersc-refresh-announcements && \
+# -----     pip install . && \
+# -----     cd .. && \
+# -----     rm -rf nersc-refresh-announcements
+
 # ========================= ^^^^^ Custom  ^^^^^ =========================
 # ========================= vvvvv Generic vvvvv  =========================
 

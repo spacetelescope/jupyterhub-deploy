@@ -1,0 +1,46 @@
+#! /bin/bash
+
+set -eu
+
+kind=${1:-"send"}
+
+cd $JUPYTERHUB_DIR
+
+TOKEN=$(get-service-token announcement)
+
+CERT="fs-support/efs-quota/jh-intermediates.pem"
+
+case ${kind} in
+    send|put)
+	message=${2:-"this is a test."}
+	level=${3:-"info"}
+	username=${4:-"system"}
+	case ${level} in
+	    debug|info|warning|error|critical)
+	    ;;
+	    *)
+	        echo "Invalid value for 'level': ${level}"
+		exit 2
+		;;
+	esac
+	curl --cacert $CERT -X POST -H "Authorization: token ${TOKEN}"     \
+	     -d "{\"level\":\"${level}\", \"username\": \"${username}\", \"announcement\": \"${message}\"}"  \
+	     https://${JH_HOSTNAME}/services/announcement/latest
+	  ;;
+    clear)
+	username=${2:-"system"}
+	curl --cacert $CERT -X DELETE -H "Authorization: token ${TOKEN}" \
+	     https://${JH_HOSTNAME}/services/announcement/latest/${username}
+	;;
+    fetch|get)
+	username=${2:-"system"}
+	curl --cacert $CERT -X GET -H "Authorization: token ${TOKEN}" \
+	     https://${JH_HOSTNAME}/services/announcement/latest/${username}
+	;;
+    *) echo "announce <send|clear|get>   <message>   <critical|error|warning|*info|debug>  [<username>]"
+       exit 2
+       ;;
+esac
+
+echo
+

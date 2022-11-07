@@ -18,7 +18,7 @@ helm upgrade --debug --wait --install ${DEPLOYMENT_NAME}-efsquota-${ENVIRONMENT}
      --namespace efs-quota --create-namespace \
      --values fs-support/efs-quota/helm/values.yaml \
      --set-string hub_url=https://${JH_HOSTNAME} \
-     --set-string api_token=$(efsq-api-token) \
+     --set-string api_token=$(get-service-token efs-quota) \
      --set-string region=us-east-1 \
      --set-string image.repository=${ECR_REGISTRY}/${EFSQUOTA_REPO} \
      --set-string image.tag=$(echo ${EFSQUOTA_TAG} | sed -e 's/unscanned-//g') \

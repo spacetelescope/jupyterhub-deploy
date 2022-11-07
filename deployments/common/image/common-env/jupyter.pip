@@ -25,3 +25,5 @@ ipyvolume
 ipyvuetify
 ipywebrtc
 ipykernel
+jupyter-resource-usage
+git+https://github.com/jaytmiller/nersc-refresh-announcements@octarine-updates

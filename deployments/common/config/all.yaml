@@ -11,6 +11,9 @@ jupyterhub:
             return response['attrib']['email']
       set_username_key: |
           c.GenericOAuthenticator.username_key = get_email
+    extraFiles:
+      announcements_service:
+        mountPath: /usr/share/jupyterhub/announcements.py
   proxy:
     chp:
       pdb:

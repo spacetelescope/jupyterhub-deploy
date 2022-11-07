@@ -135,6 +135,32 @@ function where () {
     echo $info
 }
 
+
+
+# e.g.  kpods hub default  -- prints first pod name for pods matching hub in default namespace
+function kpods {
+    pod_pat=${1}
+    namespace=${2:-default} 
+    echo $(kubectl get pods --namespace $namespace | grep $pod_pat | head -1 | cut -d ' ' -f 1)
+}
+
+# e.g. klogs hub  --  dumps pod logs for hub pod
+# e.g. klogs monitor efs-quota  --  dumps pod logs for first monitor pod in efs-quota namespace
+function klogs {
+    pod_pat=${1}
+    namespace=${2:-default}
+     kpods $pod_pat $namespace | xargs kubectl logs --namespace $namespace
+}
+
+# e.g. kexec hub                                       -- open a bash shell in hub pod
+# e.g. kexec hub default "some cmd of several words"   -- exec multiword command on hub pod
+function kexec {
+    pod_pat=${1}
+    namespace=${2:-default}
+    cmd=${3:-/bin/bash}
+    kubectl exec -it --namespace $namespace $(kpods $pod_pat $namespace) -- $(echo $cmd)
+}
+
 alias awsu="awsudo -d 3600 $ADMIN_ARN"
 alias terraform-init="awsu terraform init -backend-config=./backend.conf -backend-config=./backend.conf"
 alias terraform-apply="awsu terraform apply --var-file=${DEPLOYMENT_NAME}.tfvars"

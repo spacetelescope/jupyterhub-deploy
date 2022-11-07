@@ -1,0 +1,29 @@
+#! /bin/bash
+
+# This script extracts service API tokens from the secrets store
+# e.g.  get-service-token announcement
+# e.g.  get-service-token efq-quota
+
+set -eu
+
+cd $JUPYTERHUB_DIR
+
+service_name=${1}
+
+case "${ENVIRONMENT}" in
+    dev | test | prod)
+	export SECRETS=$(secrets-cat)
+	;;
+    *)
+	export SECRETS=$(cat values.yaml)
+	;;
+esac
+
+python - <<FILTER
+import os      
+import yaml    
+       
+x = yaml.safe_load(os.environ["SECRETS"])
+
+print(x["jupyterhub"]["hub"]["services"]["${service_name}"]["api_token"])
+FILTER
