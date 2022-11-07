@@ -4,6 +4,7 @@ import json
 import os
 import sys
 from collections import defaultdict
+import re
 
 from tornado import escape, ioloop, web
 
@@ -112,9 +113,14 @@ class AnnouncementRequestHandler(HubAuthenticated, web.RequestHandler):
         doc = escape.json_decode(self.request.body)
         username = doc["username"]
         timestamp = doc.get("timestamp", now())
+        replace = doc.get("replace", None)
+        if replace:
+            user_messages = list(ANNOUNCEMENTS[username])
+            for message in user_messages:
+                if re.search(replace, message[3]):
+                    ANNOUNCEMENTS[username].remove(message)
         message = (username, timestamp, doc["level"], doc["announcement"])
-        if message not in ANNOUNCEMENTS[username]:
-            ANNOUNCEMENTS[username].append(message)
+        ANNOUNCEMENTS[username].append(message)
         if len(ANNOUNCEMENTS[username]) > MESSAGE_Q_LEN:
             ANNOUNCEMENTS[username] = ANNOUNCEMENTS[username][1:]  # drop oldest message
         self.write_to_json(message)
