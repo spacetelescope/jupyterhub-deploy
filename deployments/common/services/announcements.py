@@ -5,10 +5,11 @@ import os
 import sys
 from collections import defaultdict
 import re
+import uuid
 
 from tornado import escape, ioloop, web
 
-from jupyterhub.services.auth import HubAuthenticated
+from jupyterhub.services.auth import HubOAuthenticated, HubOAuthCallbackHandler
 
 # ----------------------------------------------------------------------
 
@@ -98,7 +99,7 @@ SYSTEM_USERS = ["efs-quota", "announcement"]
 MESSAGE_Q_LEN = 5
 
 
-class AnnouncementRequestHandler(HubAuthenticated, web.RequestHandler):
+class AnnouncementRequestHandler(HubOAuthenticated, web.RequestHandler):
     """Dynamically manage page announcements"""
 
     def _check_admin_user(self):
@@ -139,6 +140,11 @@ class AnnouncementRequestHandler(HubAuthenticated, web.RequestHandler):
         # cmd line client can specify which user to pull
         if username in SYSTEM_USERS:
             username = self.request.uri.split("/")[-1]
+        if username == "all":
+            raise web.HTTPError(
+                status_code=400,
+                log_message="Bad request:  username==all is not supported for GET",
+            )
 
         u_popup, user_table_str = self._announcements(username, f"User {username}")
 
@@ -196,6 +202,9 @@ class AnnouncementRequestHandler(HubAuthenticated, web.RequestHandler):
         wlog(s)
 
 
+# ----------------------------------------------------------------------
+
+
 def main():
     args = parse_arguments()
     application = create_application(**vars(args))
@@ -221,8 +230,10 @@ def create_application(api_prefix=r"/", handler=AnnouncementRequestHandler, **kw
     return web.Application(
         [
             (api_prefix, handler),
+            (api_prefix + r"oauth_callback/?.*", HubOAuthCallbackHandler),
             (api_prefix + r"latest/?.*", handler),
-        ]
+        ],
+        cookie_secret=str(uuid.uuid4()).encode("utf-8"),
     )
 
 
