@@ -5,6 +5,7 @@ import sys
 import argparse
 import subprocess
 import datetime
+import re
 
 import requests
 from requests.adapters import HTTPAdapter
@@ -123,7 +124,7 @@ class AnnouncementRestApi(RestApi):
 
     prefix = "/services/announcement/latest"
 
-    def send_message(self, level, message, username=None, replace=None):
+    def send_message(self, level, message, username=None, replace=None, expires='2-00:00:00'):
         """Post a message to the announment service and return."""
         return self.post(
             level=level,
@@ -131,6 +132,7 @@ class AnnouncementRestApi(RestApi):
             username=username,
             timestamp=now(),
             replace=replace,
+            expires=expires,
         )
 
     def clear_announcements(self, username="all"):
@@ -140,6 +142,13 @@ class AnnouncementRestApi(RestApi):
     def get_announcements(self, username="all"):
         return self.get(f"/{username}")
 
+
+def deltatime(s):
+    try:
+        assert re.match(r"\d+\-\d\d:\d\d:\d\d", s)
+        return s
+    except Exception:
+        raise ValueError("Bad deltatime format for '--expires' should be DAYS-HH:MM:SS.")
 
 # ======================================================================================
 
@@ -206,6 +215,15 @@ new messages.
         metavar="<username>",
         help="User to send message to,  or 'system' (default) for a message sent to all users.",
     )
+    parser.add_argument(
+        "--expires",
+        dest="expires",
+        action="store",
+        default=None,
+        metavar="<expires>",
+        type=deltatime,
+        help="Time delta DAYS-HH:MM:SS after which this message expires and is cleared, default='2-00:00:00'.",
+    )
     return parser.parse_args(), parser
 
 
@@ -220,7 +238,7 @@ def main():
     api = AnnouncementRestApi(hub_url, api_token=get_api_token(), api_cert=api_cert)
 
     if args.put:
-        api.send_message(args.level, args.put, args.username, args.replace)
+        api.send_message(args.level, args.put, args.username, args.replace, args.expires)
     elif args.clear:
         api.clear_announcements(args.username)
     elif args.get:
