@@ -14,6 +14,14 @@ jupyterhub:
     extraFiles:
       announcements_service:
         mountPath: /usr/share/jupyterhub/announcements.py
+    extraVolumes:
+      - name: quota-control
+        persistentVolumeClaim:
+          claimName: quota-control-jh-pvc
+    extraVolumeMounts:
+      - name: quota-control
+        mountPath: "/announcements"
+        subPath: "announcements"
   proxy:
     chp:
       pdb:
