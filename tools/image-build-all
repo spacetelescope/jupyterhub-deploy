@@ -18,10 +18,6 @@ for USE_FROZEN in $FREEZE_MODES; do
         # tags for tracking here only, not intended for push, not valid for e.g. running on hub
         export IMAGE_ID=${IMAGE_ID}-${USE_FROZEN}
         export COMMON_ID=${COMMON_ID}-${USE_FROZEN}
-        if [[ `docker buildx ls | grep ${id}` == "1" ]];  then
-            docker buildx create --use --name ${id}
-        fi
-        nohup image-build 2>&1 >${id}.log &
-        sleep 5
+        image-build 2>&1 >${id}.log
     done
 done
