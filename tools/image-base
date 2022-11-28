@@ -46,7 +46,9 @@ build_jh() {
     docker build --rm --force-rm -t ${OWNER}/${STACK}:latest ./${STACK} --build-arg OWNER=${OWNER} --progress plain $*
 }
 
-build_jh  base-notebook     --build-arg ROOT_CONTAINER=${OWNER}/ubuntu-certs:latest
+build_jh  docker-stacks-foundation  --build-arg ROOT_CONTAINER=${OWNER}/ubuntu-certs:latest
+
+build_jh  base-notebook     --build-arg ROOT_CONTAINER=${OWNER}/docker-stacks-foundation:latest
 
 build_jh  minimal-notebook  --build-arg BASE_CONTAINER=${OWNER}/base-notebook:latest
 
