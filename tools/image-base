@@ -10,7 +10,7 @@ echo "========================= Building Base Image ========================"
 OWNER=stsci-jh
 
 cd ${JUPYTERHUB_DIR}/deployments/common/image
-docker build --progress plain --tag ${OWNER}/ubuntu-certs --file Dockerfile.certs.x \
+docker build --progress plain --tag ${OWNER}/ubuntu-certs --file Dockerfile.certs \
        --build-arg USE_FROZEN=${USE_FROZEN} \
        --build-arg PIP_SWITCHES="${PIP_SWITCHES}" \
        --build-arg CLEAR_PKG_CACHES="${CLEAR_PKG_CACHES}" \
