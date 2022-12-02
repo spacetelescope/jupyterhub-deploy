@@ -38,7 +38,7 @@ jwst
 kiwisolver
 lxml
 MarkupSafe
-matplotlib>=3.5.0rc1
+matplotlib
 mccabe
 numpy
 numpydoc
@@ -95,3 +95,13 @@ urllib3
 zipp
 notebook==6.4.12
 git+https://github.com/astropy/astroquery.git
+ipympl
+git+https://github.com/PAHdb/pyPAHdb.git
+git+https://github.com/PAHdb/AmesPAHdbPythonSuite.git
+git+https://github.com/PAHFIT/pahfit@dev_yaml-scipack+api
+specutils
+vtk
+tqdm
+sklearn
+jdaviz
+regions
