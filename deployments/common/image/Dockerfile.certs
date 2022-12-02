@@ -31,6 +31,7 @@ ENV NB_UID=1000
 ENV NB_GID=100
 
 # ------------------------------------------------------------------------
+
 # When buildkit caching is enabled,  map package dirs for apt, pip, etc.
 #   onto the buildkit cache directories for them.
 COPY common-scripts/buildkit-cache-setup  /opt/common-scripts/buildkit-cache-setup
@@ -44,14 +45,8 @@ RUN /opt/common-scripts/apt-install \
     openssl \
     wget \
     vim \
-    curl 
-
-# ------------------------------------------------------------------------
-# Adding nodesource repo to grab latest LTS node version (18.x at the time of this doc)
-# nodejs package already includes npm
-
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-RUN /opt/common-scripts/apt-install nodejs 
+    npm \
+    nodejs
 
 # ------------------------------------------------------------------------
 # SSL/TLS cert setup for STScI AWS firewalling
