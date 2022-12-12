@@ -16,9 +16,7 @@ jupyterlab-pygments
 jupyter-server
 bqplot-image-gl
 jupyter-server-proxy
-jupyter_bokeh
 jupyter-packaging
-ipywidgets_bokeh
 ipyevents
 ipympl
 ipyvolume
