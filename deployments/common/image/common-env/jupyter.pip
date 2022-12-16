@@ -10,7 +10,7 @@ ipython-genutils
 jupyter-core
 jupyterlab-widgets
 widgetsnbextension
-ipywidgets
+ipywidgets<8
 ipydatawidgets
 jupyterlab-pygments
 jupyter-server

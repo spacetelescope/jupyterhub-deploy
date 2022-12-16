@@ -94,25 +94,6 @@ RUN /opt/common-scripts/env-sync webbpsf-workshop
 # REMAINING ENV
 COPY --chown=${NB_UID}:${NB_GID} environments/webbpsf-workshop/ /opt/environments/webbpsf-workshop/
 
-# ---------------------------jdaviz  -------------------------------------
-
-# BASE
-COPY --chown=${NB_UID}:${NB_GID} env-frozen/jdaviz/ /opt/env-frozen/jdaviz/
-COPY --chown=${NB_UID}:${NB_GID} env-chilly/jdaviz/ /opt/env-chilly/jdaviz/
-COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/*.yml /opt/environments/jdaviz/
-RUN /opt/common-scripts/env-conda jdaviz
-
-# COMPILE ALL
-COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/*.pip /opt/environments/jdaviz/
-RUN /opt/common-scripts/env-compile jdaviz
-
-# SYNC ALL
-RUN /opt/common-scripts/env-sync jdaviz
-
-# REMAINING ENV
-COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/ /opt/environments/jdaviz/
-
-
 # --------------------------- Jdaviz -------------------------------------
 
 # BASE
