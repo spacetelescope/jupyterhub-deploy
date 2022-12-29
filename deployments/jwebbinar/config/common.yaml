@@ -73,7 +73,3 @@ jupyterhub:
     memory:
       guarantee: 14G
       limit: 15G
-  cull:
-    enabled: true
-    timeout: 1800
-    every: 60

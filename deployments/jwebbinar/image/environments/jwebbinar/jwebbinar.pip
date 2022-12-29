@@ -102,6 +102,6 @@ git+https://github.com/PAHFIT/pahfit@dev_yaml-scipack+api
 specutils
 vtk
 tqdm
-sklearn
 jdaviz
 regions
+scikit-learn
