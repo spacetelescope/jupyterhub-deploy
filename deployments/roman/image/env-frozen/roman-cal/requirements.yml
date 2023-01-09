@@ -17,6 +17,7 @@ dependencies:
   - cryptography=39.0.0
   - deprecated=1.2.13
   - deprecation=2.1.0
+  - flit-core=3.6.0
   - icu=70.1
   - idna=3.4
   - importlib-metadata=6.0.0
@@ -69,7 +70,7 @@ dependencies:
   - websockify=0.11.0
   - wheel=0.37.1
   - wrapt=1.14.1
-  - xz=5.2.6
+  - xz=5.2.8
   - zipp=3.11.0
   - zlib=1.2.13
 prefix: /opt/conda/envs/roman-cal
