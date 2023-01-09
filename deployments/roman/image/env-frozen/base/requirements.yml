@@ -316,11 +316,11 @@ dependencies:
       - asdf-standard==1.0.3
       - asdf-transform-schemas==0.3.0
       - asdf-unit-schemas==0.1.0
-      - astropy==5.2
+      - astropy==5.2.1
       - astropy-sphinx-theme==1.1
       - black==22.12.0
-      - boto3==1.26.44
-      - botocore==1.29.44
+      - boto3==1.26.45
+      - botocore==1.29.45
       - bqplot==0.12.36
       - bqplot-image-gl==1.4.11
       - casa-formats-io==0.2.1
@@ -341,7 +341,7 @@ dependencies:
       - glue-vispy-viewers==1.0.5
       - hsluv==5.0.3
       - imagesize==1.4.1
-      - iniconfig==1.1.1
+      - iniconfig==2.0.0
       - ipydatawidgets==4.3.2
       - ipyevents==2.0.1
       - ipygoldenlayout==0.4.0
@@ -392,14 +392,15 @@ dependencies:
       - simpervisor==0.4
       - snowballstemmer==2.2.0
       - spectral-cube==0.6.0
-      - sphinx==6.1.1
-      - sphinx-astropy==1.7.0
+      - sphinx==6.1.2
+      - sphinx-astropy==1.8.0
       - sphinx-automodapi==0.14.1
       - sphinx-gallery==0.11.1
       - sphinx-rtd-theme==0.5.1
-      - sphinxcontrib-applehelp==1.0.2
+      - sphinxcontrib-applehelp==1.0.3
       - sphinxcontrib-devhelp==1.0.2
       - sphinxcontrib-htmlhelp==2.0.0
+      - sphinxcontrib-jquery==3.0.0
       - sphinxcontrib-jsmath==1.0.1
       - sphinxcontrib-qthelp==1.0.3
       - sphinxcontrib-serializinghtml==1.1.5
