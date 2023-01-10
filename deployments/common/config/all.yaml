@@ -6,8 +6,8 @@ jupyterhub:
     extraConfig:
       spawning: |
         c.KubeSpawner.start_timeout = 15 * 60  # Up to 15 minutes
-        c.KubeSpawner.args.append('--NotebookApp.shutdown_no_activity_timeout=14400') # Kills notebook pod if no kernels or terminals opened after 4 hours
-        c.KubeSpawner.args.append('--MappingKernelManager.cull_idle_timeout=3600') # Kills idle kernels after 1 hour 
+        c.KubeSpawner.args.append('--NotebookApp.shutdown_no_activity_timeout=1800') # Kills notebook pod if no kernels or terminals opened after 30 minutes
+        c.KubeSpawner.args.append('--MappingKernelManager.cull_idle_timeout=14400') # Kills idle kernels after 4 hour 
         c.KubeSpawner.args.append('--MappingKernelManager.cull_interval=300') # Checks for idle kernels every 5 minutes
         c.KubeSpawner.args.append('--MappingKernelManager.cull_connected=True') # Culls even with the browser tab opened
       get_email: |
