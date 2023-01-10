@@ -1,13 +1,14 @@
 #! /bin/bash -e
 
-VALUES=${1:-datadog.yaml}
-
-cd ${JUPYTERHUB_DIR}/datadog
-
 echo "========================= Deploying DataDog ========================"
 helm repo add datadog https://helm.datadoghq.com
 helm repo update
 
-helm upgrade --install datadog datadog/datadog -f $VALUES \
-    --set datadog.apiKey=$(get-datadog-key api) \
-    --create-namespace -n datadog
+helm upgrade --install datadog datadog/datadog --set datadog.apiKey=$(get-datadog-key api) \
+    --create-namespace -n datadog \
+    --set clusterAgent.replicas=2 \
+    --set clusterAgent.createPodDisruptionBudget=true \
+    --set "datadog.tags={env:dmd-$ENVIRONMENT,service:$DEPLOYMENT_NAME-sp,infra_type:cloud}" \
+    --version 3.7.1 
+
+ 
