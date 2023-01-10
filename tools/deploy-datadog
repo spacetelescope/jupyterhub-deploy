@@ -1,14 +1,23 @@
 #! /bin/bash -e
+set -u
+
+# Swapping env name to match DD tags
+if [ $ENVIRONMENT = "prod" ]; then
+	ENV_NAME="ops"
+else
+	ENV_NAME=$ENVIRONMENT
+fi
 
 echo "========================= Deploying DataDog ========================"
 helm repo add datadog https://helm.datadoghq.com
 helm repo update
 
+# Set version for helm chart. Make sure to review chart if bumping version
 helm upgrade --install datadog datadog/datadog --set datadog.apiKey=$(get-datadog-key api) \
     --create-namespace -n datadog \
     --set clusterAgent.replicas=2 \
     --set clusterAgent.createPodDisruptionBudget=true \
-    --set "datadog.tags={env:dmd-$ENVIRONMENT,service:$DEPLOYMENT_NAME-sp,infra_type:cloud}" \
+    --set "datadog.tags={env:dmd-$ENV_NAME,service:$DEPLOYMENT_NAME-sp,infra_type:cloud}" \
     --version 3.7.1 
 
  
