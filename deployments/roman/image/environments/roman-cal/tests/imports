@@ -26,8 +26,8 @@ glue_vispy_viewers
 importlib_metadata
 IPython
 ipython_genutils
-ipywidgets_bokeh
-jupyter_bokeh
+#ipywidgets_bokeh
+#jupyter_bokeh
 jupyter
 jupyter_server
 jupyter_server_proxy
