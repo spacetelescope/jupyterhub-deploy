@@ -19,7 +19,7 @@ jupyterhub:
           mountPath: /dev/shm
         - name: s3-pvc
           mountPath: /s3
-          readOnly: tru
+          readOnly: true
   prePuller:
     continuous:
       enabled: true
