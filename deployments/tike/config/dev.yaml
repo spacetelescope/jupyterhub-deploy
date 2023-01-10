@@ -6,6 +6,20 @@ jupyterhub:
   singleuser:
     image:
       tag: latest-dev
+    storage:
+      extraVolumes:
+        - name: dshm
+          emptyDir:
+            medium: Memory
+        - name: s3-pvc
+          persistentVolumeClaim:
+            claimName: s3-pvc
+      extraVolumeMounts:
+        - name: dshm
+          mountPath: /dev/shm
+        - name: s3-pvc
+          mountPath: /s3
+          readOnly: tru
   prePuller:
     continuous:
       enabled: true
