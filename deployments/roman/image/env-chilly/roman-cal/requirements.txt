@@ -106,9 +106,9 @@ black~=22.12.0
     # via -r /opt/common-env/common.pip
 bleach~=5.0.1
     # via nbconvert
-boto3~=1.26.45
+boto3~=1.26.46
     # via -r /opt/common-env/common.pip
-botocore~=1.29.45
+botocore~=1.29.46
     # via
     #   boto3
     #   s3transfer

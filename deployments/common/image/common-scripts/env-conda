@@ -33,7 +33,7 @@ env_spec=/opt/environments/${env}/${env}.@(yml|explicit)
 
 env_frozen_yml=/opt/env-frozen/${env}/requirements.yml
 env_chilly_yml=/opt/env-chilly/${env}/requirements.yml
-hints=/opt/environments/${env}/buld-hints.conda
+hints=/opt/env-chilly/${env}/build-hints.conda
 
 . /etc/profile.d/conda.sh
 
