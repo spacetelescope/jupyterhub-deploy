@@ -1,0 +1,8 @@
+#! /bin/bash
+
+set -eu
+
+image-login
+
+echo "================================== Pushing ${FUSE_ID} =============================="
+docker push $FUSE_ID

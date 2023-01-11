@@ -16,8 +16,8 @@ jupyterhub:
           name: hub-templates
     extraVolumeMounts:
       ## Make the hub pod hub container mount that ConfigMap volume
-      - mountPath: /etc/jupyterhub/templates
-        name: hub-templates
+      - name: hub-templates
+        mountPath: /etc/jupyterhub/templates
   prePuller:
     continuous:
       enabled: true
@@ -38,7 +38,3 @@ jupyterhub:
     memory:
       guarantee: 14G
       limit: 15G
-  cull:
-    enabled: true
-    timeout: 1800
-    every: 60

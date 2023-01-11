@@ -4,10 +4,14 @@
 
 set -eu
 
-IMAGES=$*
-
 if [[ "$#" == "0" ]]; then
-    echo "usage: image-delete  <tag-or-ecr-digest>..."
+    echo "usage: image-delete  [--untagged] <tag-or-ecr-digest>..."
+fi
+
+if [[ $1 == "--untagged" ]]; then
+    IMAGES=$(awsudo ${ADMIN_ARN} aws ecr list-images --registry-id $ECR_ACCOUNT_ID --repo tike --output text | awk --field-separator=" " 'NF==2 { print $2; }')
+else
+    IMAGES=$*
 fi
 
 for image in ${IMAGES}; do

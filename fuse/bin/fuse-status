@@ -1,0 +1,18 @@
+#! /bin/bash
+
+set -eu
+
+echo "====================== DAEMONSETS ==========================="
+kubectl get daemonsets -n fuse
+
+echo "====================== PODS ==========================="
+kubectl get pods -n fuse
+
+echo "====================== PV ==========================="
+kubectl get pv -n fuse
+
+echo "====================== PVC ==========================="
+kubectl get pvc -n default
+
+
+

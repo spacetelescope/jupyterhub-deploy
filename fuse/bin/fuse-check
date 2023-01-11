@@ -1,0 +1,80 @@
+#! /bin/bash
+
+set -u
+
+check_cluster.py  --test-spec -  <<EOS
+Globals:
+  environment:
+  - DEPLOYMENT_NAME
+  - ENVIRONMENT
+  - JH_HOSTNAME
+  constants:
+    MAX_RESTARTS: 0
+    LOG_REACH: 30m
+Groups:
+  - group: Pods
+    command: kubectl get pods -n fuse
+    parser: named_columns
+    assertions:
+    - name: s3-fs pods
+      ok_rows>=1: "'s3-fs' in NAME and STATUS=='Running'"
+    - name: s3-gf pods
+      ok_rows>=1: "'s3-gf' in NAME and STATUS=='Running'"
+    - name: All fuse pods running
+      all: STATUS=='Running'
+    - name: Acceptable restart count
+      all: int(RESTARTS)<=MAX_RESTARTS
+    - name: File listing works in daemon pod s3-fs
+      ok_rows>=1: "'s3-fs' in NAME and (print(run(f'kubectl exec -t -n fuse {NAME} -- ls /s3/fs/stpubdata')) or True)"
+    - name: sha1sum works for fs
+      ok_rows>=1: "'s3-fs' in NAME and (print(run(f'kubectl exec -t -n fuse {NAME} -- sha1sum /s3/fs/stpubdata/k2/public/manifest.txt.gz')) or True)"
+    - name: File listing works in daemon pod s3-gf
+      ok_rows>=1: "'s3-gf' in NAME and (print(run(f'kubectl exec -t -n fuse {NAME} -- ls /s3/gf/stpubdata')) or True)"
+    - name: sha1sum works for gf
+      ok_rows>=1: "'s3-gf' in NAME and (print(run(f'kubectl exec -t -n fuse {NAME} -- sha1sum /s3/gf/stpubdata/k2/public/manifest.txt.gz')) or True)"
+  - group: Daemonsets
+    command: kubectl get daemonsets -n fuse
+    parser: named_columns
+    assertions:
+    - name: s3-fs daemonset
+      ok_rows>=1: "'s3-fs' in NAME and int(READY)>=1"
+    - name: s3-gf daemonset
+      ok_rows>=1: "'s3-gf' in NAME and int(READY)>=1"
+    - name: matching daemonset states
+      all: READY==DESIRED==CURRENT==AVAILABLE==_['UP-TO-DATE']
+  - group: Logs
+    function: pod_logs(LOG_REACH, 'fuse')
+    parser: yaml
+    assertions:
+    - name: No errors in logs
+      simple: ERRORS==0
+  - group: NodeMap
+    command: kubectl get pods -o wide -A
+    replace_output:
+      - input: NOMINATED NODE
+        output: NOMINATED_NODE
+      - input: READINESS GATES
+        output: READINESS_GATES
+    parser: node_map
+    print_parsing: true
+  - group: PV
+    command: kubectl get pv
+    parser: named_columns
+    replace_output:
+    - input: ACCESS MODES
+      output: ACCESS_MODES
+    - input: RECLAIM POLICY
+      output: RECLAIM_POLICY
+    assertions:
+    - name: pv properties
+      ok_rows==1: "NAME=='s3-pv' and ACCESS_MODES=='ROX' and STATUS=='Bound' and RECLAIM_POLICY=='Retain' and STORAGECLASS=='local-storage'"
+  - group: PVC
+    command: kubectl get pvc
+    parser: named_columns
+    replace_output:
+    - input: ACCESS MODES
+      output: ACCESS_MODES
+    assertions:
+    - name: pvc properties
+      ok_rows==1: "NAME=='s3-pvc' and ACCESS_MODES=='ROX' and STATUS=='Bound' and VOLUME=='s3-pv' and STORAGECLASS=='local-storage'"
+EOS

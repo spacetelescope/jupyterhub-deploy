@@ -194,8 +194,8 @@ Groups:
   - group: Pod to Node Map
     command: kubectl get pods -A -o wide
     replace_output:
-      input: NOMINATED NODE
-      output: NOMINATED_NODE
+      - input: NOMINATED NODE
+        output: NOMINATED_NODE
     parser: node_map
     print_parsing: true
 """  # noqa: E501
@@ -479,6 +479,7 @@ class Checker:
                 test_function=test_function,
                 functools=functools,
                 pod_logs=self.pod_logs,
+                run=run,
             )
         )
         return result
@@ -520,9 +521,10 @@ class Checker:
 
     def replace_output(self, check, output):
         if check.get("replace_output"):
-            input_patt = check.get("replace_output").get("input")
-            output_patt = check.get("replace_output").get("output")
-            output = re.sub(input_patt, output_patt, output, flags=re.MULTILINE)
+            for replacement in check.get("replace_output"):
+                input_patt = replacement.get("input")
+                output_patt = replacement.get("output")
+                output = re.sub(input_patt, output_patt, output, flags=re.MULTILINE)
         return output
 
     def run_check(self, check):
@@ -658,8 +660,9 @@ class Checker:
         for msg in self._error_msgs:
             print(msg)
 
-    def pod_logs(self, log_reach="30m"):
-        loaded = yaml.safe_load(run("kubectl get pods -A --output yaml"))
+    def pod_logs(self, log_reach="30m", namesp=None):
+        namespace_switch = "-A" if namesp is None else "-n " + namesp
+        loaded = yaml.safe_load(run(f"kubectl get pods {namespace_switch}  --output yaml"))
         pods = [
             (pod["metadata"]["namespace"], pod["metadata"]["name"])
             for pod in loaded["items"]
@@ -668,6 +671,8 @@ class Checker:
         print("Fetching", len(loaded["items"]), "pod logs")
         pod_errors = dict()
         for i, (namespace, name) in enumerate(pods):
+            if namesp and namesp != namespace:
+                continue
             pod = f"{namespace}:{name}"
             print()
             output = run(
@@ -699,7 +704,7 @@ def parse_args():
         dest="test_spec",
         action="store",
         default=None,
-        help="Custom test specification.  Defaults to None meaning use built-in spec.",
+        help="Custom test specification.  Defaults to None meaning use built-in spec.   Use '-' for stdin.",
     )
     parser.add_argument(
         "--output-file",
@@ -754,9 +759,14 @@ def main():
     Return the number of failing tests or 0 if all tests pass.
     """
     args = parse_args()
-    test_spec = (
-        open(args.test_spec).read().strip() if args.test_spec else CLUSTER_CHECKS
-    )
+
+    if args.test_spec == "-":
+        test_spec = sys.stdin.read().strip()
+    elif args.test_spec is None:
+        test_spec = CLUSTER_CHECKS.strip()
+    else:
+        test_spec = open(args.test_spec).read().strip()
+
     checker = Checker(
         test_spec=test_spec,
         output_file=args.output_file,

@@ -1,0 +1,48 @@
+Error: goofys takes exactly two arguments.
+
+NAME:
+   goofys - Mount an S3 bucket locally
+
+USAGE:
+   goofys [global options] bucket[:prefix] mountpoint
+
+VERSION:
+   0.24.0-08534b28a2195d30bb3c45dce0b834f3696028b8
+
+GLOBAL OPTIONS:
+   -o value            Additional system-specific mount options. Be careful!
+   --cache value       Directory to use for data cache. Requires catfs and `-o allow_other'. Can also pass in other catfs options (ex: --cache "--free:10%:$HOME/cache") (default: off)
+   --dir-mode value    Permission bits for directories. (default: 0755) (default: 493)
+   --file-mode value   Permission bits for files. (default: 0644) (default: 420)
+   --uid value         UID owner of all inodes. (default: 0)
+   --gid value         GID owner of all inodes. (default: 0)
+   --endpoint value    The non-AWS endpoint to connect to. Possible values: http://127.0.0.1:8081/
+   --profile value     Use a named profile from $HOME/.aws/credentials instead of "default"
+   --use-content-type  Set Content-Type according to file extension and /etc/mime.types (default: off)
+   --subdomain         Enable subdomain mode of S3
+
+TUNING OPTIONS:
+   --cheap                 Reduce S3 operation costs at the expense of some performance (default: off)
+   --no-implicit-dir       Assume all directory objects ("dir/") exist (default: off)
+   --stat-cache-ttl value  How long to cache StatObject results and inode attributes. (default: 1m0s)
+   --type-cache-ttl value  How long to cache name -> file/dir mappings in directory inodes. (default: 1m0s)
+   --http-timeout value    Set the timeout on HTTP requests to S3 (default: 30s)
+
+AWS S3 OPTIONS:
+   --region value         The region to connect to. Usually this is auto-detected. Possible values: us-east-1, us-west-1, us-west-2, eu-west-1, eu-central-1, ap-southeast-1, ap-southeast-2, ap-northeast-1, sa-east-1, cn-north-1 (default: "us-east-1")
+   --requester-pays       Whether to allow access to requester-pays buckets (default: off)
+   --storage-class value  The type of storage to use when writing objects. Possible values: REDUCED_REDUNDANCY, STANDARD, STANDARD_IA. (default: "STANDARD")
+   --sse                  Enable basic server-side encryption at rest (SSE-S3) in S3 for all writes (default: off)
+   --sse-kms key-id       Enable KMS encryption (SSE-KMS) for all writes using this particular KMS key-id. Leave blank to Use the account's CMK - customer master key (default: off)
+   --sse-c value          Enable server-side encryption using this base64-encoded key (default: off)
+   --acl value            The canned ACL to apply to the object. Possible values: private, public-read, public-read-write, authenticated-read, aws-exec-read, bucket-owner-read, bucket-owner-full-control (default: off)
+
+MISC OPTIONS:
+   --help, -h     Print this help text and exit successfully.
+   --debug_fuse   Enable fuse-related debugging output.
+   --debug_s3     Enable S3-related debugging output.
+   -f             Run goofys in foreground.
+   --version, -v  print the version
+
+command terminated with exit code 1
+
