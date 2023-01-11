@@ -1,0 +1,6 @@
+datadog:
+  logs:
+    enabled: True
+    containerCollectAll: True
+  processAgent:
+    processCollection: True

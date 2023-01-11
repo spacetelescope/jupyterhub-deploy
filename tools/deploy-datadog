@@ -1,6 +1,10 @@
 #! /bin/bash -e
 set -u
 
+VALUES=${1:-datadog_values.yaml}
+
+cd ${JUPYTERHUB_DIR}/datadog
+
 # Swapping env name to match DD tags
 if [ $ENVIRONMENT = "prod" ]; then
 	ENV_NAME="ops"
@@ -15,6 +19,7 @@ helm repo update
 # Set version for helm chart. Make sure to review chart if bumping version
 helm upgrade --install datadog datadog/datadog --set datadog.apiKey=$(get-datadog-key api) \
     --create-namespace -n datadog \
+    -f $VALUES \
     --set clusterAgent.replicas=2 \
     --set clusterAgent.createPodDisruptionBudget=true \
     --set "datadog.tags={env:dmd-$ENV_NAME,service:$DEPLOYMENT_NAME-sp,infra_type:cloud}" \
