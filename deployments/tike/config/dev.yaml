@@ -14,11 +14,16 @@ jupyterhub:
         - name: s3-pvc
           persistentVolumeClaim:
             claimName: s3-pvc
+        - name: systats
+          persistentVolumeClaim:
+            claimName: task-pv-claim
       extraVolumeMounts:
         - name: dshm
           mountPath: /dev/shm
         - name: s3-pvc
           mountPath: /s3
+        - name: systats
+          mountPath: /sysstats
           readOnly: true
   prePuller:
     continuous:
