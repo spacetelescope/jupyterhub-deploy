@@ -1,6 +1,9 @@
 #! /bin/bash -eu
 
-export PATH="`pwd`/tools:`pwd`/fuse/bin:${PATH}"
+export PATH=`pwd`/tools:`pwd`/fuse/bin:`pwd`/fs-support/efs-quota/bin:${PATH}
+
+# By default,  do not export frozen/chilly requirements from image. If already set, use that value.
+export FREEZE_CHILL=${FREEZE_CHILL:-0}
 
 # ----------------- vvvv less frequently changed inputs vvvv -------------------------------
 #
@@ -13,7 +16,7 @@ export JH_HOSTNAME=`echo ${JH_HOSTNAME} | sed -e's/tike/timeseries/g'`
 # Select "conda" tool used to install conda package and environments: conda or mamba
 #   mamba is largely a drop-in replacement for mamba with improved dependency resolution,
 #   parallel downloads, and C++ implementation.
-export CONDA_VER=conda
+export CONDA_VER=mamba
 
 # Additional parameters for image-exec Docker run command, e.g. add mounts here
 export IMAGE_RUN_PARS="--rm -e JUPYTER_ENABLE_LAB=yes"
@@ -106,6 +109,10 @@ export FUSE_S3_BUCKETS="stpubdata"  # space separated (for example: "stpubdata n
 export FUSE_REPO=${IMAGE_REPO}
 export FUSE_ID=${ECR_REGISTRY}/${FUSE_REPO}:${FUSE_TAG}
 
+# -------------------- EFSQUOTA settings -----------------------------------------------
+export EFSQUOTA_REPO=${IMAGE_REPO}
+export EFSQUOTA_ID=${ECR_REGISTRY}/${EFSQUOTA_REPO}:${EFSQUOTA_TAG}
+
 # --------------- vvvvv misc env settings vvvvv ---------------------------------
 
 export TMOUT=7200
@@ -114,10 +121,14 @@ export TF_LOG_PATH=terraform.log
 
 function where () {
     info="${DEPLOYMENT_NAME}-${ENVIRONMENT}"
-    if [[ "${USE_FROZEN}" == "1" ]]; then
-        info="${info}-frozen"
-    else
+    if [[ "${USE_FROZEN}" == "0" ]]; then
         info="${info}-floating"
+    elif [[ "${USE_FROZEN}" == "1" ]]; then
+        info="${info}-frozen"
+    elif [[ "${USE_FROZEN}" == "2" ]]; then
+        info="${info}-chilly"
+    else
+        info="${info}-ERROR"
     fi
     if [[ "${USE_BUILDKIT_CACHING}" == "1" ]]; then
         info="${info}-bkcache"
@@ -130,6 +141,32 @@ function where () {
         info="${info}-keeppkgs"
     fi
     echo $info
+}
+
+
+
+# e.g.  kpods hub default  -- prints first pod name for pods matching hub in default namespace
+function kpods {
+    pod_pat=${1}
+    namespace=${2:-default} 
+    echo $(kubectl get pods --namespace $namespace | grep $pod_pat | head -1 | cut -d ' ' -f 1)
+}
+
+# e.g. klogs hub  --  dumps pod logs for hub pod
+# e.g. klogs monitor efs-quota  --  dumps pod logs for first monitor pod in efs-quota namespace
+function klogs {
+    pod_pat=${1}
+    namespace=${2:-default}
+     kpods $pod_pat $namespace | xargs kubectl logs --namespace $namespace
+}
+
+# e.g. kexec hub                                       -- open a bash shell in hub pod
+# e.g. kexec hub default "some cmd of several words"   -- exec multiword command on hub pod
+function kexec {
+    pod_pat=${1}
+    namespace=${2:-default}
+    cmd=${3:-/bin/bash}
+    kubectl exec -it --namespace $namespace $(kpods $pod_pat $namespace) -- $(echo $cmd)
 }
 
 alias awsu="awsudo -d 3600 $ADMIN_ARN"

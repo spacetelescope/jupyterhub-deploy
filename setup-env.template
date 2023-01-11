@@ -8,7 +8,13 @@
 
 export DEPLOYMENT_NAME=cluster-name  # roman, jwebbinar, tike
 export ENVIRONMENT=sandbox           # sandbox, dev, test, or prod
-export USE_FROZEN=1                  # use 0 for loosely pinned package versions, 1 for tagged production build
+export CAL_VERSION=latest            # e.g. roman or jwst x.y.z CAL release, latest, or none
+
+export USE_FROZEN=1                  # use 0 for loosely pinned package versions,
+                                     # 1 for tagged production build, 2 for chilly
+
+export FREEZE_CHILL=0                # capture new frozen and chilly requirements as
+                                     # modified files in this git repo
 
 export ACCOUNT_ID=12345678
 export ECR_ACCOUNT_ID=12345678       # Set to ACCOUNT_ID for local ECR,  or central account ID for central ECR.
@@ -21,6 +27,7 @@ export DATADOG_API_KEY_ID=look-in-aws-sm
 export IMAGE_TAG=unscanned-latest-${ENVIRONMENT}
 export COMMON_TAG=unscanned-latest-common-${ENVIRONMENT}
 export FUSE_TAG=unscanned-latest-fuse-${ENVIRONMENT}
+export EFSQUOTA_TAG=unscanned-latest-efsquota-${ENVIRONMENT}
 
 # ----------------- vvvv less frequently changed vvvv -------------------------------
 

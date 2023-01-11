@@ -1,0 +1,21 @@
+#! /bin/bash -eu
+
+# Script to detect possible config/values overwrites which normally happen silently in Helm.
+#   Automatically runs using our 4 JH YAML config files.
+#
+# Note that these results may not be identical to what Helm does;  nevertheless, it can suggest
+#   possible problems.  To see offical Helm output run
+#      helm get values <release, e.g. roman-dev>
+#   Output from which is also included in the tail of the deploy-jupyterhub output.
+#
+# Warnings are written to stderr
+# The result of merging the specified files is written to stdout
+
+cd $JUPYTERHUB_DIR
+
+secrets-cat >secrets.yaml
+
+yaml-merge  deployments/common/config/all.yaml  deployments/${DEPLOYMENT_NAME}/config/common.yaml  deployments/${DEPLOYMENT_NAME}/config/dev.yaml   secrets.yaml
+
+rm secrets.yaml
+

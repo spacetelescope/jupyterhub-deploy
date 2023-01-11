@@ -43,6 +43,8 @@ RUN cd /tmp && \
     make && \
     make install
 
+
+
 # ----------------------------------------------------------------------
 # Install environments
 
@@ -59,6 +61,7 @@ RUN   /opt/common-scripts/install-common  base
 
 # BASE
 COPY --chown=${NB_UID}:${NB_GID} env-frozen/jwebbinar/ /opt/env-frozen/jwebbinar/
+COPY --chown=${NB_UID}:${NB_GID} env-chilly/jwebbinar/ /opt/env-chilly/jwebbinar/
 COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/*.yml /opt/environments/jwebbinar/
 RUN /opt/common-scripts/env-conda jwebbinar
 
@@ -67,47 +70,55 @@ COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/*.pip /opt/environments/
 RUN /opt/common-scripts/env-compile jwebbinar
 
 # SYNC ALL
-RUN /opt/common-scripts/env-sync  jwebbinar
+RUN /opt/common-scripts/env-sync jwebbinar
 
 # REMAINING ENV
 COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/ /opt/environments/jwebbinar/
 
-# --------------------------- Jdaviz -------------------------------------
 
-# Needed for cleaning up existing/obsolete kernel (also now used for Mirisim)
-COPY --chown=${NB_UID}:${NB_GID} environments/remove-kernel /opt/environments/
-
-# --------------------------- Mirisim -------------------------------------
+# --------------------------- webbpsf-workshop  -------------------------------------
 
 # BASE
-#COPY --chown=${NB_UID}:${NB_GID} env-frozen/mirisim/ /opt/env-frozen/mirisim/
-#COPY --chown=${NB_UID}:${NB_GID} environments/mirisim/*.yml /opt/environments/mirisim/
-#RUN /opt/common-scripts/env-conda mirisim
+COPY --chown=${NB_UID}:${NB_GID} env-frozen/webbpsf-workshop/ /opt/env-frozen/webbpsf-workshop/
+COPY --chown=${NB_UID}:${NB_GID} env-chilly/webbpsf-workshop/ /opt/env-chilly/webbpsf-workshop/
+COPY --chown=${NB_UID}:${NB_GID} environments/webbpsf-workshop/*.yml /opt/environments/webbpsf-workshop/
+RUN /opt/common-scripts/env-conda webbpsf-workshop
 
 # COMPILE ALL
-#COPY --chown=${NB_UID}:${NB_GID} environments/mirisim/*.pip /opt/environments/mirisim/
-
-# Mirisim pinned requirements conflict with /opt/common-env/jupyter.pip... so omit it
-# and install everything else explicitly.
-#RUN /opt/common-scripts/env-compile mirisim  \
-#   /opt/common-env/common.pip \
-#   /opt/common-env/testing.pip \
-#   /opt/common-env/docs.pip
+COPY --chown=${NB_UID}:${NB_GID} environments/webbpsf-workshop/*.pip /opt/environments/webbpsf-workshop/
+RUN /opt/common-scripts/env-compile webbpsf-workshop
 
 # SYNC ALL
-#RUN /opt/common-scripts/env-sync  mirisim
-
-# Install from Mirisim conda server, strictly speaking, not frozen, always
-# executes.  env-update would've been nicer/simpler but the package references
-# in miricle-linux don't freeze.  Hence they need to be tacked onto the frozen
-# build afterwards and env-update does nothing when USE_FROZEN=1.
-
-#COPY --chown=${NB_UID}:${NB_GID} environments/mirisim/miricle-linux-py37.0.txt  /opt/environments/mirisim/miricle-linux-py37.0.txt
-#RUN cd /opt/environments/mirisim && \
-#    chmod +x miricle-linux-py37.0.txt && \
-#    /opt/common-scripts/env-run mirisim /opt/environments/mirisim/miricle-linux-py37.0.txt  && \
-#    /opt/common-scripts/env-clean
-
+RUN /opt/common-scripts/env-sync webbpsf-workshop
 
 # REMAINING ENV
-#COPY --chown=${NB_UID}:${NB_GID} environments/mirisim/ /opt/environments/mirisim/
+COPY --chown=${NB_UID}:${NB_GID} environments/webbpsf-workshop/ /opt/environments/webbpsf-workshop/
+
+# --------------------------- Jdaviz -------------------------------------
+
+# BASE
+#COPY --chown=${NB_UID}:${NB_GID} env-frozen/jdaviz/ /opt/env-frozen/jdaviz/
+#COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/*.yml /opt/environments/jdaviz/
+#RUN /opt/common-scripts/env-conda jdaviz
+
+# COMPILE ALL
+#COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/*.pip /opt/environments/jdaviz/
+#RUN /opt/common-scripts/env-compile jdaviz
+
+# SYNC ALL
+#RUN /opt/common-scripts/env-sync jdaviz
+
+# REMAINING ENV
+#COPY --chown=${NB_UID}:${NB_GID} environments/jdaviz/ /opt/environments/jdaviz/
+
+
+# Needed for cleaning up existing/obsolete kernel (also now used for Mirisim)
+#COPY --chown=${NB_UID}:${NB_GID} environments/remove-kernel /opt/environments/
+
+
+# ----------
+
+# This should NOT be necessary, but as of 24 May 2022 it was needed to get the
+# lab extension working for Jdaviz
+RUN jupyter labextension install @jupyter-widgets/jupyterlab-sidecar
+

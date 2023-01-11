@@ -1,4 +1,4 @@
-ARG ROOT_CONTAINER=ubuntu:focal
+ARG ROOT_CONTAINER=ubuntu:jammy
 ARG BASE_CONTAINER=$ROOT_CONTAINER
 FROM $BASE_CONTAINER
 
@@ -73,3 +73,4 @@ RUN mkdir -p /home/jovyan &&\
 COPY common-scripts/fix-certs /opt/common-scripts/fix-certs
 COPY common-scripts/fix-conda-certs /opt/common-scripts/fix-conda-certs
 RUN /opt/common-scripts/fix-certs
+RUN rm -rf /usr/include/node/openssl/

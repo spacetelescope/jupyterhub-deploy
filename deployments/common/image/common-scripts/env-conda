@@ -7,9 +7,9 @@ usage:  env-conda  <env>
 Step 1 of pip-tools workflow: Create the baseline conda environment into which
 pip packages will added later;  include as few pip packages as possible.
 
-If USE_FROZEN==0:          # compile weak constraints <env>.yml to requirements.yml
+If USE_FROZEN == 0:          # compile weak constraints <env>.yml to requirements.yml
 
-If USE_FROZEN == 0 or 1:   # install from requirements.yml
+If USE_FROZEN == 1 or 2:     # install from requirements.yml
 
 Nominal pip-tools workflow:
 
@@ -24,26 +24,56 @@ fi
 
 env=$1
 
-env_yml=/opt/environments/${env}/${env}.yml
+# The "floating" conda environment should either be a .yml spec or an @explicit spec,
+# not both.
+
+# env_spec=$(ls -1 /opt/environments/${env}/${env}.{yml,explicit} 2>/dev/null)
+shopt -s extglob
+env_spec=/opt/environments/${env}/${env}.@(yml|explicit)
+
 env_frozen_yml=/opt/env-frozen/${env}/requirements.yml
+env_chilly_yml=/opt/env-chilly/${env}/requirements.yml
+hints=/opt/env-chilly/${env}/build-hints.conda
 
 . /etc/profile.d/conda.sh
 
-echo "-------------------------------------------------------------------------------"
-if [[ "$USE_FROZEN" == "0" ]]; then
-    echo "===== Creating conda environment ${env} from weak constraints ${env_yml}"
-    ${CONDA_VER} env create --quiet --name ${env} --file ${env_yml}
-    echo "===== Adding common conda packages to ${env}:"
-    /opt/common-scripts/env-update ${env}  `find /opt/common-env -name '*.conda' | sort`
-    echo "===== Saving frozen conda constraints for environment ${env} to ${env_frozen_yml}"
-    ${CONDA_VER} env export --no-build -n ${env} > ${env_frozen_yml}  # must be saved after build outside Docker
-    cat ${env_frozen_yml}
-    echo "===== Removing conda env and re-installing from ${env_frozen_yml}"
-    ${CONDA_VER} env remove -n ${env}
-fi
+function env_create {
+    spec=$1
+    if [[ ${spec} = *.yml ]]; then
+        ${CONDA_VER} env create --quiet --name ${env} --file ${spec}
+    else  # .explicit or .txt
+        ${CONDA_VER} create --quiet --name ${env} --file ${spec}
+    fi
+}
 
-echo "===== Creating conda environment ${env} from frozen constraints ${env_frozen_yml}"
-${CONDA_VER} env create --quiet --name ${env} --file ${env_frozen_yml}
+echo "-------------------------------------------------------------------------------"
+case ${USE_FROZEN} in
+    0) echo "===== Creating conda environment ${env} from floating constraints ${env_spec}"
+       env_create ${env_spec}
+       echo "===== Adding common conda packages to ${env}:"
+       /opt/common-scripts/env-update ${env}  `find /opt/common-env /opt/environments/${env} -name '*.conda' | sort`
+       ;;
+    1) echo "===== Creating conda environment ${env} from frozen constraints ${env_frozen_yml}"
+       env_create ${env_frozen_yml}
+       ;;
+    2) echo "===== Creating conda environment ${env} from chilly constraints ${env_chilly_yml}"
+       env_create ${env_chilly_yml}
+       # Only chilly needs build-hints.conda since frozen is an absolute pin and the floating build
+       # already incorporated build-hints.conda into requirements.yml and/or requirements.txt
+       if [ -e ${hints} ]; then
+           /opt/common-scripts/env-update ${env}  ${hints}
+       fi
+       ;;
+esac
+
+# Save frozen requirements inside image on the fly,  copy out to source distro later
+echo "===== Saving frozen conda constraints for environment ${env} to ${env_frozen_yml}"
+${CONDA_VER} env export --no-build -n ${env} > ${env_frozen_yml}
+
+# echo "===== Removing draft conda env ${env}"
+# ${CONDA_VER} env remove -n ${env}
+# echo "===== Creating conda environment ${env} from frozen constraints ${env_frozen_yml}"
+# env_create ${env_frozen_yml}
 
 source /opt/common-scripts/env-activate ${env}
 

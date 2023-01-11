@@ -10,8 +10,8 @@ jupyterhub:
     continuous:
       # Don't need continuous pre-puller on staging
       enabled: false
-  singleuser:
-    storage:
+  # singleuser:
+    # storage:
       #extraVolumes:
       # - name:  preloaded-fits-volume
       #  persistentVolumeClaim:

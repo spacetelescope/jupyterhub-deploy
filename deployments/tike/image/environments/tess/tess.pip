@@ -5,7 +5,7 @@ celerite
 k2flix
 everest-pipeline
 reproject
-astroML>=1.0a1
+astroML
 
 dynesty
 rebound
@@ -31,7 +31,7 @@ psycopg2-binary
 #emcee==3.0rc1
 h5py
 corner
-transitleastsquares>=1.0
+transitleastsquares
 paramiko
 
 # Installed from source due to numpy ABI version issues

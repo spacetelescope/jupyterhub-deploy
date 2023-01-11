@@ -2,24 +2,35 @@
 
 # ------------------------------------------------------------------------------------
 #
-# This file is used to initialize aspects of JupyterHub which are common to both
-# cloud and standalone usage.  post start actions which are unique to the cloud
-# should be placed either in the config YAML or in another file so that they
-# don't break the standalone/CI use case.   Only this file should be called from
-# both the Dockerfile and the hub post start hook.
+# This file is used to initialize $HOME after a notebook session has been spawned.
+#
+# When running on JupyterHub,  $HOME is backed by and overlay of EFS and AWS features
+#   are available.
+# When running in Docker,  $HOME is part of the image being initialized for standalone
+#   usage.   AWS features are assumed to be unavailable.
+#
+# Only this file should be called from the Dockerfile or hub post
+# start hook.
 #
 # This file implements:
 #
-# 1. Setup and update of the default-home-contents
+# 0. EFS quota lockouts on jupyterhub.
+#
+# 1. Setup and update of the default-home-contents.
 #
 # 2. Notebook setup for class and test notebooks.
 #
-# It should not implement e.g. CRDS symlink setup which is tied to EFS/cloud
-# and won't work standalone.
-#
-# It's a good idea to keep this relatively light weight / short running.
-#
 set -eu
+
+# .............................................................................................
+
+HUB_FLAG=${1:-"on-hub"}
+
+if [[ $HUB_FLAG == "on-hub" ]]; then   
+    /opt/common-scripts/check-quota
+fi
+
+# .............................................................................................
 
 rsync -r  /etc/default-home-contents/ /home/jovyan
 
@@ -49,10 +60,8 @@ cat <<EOF >/opt/environments/tess/tests/notebooks
     ${SN}/notebooks/MAST/TESS/beginner_tic_search_hd209458/beginner_tic_search_hd209458.ipynb
     ${SN}/notebooks/MAST/TESS/interm_gi_query/interm_gi_query.ipynb
     ${SN}/notebooks/MAST/TESS/beginner_astroquery_dv/beginner_astroquery_dv.ipynb
-    ${SN}/notebooks/MAST/TESS/beginner_how_to_use_ffi/beginner_how_to_use_ffi.ipynb
     ${SN}/notebooks/MAST/TESS/beginner_how_to_use_tp/beginner_how_to_use_tp.ipynb
 
-    ${SN}/notebooks/MAST/TESS/interm_tesscut_dss_overlay/interm_tesscut_dss_overlay.ipynb
     ${SN}/notebooks/MAST/TESS/interm_tesscut_requests/interm_tesscut_requests.ipynb
 EOF
 
@@ -73,6 +82,10 @@ cat <<EOF >/opt/environments/tess/tests/notebooks-failing
     ${SN}/notebooks/MAST/Kepler/kepler_instrumental_noise_2_spurious_signals_and_time_sampling_effects/kepler_instrumental_noise_2_spurious_signals_and_time_sampling_effects.ipynb
     ${SN}/notebooks/MAST/Kepler/kepler_instrumental_noise_3_seasonal_and_detector_effects/kepler_instrumental_noise_3_seasonal_and_detector_effects.ipynb
     ${SN}/notebooks/MAST/Kepler/kepler_creating_your_own_light_curves/kepler_creating_your_own_light_curves.ipynb
+
+    ${SN}/notebooks/MAST/TESS/interm_tesscut_dss_overlay/interm_tesscut_dss_overlay.ipynb
+    ${SN}/notebooks/MAST/TESS/beginner_how_to_use_ffi/beginner_how_to_use_ffi.ipynb
+
 EOF
 
 # .............................................................................................
@@ -116,3 +129,8 @@ EOF
 
 # /opt/common-scripts/set-notebook-kernel tess  `cat /opt/environments/tess/tests/long-notebooks`
 # /opt/common-scripts/set-notebook-kernel tess  `cat /opt/environments/tess/tests/long-notebooks-failing`
+
+# .............................................................................................
+# Remove VNC Desktop from Launcher
+rm -rf /home/jovyan/.user-dirs/Desktop
+rm -rf /home/jovyan/Desktop

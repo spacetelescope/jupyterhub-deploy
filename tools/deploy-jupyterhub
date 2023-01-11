@@ -18,7 +18,7 @@ tmp_decrypted=${JUPYTERHUB_DIR}/env.yaml.decrypted
 awsudo $ADMIN_ARN aws eks update-kubeconfig --name ${DEPLOYMENT_NAME} --region us-east-1 --role-arn $ADMIN_ARN
 
 # clear out and update the helm charts
-rm -r hub/charts/*
+rm -rf hub/charts/*
 helm dependency update hub
 
 kubectl apply -f ${CONFIG_DIR}/custom-ui-templates-${ENVIRONMENT}-${DEPLOYMENT_NAME}.yaml
@@ -28,11 +28,22 @@ pushd $(dirname ${secrets_yaml})
 awsudo $ADMIN_ARN sops --decrypt $(basename ${secrets_yaml}) > $tmp_decrypted
 popd
 
-helm upgrade --debug --wait --install ${DEPLOYMENT_NAME}-${ENVIRONMENT} hub -f ${COMMON_CONFIG_DIR}/all.yaml -f ${CONFIG_DIR}/common.yaml -f ${CONFIG_DIR}/${ENVIRONMENT}.yaml -f ${tmp_decrypted} --set-string jupyterhub.singleuser.image.name=${ECR_REGISTRY}/${IMAGE_REPO} --set-string jupyterhub.singleuser.image.tag="latest-${ENVIRONMENT}"
+helm upgrade --debug --wait --install ${DEPLOYMENT_NAME}-${ENVIRONMENT} hub \
+     -f ${COMMON_CONFIG_DIR}/all.yaml \
+     -f ${CONFIG_DIR}/common.yaml \
+     -f ${CONFIG_DIR}/${ENVIRONMENT}.yaml \
+     -f ${tmp_decrypted} \
+     --set-string jupyterhub.singleuser.image.name=${ECR_REGISTRY}/${IMAGE_REPO} \
+     --set-string jupyterhub.singleuser.image.tag="latest-${ENVIRONMENT}" \
+     --set-file jupyterhub.hub.extraFiles.announcements_service.stringData=deployments/common/services/announcements.py
 
 rm ${tmp_decrypted}
 
 # Only use 1 more IP address than is needed at all times
 kubectl set env ds aws-node -n kube-system WARM_IP_TARGET=1
+
+echo ======================= Combined Helm Config Files =======================
+helm get values ${DEPLOYMENT_NAME}-${ENVIRONMENT}
+echo ==========================================================================
 
 kubectl get svc proxy-public

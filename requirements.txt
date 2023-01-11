@@ -3,7 +3,7 @@ requests
 beautifulsoup4
 lxml
 pyyaml
-safety
+#safety
 bandit
 boto3
 flake8
@@ -13,3 +13,6 @@ keyring
 tqdm
 docutils
 webencodings
+filelock
+pytest
+pytest-coverage

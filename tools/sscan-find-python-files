@@ -2,7 +2,7 @@
 
 # Search for files containing Python source code and print their names
 
-DIRS=${1:-"deployments hub tools"}
+DIRS=${1:-"deployments hub tools fs-support datadog"}
 
 # Find Python she-bang scripts w/o .py extension
 find ${DIRS}  -type f | xargs grep -l -E '#!\s*/usr/bin/env\s+python'

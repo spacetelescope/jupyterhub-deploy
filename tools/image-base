@@ -24,7 +24,7 @@ if [[ ! -d docker-stacks ]]; then
 else
     cd docker-stacks
     git fetch origin
-    git rebase origin/master
+    git rebase origin/main
 fi
 
 # checkout the appropriate docker-stacks revision if using frozen specs;
@@ -35,7 +35,9 @@ frozen_hash_spec="$env_frozen_dir/docker-stacks.hash"
 if [[ "$USE_FROZEN" == "1" ]]; then
     git checkout `cat $frozen_hash_spec`
 else
-    echo `git rev-parse HEAD` > $frozen_hash_spec
+    if [[ "$FREEZE_CHILL" == "1" ]]; then
+        echo `git rev-parse HEAD` > $frozen_hash_spec
+    fi
 fi
 
 # Taken from the docker-stacks Makefile to enable adding --build-arg's again
@@ -44,7 +46,9 @@ build_jh() {
     docker build --rm --force-rm -t ${OWNER}/${STACK}:latest ./${STACK} --build-arg OWNER=${OWNER} --progress plain $*
 }
 
-build_jh  base-notebook     --build-arg ROOT_CONTAINER=${OWNER}/ubuntu-certs:latest
+build_jh  docker-stacks-foundation  --build-arg ROOT_CONTAINER=${OWNER}/ubuntu-certs:latest
+
+build_jh  base-notebook     --build-arg ROOT_CONTAINER=${OWNER}/docker-stacks-foundation:latest
 
 build_jh  minimal-notebook  --build-arg BASE_CONTAINER=${OWNER}/base-notebook:latest
 

@@ -1,0 +1,252 @@
+#! /usr/bin/env python
+
+import os
+import sys
+import argparse
+import subprocess
+import datetime
+import re
+
+import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
+
+# ======================================================================================
+
+
+def run(cmd, cwd=".", timeout=10):
+    """Run subprocess `cmd` in dir `cwd` failing if not completed within `timeout` seconds
+    of if `cmd` returns a non-zero exit status.
+
+    Returns both stdout+stderr from `cmd`.  (untested, verify manually if in doubt)
+    """
+    result = subprocess.run(
+        cmd.split(),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        check=True,
+        cwd=cwd,
+        timeout=timeout,
+    )  # maybe succeeds
+    return result.stdout
+
+
+def now():
+    return trim_time(datetime.datetime.now().isoformat("T"))
+
+
+NULL_TIME = "0001-01-01T01:01"
+
+
+def trim_time(t):
+    """Format times from JH in quota format by trimming subseconds and timezone."""
+    return NULL_TIME if t is None else t[: t.index(".") + 7]
+
+
+# ======================================================================================
+
+API_TIMEOUT = 10
+
+
+def requests_config():
+    """Return a requests configuration including automatic retries."""
+    retry_strategy = Retry(
+        total=3,
+        backoff_factor=1,
+        status_forcelist=[429, 500, 502, 503, 504],
+        allowed_methods=["HEAD", "GET", "PUT", "DELETE", "OPTIONS", "TRACE"],
+    )
+    adapter = HTTPAdapter(max_retries=retry_strategy)
+    http = requests.Session()
+    http.mount("https://", adapter)
+    http.mount("http://", adapter)
+    return http
+
+
+def get_api_token():
+    return run("get-service-token announcement").strip()
+
+
+class RestApi:
+    """Abstract API to simplify/standardize making requests to hub services."""
+
+    prefix = ""
+
+    def __init__(self, hub_url, api_token, api_cert):
+        self.api_url = hub_url + self.prefix
+        self.api_token = api_token
+        self.api_cert = api_cert if api_cert.capitalize() != "False" else False
+        self.requests = requests_config()
+
+    def get(self, suffix=""):
+        r = self.requests.get(
+            self.api_url + suffix,
+            headers={
+                "Authorization": f"token {self.api_token}",
+            },
+            verify=self.api_cert,
+            timeout=API_TIMEOUT,
+        )
+        r.raise_for_status()
+        return r.json()
+
+    def post(self, suffix="", **data):
+        """Post dict `data` using json encoding and return."""
+        r = self.requests.post(
+            self.api_url + suffix,
+            headers={
+                "Authorization": f"token {self.api_token}",
+            },
+            verify=self.api_cert,
+            timeout=API_TIMEOUT,
+            json=data,
+        )
+        r.raise_for_status()
+        return r.json()
+
+    def delete(self, suffix):
+        """Delete user's notebook server,  not account."""
+        r = self.requests.delete(
+            self.api_url + suffix,
+            headers={
+                "Authorization": f"token {self.api_token}",
+            },
+            verify=self.api_cert,
+            timeout=API_TIMEOUT,
+        )
+        r.raise_for_status()
+        return r.json()
+
+
+class AnnouncementRestApi(RestApi):
+    """Interface for making API requests to the hub announcements service."""
+
+    prefix = "/services/announcement/latest"
+
+    def send_message(self, level, message, username=None, replace=None, expires='2-00:00:00'):
+        """Post a message to the announment service and return."""
+        return self.post(
+            level=level,
+            announcement=message,
+            username=username,
+            timestamp=now(),
+            replace=replace,
+            expires=expires,
+        )
+
+    def clear_announcements(self, username="all"):
+        """Delete announcements for `username`."""
+        self.delete(f"/{username}")
+
+    def get_announcements(self, username="all"):
+        return self.get(f"/{username}")
+
+
+def deltatime(s):
+    try:
+        assert re.match(r"\d+\-\d\d:\d\d:\d\d", s)
+        return s
+    except Exception:
+        raise ValueError("Bad deltatime format for '--expires' should be DAYS-HH:MM:SS.")
+
+# ======================================================================================
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Send a message to the announcement service for distribution to hub users.",
+        epilog="""
+
+Interacts with the announcement service distribution server to put,
+get, and clear messages.  At present messages are kept in memory and
+do not persist across JupyterHub re-deployments.  The announcement
+service is managed by JupyterHub and messages can only be sent when
+the hub pod is up.  Any logs for the announcement service are found
+with the hub pod logs.  Both the system and per-user message stores
+act as FIFOs of length 5,  old messages are dropped to make way for
+new messages.
+
+""",
+    )
+    parser.add_argument(
+        "--put",
+        dest="put",
+        action="store",
+        default=None,
+        metavar="<message>",
+        help="Output the specified plain text message to one or all users.",
+    )
+    parser.add_argument(
+        "--clear",
+        dest="clear",
+        action="store_true",
+        default=None,
+        help="Clear all messages for the specified --username,  'system', or 'all' users.",
+    )
+    parser.add_argument(
+        "--get",
+        dest="get",
+        action="store_true",
+        default=None,
+        help="Download all messages for --username and print to stdout.",
+    )
+    parser.add_argument(
+        "--replace",
+        dest="replace",
+        action="store",
+        default="None",
+        metavar="<replace regex>",
+        help="Regex of messages this message should replace,  modulo other parameters like --username.",
+    )
+    parser.add_argument(
+        "--level",
+        dest="level",
+        action="store",
+        default="info",
+        metavar="<info|warning|error|critical>",
+        help="Log level of message:  info (default), warning, error, critical.  >= warning will pop-up.",
+    )
+    parser.add_argument(
+        "--username",
+        dest="username",
+        action="store",
+        default="system",
+        metavar="<username>",
+        help="User to send message to,  or 'system' (default) for a message sent to all users.",
+    )
+    parser.add_argument(
+        "--expires",
+        dest="expires",
+        action="store",
+        default=None,
+        metavar="<expires>",
+        type=deltatime,
+        help="Time delta DAYS-HH:MM:SS after which this message expires and is cleared, default='2-00:00:00'.",
+    )
+    return parser.parse_args(), parser
+
+
+def main():
+    """"""
+    args, parser = parse_args()
+
+    hub_url = f'https://{os.environ["JH_HOSTNAME"]}'
+    api_cert = (
+        "/home/ec2-user/jupyterhub-deploy/fs-support/efs-quota/jh-intermediates.pem"
+    )
+    api = AnnouncementRestApi(hub_url, api_token=get_api_token(), api_cert=api_cert)
+
+    if args.put:
+        api.send_message(args.level, args.put, args.username, args.replace, args.expires)
+    elif args.clear:
+        api.clear_announcements(args.username)
+    elif args.get:
+        print(api.get_announcements(args.username))
+    else:
+        parser.print_help(sys.stderr)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

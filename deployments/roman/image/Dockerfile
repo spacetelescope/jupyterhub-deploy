@@ -5,42 +5,14 @@ ARG BASE_IMAGE
 FROM $BASE_IMAGE AS build
 
 # ----------------------------------------------------------------------
-
-# All data is arranged  on /data opening up options for sharing a file system
-ENV MIRAGE_DATA=/data/mirage \
-    PYSYN_CDBS=/data/pysynphot \
-    WEBBPSF_PATH=/data/webbpsf-data \
-    pandeia_refdata=/data/pandeia
-
-# ----------------------------------------------------------------------
+# Duplicated in config,  these are for standalone non-hub lab use.
 
 ENV CRDS_PATH=/home/jovyan/crds_cache
 ENV CRDS_SERVER_URL=https://roman-crds-test.stsci.edu
-ENV CRDS_VERBOSITY=20
+# ENV CRDS_VERBOSITY=20
 
 # ----------------------------------------------------------------------
 USER root
-
-# ----------------------------------------------------------------------
-# UNIX build unaffected by environments
-
-# Get webbpsf-data-0.9.0.tar.gz
-RUN mkdir /data && cd /data && \
-    wget --quiet https://stsci.box.com/shared/static/qcptcokkbx7fgi3c00w2732yezkxzb99.gz
-RUN cd /data && tar zxf qcptcokkbx7fgi3c00w2732yezkxzb99.gz && \
-    rm qcptcokkbx7fgi3c00w2732yezkxzb99.gz && chmod -R a+r /data/webbpsf-data
-
-# Install sextractor under /usr/local
-# NOTE: using master because this fix is required:
-#       https://github.com/astromatic/sextractor/commit/46dd48faff6a7b59939096ba55e83e02e865ddfc
-RUN cd /tmp && \
-    wget https://github.com/astromatic/sextractor/archive/master.zip && \
-    unzip master.zip && \
-    cd sextractor-master && \
-    sh autogen.sh && \
-    ./configure --prefix=/usr/local && \
-    make && \
-    make install
 
 # ------------------------------------------------------------------------------
 # Install environments
@@ -55,32 +27,39 @@ USER ${NB_UID}
 COPY --chown=${NB_UID}:${NB_GID} env-frozen/base/  /opt/env-frozen/base/
 RUN   /opt/common-scripts/install-common  base
 
-# ------------------------------------------------------------------------------
-# CVT
-
-COPY --chown=${NB_UID}:${NB_GID} env-frozen/cvt/  /opt/env-frozen/cvt/
-COPY --chown=${NB_UID}:${NB_GID} environments/cvt/*.yml  /opt/environments/cvt/
-RUN /opt/common-scripts/env-conda cvt
-
-COPY --chown=${NB_UID}:${NB_GID} environments/cvt/*.pip  /opt/environments/cvt/
-RUN /opt/common-scripts/env-compile cvt
-
-RUN /opt/common-scripts/env-sync cvt
-
-COPY --chown=${NB_UID}:${NB_GID} environments/cvt/ /opt/environments/cvt/
-
 # ----------------------------------------------------------------------
 # Roman CAL
+#
+# Copy romcan-cal conda environment requirements: floating, frozen, chilly
+# All copies below are factored to enable Docker idempotence / build caching
+# e.g. changing tests should not result in re-installing conda
+
+#COPY --chown=${NB_UID}:${NB_GID} environments/roman-cal/*.yml  /opt/environments/roman-cal/
+COPY --chown=${NB_UID}:${NB_GID} environments/roman-cal/*.explicit  /opt/environments/roman-cal/
+
+COPY --chown=${NB_UID}:${NB_GID} environments/roman-cal/*.conda  /opt/environments/roman-cal/
 
 COPY --chown=${NB_UID}:${NB_GID} env-frozen/roman-cal/  /opt/env-frozen/roman-cal/
-COPY --chown=${NB_UID}:${NB_GID} environments/roman-cal/*.yml  /opt/environments/roman-cal/
+
+COPY --chown=${NB_UID}:${NB_GID} env-chilly/roman-cal/  /opt/env-chilly/roman-cal/
+
+# ----- Install romcan-cal conda environment
 RUN /opt/common-scripts/env-conda roman-cal
 
+# ----- Copy romcan-cal pip requirements
+# ----- This will include both romancal release requirements and anything JH adds.
 COPY --chown=${NB_UID}:${NB_GID} environments/roman-cal/*.pip  /opt/environments/roman-cal/
+
+# ----  Compile romcan-cal pip requirements to dependency solution
 RUN /opt/common-scripts/env-compile roman-cal
 
+# ----- Install compiled roman-cal pip dependency solution
 RUN /opt/common-scripts/env-sync roman-cal
 
+# ----- Copy remaining roman environments files, including tests and post-start-hook scripts
+# NOTE: this is a Docker cache buster and why builds back up to env installation when you're
+# iterating on the post-start-hook or tests.  The problem is that the broad copy makes it look
+# like potentially all roman-cal-specific requirements have changed.
 COPY --chown=${NB_UID}:${NB_GID} environments/roman-cal/ /opt/environments/roman-cal/
 
 # ========================= ^^^^^ Custom  ^^^^^ =========================
@@ -122,10 +101,10 @@ COPY --chown=${NB_UID}:${NB_GID} environments/    /opt/environments/
 # YYYY SEC
 
 USER root
-RUN  /opt/common-scripts/npm-audit  /usr/share/npm/node_modules/socks-proxy-agent  fix  && \
-     /opt/common-scripts/env-clean
+#RUN  /opt/common-scripts/npm-audit  /usr/share/npm/node_modules/socks-proxy-agent  fix  && \
+RUN   /opt/common-scripts/env-clean
 
-RUN  find /opt/conda -name yarn.lock | grep jupyterlab/staging | xargs rm -f || true
+#RUN  find /opt/conda -name yarn.lock | grep jupyterlab/staging | xargs rm -f || true
 
 # ----------------------------------------------------------------------
 # For standalone operation outside JupyterHub,  note that  /etc also includes
@@ -134,5 +113,5 @@ RUN  find /opt/conda -name yarn.lock | grep jupyterlab/staging | xargs rm -f || 
 
 USER $NB_USER
 WORKDIR /home/$NB_USER
-RUN /opt/environments/post-start-hook
+RUN /opt/environments/post-start-hook  docker   # docker == do not run hub-specific functions of hook
 CMD [ "start-notebook.sh" ]

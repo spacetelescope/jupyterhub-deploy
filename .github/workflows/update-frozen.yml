@@ -1,7 +1,9 @@
 name: Update Frozen Requirements
 on:
-   schedule:  # weekly
-     - cron: '0 0 * * 0'
+  schedule:  # weekly
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
 
 jobs:
   docker:
@@ -13,7 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         DEPLOYMENT_NAME: [ tike, jwebbinar, roman ]
-        USE_FROZEN: [ 0 ]
+        USE_FROZEN: [ 2 ]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -43,7 +45,7 @@ jobs:
       - name: Set Up Environment
         shell: bash
         run: |
-           tools/image-configure ${{ matrix.DEPLOYMENT_NAME }}  0
+           tools/image-configure ${{ matrix.DEPLOYMENT_NAME }} ${{ matrix.USE_FROZEN }}
            df -h
 
       - name: Image Build
@@ -57,6 +59,11 @@ jobs:
            docker image ls
            df -h
 
+      - name: Git Diffs (Frozen Specs)
+        shell: bash
+        run: |
+           git diff deployments/${{ matrix.DEPLOYMENT_NAME }}/image/env-frozen | grep -v '#' | grep -E '^[+-]'
+
       - name: Image Functional Tests
         shell: bash
         run: |
@@ -65,9 +72,10 @@ jobs:
            tools/image-test
            df -h
 
-      - name: Git Diffs (Frozen Version Specs)
+      - name: Clear setup-env
         shell: bash
-        run: git diff
+        run: |
+           rm setup-env
 
       - name: Commit & Push
         uses: actions-js/push@master
@@ -77,6 +85,6 @@ jobs:
           author_name: Mr. Freeze
           message: Automatic requirements update
           branch: update-frozen-${{ matrix.DEPLOYMENT_NAME }}
-          directory: deployments/${{ matrix.DEPLOYMENT_NAME}}/image/env-frozen
+          directory: deployments/${{ matrix.DEPLOYMENT_NAME }}/image/env-frozen
           force: true
           tags: false

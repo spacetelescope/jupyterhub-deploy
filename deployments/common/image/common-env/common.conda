@@ -1,8 +1,6 @@
-pip<22
+pip
 pip-tools
 setuptools
-conda-build
-conda-tree
 nodejs
 websockify
 jupyter-packaging

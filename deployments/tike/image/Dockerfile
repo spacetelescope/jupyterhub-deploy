@@ -31,6 +31,7 @@ RUN   /opt/common-scripts/install-common  base
 # --------------------------- TESS -------------------------------------
 
 COPY --chown=${NB_UID}:${NB_GID} env-frozen/tess/  /opt/env-frozen/tess/
+COPY --chown=${NB_UID}:${NB_GID} env-chilly/tess/  /opt/env-chilly/tess/
 COPY --chown=${NB_UID}:${NB_GID} environments/tess/*.yml /opt/environments/tess/
 RUN /opt/common-scripts/env-conda tess
 
@@ -48,7 +49,7 @@ COPY --chown=${NB_UID}:${NB_GID} environments/tess/ /opt/environments/tess/
 
 RUN /opt/common-scripts/env-src-install  tess  batman-package
 
-RUN /opt/common-scripts/env-src-install  tess  radvel
+# RUN /opt/common-scripts/env-src-install  tess  radvel
 
 RUN /opt/common-scripts/env-src-install  tess  juliet
 
@@ -104,10 +105,10 @@ COPY --chown=${NB_UID}:${NB_GID} environments/    /opt/environments/
 # YYYY SEC
 
 USER root
-RUN  /opt/common-scripts/npm-audit  /usr/share/npm/node_modules/socks-proxy-agent  fix  && \
-     /opt/common-scripts/env-clean
+#RUN  /opt/common-scripts/npm-audit  /usr/share/npm/node_modules/socks-proxy-agent  fix  && \
+RUN   /opt/common-scripts/env-clean
 
-RUN  find /opt/conda -name yarn.lock | grep jupyterlab/staging | xargs rm -f || true
+#RUN  find /opt/conda -name yarn.lock | grep jupyterlab/staging | xargs rm -f || true
 
 # ----------------------------------------------------------------------
 # For standalone operation outside JupyterHub,  note that  /etc also includes
@@ -116,5 +117,5 @@ RUN  find /opt/conda -name yarn.lock | grep jupyterlab/staging | xargs rm -f || 
 
 USER $NB_USER
 WORKDIR /home/$NB_USER
-RUN /opt/environments/post-start-hook
+RUN /opt/environments/post-start-hook  docker   # docker == do not run hub-specific functions of hook
 CMD [ "start-notebook.sh" ]

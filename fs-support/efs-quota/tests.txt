@@ -1,0 +1,545 @@
+>>> import os
+>>> import sys
+>>> import re
+>>> import shutil
+>>> from unittest.mock import patch, Mock, PropertyMock
+>>> from pprint import pprint
+
+>>> import yaml
+
+>>> import efs_quota_monitor    # monitor + reaper daemons
+>>> import check_quota          # quota display and lockout enforcer
+>>> import tests
+>>> from efs_quota_monitor import *
+
+# =========================== Env Setup ============================================
+
+>>> os.environ.update(dict(
+...    DEPLOYMENT_NAME = "roman",
+...    ENVIRONMENT = "dev",
+...    POD_NAME = "efs-quota-monitor-6d4978cb5c-6vqdm",
+... ))
+
+# =========================== Log class ============================================
+
+>>> get_pod_id()
+'6d4978cb5c-6vqdm'
+
+>>> log = Log("Monitor")
+
+>>> log.pod_id
+'6d4978cb5c-6vqdm'
+
+>>> log.environment
+'dev'
+
+>>> log.deployment
+'roman'
+
+No output expected for log.debug
+
+>>> log.debug("This is a test", "of", "args and", keyword=1)
+
+>>> log.info("This is a test", "of", "args and", keyword=1)
+{"keyword": 1, "status": "INFO", "subsystem": "Monitor", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "...", "message": "This is a test of args and", "service": "roman", "env": "dmd-dev"}
+
+>>> log.warning("This is a test", "of", "more args and", keyword=2)
+{"keyword": 2, "status": "WARN", "subsystem": "Monitor", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "...", "message": "This is a test of more args and", "service": "roman", "env": "dmd-dev"}
+
+>>> log.error("This is a test", "of", "more args and", keyword=4, another=True)
+{"keyword": 4, "another": true, "status": "ERROR", "subsystem": "Monitor", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "...", "message": "This is a test of more args and", "service": "roman", "env": "dmd-dev"}
+
+>>> log.critical("This is a test of args and", keyword=999, another=False)
+{"keyword": 999, "another": false, "status": "CRITICAL", "subsystem": "Monitor", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "...", "message": "This is a test of args and", "service": "roman", "env": "dmd-dev"}
+
+>>> try:
+...    raise RuntimeError("something unexpected!")
+... except Exception as exc:
+...    log.exception(exc, "Message for DataDog.")
+{"error.stack": "Traceback (most recent call last):\n  File \"<doctest tests.txt[...]>\", line ..., in <module>\n    raise RuntimeError(\"something unexpected!\")\nRuntimeError: something unexpected!\n", "error.message": "Message for DataDog.", "error.kind": "RuntimeError", "logger.name": "efs-quota", "logger.thread_name": "6d4978cb5c-6vqdm", "status": "ERROR", "subsystem": "Monitor", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "...", "message": "Message for DataDog.", "service": "roman", "env": "dmd-dev"}
+
+# ============================================================================
+
+>>> _ = requests_config()
+
+# ============================================================================
+
+>>> fp = QuotaFootprint("homer@stsci.edu", "efs/users", "efs/quota-control")
+
+>>> fp.user
+'homer@stsci.edu'
+
+>>> fp.monitored_home
+'efs/users/homer-40stsci-2eedu'
+
+>>> fp.lock_file
+'efs/quota-control/homer-40stsci-2eedu/quota.lock'
+
+>>> fp.quota_file
+'efs/quota-control/homer-40stsci-2eedu/quota.yaml'
+
+# ----------------------------------------------------------------------
+
+>>> patch_du = patch("efs_quota_monitor.du");  mock_du = patch_du.start()
+
+>>> data = QuotaData("homer@stsci.edu", 0.01, 0.5)
+>>> fp.save(data)
+>>> data2 = fp.load()
+>>> data.attrs == data2.attrs
+True
+
+>>> print(data)
+active_at_reap: 0
+actual_bytes: -1
+fraction_used: 0
+last_activity: 0001-01-01T01:01
+lockout_enabled: true
+quota_bytes: 10737418
+quota_enabled: true
+quota_state: ok
+reaper_time: 0001-01-01T01:01
+started: 0001-01-01T01:01
+stopped: 0001-01-01T01:01
+timed_out: false
+user: homer@stsci.edu
+warn_fraction: 0.5
+<BLANKLINE>
+
+>>> print(data.json())
+{"user": "homer@stsci.edu", "quota_bytes": 10737418, "actual_bytes": -1, "fraction_used": 0, "warn_fraction": 0.5, "quota_enabled": true, "lockout_enabled": true, "last_activity": "0001-01-01T01:01", "reaper_time": "0001-01-01T01:01", "active_at_reap": 0, "started": "0001-01-01T01:01", "stopped": "0001-01-01T01:01", "quota_state": "ok", "timed_out": false}
+
+>>> pprint(data.attrs)
+{'active_at_reap': 0,
+ 'actual_bytes': -1,
+ 'fraction_used': 0,
+ 'last_activity': '0001-01-01T01:01',
+ 'lockout_enabled': True,
+ 'quota_bytes': 10737418,
+ 'quota_enabled': True,
+ 'quota_state': 'ok',
+ 'reaper_time': '0001-01-01T01:01',
+ 'started': '0001-01-01T01:01',
+ 'stopped': '0001-01-01T01:01',
+ 'timed_out': False,
+ 'user': 'homer@stsci.edu',
+ 'warn_fraction': 0.5}
+
+>>> pprint(data.f_actual_bytes)
+'     -1'
+
+>>> pprint(data.f_quota_bytes)
+'  10.2M'
+
+>>> mock_du.return_value = int(0.004 * 2**30)
+>>> data.measure_usage(fp, 1)
+
+>>> data.actual_bytes == int(0.004 * 2**30)
+True
+
+>>> data.fraction_used == data.actual_bytes / data.quota_bytes
+True
+
+>>> data.timed_out
+False
+
+>>> data.stopped > data.started
+True
+
+>>> data.quota_state
+'ok'
+
+>>> data.started != NULL_TIME
+True
+
+>>> data.stopped != NULL_TIME
+True
+
+# ---------------------------------------------------------
+
+>>> mock_du.return_value = int(0.006 * 2**30)
+>>> data.measure_usage(fp, 1)
+
+>>> data.actual_bytes
+6442450
+
+>>> data.timed_out
+False
+
+>>> data.stopped > data.started
+True
+
+>>> data.quota_state
+'nearing-limit'
+
+>>> data.fraction_used
+0.599...
+
+# ---------------------------------------------------------
+
+>>> mock_du.return_value = int(0.011 * 2**30)
+>>> data.measure_usage(fp, 1)
+
+>>> data.actual_bytes
+11811160
+
+>>> data.quota_state
+'lockout'
+
+>>> data.fraction_used
+1.1...
+
+# ---------------------------------------------------------
+
+>>> data.lockout_enabled = False
+>>> data.measure_usage(fp, 1)
+
+>>> data.actual_bytes
+11811160
+
+>>> data.timed_out
+False
+
+>>> data.quota_state
+'violation'
+
+>>> data.fraction_used
+1.1...
+
+# ---------------------------------------------------------
+
+>>> import subprocess
+>>> del mock_du.return_value
+>>> mock_du.side_effect = [subprocess.TimeoutExpired(efs_quota_monitor.du, 1)]
+>>> data.measure_usage(fp, 1)
+>>> data.timed_out
+True
+
+>>> data.actual_bytes
+11811160
+
+>>> data.quota_state
+'violation'
+
+>>> data.fraction_used
+1.1...
+
+>>> mock_du.side_effect = [subprocess.TimeoutExpired(efs_quota_monitor.du, 1)]
+>>> data.actual_bytes = 0
+>>> data.measure_usage(fp, 1)
+>>> data.timed_out
+True
+>>> data.quota_state
+'timed-out'
+
+# ---------------------------------------------------------
+
+>>> time.sleep(1)
+>>> t = now()
+>>> data.stale(last_activity=t, stale_quota_secs=0.1)
+True
+>>> data.stale(last_activity=t, stale_quota_secs=20)
+False
+
+>>> data = QuotaData("homer@stsci.edu")
+
+>>> data.never_measured()
+True
+
+>>> data.actual_bytes = 10
+>>> data.never_measured()
+True
+
+>>> data.started = now()
+>>> data.never_measured()
+False
+
+>>> _ = mock_du.stop()
+
+# =============================================================================
+
+>>> time_re = r"\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d\.\d\d\d\d\d\d"
+>>> assert re.match(time_re, now())
+
+>>> trim_time('2022-09-07T12:52:24.200461')
+'2022-09-07T12:52:24.200461'
+
+>>> trim_time('2022-09-07T12:52:24.200461999')
+'2022-09-07T12:52:24.200461'
+
+>>> k8s_encode("homer@stsci.edu")
+'homer-40stsci-2eedu'
+
+>>> run("/bin/echo -n test")
+'test'
+
+# =============================================================================
+
+>>> shutil.rmtree("efs", ignore_errors=True)
+
+Initially the user $HOME does not exist,  lag between account admin and first
+login,  just skip:
+
+>>> tests.quota_monitor_main()
+{"status": "WARN", "subsystem": "Monitor", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "...", "message": "User homer@stsci.edu home dir efs/users/homer-40stsci-2eedu does not exist.  Skipping.", "service": "roman", "env": "dmd-dev"}
+{"status": "INFO", "subsystem": "Monitor", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "...", "message": "Waiting 10.0 seconds for next Monitor cycle.", "service": "roman", "env": "dmd-dev"}
+
+Once there is a user $HOME,  the first run will create their quota control file:
+
+>>> os.makedirs("efs/users/homer-40stsci-2eedu")
+>>> os.path.exists("efs/quota-control/homer-40stsci-2eedu/quota.yaml")
+False
+
+Until the quota file is created,  the checker outputs an INFO and quits w/o error:
+
+>>> tests.test_checker()
+INFO - No quota control file found: efs/quota-control/homer-40stsci-2eedu/quota.yaml
+0
+
+Once the quota control file exists,  regular measurements start:
+
+>>> tests.quota_monitor_main()
+{"status": "INFO", "subsystem": "Monitor", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "...", "message": "Initializing quota for user homer@stsci.edu", "service": "roman", "env": "dmd-dev"}
+{"user": "homer@stsci.edu", "quota_bytes": 214748364800, "actual_bytes": 3000000, "fraction_used": 1.3969838619232178e-05, "warn_fraction": 0.9, "quota_enabled": true, "lockout_enabled": true, "last_activity": "...", "reaper_time": "0001-01-01T01:01", "active_at_reap": 0, "started": "...", "stopped": "...", "quota_state": "ok", "timed_out": false, "status": "INFO", "subsystem": "Monitor", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "...", "message": "Updated quota for homer@stsci.edu using    2.9M of  200.0G bytes.", "service": "roman", "env": "dmd-dev"}
+{"status": "INFO", "subsystem": "Monitor", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "...", "message": "Waiting 10.0 seconds for next Monitor cycle.", "service": "roman", "env": "dmd-dev"}
+
+>>> os.path.exists("efs/quota-control/homer-40stsci-2eedu/quota.yaml")
+True
+
+>>> tests.test_checker()
+INFO - You are using    2.9M bytes of  200.0G permitted bytes of $HOME storage.  Usage OK.
+0
+
+Once both $HOME and quota control files exist, routine checks commence:
+
+>>> tests.quota_monitor_main()
+{"user": "homer@stsci.edu", "quota_bytes": 214748364800, "actual_bytes": 3000000, "fraction_used": 1.39...e-05, "warn_fraction": 0.9, "quota_enabled": true, "lockout_enabled": true, "last_activity": "...", "reaper_time": "0001-01-01T01:01", "active_at_reap": 0, "started": "...", "stopped": "...", "quota_state": "ok", "timed_out": false, "status": "INFO", "subsystem": "Monitor", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "...", "message": "Updated quota for homer@stsci.edu using    2.9M of  200.0G bytes.", "service": "roman", "env": "dmd-dev"}
+{"status": "INFO", "subsystem": "Monitor", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "...", "message": "Waiting 10.0 seconds for next Monitor cycle.", "service": "roman", "env": "dmd-dev"}
+
+>>> tests.test_checker()
+INFO - You are using    2.9M bytes of  200.0G permitted bytes of $HOME storage.  Usage OK.
+0
+
+If quota monitoring is disabled for a user,  their quota is not checked:
+
+>>> data = fp.load()  # "efs/quota-control/homer-40stsci-2edu/quota.yaml")
+>>> data.quota_enabled = False
+>>> fp.save(data)
+>>> tests.quota_monitor_main()
+{"status": "INFO", "subsystem": "Monitor", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "...", "message": "Quota monitoring for user homer@stsci.edu is disabled.  Skipping.", "service": "roman", "env": "dmd-dev"}
+{"status": "INFO", "subsystem": "Monitor", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "...", "message": "Waiting 10.0 seconds for next Monitor cycle.", "service": "roman", "env": "dmd-dev"}
+
+>>> tests.test_checker()
+INFO - Quotas have been disabled for this user. Be responsible...
+0
+
+Restore quota enable
+
+>>> data = fp.load()
+>>> data.quota_enabled = True
+>>> fp.save(data)
+
+If a user's quota was measured recently,  it will be skipped.  Fake this by driving last_activity < quota.stopped:
+
+>>> LA_DICTS = ({"homer@stsci.edu":  "2021-01-01T00:00:01.500000"},)  # 2021
+>>> tests.quota_monitor_main(la_dicts=LA_DICTS)
+{"status": "INFO", "subsystem": "Monitor", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "...", "message": "User homer@stsci.edu quota sufficiently recent.  Skipping.", "service": "roman", "env": "dmd-dev"}
+{"status": "INFO", "subsystem": "Monitor", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "...", "message": "Waiting 10.0 seconds for next Monitor cycle.", "service": "roman", "env": "dmd-dev"}
+
+>>> tests.test_checker()
+INFO - You are using    2.9M bytes of  200.0G permitted bytes of $HOME storage.  Usage OK.
+0
+
+If the filelock lock context manager times out,  some other process is working on this user,  skip:
+
+>>> @patch.object(efs_quota_monitor.Log, "dd_mode", new_callable=PropertyMock)
+... @patch.object(efs_quota_monitor.Log, "debug_mode", new_callable=PropertyMock)
+... def test_locking(debug_mock, dd_mock):
+...     dd_mock.return_value = False
+...     debug_mock.return_value = True
+...     lock = filelock.FileLock(fp.lock_file)
+...     with lock.acquire(fp.quota_file, blocking=False):
+...        tests.quota_monitor_main()
+>>> test_locking()
+2022-01-01T00:00:00 DEBUG : ========> Daemon startup.
+2022-01-01T00:00:00 DEBUG : =========> Searching for active users at REST API: https://dev.roman.science.stsci.edu/hub/api
+2022-01-01T00:00:00.125000 DEBUG : --------> Hub API found user homer@stsci.edu  : last activity 2022-01-01T00:00:01.500000
+2022-01-01T00:00:00 DEBUG : Skipping homer@stsci.edu since it is already locked for monitoring.
+2022-01-01T00:00:00 DEBUG : Elapsed time all users: 0:00:00
+2022-01-01T00:00:00.125000 INFO : Waiting 10.0 seconds for next Monitor cycle.
+2022-01-01T00:00:00.125000 DEBUG : =========> Searching for active users at REST API: https://dev.roman.science.stsci.edu/hub/api
+
+>>> tests.test_checker()
+INFO - You are using    2.9M bytes of  200.0G permitted bytes of $HOME storage.  Usage OK.
+0
+
+>>> with patch.object(efs_quota_monitor.QuotaMonitorDaemon, "operate_on_user") as operate_mock:
+...    operate_mock.side_effect = [ValueError]
+...    tests.quota_monitor_main()
+{"status": "ERROR", "subsystem": "Monitor", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "2022-01-01T00:00:00.125000", "message": "EXCEPTION: Quota processing failed for user homer@stsci.edu.", "service": "roman", "env": "dmd-dev"}
+{"status": "ERROR", "subsystem": "Monitor", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "2022-01-01T00:00:00", "message": "EXCEPTION: Quota checking top level failure.", "service": "roman", "env": "dmd-dev"}
+
+>>> tests.test_checker()
+INFO - You are using    2.9M bytes of  200.0G permitted bytes of $HOME storage.  Usage OK.
+0
+
+# ==========================================================================================
+
+Start over for Reaper
+
+>>> shutil.rmtree("efs", ignore_errors=True)
+
+If $HOME doesn't exist,  skip:
+
+>>> tests.quota_reaper_main()
+{"status": "WARN", "subsystem": "Reaper", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "2022-01-01T00:00:00.125000", "message": "User homer@stsci.edu home dir efs/users/homer-40stsci-2eedu does not exist. Skipping.", "service": "roman", "env": "dmd-dev"}
+{"status": "INFO", "subsystem": "Reaper", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "2022-01-01T00:00:00.125000", "message": "Waiting 10.0 seconds for next Reaper cycle.", "service": "roman", "env": "dmd-dev"}
+
+Create $HOME but not quota control:
+
+>>> os.makedirs("efs/users/homer-40stsci-2eedu")
+>>> os.path.exists("efs/quota-control/homer-40stsci-2eedu/quota.yaml")
+False
+
+Reaper is passive if quota-control doesn't exist,  does not create quota.yaml,  warns because user $HOME does exist:
+
+>>> tests.quota_reaper_main()
+{"status": "WARN", "subsystem": "Reaper", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "2022-01-01T00:00:00.125000", "message": "Quota file efs/quota-control/homer-40stsci-2eedu/quota.yaml for user homer@stsci.edu does not exist. Skipping.", "service": "roman", "env": "dmd-dev"}
+{"status": "INFO", "subsystem": "Reaper", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "2022-01-01T00:00:00.125000", "message": "Waiting 10.0 seconds for next Reaper cycle.", "service": "roman", "env": "dmd-dev"}
+
+>>> os.path.exists("efs/quota-control/homer-40stsci-2eedu/quota.yaml")
+False
+
+Run the quota monitor to init the quota file for the reaper
+
+>>> tests.quota_monitor_main()
+{"status": "INFO", "subsystem": "Monitor", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "2022-01-01T00:00:00.125000", "message": "Initializing quota for user homer@stsci.edu", "service": "roman", "env": "dmd-dev"}
+{"user": "homer@stsci.edu", "quota_bytes": 214748364800, "actual_bytes": 3000000, "fraction_used": 1.3969838619232178e-05, "warn_fraction": 0.9, "quota_enabled": true, "lockout_enabled": true, "last_activity": "2022-01-01T00:00:01.500000", "reaper_time": "0001-01-01T01:01", "active_at_reap": 0, "started": "2022-01-01T00:00:00", "stopped": "2022-01-01T00:00:00.125000", "quota_state": "ok", "timed_out": false, "status": "INFO", "subsystem": "Monitor", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "2022-01-01T00:00:00", "message": "Updated quota for homer@stsci.edu using    2.9M of  200.0G bytes.", "service": "roman", "env": "dmd-dev"}
+{"status": "INFO", "subsystem": "Monitor", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "2022-01-01T00:00:00", "message": "Waiting 10.0 seconds for next Monitor cycle.", "service": "roman", "env": "dmd-dev"}
+
+>>> tests.test_checker()
+INFO - You are using    2.9M bytes of  200.0G permitted bytes of $HOME storage.  Usage OK.
+0
+
+The quota is currently OK:
+
+>>> tests.quota_reaper_main()
+{"user": "homer@stsci.edu", "quota_bytes": 214748364800, "actual_bytes": 3000000, "fraction_used": 1.3969838619232178e-05, "warn_fraction": 0.9, "quota_enabled": true, "lockout_enabled": true, "last_activity": "2022-01-01T00:00:01.500000", "reaper_time": "2022-01-01T00:00:00.125000", "active_at_reap": 0, "started": "2022-01-01T00:00:00", "stopped": "2022-01-01T00:00:00.125000", "quota_state": "ok", "timed_out": false, "status": "INFO", "subsystem": "Reaper", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "2022-01-01T00:00:00", "message": "Quota for homer@stsci.edu using    2.9M of  200.0G bytes.  OK.", "service": "roman", "env": "dmd-dev"}
+{"status": "INFO", "subsystem": "Reaper", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "2022-01-01T00:00:00", "message": "Waiting 10.0 seconds for next Reaper cycle.", "service": "roman", "env": "dmd-dev"}
+
+>>> tests.test_checker()
+INFO - You are using    2.9M bytes of  200.0G permitted bytes of $HOME storage.  Usage OK.
+0
+
+Adjust the quota near the limit and check it:
+
+>>> data = fp.load()
+>>> data.actual_bytes = 214748364000
+>>> assert data.quota_state == "ok"
+>>> fp.save(data)
+>>> tests.quota_reaper_main()
+{"user": "homer@stsci.edu", "quota_bytes": 214748364800, "actual_bytes": 214748364000, "fraction_used": 0.9999999962747097, "warn_fraction": 0.9, "quota_enabled": true, "lockout_enabled": true, "last_activity": "...", "reaper_time": "...", "active_at_reap": 0, "started": "...", "stopped": "...", "quota_state": "nearing-limit", "timed_out": false, "status": "WARN", "subsystem": "Reaper", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "...", "message": "User homer@stsci.edu using  200.0G bytes nearing limit of  200.0G bytes.  Fraction used: 0.9999999962747097", "service": "roman", "env": "dmd-dev"}
+{"status": "INFO", "subsystem": "Reaper", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "...", "message": "Waiting 10.0 seconds for next Reaper cycle.", "service": "roman", "env": "dmd-dev"}
+
+>>> data = fp.load()
+>>> assert data.quota_state == "nearing-limit"
+
+>>> tests.test_checker()
+WARNING - You are using  200.0G bytes of  200.0G permitted bytes of $HOME storage.  If you exceed your quota logins may be disabled.
+0
+
+Adjust the quota over the limit and check it.  When a lockout occurs the
+delete_user_server method is called.  Both the quota event and
+delete_user_server event are CRITICAL:
+
+
+>>> data.actual_bytes = 214748369000
+>>> fp.save(data)
+
+>>> @patch.object(efs_quota_monitor.HubRestApi, "delete_user_server")
+... def test_reaper(delete_mock):
+...     tests.quota_reaper_main()
+
+>>> test_reaper()
+{"user": "homer@stsci.edu", "quota_bytes": 214748364800, "actual_bytes": 214748369000, "fraction_used": 1.000000019557774, "warn_fraction": 0.9, "quota_enabled": true, "lockout_enabled": true, "last_activity": "...", "reaper_time": "...", "active_at_reap": 0, "started": "...", "stopped": "...", "quota_state": "lockout", "timed_out": false, "status": "CRITICAL", "subsystem": "Reaper", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "...", "message": "User homer@stsci.edu is using  200.0G bytes exceeding quota  200.0G bytes.  LOCKOUT.", "service": "roman", "env": "dmd-dev"}
+{"status": "CRITICAL", "subsystem": "Reaper", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "...", "message": "Deleting notebook server for homer@stsci.edu", "service": "roman", "env": "dmd-dev"}
+{"status": "INFO", "subsystem": "Reaper", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "...", "message": "Waiting 10.0 seconds for next Reaper cycle.", "service": "roman", "env": "dmd-dev"}
+
+>>> tests.test_checker()
+CRITICAL - You are using  200.0G bytes but are only permitted  200.0G bytes of $HOME storage.  Logins are disabled.
+1
+
+>>> data = fp.load()
+>>> assert data.quota_state == "lockout"
+
+Setting lockout_enabled=False in the quota-control data reduces CRITICAL lockouts to
+violation ERRORs:
+
+>>> data.lockout_enabled = False
+>>> fp.save(data)
+>>> test_reaper()
+{"user": "homer@stsci.edu", "quota_bytes": 214748364800, "actual_bytes": 214748369000, "fraction_used": 1.000000019557774, "warn_fraction": 0.9, "quota_enabled": true, "lockout_enabled": false, "last_activity": "2022-01-01T00:00:01.500000", "reaper_time": "2022-01-01T00:00:00.125000", "active_at_reap": 0, "started": "2022-01-01T00:00:00", "stopped": "2022-01-01T00:00:00.125000", "quota_state": "violation", "timed_out": false, "status": "ERROR", "subsystem": "Reaper", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "2022-01-01T00:00:00", "message": "User homer@stsci.edu is using  200.0G bytes exceeding quota  200.0G bytes.  Lockout disabled.", "service": "roman", "env": "dmd-dev"}
+{"status": "INFO", "subsystem": "Reaper", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "2022-01-01T00:00:00", "message": "Waiting 10.0 seconds for next Reaper cycle.", "service": "roman", "env": "dmd-dev"}
+
+>>> tests.test_checker()
+ERROR - You are using  200.0G bytes but are only permitted  200.0G bytes of $HOME storage.   Please reduce storage usage as soon as possible.
+0
+
+>>> data = fp.load()
+>>> assert data.quota_state == "violation"
+
+If du timesout measuring a quota the timed_out flag is set in quota control
+data.  The reaper issues a WARNING:
+
+>>> data.lockout_enabled = True
+>>> data.timed_out = True
+>>> data.actual_bytes = 10
+>>> fp.save(data)
+>>> test_reaper()
+{"user": "homer@stsci.edu", "quota_bytes": 214748364800, "actual_bytes": 10, "fraction_used": 4.656612873077393e-11, "warn_fraction": 0.9, "quota_enabled": true, "lockout_enabled": true, "last_activity": "...", "reaper_time": "...", "active_at_reap": 0, "started": "...", "stopped": "...", "quota_state": "timed-out", "timed_out": true, "status": "WARN", "subsystem": "Reaper", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "...", "message": "Quota measurement for user homer@stsci.edu exceeded timeout 3600.0 secs.  Usage unknown,  potentially high.", "service": "roman", "env": "dmd-dev"}
+{"status": "INFO", "subsystem": "Reaper", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "...", "message": "Waiting 10.0 seconds for next Reaper cycle.", "service": "roman", "env": "dmd-dev"}
+
+>>> tests.test_checker()
+WARNING - Measurement of your $HOME usage timed out and is assumed to be high. Make sure your $HOME usage is below  200.0G bytes or logins may be disabled.
+0
+
+
+The active_at_reap field is set to 1 by the repear if a user has been active this period,  0 otherwise.
+This field can be potentially integrated to get cummulative login time in units of the reaper period:
+
+>>> data.timed_out=False
+>>> fp.save(data)
+>>> NOW_STAMPS = (
+...    "2022-01-01T00:00:00",  # start
+...    "2022-01-01T00:00:02",  # reaper_time
+...    "2022-01-01T00:00:03",  #
+...    "2022-01-01T00:00:04",  #
+...    "2022-01-01T00:00:05",  #
+...    "2022-01-01T00:00:06",  #
+... )
+>>> LA_DICTS = ({"homer@stsci.edu": "2022-01-01T00:00:01"},)
+>>> tests.quota_reaper_main(now_stamps=NOW_STAMPS, la_dicts=LA_DICTS)
+{"user": "homer@stsci.edu", "quota_bytes": 214748364800, "actual_bytes": 10, "fraction_used": 4.656612873077393e-11, "warn_fraction": 0.9, "quota_enabled": true, "lockout_enabled": true, "last_activity": "2022-01-01T00:00:01", "reaper_time": "2022-01-01T00:00:02", "active_at_reap": 1, "started": "2022-01-01T00:00:00", "stopped": "2022-01-01T00:00:00.125000", "quota_state": "ok", "timed_out": false, "status": "INFO", "subsystem": "Reaper", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "2022-01-01T00:00:03", "message": "Quota for homer@stsci.edu using      10 of  200.0G bytes.  OK.", "service": "roman", "env": "dmd-dev"}
+{"status": "INFO", "subsystem": "Reaper", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "2022-01-01T00:00:05", "message": "Waiting 6.0 seconds for next Reaper cycle.", "service": "roman", "env": "dmd-dev"}
+
+>>> data = fp.load()
+>>> assert data.active_at_reap
+
+>>> NOW_STAMPS = (
+...    "2022-01-01T00:00:00",  # start
+...    "2022-01-01T00:00:25",  # reaper_time
+...    "2022-01-01T00:00:26",  #
+...    "2022-01-01T00:00:27",  #
+...    "2022-01-01T00:00:28",  #
+...    "2022-01-01T00:00:29",  #
+... )
+>>> LA_DICTS = ({"homer@stsci.edu": "2022-01-01T00:00:00"},)
+>>> tests.quota_reaper_main(now_stamps=NOW_STAMPS, la_dicts=LA_DICTS)
+{"user": "homer@stsci.edu", "quota_bytes": 214748364800, "actual_bytes": 10, "fraction_used": 4.656612873077393e-11, "warn_fraction": 0.9, "quota_enabled": true, "lockout_enabled": true, "last_activity": "2022-01-01T00:00:00", "reaper_time": "2022-01-01T00:00:25", "active_at_reap": 0, "started": "2022-01-01T00:00:00", "stopped": "2022-01-01T00:00:00.125000", "quota_state": "ok", "timed_out": false, "status": "INFO", "subsystem": "Reaper", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "2022-01-01T00:00:26", "message": "Quota for homer@stsci.edu using      10 of  200.0G bytes.  OK.", "service": "roman", "env": "dmd-dev"}
+{"status": "WARN", "subsystem": "Reaper", "pod_id": "6d4978cb5c-6vqdm", "timestamp": "2022-01-01T00:00:28", "message": "Monitor cycle is 17.0 seconds too slow to sample every 10.0.  Slow sampling may be mitigated by multiple monitors or few outlying users.", "service": "roman", "env": "dmd-dev"}
+
+>>> data = fp.load()
+>>> assert not data.active_at_reap
+
+Test cleanup
+
+>>> shutil.rmtree("efs")

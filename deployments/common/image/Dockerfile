@@ -38,7 +38,9 @@ RUN /opt/common-scripts/apt-install \
         ssh \
         htop \
         sysstat \
-        net-tools
+        net-tools \
+        rename
+	#        libexpat1
 
 # S/W Development Tools
 RUN /opt/common-scripts/apt-install \
@@ -56,28 +58,11 @@ RUN /opt/common-scripts/apt-install \
         libxml2-dev \
         libxslt1.1 \
         libxslt1-dev \
-        python-libxml2 \
-        python-dev \
+        python3-libxml2 \
+        python-dev-is-python3 \
         python-setuptools \
         graphviz \
         libopenblas-dev
-
-# X11 and DS9
-RUN /opt/common-scripts/apt-install \
-        dbus-x11 \
-        xfce4 \
-        xfce4-panel \
-        xfce4-session \
-        xfce4-settings \
-        xorg \
-        xubuntu-icon-theme \
-        imagemagick \
-        gedit \
-        saods9
-
-# Firefox ???
-RUN /opt/common-scripts/apt-install \
-        firefox
 
 # Libraries for FITS, DS9, ML
 RUN /opt/common-scripts/apt-install \
@@ -107,14 +92,6 @@ RUN /opt/common-scripts/apt-install \
 RUN /opt/common-scripts/fix-certs
 
 # ------------------------------------------------------------------------
-# Remove light-locker to prevent screen lock
-# BUG: get rid of --no-check-certificate
-RUN wget https://sourceforge.net/projects/turbovnc/files/2.2.6/turbovnc_2.2.6_amd64.deb --no-check-certificate && \
-    dpkg -i turbovnc_2.2.6_amd64.deb && \
-    rm turbovnc_2.2.6_amd64.deb && \
-    apt-get remove -y -q light-locker
-
-# ------------------------------------------------------------------------
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
     unzip awscliv2.zip && \
     ./aws/install && \
@@ -131,7 +108,7 @@ RUN ln -s ${CONDA_DIR}/etc/profile.d/conda.sh /etc/profile.d/conda.sh
 USER root
 
 # Keep Xfce directories out of home and set up shortcuts for DS9.
-COPY user-dirs.defaults /etc/xdg/user-dirs.defaults
+#COPY user-dirs.defaults /etc/xdg/user-dirs.defaults
 
 COPY --chown=${NB_UID}:${NB_GID}  common-scripts/ /opt/common-scripts
 COPY --chown=${NB_UID}:${NB_GID}  common-env/ /opt/common-env
@@ -139,8 +116,8 @@ RUN cat /opt/common-scripts/global_bashrc >> /etc/bash.bashrc
 
 # ----------------------------------------------------------------------
 # Common conda environments
-# USER ${NB_UID}
-# COPY environments/ /opt/environments/
+#USER ${NB_UID}
+#COPY environments/ /opt/environments/
 
 # ----------------------------------------------------------------------
 # Set up astroquery and ds9 desktop short-cut, will be further
@@ -155,9 +132,7 @@ RUN npm set config set cafile /etc/ssl/certs/stsci-tls-ca-bundle.pem
 
 RUN npm install -g --prod yarn             && \
     npm install -g --prod yarn-audit-fix   && \
+    npm install -g minimist                && \
     yarn config set cafile /etc/ssl/certs/stsci-tls-ca-bundle.pem && \
     npm cache clean --force && \
     yarn cache clean --force
-    
-
-

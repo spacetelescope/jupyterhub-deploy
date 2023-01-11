@@ -6,11 +6,17 @@ jupyterhub:
     extraConfig:
       spawning: |
         c.KubeSpawner.start_timeout = 15 * 60  # Up to 15 minutes
-      get_email: |
-        def get_email(response):
-            return response['attrib']['email']
-      set_username_key: |
-          c.GenericOAuthenticator.username_key = get_email
+    extraFiles:
+      announcements_service:
+        mountPath: /usr/share/jupyterhub/announcements.py
+    extraVolumes:
+      - name: quota-control
+        persistentVolumeClaim:
+          claimName: quota-control-jh-pvc
+    extraVolumeMounts:
+      - name: quota-control
+        mountPath: "/announcements"
+        subPath: "announcements"
   proxy:
     chp:
       pdb:
@@ -22,13 +28,21 @@ jupyterhub:
       static:
         pvcName: "users-jh-pvc"
         subPath: "{username}"
+      extraVolumes:
+        - name: quota-control
+          persistentVolumeClaim:
+            claimName: quota-control-jh-pvc
+      extraVolumeMounts:
+        - name: quota-control
+          mountPath: "/quota-control"
+          subPath: "{username}"
+          readOnly: true
     defaultUrl: "/lab"
   scheduling:
     userScheduler:
       enabled: true
       pdb:
         enabled: true
-        minAvailable: 0
     corePods:
       nodeAffinity:
         matchNodePurpose: require
