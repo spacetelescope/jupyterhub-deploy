@@ -27,15 +27,6 @@ jupyterhub:
     profileList:
       - display_name: "TIKE Science Platform"
         default: true
-    storage:
-      extraVolumes:
-        - name: s3-pvc
-          persistentVolumeClaim:
-            claimName: s3-pvc
-      extraVolumeMounts:
-        - name: s3-pvc
-          mountPath: /s3
-          readOnly: true
     lifecycleHooks:
       postStart:
         exec:
