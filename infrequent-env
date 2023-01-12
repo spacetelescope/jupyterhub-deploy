@@ -17,8 +17,8 @@ export JH_HOSTNAME=`echo ${JH_HOSTNAME} | sed -e's/tike/timeseries/g'`
 # Select "conda" tool used to install conda package and environments: conda or mamba
 #   mamba is largely a drop-in replacement for mamba with improved dependency resolution,
 #   parallel downloads, and C++ implementation.
-export CONDA_VER=mamba
-#export CONDA_VER=conda
+#export CONDA_VER=mamba
+export CONDA_VER=conda
 
 # Additional parameters for image-exec Docker run command, e.g. add mounts here
 export IMAGE_RUN_PARS="--rm -e JUPYTER_ENABLE_LAB=yes"
