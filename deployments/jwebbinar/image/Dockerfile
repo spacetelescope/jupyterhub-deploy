@@ -76,24 +76,6 @@ RUN /opt/common-scripts/env-sync jwebbinar
 COPY --chown=${NB_UID}:${NB_GID} environments/jwebbinar/ /opt/environments/jwebbinar/
 
 
-# --------------------------- webbpsf-workshop  -------------------------------------
-
-# BASE
-COPY --chown=${NB_UID}:${NB_GID} env-frozen/webbpsf-workshop/ /opt/env-frozen/webbpsf-workshop/
-COPY --chown=${NB_UID}:${NB_GID} env-chilly/webbpsf-workshop/ /opt/env-chilly/webbpsf-workshop/
-COPY --chown=${NB_UID}:${NB_GID} environments/webbpsf-workshop/*.yml /opt/environments/webbpsf-workshop/
-RUN /opt/common-scripts/env-conda webbpsf-workshop
-
-# COMPILE ALL
-COPY --chown=${NB_UID}:${NB_GID} environments/webbpsf-workshop/*.pip /opt/environments/webbpsf-workshop/
-RUN /opt/common-scripts/env-compile webbpsf-workshop
-
-# SYNC ALL
-RUN /opt/common-scripts/env-sync webbpsf-workshop
-
-# REMAINING ENV
-COPY --chown=${NB_UID}:${NB_GID} environments/webbpsf-workshop/ /opt/environments/webbpsf-workshop/
-
 # --------------------------- Jdaviz -------------------------------------
 
 # BASE

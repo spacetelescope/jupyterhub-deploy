@@ -2,3 +2,6 @@
 gwcs
 jupyterlab-widgets==1.1.1
 ipywidgets==7.7.2
+glue-jupyter~=0.14.2
+sphinx~=5.3.0
+sphinx-rtd-theme~=1.0.0
