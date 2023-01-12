@@ -247,7 +247,7 @@ def k8s_encode(name):
     """Encode name such that it makes a suitable k8s label?  Lowercase a-z 0-9 and dash.
     (Mimic JH e-mail username encoding.)
     """
-    return name.replace("-", "-2d").replace("@", "-40").replace(".", "-2e")
+    return name.replace("-", "-2d").replace("@", "-40").replace(".", "-2e").replace("_", "-5f")
 
 
 class QuotaFootprint:
