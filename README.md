@@ -1,5 +1,5 @@
 
-## STScI JupyterHub Science Platforms
+## [DEPRECATED] STScI JupyterHub Science Platforms
 
 ### Overview
 The Space Telescope Science Institute ([STScI](https://www.stsci.edu/)) provides JupyterHub-based science platforms for community use.  These web-based platforms offer software and tools to perform analysis and processing of astronomical data, as well as easy access to multi-mission data archives.
